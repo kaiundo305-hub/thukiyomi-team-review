@@ -1,12 +1,13 @@
-.passport-cover-page{
+align-items: flex-start;{
   margin:0 auto 24px;
   text-align:center;
+  align-items: flex-start;
 }
 
 .cover-image{
   display:block;
   width:min(100%,680px);
-  height:auto;
+  height:94vh;
   margin:20px auto 24px;
   border-radius:18px;
   border:1px solid rgba(241,217,155,.42);
