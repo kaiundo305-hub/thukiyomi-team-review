@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>月読みワンダーランド 月の扉｜開運パスポート第1の鑑定書</title>
+<title>月読みワンダーランド 月の種｜開運パスポート第1の鑑定書</title>
 <style>
   :root{
     --bg1:#1b1233; --bg2:#3a235f; --gold:#d8b56d; --gold2:#f1d99b;
@@ -57,8 +57,12 @@
   .qtitle{font-size:18px; color:var(--gold2); margin-bottom:10px;}
   .choice{display:block; padding:12px 14px; border:1px solid rgba(241,217,155,.32); border-radius:16px; margin:9px 0; background:rgba(255,255,255,.07); cursor:pointer;}
   .choice input{width:auto; margin-right:8px;}
-  .result-title{font-size:30px; color:var(--gold2); text-align:center; line-height:1.5;text-shadow:0 0 18px rgba(241,217,155,.22);}
-  .badge{display:inline-block; border:1px solid var(--line); border-radius:999px; padding:4px 14px; color:var(--gold2); margin:4px; font-size:14px;}
+	  .result-title{font-size:30px; color:var(--gold2); text-align:center; line-height:1.45;text-shadow:0 0 18px rgba(241,217,155,.22);}
+	  .title-kage{display:block;font-size:.62em;letter-spacing:.26em;color:rgba(241,217,155,.88);margin-bottom:5px;font-weight:600}
+	  .title-seed{display:block;font-size:1.18em;letter-spacing:.08em;font-weight:800;color:#ffe6a8;text-shadow:0 0 22px rgba(241,217,155,.32)}
+	  .title-passport{display:block;font-size:.66em;letter-spacing:.16em;margin-top:8px;color:rgba(255,250,242,.92);font-weight:600}
+	  .cover-image{display:block;width:min(100%,680px);height:auto;margin:20px auto 24px;border-radius:18px;border:1px solid rgba(241,217,155,.42);box-shadow:0 26px 70px rgba(0,0,0,.34)}
+	  .badge{display:inline-block; border:1px solid var(--line); border-radius:999px; padding:4px 14px; color:var(--gold2); margin:4px; font-size:14px;}
   .grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:14px;}
   .mini{background:rgba(255,255,255,.07); border:1px solid rgba(241,217,155,.26); border-radius:18px; padding:16px; display:flex; flex-direction:column;}
   .mini h3{margin:0 0 10px; min-height:2.8em; display:flex; align-items:flex-start; font-size:18px;}
@@ -87,12 +91,14 @@
   .basis-reason{font-size:14px;color:var(--muted);line-height:1.8;margin:0;border-left:2px solid rgba(241,217,155,.4);padding-left:12px}
   .neko-card{margin:24px 0 8px;border-radius:22px;overflow:hidden;background:linear-gradient(160deg,#fff9e8,#fef3cc);border:2px solid rgba(241,210,80,.45);box-shadow:0 8px 28px rgba(180,150,60,.18)}
   .neko-bar{background:linear-gradient(90deg,rgba(241,200,70,.38),rgba(241,217,140,.22));padding:9px 18px;font-size:12px;letter-spacing:.2em;color:#c8960a}
-  .neko-inner{display:flex;gap:14px;padding:16px 18px;align-items:flex-start}
-  .neko-avatar{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:6px}
-  .neko-photo{width:100px;border-radius:14px;object-fit:cover;display:block}
+  .neko-inner{display:grid;grid-template-columns:104px 1fr;gap:16px;padding:16px 18px;align-items:center}
+  .neko-avatar{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-width:0}
+  .neko-photo{width:88px;max-width:100%;border-radius:14px;object-fit:cover;display:block;margin:0 auto}
   .neko-name-tag{font-size:10px;color:#8a6200;text-align:center;line-height:1.5;white-space:nowrap}
-  .neko-bubble{flex:1;background:rgba(255,255,255,.65);border-radius:4px 16px 16px 16px;padding:14px 16px;font-size:14px;line-height:2;color:#3a2800;white-space:pre-line;border:1px solid rgba(241,210,80,.32)}
+  .neko-bubble{background:rgba(255,255,255,.68);border-radius:16px;padding:14px 16px;font-size:14px;line-height:2;color:#3a2800;white-space:pre-line;border:1px solid rgba(241,210,80,.32)}
+  .neko-promise{margin-top:12px;padding:12px 14px;border-radius:14px;background:rgba(255,246,210,.74);border:1px solid rgba(200,150,10,.26);color:#5d3b00;font-weight:bold;line-height:1.9}
   .neko-phrase{margin-top:12px;padding-top:10px;border-top:1px solid rgba(200,150,10,.24);font-size:13px;color:#8a6200;font-weight:bold;letter-spacing:.06em}
+  @media(max-width:520px){.neko-inner{grid-template-columns:1fr;justify-items:center;text-align:left}.neko-bubble{width:100%;box-sizing:border-box}.neko-photo{width:82px}}
   .challenge-intro{font-size:14px;color:var(--muted);line-height:1.8;margin:6px 0 14px}
   .challenge-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(196px,1fr));gap:10px}
   .day-card{background:rgba(255,255,255,.06);border:1px solid rgba(241,217,155,.2);border-radius:16px;padding:14px;position:relative}
@@ -131,6 +137,10 @@
   .memo-label{font-size:11px;color:var(--gold2);letter-spacing:.14em;margin-bottom:8px}
   .memo-body{min-height:56px;font-size:14px;color:var(--muted);line-height:1.9;padding:4px 2px}
   .memo-body:empty:before{content:attr(data-ph);opacity:.4;pointer-events:none;display:block}
+  .print-note-box{margin:26px 0 0;padding:18px 20px;border:1px solid rgba(241,217,155,.34);border-radius:16px;background:rgba(255,250,242,.05)}
+  .print-note-title{font-size:12px;color:var(--gold2);letter-spacing:.18em;margin:0 0 12px;text-align:center}
+  .print-note-lines{min-height:96px;background:repeating-linear-gradient(to bottom,transparent 0,transparent 29px,rgba(241,217,155,.22) 30px);border-radius:8px}
+  .print-note-caption{font-size:12px;color:var(--muted);text-align:center;margin:12px 0 0;line-height:1.8}
   .print-frame,.print-footer{display:none}
   #resultBody{border-left:1px solid rgba(241,217,155,.34);border-right:1px solid rgba(241,217,155,.34);padding-left:22px;padding-right:22px}
   @media print{
@@ -155,7 +165,8 @@
     display:none!important;
   }
   /* ── 基本設定 ── */
-  body{background:white!important;color:#1a1410!important;font-size:10.5pt!important;line-height:1.58!important}
+  html{background:#fff6dc!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body{background:#fff6dc!important;color:#1a1410!important;font-size:10.5pt!important;line-height:1.58!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .stars:before,.stars:after{display:none!important}
   /* ── 非表示 ── */
   .btn,.copy-btn,.cta-join-btn,.edit-hint{display:none!important}
@@ -170,6 +181,7 @@
     padding-left:9mm!important;
     padding-right:9mm!important;
     color:#1a1410!important;
+    background:#fffdf6!important;
     -webkit-print-color-adjust:exact;
     print-color-adjust:exact;
   }
@@ -238,8 +250,9 @@
   .neko-card{background:#fffbf0!important;border:1px solid #c8a84b!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .neko-bar{color:#7a5010!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .neko-bubble{background:none!important;color:#2a1810!important;border:none!important;border-radius:0!important}
+  .neko-promise{background:#fff7dd!important;color:#4a2c00!important;border:1px solid #d0b86a!important}
   .neko-phrase{color:#7a5010!important;border-top:1px solid #d0c0a0!important}
-  .neko-inner{padding:8px 0!important}
+  .neko-inner{grid-template-columns:74pt 1fr!important;gap:8pt!important;padding:8px 0!important;align-items:center!important}
   .cta-block{background:#fffbf0!important;border:1.5pt solid #c9a84c!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .ls-item{border-color:#c8a84b!important;background:#fffbf0!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .ls-day{color:#7a3030!important}
@@ -263,7 +276,11 @@
   #result ul li span,#result ul li strong{color:#2a1810!important}
   #result ul li{border-bottom-color:#d8c89a!important;color:#2a1810!important}
   .level-badge{background:rgba(0,0,0,.05)!important;color:#444!important}
-  .result-title{font-size:22pt!important;line-height:1.35!important}
+	  .result-title{font-size:22pt!important;line-height:1.32!important}
+	  .cover-image{max-width:92%!important;margin:10pt auto 14pt!important;border-radius:8pt!important;box-shadow:none!important}
+  .title-kage{font-size:12pt!important;letter-spacing:.2em!important;color:#7a5010!important;margin-bottom:3pt!important}
+  .title-seed{font-size:27pt!important;letter-spacing:.04em!important;color:#2a1810!important;text-shadow:none!important}
+  .title-passport{font-size:12.5pt!important;letter-spacing:.12em!important;color:#7a5010!important;margin-top:5pt!important}
   h3{font-size:13.5pt!important;margin:10pt 0 4pt!important}
   .grid{gap:6pt!important}
   .mini{padding:8pt!important}
@@ -275,10 +292,14 @@
   .basis-step{padding:2pt 5pt!important}
   .memo-block{margin:8pt 0!important;padding:8pt 9pt!important}
   .memo-body{min-height:34pt!important;line-height:1.55!important}
+  .print-note-box{margin:12pt 0 0!important;padding:10pt 12pt!important;border:1pt solid #c9a84c!important;border-radius:0!important;background:#fffdf6!important;page-break-inside:avoid!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .print-note-title{color:#7a5010!important;font-size:10pt!important;letter-spacing:.14em!important;margin:0 0 8pt!important}
+  .print-note-lines{min-height:72pt!important;background:repeating-linear-gradient(to bottom,transparent 0,transparent 20pt,#d8c89a 20.5pt)!important;border-radius:0!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .print-note-caption{color:#4a3720!important;font-size:9pt!important;margin:7pt 0 0!important}
   .neko-card{margin:10pt 0 4pt!important}
   .neko-bar{padding:5pt 9pt!important}
   .neko-bubble{font-size:9.5pt!important;line-height:1.6!important;padding:6pt 8pt!important}
-  .neko-photo{width:68pt!important}
+  .neko-photo{width:58pt!important;max-width:58pt!important;margin:0 auto!important}
   .cta-block{margin:12pt 0!important;padding:12pt 14pt!important;border-radius:12pt!important}
   .live-schedule{gap:6pt!important;margin-bottom:8pt!important}
   .ls-item{padding:5pt 9pt!important;min-width:auto!important}
@@ -291,25 +312,47 @@
   #result p,
   #result li,
   #result .mini,
+  #result .grid,
   #result .harmony-card,
   #result .basis-card,
+  #result .basis-chain,
   #result .memo-block,
   #result .neko-card,
+  #result .neko-inner,
+  #result .cta-block,
   #result .second-report-preview,
-  #result .second-report-page{
+  #result .second-report-pages,
+  #result .second-report-page,
+  #result .print-note-box,
+  #resultBody > div{
     break-inside:avoid!important;
     page-break-inside:avoid!important;
+    -webkit-column-break-inside:avoid!important;
   }
-  #result p{
-    orphans:3;
-    widows:3;
+  #result p,
+  #result .basis-reason,
+  #result .memo-body,
+  #result [contenteditable="true"]{
+    orphans:4;
+    widows:4;
+    break-inside:avoid!important;
+    page-break-inside:avoid!important;
   }
   #result h3,
   #result .memo-label,
   #result .basis-label,
-  #result .level-badge{
+  #result .level-badge,
+  #result .result-title{
     break-after:avoid!important;
     page-break-after:avoid!important;
+    break-inside:avoid!important;
+    page-break-inside:avoid!important;
+  }
+  #result h3 + p,
+  #result .basis-label + p,
+  #result .level-badge + p{
+    break-before:avoid!important;
+    page-break-before:avoid!important;
   }
   /* ── ページ区切り ── */
   .cta-block{page-break-before:auto}
@@ -326,7 +369,7 @@
 <div class="wrap">
   <section id="top" class="hero">
     <div class="moon"></div>
-    <h1>月の扉｜開運パスポート第1の鑑定書</h1>
+    <h1>月の種｜開運パスポート第1の鑑定書</h1>
     <p class="sub">月とともに、今を整えていく月読み</p>
     <p>あなたの中に眠る天命の扉へ。<br>生年月日から導く本命宿をもとに、今のあなたに宿る才能の種と因果の流れを読み解きます。<br>未来を決めるものではなく、自分らしい人生の流れを整えるための羅針盤です。</p>
     <button class="btn" onclick="showSection('form')">開運パスポートをひらく</button>
@@ -377,48 +420,48 @@ function autoCalcShuku(){
  }catch(e){document.getElementById('shukuResult').textContent=''}
 }
 const shukuData = {
- "昴宿":{group:"導き", item:"鏡", itemAction:"鏡を見るとき", essence:"月の鏡の宿命から授かった気品で、人が迷うとき静かに正しい方向を照らし出す宿", reason:"昴宿は七つの星が集まる輝きの宿。多くをひとつに束ね、人の目を引き、方向を示す力を宿曜では「導き」の資質と読みます。"},
- "畢宿":{group:"表現", item:"歯ブラシ", itemAction:"歯ブラシを使うとき", essence:"一滴の水が長い年月をかけて石を穿つように、日々の丁寧な積み重ねで本物の美しさを磨き上げる宿", reason:"畢宿は丁寧さと持続の宿。積み重ねた美しさを外へ伝える力を持ち、宿曜では「表現」の資質と読みます。"},
- "觜宿":{group:"変容", item:"カーテン", itemAction:"カーテンを開けるとき・閉めるとき", essence:"夜明けの瞬間に闇と光の境を引くカーテンのように、言葉の力で古い思い込みを新しい夜明けへと切り替える宿", reason:"觜宿は切り替えと洞察の宿。言葉と鋭い観察で古いものを新しい形へ変える力を、宿曜では「変容」の資質と読みます。"},
- "参宿":{group:"導き", item:"スイッチ", itemAction:"スイッチを入れるとき・切るとき", essence:"長い夜の果てに最初の一歩の炎を灯し、止まった流れに動き出す勇気の引き金を与える宿", reason:"参宿は行動と開拓の宿。最初の一歩を踏み出す力で流れを開く資質を、宿曜では「導き」と読みます。"},
- "井宿":{group:"癒し", item:"ナイトランプ", itemAction:"ランプを灯すとき・消すとき", essence:"深夜の優しい灯りが孤独を和らげるように、人と人の間に安心の橋をかけ温かな場を満たしていく宿", reason:"井宿は繁栄とつながりの宿。人と人を結び、安心の場を整える力を、宿曜では「癒し」の資質と読みます。"},
- "鬼宿":{group:"変容", item:"ゴミ箱", itemAction:"ゴミ箱を空にするとき", essence:"満月の引力が海の水を入れ替えるように、魂に積もった不要なものを手放し深い再生へと導く宿", reason:"鬼宿は浄化と再生の宿。不要なものを手放し魂を新たにする力を、宿曜では「変容」の資質と読みます。"},
- "柳宿":{group:"癒し", item:"ティッシュ", itemAction:"ティッシュを手に取るとき", essence:"川面に映る月が揺れながら波を受け止めるように、人のどんな感情をもそのまま抱きしめ心の水面を静かにほどく宿", reason:"柳宿は感情の受容と共感の宿。深い感情を受け止める力を、宿曜では「癒し」の資質と読みます。"},
- "星宿":{group:"表現", item:"音・BGM", itemAction:"音楽を流すとき・止めるとき", essence:"夜空でひときわ輝く星が暗闇を照らすように、存在感と美意識という名の光で場全体に生命を吹き込む宿", reason:"星宿は輝きと美意識の宿。存在感で場を照らし出す力を、宿曜では「表現」の資質と読みます。"},
- "張宿":{group:"表現", item:"SNS", itemAction:"SNSを開くとき・投稿するとき", essence:"月の引力が遠い海を揺り動かすように、その天性の魅力と包容力で見知らぬ心までをも引き寄せ広げていく宿", reason:"張宿は広がりと包容の宿。魅力を外へ届け人の心を惹きつける力を、宿曜では「表現」の資質と読みます。"},
- "翼宿":{group:"表現", item:"照明", itemAction:"照明をつけるとき・消すとき", essence:"大空を翔る翼が地平の彼方まで届くように、理想と気品という光を高く掲げ世界の端まで照らしていく宿", reason:"翼宿は飛翔と理想の宿。高い品格で最後まで丁寧に届ける力を、宿曜では「表現」の資質と読みます。"},
- "軫宿":{group:"癒し", item:"味噌汁", itemAction:"味噌汁をつくるとき・口にするとき", essence:"朝露が大地の奥まで染み込むように、気づかれないほど細やかな配慮で人の心と体の根っこから整えていく宿", reason:"軫宿は細やかな配慮と社交の宿。気づきと温かさで心身を整える力を、宿曜では「癒し」の資質と読みます。"},
- "角宿":{group:"導き", item:"玄関", itemAction:"玄関を出るとき・帰るとき", essence:"東の空に最初の光が差し込む星のように、成長の入口を開き次の世界へと一歩踏み出す勇気を灯す宿", reason:"角宿は始まりと調和の宿。成長の入口を開き人を次へ促す力を、宿曜では「導き」の資質と読みます。"},
- "亢宿":{group:"変容", item:"鍵", itemAction:"鍵を差し込むとき・開けるとき", essence:"月が欠けながら光を蓄え再び満ちるように、揺るぎない信念を内側に宿し続け、やがて静かに人生の扉を開く宿", reason:"亢宿は信念と変化の宿。強い意志で人生を変容させていく力を、宿曜では「変容」の資質と読みます。"},
- "氐宿":{group:"豊かさ循環", item:"財布", itemAction:"財布を開くとき・閉じるとき", essence:"大地が季節をかけて作物を育てるように、現実の土台を丁寧に整え豊かさが根付く器を着実に形にしていく宿", reason:"氐宿は調整と土台の宿。現実を整え価値の器を形にする力を、宿曜では「豊かさ循環」の資質と読みます。"},
- "房宿":{group:"豊かさ循環", item:"ベッド", itemAction:"ベッドに入るとき・起き上がるとき", essence:"満月の夜に安心が満ちるように、受け取る力と温かな居場所を育て人が戻ってこられる器を広げていく宿", reason:"房宿は豊かさと行動力の宿。受け取る力と安心の場を育てる資質を、宿曜では「豊かさ循環」と読みます。"},
- "心宿":{group:"表現", item:"キャンドル", itemAction:"キャンドルに火を灯すとき・消すとき", essence:"暗闇に揺れるキャンドルの炎が見る人の心を揺らすように、感情の深さと誠実さで人の奥底に届く表現をもたらす宿", reason:"心宿は感情の深みと直感の宿。魂の深さから人を動かす表現力を、宿曜では「表現」の資質と読みます。"},
- "尾宿":{group:"変容", item:"仕事道具", itemAction:"仕事道具を手に取るとき・片付けるとき", essence:"研ぎ澄まされた刃が迷いなく仕事をするように、強い集中力で自分の役割を磨き上げ本物の力に変えていく宿", reason:"尾宿は集中と磨き上げの宿。役割を深めながら自己を変容させる力を、宿曜では「変容」の資質と読みます。"},
- "箕宿":{group:"豊かさ循環", item:"食器", itemAction:"食器を手に取るとき・洗うとき", essence:"風に乗る種が思わぬ場所で芽吹くように、自由な生命力で豊かさの流れをあらゆる方向へ軽やかに運んでいく宿", reason:"箕宿は自由と先見の宿。生命力でどこへでも豊かさを運ぶ力を、宿曜では「豊かさ循環」の資質と読みます。"},
- "斗宿":{group:"導き", item:"手帳", itemAction:"手帳を開くとき・閉じるとき", essence:"夜の海で航海者を迷わせない北極星のように、大きな視野で人生の地図を描き人々が進む方向を示し続ける宿", reason:"斗宿は誠実さと蓄積の宿。大局を見渡し正確に道を示す力を、宿曜では「導き」の資質と読みます。"},
- "女宿":{group:"癒し", item:"服", itemAction:"服を着るとき・脱ぐとき", essence:"月光がやわらかく全てを包むように、暮らしの細部を整えることで自分と周囲の価値を静かに守り続ける宿", reason:"女宿は奉仕と日常の守りの宿。暮らしを整え人の価値を守る力を、宿曜では「癒し」の資質と読みます。"},
- "虚宿":{group:"豊かさ循環", item:"空間", itemAction:"部屋の空間を整えるとき", essence:"月と月の間の暗闇が次の輝きを準備するように、余白と沈黙の中から誰も気づかなかった可能性を生み出す深遠な宿", reason:"虚宿は洞察と神秘の宿。余白の中から新たな可能性を生む力を、宿曜では「豊かさ循環」の資質と読みます。"},
- "危宿":{group:"変容", item:"メガネ", itemAction:"メガネをかけるとき・外すとき", essence:"光の当たる角度が変わると隠れていた宝石が現れるように、視点の転換で人生に潜む真実を新たに映し出す宿", reason:"危宿は革新と独創の宿。視点を変え真実を映し出す力を、宿曜では「変容」の資質と読みます。"},
- "室宿":{group:"導き", item:"家", itemAction:"家を出るとき・帰るとき", essence:"旅の夜に窓から漏れる灯りが帰り道を照らすように、人が戻れる安心の居場所と揺るぎない土台を守り続ける宿", reason:"室宿は献身と忠実の宿。安心の基盤を守り人が戻れる場をつくる力を、宿曜では「導き」の資質と読みます。"},
- "壁宿":{group:"癒し", item:"バスタオル", itemAction:"バスタオルで体を包むとき", essence:"満月の月光が海を清め浄化するように、守りと清めの力で人を支え魂に宿る古い疲れを洗い流していく宿", reason:"壁宿は知恵と継承の宿。守りと清めで人を支える力を、宿曜では「癒し」の資質と読みます。"},
- "奎宿":{group:"表現", item:"ミネラルウォーター", itemAction:"水を口にするとき", essence:"清らかな泉から詩が生まれるように、理想と感動を美しい言葉と形に変えて世界へ届けていく宿", reason:"奎宿は文才と芸術の宿。美しい言葉と感動を伝える力を、宿曜では「表現」の資質と読みます。"},
- "婁宿":{group:"豊かさ循環", item:"花", itemAction:"花を手にするとき・飾るとき", essence:"月の雫を受けて花が開くように、人を育て喜びの種をまき循環の庭をどこまでも広げていく宿", reason:"婁宿は正義と育みの宿。人を育て喜びの循環を広げる力を、宿曜では「豊かさ循環」の資質と読みます。"},
- "胃宿":{group:"豊かさ循環", item:"食べ物", itemAction:"食べ物を口にするとき", essence:"大地の恵みが体を満たし力になるように、現実の豊かさを着実に積み上げ人の土台を養い続ける宿", reason:"胃宿は蓄積と安定の宿。現実の豊かさを着実に積み上げる力を、宿曜では「豊かさ循環」の資質と読みます。"}
+ "昴宿":{group:"導き", element:"火1・土3", detail:"🔥火（羊宮×1足）　🌍土（牛宮×3足）", talent:"引力・カリスマ", luck:"引立運", core:"影響力", tenmeiWord:"波動を広げる", missionWord:"意識を動かす", karma:"存在が影響していた", item:"鏡", itemAction:"鏡を見るとき", essence:"影響力。あなたは生まれながらに周囲に影響を与える存在です。あなたの放つ波動がそのまま意識の場を動かし、集まる人々の心を変えていきます。鏡を傍に置き、自分を正しく映し出す習慣が運気を高めます。", reason:"昴宿は「引力・カリスマ」の才能を持つ宿です。属性は火1・土3、開運テーマは「引立運」。天命は「波動を広げる」、使命は「意識を動かす」として読み解きます。", message:"あなたは生まれながらに周囲に影響を与える存在です。あなたの放つ波動がそのまま意識の場を動かし、集まる人々の心を変えていきます。鏡を傍に置き、自分を正しく映し出す習慣が運気を高めます。"},
+ "畢宿":{group:"表現", element:"土4", detail:"🌍土（牛宮×4足）", talent:"専門性・深度", luck:"自分軸", core:"理解力", tenmeiWord:"構造を掴む", missionWord:"本質理解", karma:"理解できなかった", item:"歯ブラシ", itemAction:"歯ブラシを使うとき", essence:"理解力。物事の構造を深く掴む知性があなたの本質です。表面ではなく本質を見抜く力が、あなたの最大の才能です。毎朝の歯磨きの習慣が思考を整え、歯ブラシへの感謝が洞察力を研ぎ澄ます鍵となります。", reason:"畢宿は「専門性・深度」の才能を持つ宿です。属性は土4、開運テーマは「自分軸」。天命は「構造を掴む」、使命は「本質理解」として読み解きます。", message:"物事の構造を深く掴む知性があなたの本質です。表面ではなく本質を見抜く力が、あなたの最大の才能です。毎朝の歯磨きの習慣が思考を整え、歯ブラシへの感謝が洞察力を研ぎ澄ます鍵となります。"},
+ "觜宿":{group:"変容", element:"土2・風2", detail:"🌍土（牛宮×2足）　🌬️風（夫妻宮×2足）", talent:"集中・現実力", luck:"財運", core:"現実化", tenmeiWord:"結果にする", missionWord:"行動結果化", karma:"形にできなかった", item:"カーテン", itemAction:"カーテンを開けるとき・閉めるとき", essence:"現実化。あなたは思いを形にする力を持って生まれました。アイデアや想いを現実の結果へと変える使命があります。カーテンに感謝することで、新しい一日を迎える意識が芽生え、行動力が増します。", reason:"觜宿は「集中・現実力」の才能を持つ宿です。属性は土2・風2、開運テーマは「財運」。天命は「結果にする」、使命は「行動結果化」として読み解きます。", message:"あなたは思いを形にする力を持って生まれました。アイデアや想いを現実の結果へと変える使命があります。カーテンに感謝することで、新しい一日を迎える意識が芽生え、行動力が増します。"},
+ "参宿":{group:"導き", element:"風4", detail:"🌬️風（夫妻宮×4足）", talent:"行動・開拓", luck:"人気運", core:"行動力", tenmeiWord:"突破する", missionWord:"動かす", karma:"動けなかった", item:"スイッチ", itemAction:"スイッチを入れるとき・切るとき", essence:"行動力。あなたの中には湧き続ける行動のエネルギーが宿っています。躊躇わず突破する力こそが、あなたの天命です。スイッチを押す行為がエネルギーを呼び覚まし、運命の扉を開きます。", reason:"参宿は「行動・開拓」の才能を持つ宿です。属性は風4、開運テーマは「人気運」。天命は「突破する」、使命は「動かす」として読み解きます。", message:"あなたの中には湧き続ける行動のエネルギーが宿っています。躊躇わず突破する力こそが、あなたの天命です。スイッチを押す行為がエネルギーを呼び覚まし、運命の扉を開きます。"},
+ "井宿":{group:"癒し", element:"風3・水1", detail:"🌬️風（夫妻宮×3足）　💧水（蟹宮×1足）", talent:"繁栄・豊穣", luck:"物質運", core:"循環", tenmeiWord:"流れを作る", missionWord:"循環させる", karma:"停滞していた", item:"グラス", itemAction:"グラスを手に取るとき・磨くとき", essence:"循環。あなたはエネルギーの流れを作り、必要なものを巡らせる循環の担い手です。グラスを磨き、澄んだ水を受け取る習慣が、心と現実の流れを整えていきます。", reason:"井宿は「繁栄・豊穣」の才能を持つ宿です。属性は風3・水1、開運テーマは「物質運」。天命は「流れを作る」、使命は「循環させる」として読み解きます。", message:"あなたはエネルギーの流れを作り、必要なものを巡らせる循環の担い手です。グラスを磨き、澄んだ水を受け取る習慣が、心と現実の流れを整えていきます。"},
+ "鬼宿":{group:"変容", element:"水4", detail:"💧水（蟹宮×4足）", talent:"霊感・浄化", luck:"強運", core:"浄化", tenmeiWord:"不要を削る", missionWord:"本質化", karma:"見抜いていた", item:"ゴミ箱", itemAction:"ゴミ箱を空にするとき", essence:"浄化。あなたには不要なものを見抜き、本質だけを残す浄化の力があります。ゴミ箱をこまめに空にする習慣が、人生に本当に必要なものだけを引き寄せます。", reason:"鬼宿は「霊感・浄化」の才能を持つ宿です。属性は水4、開運テーマは「強運」。天命は「不要を削る」、使命は「本質化」として読み解きます。", message:"あなたには不要なものを見抜き、本質だけを残す浄化の力があります。ゴミ箱をこまめに空にする習慣が、人生に本当に必要なものだけを引き寄せます。"},
+ "柳宿":{group:"癒し", element:"水4", detail:"💧水（蟹宮×4足）", talent:"言葉の力", luck:"交渉運", core:"言語化", tenmeiWord:"伝える", missionWord:"理解させる", karma:"伝わらなかった", item:"ティッシュ", itemAction:"ティッシュを手に取るとき", essence:"言語化。あなたは、思いを言葉にし、人の心へ届ける力を持っています。柳宿の言葉は、誰かを励まし、安心させ、次の一歩へ導く灯りになります。日常の小さな感謝を言葉にするほど、その力はやわらかく育っていきます。", reason:"柳宿は「言葉の力」の才能を持つ宿です。属性は水4、開運テーマは「交渉運」。天命は「伝える」、使命は「理解させる」として読み解きます。", message:"あなたは言葉で人の心を動かす力を持ちます。思いを丁寧に言葉にするほど、その言葉は相手の心へあたたかく届きます。日常の中で感謝を言葉にすることが、柳宿の力を育てる開運行動になります。"},
+ "星宿":{group:"表現", element:"火4", detail:"🔥火（獅子宮×4足）", talent:"輝き・自己表現", luck:"不動産", core:"魅せる", tenmeiWord:"表現する", missionWord:"惹きつける", karma:"見られていた", item:"ポット", itemAction:"ポットを手に取るとき・お茶を注ぐとき", essence:"魅せる。あなたは人を惹きつける表現者として生まれました。存在そのものが場をあたためる光になります。ポットであたたかい飲み物を注ぐ習慣が、星宿の表現力をやわらかく広げ、人が集まる流れを育てていきます。", reason:"星宿は「輝き・自己表現」の才能を持つ宿です。属性は火4、開運テーマは「不動産」。天命は「表現する」、使命は「惹きつける」として読み解きます。", message:"あなたは人を惹きつける表現者として生まれました。存在そのものが場をあたためる光になります。ポットであたたかい飲み物を注ぐ習慣が、星宿の表現力をやわらかく広げ、人が集まる流れを育てていきます。"},
+ "張宿":{group:"表現", element:"火4", detail:"🔥火（獅子宮×4足）", talent:"援助・包容", luck:"援助運", core:"拡散", tenmeiWord:"広げる", missionWord:"流通させる", karma:"広がらなかった", item:"SNS", itemAction:"SNSを開くとき・投稿するとき", essence:"拡散。あなたは情報やエネルギーを広げる拡散の力を持ちます。良いものを世に流通させることがあなたの使命です。SNSを通じた発信が、運命的な縁を引き寄せます。", reason:"張宿は「援助・包容」の才能を持つ宿です。属性は火4、開運テーマは「援助運」。天命は「広げる」、使命は「流通させる」として読み解きます。", message:"あなたは情報やエネルギーを広げる拡散の力を持ちます。良いものを世に流通させることがあなたの使命です。SNSを通じた発信が、運命的な縁を引き寄せます。"},
+ "翼宿":{group:"表現", element:"火1・土3", detail:"🔥火（獅子宮×1足）　🌍土（女宮×3足）", talent:"理想・現実化", luck:"海外運", core:"拡張", tenmeiWord:"可能性を形にする", missionWord:"理想を行動へ映す", karma:"広い世界を見ていた", item:"デスクライト", itemAction:"デスクライトをつけるとき・手元を照らすとき", essence:"拡張。あなたは、広い世界から受け取ったひらめきや理想を、現実の行動へ落とし込む力を持っています。デスクライトで手元を照らす習慣が、翼宿の可能性を今日の一歩へ変えていきます。", reason:"翼宿は「理想・現実化」の才能を持つ宿です。属性は火1・土3、開運テーマは「海外運」。天命は「可能性を形にする」、使命は「理想を行動へ映す」として読み解きます。", message:"あなたは、広い世界から受け取ったひらめきや理想を、現実の行動へ落とし込む力を持っています。デスクライトで手元を照らす習慣が、翼宿の可能性を今日の一歩へ変えていきます。"},
+ "軫宿":{group:"癒し", element:"土4", detail:"🌍土（女宮×4足）", talent:"伝達・調整", luck:"社交運", core:"縁", tenmeiWord:"関係調整", missionWord:"人をつなぐ", karma:"縛られていた", item:"ペン", itemAction:"ペンを手に取るとき・思いを書くとき", essence:"縁。あなたは、人とのご縁や心に浮かんだ思いを、安心できる形へ整えていく力を持っています。ペンを手に取り、大切な気づきや関係性を一文にする習慣が、ご縁をやさしく結び直していきます。", reason:"軫宿は「伝達・調整」の才能を持つ宿です。属性は土4、開運テーマは「社交運」。天命は「関係調整」、使命は「人をつなぐ」として読み解きます。", message:"あなたは、人とのご縁や心に浮かんだ思いを、安心できる形へ整えていく力を持っています。ペンで書くことで、曖昧だった気持ちや関係性が少しずつ整理され、次の一歩を選びやすくなります。"},
+ "角宿":{group:"導き", element:"土2・風2", detail:"🌬️風（女宮×2足）　🌬️風（秤宮×2足）", talent:"調和・信頼", luck:"縁結び運", core:"入口", tenmeiWord:"始める", missionWord:"信頼形成", karma:"始められなかった", item:"玄関", itemAction:"玄関を出るとき・帰るとき", essence:"入口。あなたは新しい始まりの扉を開く存在です。玄関を清潔に整えることで、信頼という新たなエネルギーが流れ込み、始める力が高まります。", reason:"角宿は「調和・信頼」の才能を持つ宿です。属性は土２風２、開運テーマは「縁結び運」。天命は「始める」、使命は「信頼形成」として読み解きます。", message:"あなたは新しい始まりの扉を開く存在です。玄関を清潔に整えることで、信頼という新たなエネルギーが流れ込み、始める力が高まります。"},
+ "亢宿":{group:"変容", element:"風4", detail:"🌬️風（秤宮×4足）", talent:"知性・分析", luck:"頭領運", core:"意志", tenmeiWord:"軸を通す", missionWord:"基準提示", karma:"押さえられていた", item:"鍵", itemAction:"鍵を差し込むとき・開けるとき", essence:"意志。揺るぎない軸と意志を持って生まれたあなた。基準を示し、道を照らすことが使命です。鍵を大切に扱う習慣が意志の力を研ぎ澄まし、ぶれない核を作ります。", reason:"亢宿は「知性・分析」の才能を持つ宿です。属性は風4、開運テーマは「頭領運」。天命は「軸を通す」、使命は「基準提示」として読み解きます。", message:"揺るぎない軸と意志を持って生まれたあなた。基準を示し、道を照らすことが使命です。鍵を大切に扱う習慣が意志の力を研ぎ澄まし、ぶれない核を作ります。"},
+ "氐宿":{group:"豊かさ循環", element:"風3・火1", detail:"🌬️風（秤宮×3足）　🔥火（蠍宮×1足）", talent:"調整・魅力", luck:"人気運", core:"引力", tenmeiWord:"選ばれる", missionWord:"魅力発揮", karma:"選ばれなかった", item:"財布", itemAction:"財布を開くとき・閉じるとき", essence:"引力。あなたは磁石のように人を引き寄せる引力を持ちます。財布を整えることで豊かさへの引力が高まり、自然と選ばれる存在になっていきます。", reason:"氐宿は「調整・魅力」の才能を持つ宿です。属性は風3・火1、開運テーマは「人気運」。天命は「選ばれる」、使命は「魅力発揮」として読み解きます。", message:"あなたは磁石のように人を引き寄せる引力を持ちます。財布を整えることで豊かさへの引力が高まり、自然と選ばれる存在になっていきます。"},
+ "房宿":{group:"豊かさ循環", element:"水4", detail:"💧水（蠍宮×4足）", talent:"豊かさ・行動力", luck:"財運", core:"受取", tenmeiWord:"豊かさ循環", missionWord:"受容モデル", karma:"与えすぎていた", item:"ベッド", itemAction:"ベッドに入るとき・起き上がるとき", essence:"受取。あなたは受け取ることで豊かさを循環させる使命があります。ベッドを整え、深くくつろぐことが受容力を高め、豊かさが自然に流れ込む体質をつくります。", reason:"房宿は「豊かさ・行動力」の才能を持つ宿です。属性は水4、開運テーマは「財運」。天命は「豊かさ循環」、使命は「受容モデル」として読み解きます。", message:"あなたは受け取ることで豊かさを循環させる使命があります。ベッドを整え、深くくつろぐことが受容力を高め、豊かさが自然に流れ込む体質をつくります。"},
+ "心宿":{group:"表現", element:"水4", detail:"💧水（蠍宮×4足）", talent:"直感・感受性", luck:"地位運", core:"本音", tenmeiWord:"感情理解", missionWord:"内面解放", karma:"抑えていた", item:"マグカップ", itemAction:"マグカップを手に取るとき・温かい飲み物を飲むとき", essence:"本音。あなたは感情の深みに触れ、内面の声を言葉に戻す力を持っています。マグカップで温かい飲み物を受け取る習慣が、心をゆるめ、本音をやさしく整えていきます。", reason:"心宿は「直感・感受性」の才能を持つ宿です。属性は水4、開運テーマは「地位運」。天命は「感情理解」、使命は「内面解放」として読み解きます。", message:"あなたは感情の深みに触れ、内面の声を言葉に戻す力を持っています。マグカップで温かい飲み物を受け取る習慣が、心をゆるめ、本音をやさしく整えていきます。"},
+ "尾宿":{group:"変容", element:"火4", detail:"🔥火（弓宮×4足）", talent:"情熱・突破力", luck:"名声運", core:"役割", tenmeiWord:"実務遂行", missionWord:"現実推進", karma:"背負いすぎた", item:"仕事道具", itemAction:"仕事道具を手に取るとき・片付けるとき", essence:"役割。あなたは現実を着実に動かす実務の担い手です。仕事道具を丁寧に扱うことで役割意識が高まり、使命を全うするエネルギーが湧き上がります。", reason:"尾宿は「情熱・突破力」の才能を持つ宿です。属性は火4、開運テーマは「名声運」。天命は「実務遂行」、使命は「現実推進」として読み解きます。", message:"あなたは現実を着実に動かす実務の担い手です。仕事道具を丁寧に扱うことで役割意識が高まり、使命を全うするエネルギーが湧き上がります。"},
+ "箕宿":{group:"豊かさ循環", element:"火4", detail:"🔥火（弓宮×4足）", talent:"自由・先見性", luck:"独立運", core:"継続", tenmeiWord:"流れ維持", missionWord:"拡大継続", karma:"止められていた", item:"食器", itemAction:"食器を手に取るとき・洗うとき", essence:"継続。あなたは流れを止めずに継続し拡大する力を持ちます。食器を大切に扱う習慣が日常の流れを整え、継続のエネルギーが自然と高まります。", reason:"箕宿は「自由・先見性」の才能を持つ宿です。属性は火4、開運テーマは「独立運」。天命は「流れ維持」、使命は「拡大継続」として読み解きます。", message:"あなたは流れを止めずに継続し拡大する力を持ちます。食器を大切に扱う習慣が日常の流れを整え、継続のエネルギーが自然と高まります。"},
+ "斗宿":{group:"導き", element:"火1・土3", detail:"🔥火（弓宮×1足）　🌍土（磨宮×3足）", talent:"誠実・蓄積", luck:"名誉運", core:"方向", tenmeiWord:"未来決定", missionWord:"指針提示", karma:"選べなかった", item:"手帳", itemAction:"手帳を開くとき・閉じるとき", essence:"方向。あなたは未来の方向を決め、道筋を示す指針の星です。手帳に未来を書き込む習慣が決断力を育て、迷いなく進む力となります。", reason:"斗宿は「誠実・蓄積」の才能を持つ宿です。属性は火1・土3、開運テーマは「名誉運」。天命は「未来決定」、使命は「指針提示」として読み解きます。", message:"あなたは未来の方向を決め、道筋を示す指針の星です。手帳に未来を書き込む習慣が決断力を育て、迷いなく進む力となります。"},
+ "女宿":{group:"癒し", element:"土4", detail:"🌍土（磨宮×4足）", talent:"奉仕・繊細", luck:"名誉運", core:"感性", tenmeiWord:"受容魅力", missionWord:"美意識提示", karma:"選べなかった", item:"服", itemAction:"服を着るとき・脱ぐとき", essence:"感性。あなたは深い感性と美意識で世界を彩る使命があります。服装を丁寧に選ぶことで美意識が研ぎ澄まされ、あなたらしい魅力が最大限に輝きます。", reason:"女宿は「奉仕・繊細」の才能を持つ宿です。属性は土4、開運テーマは「名誉運」。天命は「受容魅力」、使命は「美意識提示」として読み解きます。", message:"あなたは深い感性と美意識で世界を彩る使命があります。服装を丁寧に選ぶことで美意識が研ぎ澄まされ、あなたらしい魅力が最大限に輝きます。"},
+ "虚宿":{group:"豊かさ循環", element:"土2・風2", detail:"🌍土（磨宮×2足）　🌬️風（瓶宮×2足）", talent:"洞察・神秘", luck:"財運", core:"空", tenmeiWord:"本質回帰", missionWord:"削ぎ落とし", karma:"満たされなかった", item:"空間", itemAction:"部屋の空間を整えるとき", essence:"空。あなたは余分を削ぎ落とし、本質だけを残す空の力を持ちます。空間を広くシンプルに整えることで、本質が見え、満たされる感覚が訪れます。", reason:"虚宿は「洞察・神秘」の才能を持つ宿です。属性は土2・風2、開運テーマは「財運」。天命は「本質回帰」、使命は「削ぎ落とし」として読み解きます。", message:"あなたは余分を削ぎ落とし、本質だけを残す空の力を持ちます。空間を広くシンプルに整えることで、本質が見え、満たされる感覚が訪れます。"},
+ "危宿":{group:"変容", element:"風4", detail:"🌬️風（瓶宮×4足）", talent:"革新・独創", luck:"個性運", core:"リスク", tenmeiWord:"精度向上", missionWord:"崩れ防止", karma:"崩れた経験", item:"メガネ", itemAction:"メガネをかけるとき・外すとき", essence:"リスク。あなたはリスクを見抜き、精度を高める防衛の力を持ちます。視点を整えることで細部まで見える力が増し、崩れを未然に防げます。", reason:"危宿は「革新・独創」の才能を持つ宿です。属性は風4、開運テーマは「個性運」。天命は「精度向上」、使命は「崩れ防止」として読み解きます。", message:"あなたはリスクを見抜き、精度を高める防衛の力を持ちます。視点を整えることで細部まで見える力が増し、崩れを未然に防げます。"},
+ "室宿":{group:"導き", element:"風3・水1", detail:"🌬️風（瓶宮×3足）　💧水（魚宮×1足）", talent:"献身・忠実", luck:"情熱運", core:"安定", tenmeiWord:"居場所形成", missionWord:"継続基盤", karma:"不安定だった", item:"家", itemAction:"家を出るとき・帰るとき", essence:"安定。あなたは安心できる場を作り、継続の土台を育てる使命があります。家を整え、居心地の良い空間を保つことが安定のエネルギーをもたらします。", reason:"室宿は「献身・忠実」の才能を持つ宿です。属性は風3・水1、開運テーマは「情熱運」。天命は「居場所形成」、使命は「継続基盤」として読み解きます。", message:"あなたは安心できる場を作り、継続の土台を育てる使命があります。家を整え、居心地の良い空間を保つことが安定のエネルギーをもたらします。"},
+ "壁宿":{group:"癒し", element:"水4", detail:"💧水（魚宮×4足）", talent:"知恵・継承", luck:"直感運", core:"防御", tenmeiWord:"境界設定", missionWord:"守る", karma:"侵食された", item:"バスタオル", itemAction:"バスタオルで体を包むとき", essence:"防御。あなたは大切なものを守り、境界を設定する守護の力を持ちます。バスタオルで体を包む習慣が境界の感覚を育て、自分を守る力を強化します。", reason:"壁宿は「知恵・継承」の才能を持つ宿です。属性は水4、開運テーマは「直感運」。天命は「境界設定」、使命は「守る」として読み解きます。", message:"あなたは大切なものを守り、境界を設定する守護の力を持ちます。バスタオルで体を包む習慣が境界の感覚を育て、自分を守る力を強化します。"},
+ "奎宿":{group:"表現", element:"水4", detail:"💧水（魚宮×4足）", talent:"文才・芸術", luck:"文才運", core:"知性", tenmeiWord:"体系化", missionWord:"伝承", karma:"活かせなかった", item:"水", itemAction:"水を口にするとき", essence:"知性。あなたは知識を体系化し、次世代へ伝える知性の担い手です。水をこまめに飲む習慣が思考を澄ませ、知識を活かす力を高めます。", reason:"奎宿は「文才・芸術」の才能を持つ宿です。属性は水4、開運テーマは「文才運」。天命は「体系化」、使命は「伝承」として読み解きます。", message:"あなたは知識を体系化し、次世代へ伝える知性の担い手です。水をこまめに飲む習慣が思考を澄ませ、知識を活かす力を高めます。"},
+ "婁宿":{group:"豊かさ循環", element:"火4", detail:"🔥火（羊宮×4足）", talent:"正義・責任感", luck:"正義運", core:"成果", tenmeiWord:"具現化", missionWord:"証明", karma:"結果出なかった", item:"花", itemAction:"花を手にするとき・飾るとき", essence:"成果。あなたは努力を形にし、成果として証明する力を持ちます。花を飾ることで美しい結果への意識が高まり、具現化のエネルギーが引き寄せられます。", reason:"婁宿は「正義・責任感」の才能を持つ宿です。属性は火4、開運テーマは「正義運」。天命は「具現化」、使命は「証明」として読み解きます。", message:"あなたは努力を形にし、成果として証明する力を持ちます。花を飾ることで美しい結果への意識が高まり、具現化のエネルギーが引き寄せられます。"},
+ "胃宿":{group:"豊かさ循環", element:"火4", detail:"🔥火（羊宮×4足）", talent:"蓄積・安定", luck:"財運", core:"統合", tenmeiWord:"満足", missionWord:"完結", karma:"満たされなかった", item:"食べ物", itemAction:"食べ物を口にするとき", essence:"統合。あなたはすべてを統合し、満足と完結をもたらす使命があります。食事を丁寧に味わう習慣が満足感を育て、人生を豊かに完結させる力を高めます。", reason:"胃宿は「蓄積・安定」の才能を持つ宿です。属性は火4、開運テーマは「財運」。天命は「満足」、使命は「完結」として読み解きます。", message:"あなたはすべてを統合し、満足と完結をもたらす使命があります。食事を丁寧に味わう習慣が満足感を育て、人生を豊かに完結させる力を高めます。"}
 };
 const types = {
- A:{name:"癒しの月タイプ", key:"癒し", copy:"あなたが静かにそこにいるだけで、人の心はほどけていくようです。", destiny:"月が海の波を引き寄せるように、あなたの存在は人の奥底にある痛みをやさしく照らし出す本来の資質を持っています。", tenmei:"誰かの言葉を最後まで抱きしめる時間を持つことで、因果の流れが整いやすくなります。急がず、受け取ることを自分に許すことが、あなたの月の使い道です。", mission:"傷ついた人が再び歩き出すための「月明かりの道」となっていく流れがあるようです。その才能の種は、日常の小さな選択の中に静かに息づいています。", action:"今夜、誰かの話を遮らずに最後まで聴いてみてください。その沈黙の中にこそ、あなたの月の力が宿っています。"},
- B:{name:"導きの月タイプ", key:"導き", copy:"暗闇の中でも、あなたの目には道筋が見えているようです。", destiny:"嵐の夜の灯台のように、本質を見抜く眼差しという才能の種が宿っています。その流れを整えることで、人の心に寄り添う力が開きやすくなります。", tenmei:"感じた違和感を言葉にしていくことで、因果の流れが動き始めます。判断や助言を求められる場面で、本来の資質が自然に発揮されます。", mission:"人生の地図を描く「星読みの賢者」として、人々が自分の道を選ぶそばで光り続ける流れがあるようです。焦らず、今を整えることから始めてください。", action:"心の中で「おかしい」と感じたことを一文だけ書き留めてください。そこに因果の流れを読む種があります。"},
+ A:{name:"癒しの月タイプ", key:"癒し", copy:"あなたが静かにそこにいるだけで、人の心はほどけていくようです。", destiny:"月が海の波を引き寄せるように、あなたの存在は人の奥底にある本音をやさしく照らし出す本来の資質を持っています。", tenmei:"誰かの言葉を最後まで抱きしめる時間を持つことで、因果の流れが整いやすくなります。自分の歩幅で受け取りながら進むことが、あなたの月の使い道です。", mission:"人が自分らしく再び歩き出すための「月明かりの道」となっていく流れがあるようです。その才能の種は、日常の小さな選択の中に静かに息づいています。", action:"今夜、誰かの話を遮らずに最後まで聴いてみてください。その沈黙の中にこそ、あなたの月の力が宿っています。"},
+ B:{name:"導きの月タイプ", key:"導き", copy:"暗闇の中でも、あなたの目には道筋が見えているようです。", destiny:"嵐の夜の灯台のように、本質を見抜く眼差しという才能の種が宿っています。その流れを整えることで、人の心に寄り添う力が開きやすくなります。", tenmei:"感じた違和感を言葉にしていくことで、因果の流れが動き始めます。判断や助言を求められる場面で、本来の資質が自然に発揮されます。", mission:"人生の地図を描く「星読みの賢者」として、人々が自分の道を選ぶそばで光り続ける流れがあるようです。今の流れを整えながら、見えている道を一歩ずつ進めてください。", action:"心の中で「ここを整えたい」と感じたことを一文だけ書き留めてください。そこに因果の流れを読む種があります。"},
  C:{name:"表現の月タイプ", key:"表現", copy:"あなたの言葉は、人の心の奥にある扉をそっとノックする力を持っているようです。", destiny:"月が夜空に姿を変えながら輝き続けるように、感性と表現力という才能の種を本来の資質として持っています。発信を通じて、その流れが整いやすくなります。", tenmei:"言葉を外へ出すことで、願いが叶いやすい流れが動き始めます。感じたことを形にする行為そのものが、あなたの月の使い道です。", mission:"人々の心の奥にある声を代弁する「月の吟遊詩人」として、時を超えた影響力を持つ可能性があります。その種を丁寧に育てていくことが大切です。", action:"感じたことを、たった一行でいいので外に出してください。その一行が、誰かの心の流れを整えるかもしれません。"},
- D:{name:"変容の月タイプ", key:"変容", copy:"あなたが現れるところに、古い季節の終わりと新しい夜明けの流れがやってくるようです。", destiny:"月が欠けるたびに次の満月の力を蓄えるように、「終わり」を恐れずに月の流れとともに進む本来の資質を持っています。", tenmei:"何かを丁寧に終わらせることで、新しい流れが整いやすくなります。手放しと受け取りの循環が、あなたの月の本質的な使い道です。", mission:"人生の転換点に自然と現れる「変容の月の使者」として、再生の物語を紡いでいく流れがあるようです。自分の変化を静かに受け取ることから始まります。", action:"もう必要のないものを一つだけ手放してください。物でも、習慣でも、思い込みでも。それが月の流れを整える新月の儀式です。"},
+ D:{name:"変容の月タイプ", key:"変容", copy:"あなたが現れるところに、古い季節の終わりと新しい夜明けの流れがやってくるようです。", destiny:"月が欠けるたびに次の満月の力を蓄えるように、節目を力に変えながら、月の流れとともに進む本来の資質を持っています。", tenmei:"節目を丁寧に整えることで、新しい流れが開きやすくなります。受け取り、選び、前へ進む循環が、あなたの月の本質的な使い道です。", mission:"人生の転換点に自然と現れる「変容の月の使者」として、再生の物語を紡いでいく流れがあるようです。自分の変化を受け取り、次の一歩へ活かすことから始まります。", action:"これから持っていきたいものを一つ選び、今の流れを整えてください。物でも、習慣でも、言葉でも大丈夫です。それが月の流れを進める新月の儀式です。"},
  E:{name:"豊かさ循環タイプ", key:"豊かさ循環", copy:"あなたの手を通ると、止まっていた流れがまた動き始めるようです。", destiny:"潮の満ち引きが海を動かすように、ご縁・物・価値の流れを整える才能の種を本来の資質として持っています。", tenmei:"日々の小さな整えが、願いが叶いやすい流れをつくっていきます。暮らしを丁寧に扱うことそのものが、あなたの月の本質的な使い道です。", mission:"豊かさの循環を地上に根付かせる「月の錬金術師」として、月とともに進む流れがあるようです。まず自分の暮らしを丁寧に整えることから始めてください。", action:"毎日使うものを一つ選び、感謝しながら丁寧に磨いてください。その行為がエネルギーの流れを整えていきます。"}
 };
 const nekoSvg='<img src="neko-tenshi.png" class="neko-photo" alt="かのんねこ天使">';
 
 const nekoMessages={
- A:(item,shuku,ia)=>`${shuku}の月の流れが、あなたにそっと伝えてくれたことがあるの。\n「${item}」はね、あなたの中にある癒しの才能の種を、静かに育ててくれる守りなんだよ。\n${ia}、まず自分のために感謝の気持ちをそっと添えてみてね。\nあなたが満たされると、周りの流れも自然と整っていくの。\n焦らなくていいよ。月とともに、今を整えていけば大丈夫。`,
+ A:(item,shuku,ia)=>`${shuku}の月の流れが、あなたにそっと伝えてくれたことがあるの。\n「${item}」はね、あなたの中にある癒しの才能の種を、静かに育ててくれる守りなんだよ。\n${ia}、まず自分のために感謝の気持ちをそっと添えてみてね。\nあなたが満たされると、周りの流れも自然と整っていくの。\n今の歩幅で進んでいこうね。月とともに整えるほど、次の流れが開いていくよ。`,
  B:(item,shuku,ia)=>`${shuku}の月の流れを読んでいたら、素敵なことが見えてきたよ。\n「${item}」はね、あなたの本来の資質——道を示す力を整えてくれる存在なの。\n${ia}、ひと呼吸おいて「これでいい」と心の中でつぶやいてみて。\n因果の流れが少しずつ見えやすくなるかもしれないよ。\nあなたの中にある答えを、信じてみてね。`,
  C:(item,shuku,ia)=>`${shuku}の月が、あなたの才能の種についてこっそり教えてくれたよ。\n「${item}」はね、あなたの感性の流れを整えてくれる大切な守りなの。\n${ia}、「今日も心が動いた瞬間があった」と心の中でそっと思ってみてね。\n表現の流れが少しずつ開いていく可能性があるよ。\nあなたの言葉は、誰かの心の流れを整えるかもしれないから。`,
- D:(item,shuku,ia)=>`${shuku}の月がね、あなたにやさしいメッセージを持ってきてくれたよ。\n「${item}」は、変容の流れを整えてくれる守りなの。\n${ia}、感謝の気持ちをそっと込めてみてね。\nそのたびに、新しい月の流れが動き始める可能性があるよ。\n焦らなくていい。月とともに、少しずつ整えていけば大丈夫。`,
+ D:(item,shuku,ia)=>`${shuku}の月がね、あなたにやさしいメッセージを持ってきてくれたよ。\n「${item}」は、変容の流れを整えてくれる守りなの。\n${ia}、感謝の気持ちをそっと込めてみてね。\nそのたびに、新しい月の流れが動き始める可能性があるよ。\n今の歩幅で進んでいこう。月とともに整えるほど、新しい流れが育っていくよ。`,
  E:(item,shuku,ia)=>`${shuku}の月の流れから、素敵なことが見えてきたよ。\n「${item}」はね、豊かさの因果の流れを整えるスイッチになるかもしれないの。\n${ia}、「受け取っていいんだよ」って自分に伝えてみてね。\n月とともに整えていくと、願いが叶いやすい流れが少しずつ動き始めるよ。`
 };
 
@@ -430,7 +473,7 @@ function getKanonMessageKey(name,birth,shuku){
 function getDiagnosisEditKey(name,birth,shuku){
  const p=new URLSearchParams(location.search);
  const personKey=p.get('participantId')||p.get('email')||'';
- return ['tsukiyomiMoonSeedFullEdit',personKey,name||'',birth||'',shuku||''].join('::');
+ return ['tsukiyomiMoonSeedFullEditV5',personKey,name||'',birth||'',shuku||''].join('::');
 }
 function setupKanonMessageAutosave(storageKey){
  const el=document.querySelector('[data-kanon-message]');
@@ -442,7 +485,7 @@ function setupKanonMessageAutosave(storageKey){
  el.addEventListener('blur',save);
 }
 function setupDiagnosisEditAutosave(storageKey){
- const fields=[...document.querySelectorAll('#resultBody [contenteditable="true"]')];
+ const fields=[...document.querySelectorAll('#resultBody [contenteditable="true"]:not([data-no-autosave]):not([data-kanon-message])')];
  if(!fields.length)return;
  try{
    const saved=JSON.parse(localStorage.getItem(storageKey)||'{}');
@@ -474,7 +517,7 @@ const challenges={
   {title:"癒しの耳を開く",      action:"誰かの話を5分間、遮らずに最後まで聴く。相槌だけでいい。"},
   {title:"感情のひとことメモ",  action:"今の自分の気持ちを一言で書き留める。正直でいい。"},
   {title:"開運アイテムへの感謝",action:"{item}を丁寧に拭いて、声に出して「ありがとう」と言う。"},
-  {title:"そっと寄り添う練習",  action:"無理していそうな人のそばに、何も言わずにいる時間を作る。"},
+  {title:"そっと寄り添う練習",  action:"頑張っている人のそばで、あたたかく見守る時間を作る。"},
   {title:"自分への言葉",        action:"鏡を見て「よく頑張ってるね」と声に出して伝える。"},
   {title:"癒された瞬間を集める",action:"今週、心がほっとした瞬間を3つ書き出す。"},
   {title:"7日間の振り返り",     action:"「私は癒しの月タイプ」と声に出し、今週起きた変化を一つ書く。"}
@@ -483,14 +526,14 @@ const challenges={
   {title:"直感を書き留める",    action:"今日感じた「なんかおかしい」を一文だけ書き留める。"},
   {title:"一言アドバイスを贈る",action:"迷っている誰かに、アドバイスを一言だけ伝えてみる。"},
   {title:"開運アイテムと問いかけ",action:"{item}を手に持ち、今一番大切な判断を静かに思い浮かべる。"},
-  {title:"違和感を言葉にする",  action:"「おかしい」と感じていることを紙に書き出す。誰にも見せなくていい。"},
+  {title:"違和感を言葉にする",  action:"「ここを整えたい」と感じていることを紙に書き出し、自分の本音を確認する。"},
   {title:"整理のための対話",    action:"難しい判断を誰かに話す。答えをもらうためでなく、整理のため。"},
   {title:"直感を振り返る",      action:"今週「あの判断は正しかった」と思えた瞬間を一つ書く。"},
   {title:"7日間の振り返り",     action:"「私の直感は人を助けた」瞬間を思い出し、次に活かしたい場面を書く。"}
  ],
  C:[
   {title:"「心が動いた」を一つ", action:"今日感じた「心が動いた瞬間」を、写真か言葉に一つ残す。"},
-  {title:"一行だけ発信する",    action:"SNSかメモに、自分の言葉を一行だけ書く。完璧でなくていい。"},
+  {title:"一行だけ発信する",    action:"SNSかメモに、自分の言葉を一行だけ書く。今の言葉が、次の流れを開いていく。"},
   {title:"開運アイテムから聞く",action:"{item}を見つめ、それが今のあなたに伝えたいことを想像する。"},
   {title:"具体的な「好き」を伝える",action:"誰かに「あなたの○○が好き」と、具体的に伝える。"},
   {title:"未来の自分への手紙",  action:"15年後の自分へ、3行だけ手紙を書く。"},
@@ -498,8 +541,8 @@ const challenges={
   {title:"7日間の振り返り",     action:"「私の言葉は誰かに届く」と声に出し、次に伝えたいことを一つ決める。"}
  ],
  D:[
-  {title:"一つだけ手放す",      action:"使わなくなったものを一つだけ手放す。物でも習慣でも思い込みでもいい。"},
-  {title:"終わらせたいことを書く",action:"「終わらせたいこと」を紙に書いて、くるくる丸める。捨てなくていい。"},
+  {title:"一つだけ選び直す",    action:"今の自分に合うものを一つ選び、次の流れへ持っていくものを整える。"},
+  {title:"終わらせたいことを書く",action:"「次へ進めたいこと」を紙に書いて、今の気持ちをひとつ整える。"},
   {title:"開運アイテムに感謝する",action:"{item}に「あなたが来てくれてありがとう」と声に出して伝える。"},
   {title:"新しい5分を試す",     action:"新しいルーティンを一つだけ試す。5分でいい。"},
   {title:"変化を書き出す",      action:"変わったこと・変わりたいことを3つ書き出す。"},
@@ -512,7 +555,7 @@ const challenges={
   {title:"開運アイテムを磨く",  action:"{item}を磨きながら、今の暮らしへの感謝を一つ思い浮かべる。"},
   {title:"感謝を言葉にする",    action:"お金・時間・ご縁、受け取ったものへの感謝を誰かに伝える。"},
   {title:"豊かさを集める",      action:"「豊かさを感じた瞬間」を3つ書き出す。どんな小さなことでもOK。"},
-  {title:"循環を起こす",        action:"使わなくなったものを誰かに譲る、または感謝して手放す。"},
+  {title:"循環を起こす",        action:"今あるものに感謝し、必要な場所へ巡らせる行動を一つ選ぶ。"},
   {title:"7日間の振り返り",     action:"「私は豊かさの月の錬金術師」と声に出し、次に循環させたいことを決める。"}
  ]
 };
@@ -529,37 +572,37 @@ function detectTheme(text){
 const concreteFocus={
  A:{
    love:"相手に合わせすぎて、本音が後回しになっているサインが出ています。",
-   work:"責任感で抱え込み、休む前に頑張り切ってしまう流れが出ています。",
+   work:"責任感が強く、力の注ぎどころを整えることで仕事運が伸びる流れが出ています。",
    relation:"気を遣いすぎて、優しさが義務に変わる場面が増えています。",
-   mind:"心が疲れていても『大丈夫なふり』で進みやすい時期です。",
+   mind:"心の声を丁寧に拾うほど、自分らしい進み方を取り戻しやすい現在地です。",
    general:"今は、安心を先に整えるほど流れが戻るタイミングです。"
  },
  B:{
-   love:"違和感に気づいているのに、結論を急がず保留している状態です。",
+   love:"違和感に気づけているからこそ、次に選びたい関わり方が見え始めています。",
    work:"判断材料はあるのに、最終決断だけが先延ばしになっています。",
    relation:"相手の意図を読みすぎて、自分の軸が揺れやすくなっています。",
    mind:"頭では整理できていても、腹落ちが追いついていない状態です。",
    general:"答えは外ではなく、すでにあなたの直感の中にあります。"
  },
  C:{
-   love:"気持ちはあるのに、伝え方を迷って止まる流れが見えます。",
+   love:"気持ちを言葉にする準備が整い、伝え方を選べる流れが見えます。",
    work:"価値はあるのに、発信量の少なさで届き切っていない状態です。",
-   relation:"言いたいことを飲み込み、後で一人で抱えやすい時期です。",
+   relation:"言いたいことを飲み込み、後で一人で抱えやすい状態です。",
    mind:"心が動いているのに、言葉にする前に引っ込める癖が出ています。",
    general:"表現した分だけ、運の流れが現実側で動き始めます。"
  },
  D:{
    love:"終わったはずの感情を抱え、次の関係に進みにくくなっています。",
-   work:"古いやり方を手放せず、新しい挑戦の入口で止まりやすい状態です。",
-   relation:"無理な関係を続けることで、日常のエネルギーが削られています。",
-   mind:"『変わりたい』と『まだ怖い』が同時にある転換点です。",
-   general:"手放しを1つ決めると、次の扉が具体的に開き始めます。"
+   work:"これまでのやり方を活かしながら、新しい挑戦へ切り替える入口にいます。",
+   relation:"関係性の力の使い方を整えることで、日常のエネルギーが戻りやすくなっています。",
+   mind:"「変わりたい」という思いが育ち、次の選択へ向かう転換点です。",
+   general:"次へ持っていくものを1つ選ぶと、扉が具体的に開き始めます。"
  },
  E:{
    love:"与える側に偏り、受け取る許可が不足しやすい状態です。",
    work:"努力は積めているので、次は受け取り方の設計が鍵です。",
    relation:"支える力は十分。境界線を整えると循環が戻ります。",
-   mind:"不足を見る癖が強く、すでにある豊かさを見逃しやすい時期です。",
+   mind:"不足を見る癖が強く、すでにある豊かさを見逃しやすい現在地です。",
    general:"小さな整えを続けるほど、運とご縁の循環が強まります。"
  }
 };
@@ -567,7 +610,7 @@ const concreteFocus={
 const concreteCause={
  A:"因果の核は『先に自分を満たす許可』です。ここが整うと、対人運が静かに改善します。",
  B:"因果の核は『違和感を言語化する勇気』です。曖昧さを減らすほど流れが速くなります。",
- C:"因果の核は『表現の回数』です。質より先に回数を置くと、現実の反応が変わります。",
+ C:"因果の核は『ステップを踏んで表現すること』です。思いつきをそのまま出すより、気づく・整える・小さく出す、という順番を踏むほど現実の反応が変わります。",
  D:"因果の核は『終わらせる決断』です。区切りをつけた瞬間に新しい縁が入りやすくなります。",
  E:"因果の核は『受け取りの器』です。整えるほど、同じ努力でも成果量が変わってきます。"
 };
@@ -575,25 +618,45 @@ const concreteCause={
 const concreteAction48h={
  love:"48時間以内に『本当はこうされると嬉しい』を1文で書き、信頼できる相手に伝える準備をしてください。",
  work:"48時間以内に、今の悩みを『やめる・続ける・試す』の3列で3行だけ整理してください。",
- relation:"48時間以内に、消耗する関係を1つ特定し『今週はここまで』の境界線を1つ決めてください。",
+ relation:"48時間以内に、心地よく関われる距離感を1つ決め、『今週はこの距離で進む』と書いてください。",
  mind:"48時間以内に、寝る前1分で『今日よかったこと』を3つ書き、心の土台を回復してください。",
- general:"48時間以内に、開運アイテム「{item}」を整えながら『今週手放すこと』を1つ決めてください。"
+ general:"48時間以内に、開運アイテム「{item}」を整えながら『今週育てたい流れ』を1つ決めてください。"
 };
 
 const shukuOracleThemes={
- "昴宿":"美意識・上質さ","畢宿":"安定・継続・守る力","觜宿":"言葉・知性・丁寧さ","参宿":"好奇心・行動力・情報",
- "井宿":"循環・広がり・分かち合い","鬼宿":"癒し・安心・共感","柳宿":"情緒・感情解放・やさしさ","星宿":"存在感・自己表現",
- "張宿":"喜び・華やかさ・拡大","翼宿":"理想・学び・構想","軫宿":"調和・気遣い・人間関係","角宿":"始まり・視野・新しい見方",
- "亢宿":"誇り・自尊心・社会性","氐宿":"境界線・調整・守り","房宿":"深い魅力・情熱","心宿":"本音・心・情熱",
- "尾宿":"集中・突破・前進","箕宿":"自由・解放・勢い","斗宿":"器・支える力・大きな視点","女宿":"管理・秩序・整理",
- "虚宿":"余白・内省・空白","危宿":"変化・危機管理・境界","室宿":"居場所・守護・拠点","壁宿":"境界・内省・守り",
- "奎宿":"品位・感性・美しいもの","婁宿":"育成・世話・日々のケア","胃宿":"満たす・食べる力・所有"
+ "昴宿":"引力・カリスマ",
+ "畢宿":"専門性・深度",
+ "觜宿":"集中・現実力",
+ "参宿":"行動・開拓",
+ "井宿":"繁栄・豊穣",
+ "鬼宿":"霊感・浄化",
+ "柳宿":"言葉の力",
+ "星宿":"輝き・自己表現",
+ "張宿":"援助・包容",
+ "翼宿":"理想・現実化",
+ "軫宿":"伝達・調整",
+ "角宿":"調和・信頼",
+ "亢宿":"知性・分析",
+ "氐宿":"調整・魅力",
+ "房宿":"豊かさ・行動力",
+ "心宿":"直感・感受性",
+ "尾宿":"情熱・突破力",
+ "箕宿":"自由・先見性",
+ "斗宿":"誠実・蓄積",
+ "女宿":"奉仕・繊細",
+ "虚宿":"洞察・神秘",
+ "危宿":"革新・独創",
+ "室宿":"献身・忠実",
+ "壁宿":"知恵・継承",
+ "奎宿":"文才・芸術",
+ "婁宿":"正義・責任感",
+ "胃宿":"蓄積・安定"
 };
 
 const kanonThemeAdvice={
  love:"愛情運は、相手を変えることよりも『自分はどう扱われると安心するのか』を知るところから整います。",
- work:"仕事運は、今の役割を『何を続け、何を手放し、何を試すか』に小さく分けることで動き始めます。",
- relation:"人間関係運は、すべての人に合わせることではなく、心が疲れすぎない距離感を決めることで整います。",
+ work:"仕事運は、今の役割を『何を続け、何を整え、何を試すか』に小さく分けることで動き始めます。",
+ relation:"人間関係運は、自分らしく関われる距離感を選ぶことで、あたたかく整っていきます。",
  mind:"心の流れは、頑張りを増やすよりも安心の土台を戻すことで整います。まずは小さな回復を優先してください。",
  general:"今の流れは、大きく変えるよりも日常の扱い方を一つ整えることで動き始めます。"
 };
@@ -607,12 +670,36 @@ function buildPersonalFocus(baseText,shuku,sd,concernTheme){
    mind:"心の整えでは、",
    general:"今の流れでは、"
  }[concernTheme]||"今の流れでは、";
- return themeLead+shuku+'の「'+shukuTheme+'」が少し眠り、'+baseText+' 開運のお守りである「'+sd.item+'」の扱い方にも、その現在地が映りやすくなっています。';
+ const plusMap={
+   "癒し":"人の心を包み、安心できる場をつくる力として働きます。",
+   "導き":"迷っている人に光を当て、進む方向を示す力として働きます。",
+   "表現":"思いや魅力を言葉や表現に変え、人の心へ届ける力として働きます。",
+   "変容":"古い流れを切り替え、新しい一歩へ進める力として働きます。",
+   "豊かさ循環":"今あるものを育て、感謝と豊かさを循環させる力として働きます。"
+ };
+ const minusMap={
+   love:{"癒し":"マイナスに出ると、愛されるために頑張りすぎて、受け取ることが後回しになりやすくなります。","導き":"マイナスに出ると、違和感に気づいても言葉にするまで時間がかかりやすくなります。","表現":"マイナスに出ると、本当の気持ちを伝える前に、表現を飲み込みやすくなります。","変容":"マイナスに出ると、過去の感情を持ったまま、次の関係へ進みにくくなります。","豊かさ循環":"マイナスに出ると、与える側に偏り、受け取る許可が不足しやすくなります。"},
+   work:{"癒し":"マイナスに出ると、責任を抱えすぎて、力の注ぎどころがぼやけやすくなります。","導き":"マイナスに出ると、判断材料はあるのに、最終決断を先延ばしにしやすくなります。","表現":"マイナスに出ると、価値はあるのに、表現や発信を整える途中で止まりやすくなります。","変容":"マイナスに出ると、古いやり方に力を使い続け、新しい挑戦へ切り替えにくくなります。","豊かさ循環":"マイナスに出ると、努力を積んでも、成果を受け取る設計が後回しになりやすくなります。"},
+   relation:{"癒し":"マイナスに出ると、相手を優先しすぎて、自分の本音が後回しになりやすくなります。","導き":"マイナスに出ると、相手の意図を読みすぎて、自分の軸が揺れやすくなります。","表現":"マイナスに出ると、反省が長くなり、あとでくよくよ悩みやすくなります。","変容":"マイナスに出ると、関係を変えたい思いが強くなり、力の使い方に迷いやすくなります。","豊かさ循環":"マイナスに出ると、支える側に偏り、境界線が曖昧になりやすくなります。"},
+   mind:{"癒し":"マイナスに出ると、自分を包む前に周囲を優先し、心の声が小さくなりやすくなります。","導き":"マイナスに出ると、頭では整理できていても、心が納得する言葉に届きにくくなります。","表現":"マイナスに出ると、表現する前に反省点を探しすぎて、流れが止まりやすくなります。","変容":"マイナスに出ると、変わりたい思いだけが強くなり、最初の一歩を選びにくくなります。","豊かさ循環":"マイナスに出ると、不足を見る癖が強くなり、すでにある豊かさを見逃しやすくなります。"},
+   general:{"癒し":"マイナスに出ると、安心を整える前に周囲を優先しやすくなります。","導き":"マイナスに出ると、外の答えを探しすぎて、自分の直感が見えにくくなります。","表現":"マイナスに出ると、反省が長くなり、あとでくよくよ悩みやすくなります。","変容":"マイナスに出ると、次へ進みたい思いと手放しきれない思いがぶつかりやすくなります。","豊かさ循環":"マイナスに出ると、感謝より不足に目が向き、循環が滞りやすくなります。"}
+ };
+ const closing={
+   love:"だから今は、自分がどう扱われると安心するのかを、やさしく言葉にすることが鍵になります。",
+   work:"だから今は、理想を大きく考えるより、今日できる一歩へ落とし込むことが鍵になります。",
+   relation:"だから今は、失敗する可能性を先に見越し、改善したものを少しずつ表現することが鍵になります。",
+   mind:"だから今は、反省を改善点に変え、小さな表現へ戻すことが鍵になります。",
+   general:"だから今は、失敗する可能性を先に見越し、改善したものを少しずつ表現することが鍵になります。"
+ }[concernTheme]||"だから今は、日常の小さな選択へ戻すことで、現在地から次の一歩が見えやすくなります。";
+ if(shuku==='翼宿'){
+   return themeLead+shuku+'の「'+shukuTheme+'」は、良い形で出ると、広い視点で可能性を見つけ、失敗する可能性要因を先に見越して、改善したものを表現する力として働きます。 '+((minusMap[concernTheme]||minusMap.general)[sd.group]||baseText)+' '+closing;
+ }
+ return themeLead+shuku+'の「'+shukuTheme+'」は、良い形で出ると、'+(plusMap[sd.group]||plusMap["表現"])+' '+((minusMap[concernTheme]||minusMap.general)[sd.group]||baseText)+' '+closing;
 }
 
 function buildPersonalCause(baseText,shuku,sd){
  const shukuTheme=shukuOracleThemes[shuku]||sd.group;
- return baseText+' '+shuku+'は「'+shukuTheme+'」を日常の中で育てる宿です。だからこそ、特別な出来事よりも、毎日触れる「'+sd.item+'」をどう扱うかに、今の因果の流れが表れます。';
+ return baseText+' '+shuku+'は「'+shukuTheme+'」を日常の中で育てる宿です。だからこそ、特別な出来事よりも、毎日の小さな選択や感謝の言葉に、今の因果の流れが表れます。';
 }
 
 function buildPersonalAction(baseText,shuku,sd,concernTheme){
@@ -620,11 +707,38 @@ function buildPersonalAction(baseText,shuku,sd,concernTheme){
  const suffix={
    love:"その後で『私はどう扱われると安心するか』を一文だけ書いてください。",
    work:"その後で『今週ひとつだけ形にすること』を一文だけ決めてください。",
-   relation:"その後で『無理なく関われる距離感』を一文だけ決めてください。",
-   mind:"その後で『今日の私を責めない言葉』を一文だけ残してください。",
-   general:"その後で『今週の整えの一歩』を一文だけ残してください。"
- }[concernTheme]||"その後で『今週の整えの一歩』を一文だけ残してください。";
+   relation:"その後で『心地よく関われる距離感』を一文だけ決めてください。",
+   mind:"その後で『今日の私を前へ進める言葉』を一文だけ残してください。",
+   general:"その後で『今日ステップを踏んで表現すること』を一文だけ残してください。"
+ }[concernTheme]||"その後で『今日ステップを踏んで表現すること』を一文だけ残してください。";
  return baseText+' 仕上げに、'+sd.item+'へ「'+shuku+'の'+shukuTheme+'を日常で活かします」と心の中で伝え、'+suffix;
+}
+
+function escapeHTML(str){
+ return String(str||'').replace(/[&<>"']/g,function(ch){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];
+ });
+}
+
+function shortenConcernText(text){
+ const clean=String(text||'').replace(/（記載なし）/g,'').replace(/\s+/g,' ').trim();
+ if(!clean) return '';
+ return clean.length>54 ? clean.slice(0,54)+'…' : clean;
+}
+
+function buildConcernReflection(name,shuku,sd,concernTheme,formQ,formQ2){
+ const merged=((formQ||'')+' '+(formQ2||'')).replace(/（記載なし）/g,'').trim();
+ if(!merged) return '';
+ const shukuTheme=shukuOracleThemes[shuku]||sd.group;
+ const picked=shortenConcernText(formQ)||shortenConcernText(formQ2);
+ const lead={
+  love:'愛情やパートナーシップのお悩みは、相手をどう選ぶかだけでなく、「自分がどんな関わり方なら安心できるのか」を思い出す入口でもあります。',
+  work:'仕事や収入のお悩みは、今の役割を見つめ直し、「何を続け、何を整え、何を試すか」を選ぶ合図として表れています。',
+  relation:'人間関係や家族のお悩みは、誰かに合わせ続けるためではなく、あなたの心が安心できる距離感を取り戻すためのサインです。',
+  mind:'心や体の揺らぎは、今の自分に合う進み方へ調整するための月からの知らせです。自分の声を拾うほど、前へ進む力が戻っていきます。',
+  general:'今のお悩みは、未来を急いで決めるためではなく、まず現在地をやさしく見つめ直すための入口です。'
+ }[concernTheme]||'今のお悩みは、未来を急いで決めるためではなく、まず現在地をやさしく見つめ直すための入口です。';
+ return name+'さんが書いてくださった「'+escapeHTML(picked)+'」という言葉には、今の現在地が静かに映っています。'+lead+' '+shuku+'の「'+shukuTheme+'」は、この問いを日常の中で少しずつほどき、次の一歩へ導いてくれます。';
 }
 
 function buildKanonAdvice(name,shuku,sd,typeData,typeKey,concernTheme,formQ,formQ2,focusText,causeText,act48){
@@ -635,7 +749,7 @@ function buildKanonAdvice(name,shuku,sd,typeData,typeKey,concernTheme,formQ,form
  '宿曜占星術で見ると、'+shuku+'には「'+shukuTheme+'」という流れが宿っています。これは、'+sd.reason+'<br><br>'+
  concernText+' '+focusText+'<br><br>'+
  concernLead+' '+causeText+'<br><br>'+
- '開運のお守りは「'+sd.item+'」です。日用品はただの物ではなく、今の心の扱い方や運の流れを映す小さな鏡です。'+sd.item+'を丁寧に扱うたびに、'+shuku+'の宿命が日常の中で少しずつ活かされていきます。<br><br>'+
+ '開運のお守りは「'+sd.item+'」です。日用品はただの物ではなく、今の心の扱い方や運の流れを映す小さな鏡です。身近なモノへ感謝を向けるたびに、'+shuku+'の宿命が日常の中で少しずつ活かされていきます。<br><br>'+
  'まずは、'+act48+' その小さな一歩が、宿命を活かし、天命で生きる流れへつながっていきます。';
 }
 
@@ -645,18 +759,19 @@ function buildItemPowerText(shuku,item){
    "鏡":"開運アイテムは「鏡」です。鏡を見るたびに姿勢と表情を整えることが、運の通り道を整える行動になります。",
    "カーテン":"開運アイテムは「カーテン」です。朝に開け、夜に閉めるリズムを丁寧にすると、気持ちの切り替え力が育ちます。",
    "スイッチ":"開運アイテムは「スイッチ」です。オン・オフを意識して切り替えるほど、決断力と集中力の流れが整います。",
-   "ナイトランプ":"開運アイテムは「ナイトランプ」です。夜にやさしい灯りをともすことで、不安がほどけ、安心の流れが育ちます。",
-   "ゴミ箱":"開運アイテムは「ゴミ箱」です。不要なものを手放すたびに、滞っていた運の流れが入れ替わります。",
-   "ティッシュ":"開運アイテムは「すべてを受け止めてくれるティッシュ」です。涙やため息をそっと受け止める動作を丁寧にすると、心の浄化が進みます。",
+   "グラス":"開運アイテムは「グラス」です。グラスは、水を受け取り、必要な分だけ体へ届ける小さな器です。グラスを磨くたびに心の流れも澄み、井宿の循環の力が日常の中で育っていきます。",
+   "ゴミ箱":"開運アイテムは「ゴミ箱」です。今の自分に必要なものを選び直すたびに、滞っていた運の流れが入れ替わります。",
+   "ティッシュ":"開運アイテムは「ティッシュ」です。何気なく手に取るこの小さな存在は、涙も、こぼれた言葉も、日々の小さな汚れも、そっと受け止めてくれます。手に取るたびに『いつも受け止めてくれてありがとう。柳宿の言葉の力を日常で活かします』と感謝を向けることで、当たり前のものを慈しむ心が育ち、あなたの言葉もやさしく整っていきます。",
    "音・BGM":"開運アイテムは「音・BGM」です。今の自分に合う音を選ぶことが、心の波を整える開運行動になります。",
+   "音":"開運アイテムは「音」です。好きな音や心地よい響きに意識を向けることで、表現のエネルギーが整い、あなたの存在感が自然に開いていきます。",
    "SNS":"開運アイテムは「SNS」です。一言でも本音を投稿するたびに、表現運とご縁の流れが開いていきます。",
-   "照明":"開運アイテムは「照明」です。朝夕で光を整えると、思考が澄み、行動の質が上がります。",
+   "デスクライト":"開運アイテムは「デスクライト」です。デスクライトは、未来の光を手元に落とし、ひらめきを今日の形へ育てる道具です。灯りをつけるたびに、翼宿の可能性を現実へ育てる力が整っていきます。",
    "味噌汁":"開運アイテムは「味噌汁」です。体をあたためる習慣が、心身の土台運を整えてくれます。",
    "玄関":"開運アイテムは「玄関」です。靴をそろえ空気を入れ替えるだけで、出会い運と行動運が上がります。",
    "鍵":"開運アイテムは「鍵」です。鍵を丁寧に扱うほど、人生の扉を開くタイミングが整います。",
    "財布":"開運アイテムは「財布」です。レシートを整え感謝して使うほど、金運の循環が安定します。",
    "ベッド":"開運アイテムは「ベッド」です。寝具を整えて眠ることが、回復運と受け取り運を育てます。",
-   "キャンドル":"開運アイテムは「キャンドル」です。短時間でも灯りを見つめると、感情が静まり直感が通りやすくなります。",
+   "マグカップ":"開運アイテムは「マグカップ」です。温かい飲み物を受け取るマグカップは、心の奥にある本音をやさしくほどく日用品です。手に取るたびに、心がゆるみ、今の気持ちを言葉に戻す力が整っていきます。",
    "仕事道具":"開運アイテムは「仕事道具」です。使う前後に整えるほど、仕事運と成果運が高まります。",
    "食器":"開運アイテムは「食器」です。洗う・拭くを丁寧にすることで、暮らし全体の循環運が育ちます。",
    "手帳":"開運アイテムは「手帳」です。予定と気持ちを一行ずつ書くことで、判断の軸が整います。",
@@ -666,23 +781,65 @@ function buildItemPowerText(shuku,item){
    "家":"開運アイテムは「家」です。帰宅時の『ただいま』を丁寧にすると、安心の土台運が深まります。",
    "バスタオル":"開運アイテムは「バスタオル」です。体をやさしく包む習慣が、浄化と回復の流れを整えます。",
    "ミネラルウォーター":"開運アイテムは「ミネラルウォーター」です。意識して飲むたびに、言葉と感性の巡りが澄んでいきます。",
+   "水":"開運アイテムは「水」です。水を口にするたびに、知性と言葉の巡りが澄み、受け取ったものを美しく体系化する力が整います。",
+   "ポット":"開運アイテムは「ポット」です。ポットは、あたたかさを保ち、必要な人へ少しずつ注いでいく道具です。お茶を注ぐたびに、星宿の輝きが場に広がり、人を惹きつけるあたたかな表現力が育っていきます。",
+   "ペン":"開運アイテムは「ペン」です。ペンは、心に浮かんだ思いや大切なご縁を、そっと形に残してくれるお守りです。書くことで、曖昧だった気持ちや関係性が少しずつ整理され、安心して次の一歩を選びやすくなります。",
    "花":"開運アイテムは「花」です。1輪でも飾ることで、場の気がやわらぎ、ご縁運が育ちます。",
    "食べ物":"開運アイテムは「食べ物」です。『いただきます』を丁寧に言うことで、現実運と実り運が安定します。"
  };
  const base=map[item] || (shuku + "の流れに乗るとき、このアイテムが月のエネルギーをあなたへ届けます。毎日丁寧に扱うことで、宿命の扉が静かに開いていきます。");
- return base.replace('{shuku}',shuku);
+ const sd=shukuData[shuku] || {};
+ const altMap={
+   "鏡":"手鏡、スマホの内側カメラ、窓に映る姿など、自分を映すものでも大丈夫です。",
+   "歯ブラシ":"いつも使っている洗面道具や、口元を整えるものでも大丈夫です。",
+   "カーテン":"ブラインド、窓、玄関の扉など、光や空気を入れ替えるものでも大丈夫です。",
+   "スイッチ":"照明のスイッチ、スマホの電源、家電のボタンなど、オンとオフを切り替えるものでも大丈夫です。",
+   "グラス":"湯のみ、コップ、マグカップなど、飲み物を受け取る器でも大丈夫です。",
+   "ゴミ箱":"小さな袋、紙袋、不要なものを一時的に入れる箱でも大丈夫です。",
+   "ティッシュ":"ハンカチ、タオル、キッチンペーパーなど、そっと受け止めるものでも大丈夫です。",
+   "ポット":"急須、やかん、電気ケトル、マグカップなど、あたたかさを注ぐものでも大丈夫です。",
+   "SNS":"スマホのメモ、LINEの下書き、ノートなど、言葉を外へ届ける準備ができるものでも大丈夫です。",
+   "デスクライト":"スタンドライト、読書灯、スマホのライトなど、手元を照らすものでも大丈夫です。",
+   "ペン":"鉛筆、万年筆、スマホのメモなど、言葉を残せるものでも大丈夫です。",
+   "玄関":"部屋の入口、靴箱、バッグを置く場所など、出入りの流れを整える場所でも大丈夫です。",
+   "鍵":"家の鍵、車の鍵、手帳のしおりなど、扉を開く感覚を思い出せるものでも大丈夫です。",
+   "財布":"小銭入れ、カードケース、家計簿、通帳ケースなど、豊かさを管理するものでも大丈夫です。",
+   "ベッド":"布団、枕、ブランケットなど、体を休めるものでも大丈夫です。",
+   "マグカップ":"湯のみ、グラス、カップなど、温かい飲み物を受け取れる器でも大丈夫です。",
+   "仕事道具":"パソコン、スマホ、筆記具、エプロンなど、今の役割を支えている道具でも大丈夫です。",
+   "食器":"お皿、茶碗、箸、スプーンなど、食事を支えるものでも大丈夫です。",
+   "手帳":"カレンダー、ノート、スマホの予定表など、未来を書き留めるものでも大丈夫です。",
+   "服":"ストール、靴、アクセサリーなど、今日の自分を包むものでも大丈夫です。",
+   "空間":"机の上、玄関、棚の一角など、小さな余白を作れる場所でも大丈夫です。",
+   "メガネ":"サングラス、スマホ画面、窓ガラスなど、視界を整えるものでも大丈夫です。",
+   "家":"自分の部屋、よく座る場所、キッチンなど、安心して戻れる場所でも大丈夫です。",
+   "バスタオル":"フェイスタオル、ハンカチ、ブランケットなど、体を包むものでも大丈夫です。",
+   "水":"白湯、お茶、ミネラルウォーターなど、体へ巡りを届ける飲み物でも大丈夫です。",
+   "花":"観葉植物、庭の草花、花柄の小物など、生命の気配を感じるものでも大丈夫です。",
+   "食べ物":"ご飯、お茶、おやつなど、今日の体を支えてくれる食べ物でも大丈夫です。"
+ };
+ const why='<strong>なぜこのアイテム？</strong><br>'+item+'は、'+shuku+'の「'+(sd.core||sd.talent||'天命')+'」を日常の中で思い出させてくれる小さなお守りです。特別なものを用意するより、毎日触れるものを丁寧に扱うことで、運の流れが現実の行動へつながっていきます。';
+ const alt='<strong>家にない場合</strong><br>'+(altMap[item] || '似た役割を持つ日用品で大丈夫です。大切なのは物そのものより、その物に感謝を向け、今の自分の扱い方に気づくことです。');
+ return base.replace('{shuku}',shuku)+'<br><br>'+why+'<br><br>'+alt;
 }
 
 function buildAction48Text(baseText,item){
  const actionMap={
    "歯ブラシ":"48時間以内に、開運アイテム「歯ブラシ」を新しく整えてください。歯みがきを丁寧に行うこと自体が開運アクションです。",
    "鏡":"48時間以内に、鏡を拭いてから自分の目を見て『今日の私で進む』と一言宣言してください。",
+   "グラス":"48時間以内に、グラスをひとつ丁寧に磨き、澄んだ水を注いで『今日の流れを心地よく巡らせます』と心の中で唱えてください。",
    "カーテン":"48時間以内に、朝いちばんにカーテンを開けて3呼吸し、気持ちの切り替えを言葉にしてください。",
    "鍵":"48時間以内に、鍵を拭いて『開きたい扉』を1つ書いてください。",
    "財布":"48時間以内に、財布の中を整えて『今月受け取りたい豊かさ』を1つ書いてください。",
    "ベッド":"48時間以内に、寝具を整えてから眠り、翌朝の気分を一言メモしてください。",
    "SNS":"48時間以内に、今の本音を1行だけ投稿または下書きして、表現の流れを動かしてください。",
-   "食器":"48時間以内に、食器を1つ丁寧に磨き、『今日ありがとう』を声に出してください。"
+   "音":"48時間以内に、心が動く音を1つ選び、その音から受け取った言葉を一文だけ書いてください。",
+   "食器":"48時間以内に、食器を1つ丁寧に磨き、『今日ありがとう』を声に出してください。",
+   "水":"48時間以内に、水を一杯味わいながら、今の自分を前へ進める言葉を一文だけ書いてください。",
+   "ポット":"48時間以内に、ポットであたたかい飲み物を注ぎ、『私の輝きで場をあたためます』と心の中で唱えてください。",
+   "ペン":"48時間以内に、ペンで『大切にしたいご縁』または『整えたい関係』を一文だけ書いてください。書き終えたら、その一文を見ながら深呼吸し、次にできる小さな一歩を決めてください。",
+   "デスクライト":"48時間以内に、デスクライトをつけて手元を照らし、『失敗する可能性も先に見越し、改善したものを今日の形へ育てます』と心の中で唱えてください。終えたらデスクライトを消し、今日の表現をここで一区切りにしてください。",
+   "マグカップ":"48時間以内に、お気に入りのマグカップで温かい飲み物を飲みながら、『今の私の本音』を一文だけ書いてください。"
  };
  if(actionMap[item]) return actionMap[item];
  return baseText.replace('{item}',item);
@@ -710,8 +867,8 @@ function generateReading(){
  const concernHTML=(formQ||formQ2)?
   '<div class="basis-card" style="border-color:rgba(180,120,255,.42);background:rgba(180,120,255,.07);margin-top:16px">'+
   '<p class="basis-label" style="color:#c090ff">✦ ご相談内容</p>'+
-  (formQ?'<div style="margin-bottom:12px"><p style="font-size:11px;color:#c090ff;letter-spacing:.12em;margin:0 0 5px">具体的なお悩みや、今気になっていること</p><p contenteditable="true" class="basis-reason">'+formQ+'</p></div>':'')+
-  (formQ2?'<div><p style="font-size:11px;color:#c090ff;letter-spacing:.12em;margin:0 0 5px">現在の状況について、差し支えない範囲</p><p contenteditable="true" class="basis-reason">'+formQ2+'</p></div>':'')+
+  (formQ?'<div style="margin-bottom:12px"><p style="font-size:11px;color:#c090ff;letter-spacing:.12em;margin:0 0 5px">具体的なお悩みや、今気になっていること</p><p contenteditable="true" data-no-autosave="true" class="basis-reason">'+formQ+'</p></div>':'')+
+  (formQ2?'<div><p style="font-size:11px;color:#c090ff;letter-spacing:.12em;margin:0 0 5px">現在の状況について、差し支えない範囲</p><p contenteditable="true" data-no-autosave="true" class="basis-reason">'+formQ2+'</p></div>':'')+
   '</div>':'';
  const bridgeMsgMap={
   A:nm+'さんの今に、'+shuku+'は静かに寄り添っています。その悩みはきっと、あなたの中にある癒しの力が動き始めているサインです。',
@@ -731,6 +888,7 @@ function generateReading(){
  const act48=buildPersonalAction(baseAct48,shuku,sd,concernTheme);
  const itemPowerText=buildItemPowerText(shuku,sd.item);
  const kanonAdvice=buildKanonAdvice(nm,shuku,sd,t,topKey,concernTheme,formQ,formQ2,focusText,causeText,act48);
+ const concernReflection=buildConcernReflection(nm,shuku,sd,concernTheme,formQ,formQ2);
  const destinyMsg=`${shuku}が宿す「${sd.group}」という才能の種は、あなたの日常の選択の中に静かに宿っています。本来の資質を活かしているとき、人は自然と自分らしくいられます。月の流れとともに今を整えることで、因果の流れが少しずつ動き始める可能性があります。`;
  const lunarStr=(()=>{try{const d=new Date(document.getElementById('birth').value+'T00:00:00'),l=solarToLunar(d);return l.year+'年'+(l.isLeap?'閏':'')+l.month+'月'+l.day+'日'}catch(e){return '—'}})();
  const basisCardHTML='<div class="basis-card">'+
@@ -751,7 +909,7 @@ function generateReading(){
    {title:"今の私を知る",body:"まずは、今の自分の声をやさしく受け取ります。"},
    {title:"月からのメッセージを受け取る",body:"頭で考えすぎていたことを少しゆるめ、必要な言葉を受け取ります。"},
    {title:"感謝とご縁を見つめる",body:"足りないものではなく、すでに支えてくれているものに光を当てます。"},
-   {title:"感情をほどき、手放す",body:"過去の思い込みや不安を、責めずにやさしく整理します。"},
+   {title:"感情を整え、前へ進む",body:"過去の思い込みを見つめ、これから進むための力へ整えます。"},
    {title:"日常の運を整える",body:"身近なアイテムを通して、毎日の小さな開運スイッチを見つけます。"},
    {title:"未来の私から言葉を受け取る",body:"これからの自分に必要な許可と希望を、日記の中に残します。"},
    {title:"第2の鑑定書へつなぐ",body:"7日間の記録が、あなた専用の第2の鑑定書へと育っていきます。"}
@@ -785,13 +943,14 @@ function generateReading(){
    <p style="font-size:14px;color:var(--muted);line-height:2.1;margin:0">全国出版オーディションへのご支援、ありがとうございます。<br>この鑑定書は、あなたへの感謝をこめた、<span style="color:var(--gold2)">月からの贈り物</span>です。</p>
  </div>
  <div style="margin:0 auto 14px;max-width:560px;padding:18px 22px;border:1px solid rgba(241,217,155,.58);border-radius:20px;background:radial-gradient(circle at 50% 0%,rgba(241,217,155,.16),transparent 56%),rgba(241,217,155,.06);box-shadow:0 0 28px rgba(241,217,155,.12),inset 0 0 24px rgba(255,250,242,.04)">
-   <p style="font-size:12px;color:rgba(241,217,155,.86);letter-spacing:.28em;margin:0 0 8px;text-align:center">— ✦ 月読みワンダーランド ✦ —</p>
-   <p class="result-title" style="margin:0">${nm}さんの<br>月の扉｜開運パスポート第1の鑑定書</p>
- </div>
- <div style="margin:0 auto 18px;max-width:620px;padding:16px 22px;border-radius:18px;border:1px solid rgba(241,217,155,.48);background:linear-gradient(160deg,rgba(241,217,155,.12),rgba(255,255,255,.05));text-align:center">
+	   <p style="font-size:12px;color:rgba(241,217,155,.86);letter-spacing:.28em;margin:0 0 8px;text-align:center">— ✦ 月読みワンダーランド ✦ —</p>
+	   <p class="result-title" style="margin:0"><span class="title-kage">お陰様で育つ</span><span class="title-seed">${nm}さんの月の種</span><span class="title-passport">開運パスポート第1の鑑定書</span></p>
+	 </div>
+	 <img src="moon_passport_cover.png" alt="月の扉 開運パスポート表紙" class="cover-image">
+	 <div style="margin:0 auto 18px;max-width:620px;padding:16px 22px;border-radius:18px;border:1px solid rgba(241,217,155,.48);background:linear-gradient(160deg,rgba(241,217,155,.12),rgba(255,255,255,.05));text-align:center">
    <p style="font-size:11px;letter-spacing:.22em;color:var(--gold2);margin:0 0 8px">応援投票ありがとう企画</p>
    <p style="font-size:16px;color:var(--gold2);font-weight:bold;line-height:1.8;margin:0">この鑑定書は、7日間の月読み日記への招待状です。</p>
-   <p style="font-size:13px;color:#ffe6a8;line-height:1.9;margin:10px 0 0;font-weight:bold">【予告】6月15日（月）双子座新月から始まります。<br><span style="color:var(--muted);font-weight:normal">新月は、願いを始めるタイミング。テーマは</span><span style="color:#ffe6a8">コミュニケーション、学び、友情、夫婦関係</span><span style="color:var(--muted);font-weight:normal">などです。</span></p>
+   <p style="font-size:13px;color:#ffe6a8;line-height:1.9;margin:10px 0 0;font-weight:bold">【予告】6月15日（月）双子座新月から扉が開きます。<br><span style="color:var(--muted);font-weight:normal">新月は、願いを始めるタイミング。双子座新月に願いをかけることで、</span><span style="color:#ffe6a8">コミュニケーション、学び、友情、夫婦関係</span><span style="color:var(--muted);font-weight:normal">の流れを整え、願いが叶いやすい流れを育てていきます。</span></p>
    <p style="font-size:13px;color:#ffe6a8;line-height:1.9;margin:8px 0 0;font-weight:bold">7日間コンプリートすると、あなたの記録から<br>「月の扉｜第2の鑑定書」が開きます。</p>
  </div>
  <p style="text-align:center;color:var(--gold2);font-size:14px;letter-spacing:.12em;margin:-4px 0 12px">あなたの中に眠る天命の扉へ</p>
@@ -802,6 +961,7 @@ function generateReading(){
    <span class="badge">月の守り：${sd.item}</span>
  </div>
  ${concernHTML}
+ ${concernReflection?'<div class="harmony-card harmony-bridge" style="margin-top:14px;border-color:rgba(241,217,155,.5);background:linear-gradient(160deg,rgba(241,217,155,.10),rgba(180,120,255,.07))"><span class="level-badge lv-bridge">✦ ご相談内容を受けて</span><p contenteditable="true" data-no-autosave="true" style="margin:8px 0 0;line-height:1.95">'+concernReflection+'</p></div>':''}
  ${bridgeMsg?'<div style="margin:16px 0;padding:16px 20px;border-radius:14px;border-left:3px solid rgba(241,217,155,.55);background:rgba(241,217,155,.05)"><p style="font-size:14px;color:var(--muted);line-height:2;margin:0;font-style:italic">'+bridgeMsg+'</p></div>':''}
  <div class="harmony-card harmony-bridge" style="margin-top:14px">
    <span class="level-badge lv-bridge">✦ いまの現在地（具体）</span>
@@ -840,12 +1000,12 @@ function generateReading(){
        ${nekoSvg}
        <div class="neko-name-tag">にゃんてん<br>月の案内人</div>
      </div>
-     <div class="neko-bubble" contenteditable="true">${nekoMessages[topKey](sd.item,shuku,sd.itemAction)}<div class="neko-phrase">「モノに宿る流れを見てごらん」</div></div>
+     <div class="neko-bubble" contenteditable="true">${nekoMessages[topKey](sd.item,shuku,sd.itemAction)}<div class="neko-promise">「月読み日記7日間チャレンジは、<br>あなたの言葉で鑑定書が育っていく時間だよ。<br>7日間の気づき、ちゃんと月に届けるからね。」</div><div class="neko-phrase">「モノに宿る流れを見てごらん」</div></div>
    </div>
  </div>
  <h3>✦ 月に寄せる 今日の誓い</h3>
  <p contenteditable="true">${t.action}</p>
- ${formQ||formQ2?'<div class="memo-block"><div class="memo-label">✦ あなたのお悩みに寄り添うメモ</div><div class="memo-body" contenteditable="true">'+(formQ?('・いまのお悩み：'+formQ+'<br>'):'')+(formQ2?('・現在の状況：'+formQ2):'')+'</div></div>':''}
+ ${formQ||formQ2?'<div class="memo-block"><div class="memo-label">✦ あなたのお悩みに寄り添うメモ</div><div class="memo-body" contenteditable="true" data-no-autosave="true">'+(formQ?('・いまのお悩み：'+formQ+'<br>'):'')+(formQ2?('・現在の状況：'+formQ2):'')+'</div></div>':''}
  <div class="memo-block">
    <div class="memo-label">✦ かのんからの一言</div>
    <div class="memo-body" contenteditable="true" data-kanon-message="true" data-ph="月の流れから、あなたへ具体的な一歩を…">${kanonAdvice}</div>
@@ -853,7 +1013,7 @@ function generateReading(){
  <div class="cta-block">
    <p class="cta-eyebrow">✦　プレゼント企画第二弾　✦</p>
    <p class="cta-title">月読み日記 7日間チャレンジ</p>
-   <p class="cta-desc">鑑定書を読んで終わりにせず、7日間だけ月と日常アイテムに向き合うことで、今の自分の声と未来の願いを整えていく体験です。</p>
+   <p class="cta-desc">この鑑定書に記された「月の種」は、読んで終わりではなく、日々の小さな行動で開花していきます。7日間だけ、月の流れと日常アイテムに向き合いながら、心の本音をひらき、自分の中に眠る力を少しずつ伸ばし、運気に乗っていく方法を受け取ってください。</p>
    <div style="margin:0 auto 20px;padding:14px 18px;border-radius:16px;border:1px solid rgba(241,217,155,.5);background:rgba(241,217,155,.1);max-width:560px">
      <p style="font-size:16px;color:var(--gold2);font-weight:bold;line-height:1.8;margin:0">7日間の月読み日記をコンプリートすると、<br>あなたの記録から「月の扉｜第2の鑑定書」が開きます。</p>
    </div>
@@ -881,7 +1041,7 @@ function generateReading(){
  <div class="second-report-preview">
    <p class="second-report-preview-label">✦　7日後に開く見本　✦</p>
    <p class="second-report-preview-title">月の扉｜第2の鑑定書</p>
-   <p class="second-report-preview-body">7日間の月読み日記をコンプリートすると、あなたが書いた言葉、写メに残した日常アイテム、感謝や手放しの記録をもとに、今の流れをもう一段深く読み解く鑑定書が開きます。</p>
+   <p class="second-report-preview-body">7日間の月読み日記をコンプリートすると、あなたが書いた言葉、写メに残した日常アイテム、感謝と前進の記録をもとに、今の流れをもう一段深く読み解く鑑定書が開きます。</p>
    <div class="second-report-pages">
      <div class="second-report-page">
        <strong>1. 7日間の記録から見える現在地</strong>
@@ -893,21 +1053,21 @@ function generateReading(){
      </div>
      <div class="second-report-page">
        <strong>3. 次に開く27日の月読みの道</strong>
-       <span>宿曜27宿の巡りへ進むことで、人生の縮図をやさしく整えていきます。</span>
+       <span>宿曜27宿の巡りへ進むことで、人生の縮図をやさしく整えていきます。<br>（こちらは現在、開発中）</span>
      </div>
    </div>
    <p style="font-size:13px;color:var(--gold2);line-height:1.9;text-align:center;margin:16px 0 0">これは、7日間を書き終えた方だけに開く、次の扉です。</p>
  </div>
  <div style="margin:28px 0 0;padding:24px;border-radius:20px;background:rgba(241,217,155,.08);border:1px solid rgba(241,217,155,.3)">
    <h3 style="margin-top:0;font-size:18px">✦ この鑑定書の受け取り方</h3>
-   <p>この鑑定書は、未来を決めるものではありません。<br>月とともに、<strong>今の自分を知るための、静かな羅針盤</strong>です。</p>
-   <p>すべてを一度に理解しなくていい。<br>すべてをすぐに実践しなくていい。</p>
-   <p style="margin-bottom:0">今のあなたに響く言葉だけを、そっと胸に受け取ってください。<br><span style="color:var(--gold2);font-size:14px">月は、いつもあなたのそばにいます。</span></p>
+   <p>この鑑定書は、未来を決めつけるものではなく、<br>月とともに現在地を知り、<strong>人生を味わいながら前へ進むための羅針盤</strong>です。</p>
+   <p>今のあなたに響く言葉から受け取ることで、<br>月の種は日常の中で少しずつ育っていきます。</p>
+   <p style="margin-bottom:0">今のあなたに響く言葉を、今日の一歩へつなげてみてください。<br><span style="color:var(--gold2);font-size:14px">月は、いつもあなたのそばにいます。</span></p>
  </div>
  <div style="margin:40px 0 0;padding:36px 24px;border-radius:22px;background:linear-gradient(160deg,rgba(241,217,155,.09),rgba(180,120,255,.07));border:1px solid rgba(241,217,155,.3);text-align:center">
    <p style="font-size:12px;letter-spacing:.28em;color:var(--gold2);margin:0 0 20px">✦ ✦ ✦</p>
-   <p style="font-size:18px;color:var(--gold2);font-weight:bold;margin:0 0 16px;line-height:1.8">${nm}さんの天命の種は、<br>すでにここに宿っています。</p>
-   <p style="font-size:14px;color:var(--muted);line-height:2.2;margin:0 0 24px">急がなくていい。<br>完璧でなくていい。<br>月とともに、ゆっくりと整えていきましょう。</p>
+   <p style="font-size:18px;color:var(--gold2);font-weight:bold;margin:0 0 16px;line-height:1.8">${nm}さんの天命の種は、<br>すでにあなたに宿っています。</p>
+   <p style="font-size:14px;color:var(--muted);line-height:2.2;margin:0 0 24px">その種は、出会い、支え、日々そばにあるモノたちへの感謝の中で、<br>お陰様で、少しずつ育っていきます。<br><br>響いた言葉を受け取り、今日できる一歩へ。<br>人生を味わいながら、月とともに整え、前へ進んでいきましょう。</p>
    <div style="width:36px;height:1px;background:rgba(241,217,155,.45);margin:0 auto 20px"></div>
    <p style="font-size:14px;color:var(--gold2);margin:0 0 4px;letter-spacing:.14em">みずきかのん</p>
    <p style="font-size:11px;color:var(--muted);letter-spacing:.16em;margin:0">月読み師</p>
@@ -916,7 +1076,12 @@ function generateReading(){
    <p style="font-size:13px;color:var(--muted);line-height:2;margin:0">今回は、全国出版オーディション応援投票への感謝をこめて、<br><span style="color:var(--gold2);font-weight:bold;letter-spacing:.06em">まだ一般公開前の「月読みワンダーランド」へご招待</span>しています。</p>
    <p style="font-size:13px;color:var(--muted);line-height:2;margin:14px 0 0">6月15日から始まる、ふたご座新月の願いとともに、<br><span style="color:var(--gold2);font-weight:bold">7日間の月読み日記チャレンジ</span>へ、ぜひご参加ください。</p>
    <p style="font-size:13px;color:var(--muted);line-height:2;margin:14px 0 0">7日間をコンプリートすると、あなたの記録から<br><span style="font-size:13px;color:var(--gold2);font-weight:bold">第2の鑑定書が開きます。</span><br>ライブ配信も予定しております。<br>お会いできますのを楽しみにしております。</p>
-   <a href="wonderland_gate.html?${forwardParams}" class="cta-join-btn" style="margin-top:24px">7日間の月読み日記を始める</a>
+   <a href="moon_diary_book_修正版.html?${forwardParams}" class="cta-join-btn" style="margin-top:24px">月読み日記7DAYS体験 はじめにを開く</a>
+ </div>
+ <div class="print-note-box">
+   <p class="print-note-title">✦ 月読みメモ ✦</p>
+   <div class="print-note-lines" contenteditable="true" data-no-autosave="true"></div>
+   <p class="print-note-caption">鑑定書を読んで心に残った言葉や、今の気づきを自由にお書きください。</p>
  </div>
 	 `;
 	 setupKanonMessageAutosave(kanonMessageKey);
@@ -935,7 +1100,7 @@ function copyChallenge(typeKey,shuku,item){
    const action=d.action.replace('{item}',item);
    return `【Day ${i+1}】${d.title}\n${action}`;
  }).join('\n\n');
- const text=`✦ 7日間チャレンジ（${shuku} × ${types[typeKey].name}）✦\n\n${lines}\n\n— 月読みワンダーランド 月の扉｜開運パスポート第1の鑑定書より`;
+ const text=`✦ 7日間チャレンジ（${shuku} × ${types[typeKey].name}）✦\n\n${lines}\n\n— 月読みワンダーランド 月の種｜開運パスポート第1の鑑定書より`;
  if(navigator.clipboard){navigator.clipboard.writeText(text).then(()=>alert('コピーしました！SNSやメモ帳に貼り付けてお使いください。'));}
  else{prompt('以下をコピーしてください',text);}
 }
@@ -960,7 +1125,7 @@ let urlQ='', urlQ2='';
 </script>
 <div class="print-frame"></div>
 <div class="print-footer">
-  <span>Shukuyo Astrology ／ 宿曜占星術 月の扉｜開運パスポート第1の鑑定書</span>
+  <span>Shukuyo Astrology ／ 宿曜占星術 月の種｜開運パスポート第1の鑑定書</span>
   <span>みずきかのん　月読み師</span>
 </div>
 </body>
