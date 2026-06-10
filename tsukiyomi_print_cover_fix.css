@@ -69,34 +69,3 @@ align-items: flex-start;{
     object-fit:contain!important;
   }
 }
-@media print {
-  @page {
-    size: A4;
-    margin: 0;
-  }
-
-  html,
-  body {
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-
-  .passport-cover-page {
-    height: 297mm !important;
-    min-height: 297mm !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    display: flex !important;
-    align-items: flex-start !important;
-    justify-content: center !important;
-    overflow: hidden !important;
-  }
-
-  .passport-cover-page .cover-image {
-    max-height: 285mm !important;
-    max-width: 190mm !important;
-    margin: 0 auto !important;
-    display: block !important;
-    object-fit: contain !important;
-  }
-}
