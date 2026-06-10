@@ -4,6 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>月読みワンダーランド 月の種｜開運パスポート第1の鑑定書</title>
+<link rel="stylesheet" href="tsukiyomi_print_cover_fix.css">
 <style>
   :root{
     --bg1:#1b1233; --bg2:#3a235f; --gold:#d8b56d; --gold2:#f1d99b;
@@ -61,6 +62,7 @@
 	  .title-kage{display:block;font-size:.62em;letter-spacing:.26em;color:rgba(241,217,155,.88);margin-bottom:5px;font-weight:600}
 	  .title-seed{display:block;font-size:1.18em;letter-spacing:.08em;font-weight:800;color:#ffe6a8;text-shadow:0 0 22px rgba(241,217,155,.32)}
 	  .title-passport{display:block;font-size:.66em;letter-spacing:.16em;margin-top:8px;color:rgba(255,250,242,.92);font-weight:600}
+	  .passport-cover-page{margin:0 auto 24px;text-align:center}
 	  .cover-image{display:block;width:min(100%,680px);height:auto;margin:20px auto 24px;border-radius:18px;border:1px solid rgba(241,217,155,.42);box-shadow:0 26px 70px rgba(0,0,0,.34)}
 	  .badge{display:inline-block; border:1px solid var(--line); border-radius:999px; padding:4px 14px; color:var(--gold2); margin:4px; font-size:14px;}
   .grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:14px;}
@@ -175,11 +177,12 @@
   /* ── カード背景 ── */
   .hero,.card,.wrap{background:none!important;border:none!important;box-shadow:none!important;backdrop-filter:none!important}
   .wrap::after,.wrap::before,.hero::before,.hero::after,.card::before,.card::after{display:none!important}
-  #resultBody{
-    border-left:0.9pt solid #b89438!important;
-    border-right:0.9pt solid #b89438!important;
-    padding-left:9mm!important;
-    padding-right:9mm!important;
+	  #resultBody{
+	    border-left:0.9pt solid #b89438!important;
+	    border-right:0.9pt solid #b89438!important;
+	    padding-top:0!important;
+	    padding-left:9mm!important;
+	    padding-right:9mm!important;
     color:#1a1410!important;
     background:#fffdf6!important;
     -webkit-print-color-adjust:exact;
@@ -202,12 +205,16 @@
   #resultBody .memo-label{
     color:#7a5010!important;
   }
-  #resultBody::before{
-    content:'✦';
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    height:8.5mm;
+	  #resultBody::before{
+	    content:none!important;
+	    display:none!important;
+	  }
+	  .report-page-start::before{
+	    content:'✦';
+	    display:flex;
+	    align-items:center;
+	    justify-content:center;
+	    height:8.5mm;
     margin:0 -9mm 8mm;
     color:#9b772b;
     font-size:8pt;
@@ -220,9 +227,9 @@
     background-size:100% 1px,100% 1px;
     background-position:center 39%,center 61%;
     background-repeat:no-repeat;
-    -webkit-print-color-adjust:exact;
-    print-color-adjust:exact;
-  }
+	    -webkit-print-color-adjust:exact;
+	    print-color-adjust:exact;
+	  }
   #resultBody::after{
     content:'✦';
     display:flex;
@@ -277,7 +284,30 @@
   #result ul li{border-bottom-color:#d8c89a!important;color:#2a1810!important}
   .level-badge{background:rgba(0,0,0,.05)!important;color:#444!important}
 	  .result-title{font-size:22pt!important;line-height:1.32!important}
-	  .cover-image{max-width:92%!important;margin:10pt auto 14pt!important;border-radius:8pt!important;box-shadow:none!important}
+	  .passport-cover-page{
+	    display:flex!important;
+	    align-items:center!important;
+	    justify-content:center!important;
+	    min-height:270mm!important;
+	    margin:0!important;
+	    padding:0!important;
+	    break-before:auto!important;
+	    page-break-before:auto!important;
+	    break-after:page!important;
+	    page-break-after:always!important;
+	    break-inside:avoid!important;
+	    page-break-inside:avoid!important;
+	  }
+	  .passport-cover-page .cover-image{
+	    width:auto!important;
+	    max-width:190mm!important;
+	    max-height:270mm!important;
+	    height:auto!important;
+	    margin:0 auto!important;
+	    border-radius:8pt!important;
+	    box-shadow:none!important;
+	    object-fit:contain!important;
+	  }
   .title-kage{font-size:12pt!important;letter-spacing:.2em!important;color:#7a5010!important;margin-bottom:3pt!important}
   .title-seed{font-size:27pt!important;letter-spacing:.04em!important;color:#2a1810!important;text-shadow:none!important}
   .title-passport{font-size:12.5pt!important;letter-spacing:.12em!important;color:#7a5010!important;margin-top:5pt!important}
@@ -355,7 +385,7 @@
     page-break-before:avoid!important;
   }
   /* ── ページ区切り ── */
-  .cta-block{page-break-before:auto}
+	  .cta-block{page-break-before:auto}
   h3{page-break-after:avoid}
   .mini,.harmony-card,.basis-card,li{break-inside:avoid}
   /* ── レイアウト ── */
@@ -935,10 +965,13 @@ function generateReading(){
   if(formQ2) out.set('q2',formQ2);
   return out.toString();
  })();
- document.getElementById('resultBody').innerHTML=`
- <div style="text-align:center;margin-bottom:8px">
-   <p style="display:inline-block;padding:6px 18px;border-radius:999px;border:1px solid rgba(241,217,155,.55);background:rgba(241,217,155,.08);color:var(--gold2);font-size:15px;letter-spacing:.2em;margin:0">✦ 月の扉が、今ひらかれました ✦</p>
- </div>
+	 document.getElementById('resultBody').innerHTML=`
+	 <div class="passport-cover-page">
+	   <img src="moon_passport_cover.png" alt="月の扉 開運パスポート表紙" class="cover-image">
+	 </div>
+	 <div class="report-page-start" style="text-align:center;margin-bottom:8px">
+	   <p style="display:inline-block;padding:6px 18px;border-radius:999px;border:1px solid rgba(241,217,155,.55);background:rgba(241,217,155,.08);color:var(--gold2);font-size:15px;letter-spacing:.2em;margin:0">✦ 月の扉が、今ひらかれました ✦</p>
+	 </div>
  <div style="text-align:center;margin:14px 0 22px;padding:16px 24px;border-top:1px solid rgba(241,217,155,.28);border-bottom:1px solid rgba(241,217,155,.28)">
    <p style="font-size:14px;color:var(--muted);line-height:2.1;margin:0">全国出版オーディションへのご支援、ありがとうございます。<br>この鑑定書は、あなたへの感謝をこめた、<span style="color:var(--gold2)">月からの贈り物</span>です。</p>
  </div>
@@ -946,7 +979,6 @@ function generateReading(){
 	   <p style="font-size:12px;color:rgba(241,217,155,.86);letter-spacing:.28em;margin:0 0 8px;text-align:center">— ✦ 月読みワンダーランド ✦ —</p>
 	   <p class="result-title" style="margin:0"><span class="title-kage">お陰様で育つ</span><span class="title-seed">${nm}さんの月の種</span><span class="title-passport">開運パスポート第1の鑑定書</span></p>
 	 </div>
-	 <img src="moon_passport_cover.png" alt="月の扉 開運パスポート表紙" class="cover-image">
 	 <div style="margin:0 auto 18px;max-width:620px;padding:16px 22px;border-radius:18px;border:1px solid rgba(241,217,155,.48);background:linear-gradient(160deg,rgba(241,217,155,.12),rgba(255,255,255,.05));text-align:center">
    <p style="font-size:11px;letter-spacing:.22em;color:var(--gold2);margin:0 0 8px">応援投票ありがとう企画</p>
    <p style="font-size:16px;color:var(--gold2);font-weight:bold;line-height:1.8;margin:0">この鑑定書は、7日間の月読み日記への招待状です。</p>
