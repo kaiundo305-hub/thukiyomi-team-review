@@ -1936,3 +1936,21 @@ a {
     display: none;
   }
 }
+.cover-image{
+  display:block;
+  width:min(100%,680px);
+  height:auto;
+  margin:20px auto 24px;
+  border-radius:18px;
+  border:1px solid rgba(241,217,155,.42);
+  box-shadow:0 26px 70px rgba(0,0,0,.34);
+}
+
+@media print{
+  .cover-image{
+    max-width:92%!important;
+    margin:10pt auto 14pt!important;
+    border-radius:8pt!important;
+    box-shadow:none!important;
+  }
+}
