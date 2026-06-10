@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>月の扉｜開運パスポート第1の鑑定書リスト｜個別鑑定20名抽選用</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Yu Mincho","Hiragino Mincho ProN","Noto Serif JP",serif;background:#f5f0e8;color:#1a1410;font-size:13px}
+.header{background:linear-gradient(135deg,#1a1233,#3a235f);color:#f1d99b;text-align:center;padding:28px 20px;border-bottom:3px solid #c9a84c}
+.header h1{font-size:22px;letter-spacing:.12em;margin-bottom:8px}
+.header p{font-size:13px;opacity:.8;letter-spacing:.08em}
+.summary{display:flex;gap:16px;justify-content:center;padding:16px 20px;background:#fff8e8;border-bottom:1px solid #d8c28d;flex-wrap:wrap}
+.summary-box{background:white;border:1px solid #d8c28d;border-radius:10px;padding:10px 18px;text-align:center;min-width:120px}
+.summary-box .num{font-size:22px;font-weight:bold;color:#6b3fa0}
+.summary-box .lbl{font-size:11px;color:#8a6200;margin-top:2px}
+.container{max-width:1400px;margin:0 auto;padding:16px}
+.table-wrap{overflow-x:auto;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,.12)}
+table{width:100%;border-collapse:collapse;background:white}
+thead tr{background:linear-gradient(135deg,#2a1a42,#4a2878);color:#f1d99b}
+thead th{padding:10px 8px;text-align:left;font-size:11px;letter-spacing:.06em;white-space:nowrap;font-weight:normal}
+tbody tr{border-bottom:1px solid #ede5ce;cursor:pointer;transition:background .15s}
+tbody tr:nth-child(even){background:#fffbf0}
+tbody tr:hover{background:#f5e8ff;box-shadow:inset 3px 0 0 #6b3fa0}
+tbody tr:hover .name{color:#4a2878}
+td{padding:9px 8px;vertical-align:middle;line-height:1.5}
+.no{text-align:center;color:#8a7060;font-size:11px;width:32px}
+.name{font-weight:bold;color:#1a1410;min-width:90px}
+.birth{font-size:11px;color:#555;white-space:nowrap}
+.lunar{font-size:11px;color:#666;white-space:nowrap}
+.shuku{font-weight:bold;color:#4a2878;white-space:nowrap}
+.group-badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:10px;white-space:nowrap}
+.g-癒し{background:#e8f4e8;color:#2a6a3a;border:1px solid #a8d8a8}
+.g-導き{background:#e8e8f8;color:#2a2a7a;border:1px solid #a8a8d8}
+.g-表現{background:#f8e8f0;color:#7a2a5a;border:1px solid #d8a8c8}
+.g-変容{background:#f8f0e8;color:#7a4a1a;border:1px solid #d8c0a0}
+.g-豊かさ循環{background:#f0f8e8;color:#3a6a1a;border:1px solid #b0d890}
+.type-name{font-size:11px;color:#3a2a50;white-space:nowrap}
+.item-tag{display:inline-block;background:#fff8e0;border:1px solid #d4b86a;border-radius:6px;padding:2px 7px;font-size:11px;color:#7a5000;white-space:nowrap}
+.concern{font-size:11px;color:#555}
+.question-preview{font-size:10px;color:#4f463f;line-height:1.45;min-width:160px;max-width:220px}
+.question-preview span{display:block;max-height:3.1em;overflow:hidden}
+.lottery-col{text-align:center;width:60px}
+.lottery-check{width:20px;height:20px;border:1.5px solid #c9a84c;border-radius:4px;margin:0 auto;cursor:pointer}
+.lottery-check:checked{accent-color:#6b3fa0}
+.section-title{font-size:14px;color:#4a2878;font-weight:bold;margin:20px 0 10px;padding-left:12px;border-left:4px solid #c9a84c}
+.type-summary{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.ts-box{background:white;border-radius:10px;padding:10px 14px;border:1px solid #d8c28d;min-width:130px}
+.ts-box .ts-type{font-size:11px;color:#666;margin-bottom:3px}
+.ts-box .ts-num{font-size:18px;font-weight:bold;color:#4a2878}
+.ts-box .ts-bar{height:4px;border-radius:2px;margin-top:5px;background:#e0d0ff}
+.note-col{font-size:10px;color:#888;max-width:80px;line-height:1.4}
+.content-col{min-width:100px}
+.content-tag{display:inline-block;background:#f0eeff;border:1px solid #b8a8e8;border-radius:6px;padding:2px 7px;font-size:11px;color:#3a2a7a;white-space:nowrap}
+.detail-col{text-align:center;width:70px}
+.detail-btn{background:#ede8f8;border:1px solid #b8a0e0;border-radius:8px;color:#4a2878;font-size:11px;padding:5px 9px;cursor:pointer;font-family:inherit;white-space:nowrap;transition:.15s}
+.detail-btn:hover,.detail-btn.open{background:#4a2878;color:white;border-color:#4a2878}
+.detail-row>td{background:#faf7ff;padding:0}
+.detail-inner{padding:12px 18px 12px 24px;border-top:2px solid #d4c4f0;display:flex;flex-direction:column;gap:10px}
+.dq-item{display:flex;gap:12px;align-items:flex-start}
+.dq-label{flex-shrink:0;font-size:10px;font-weight:bold;color:#8a6200;background:#fff8e0;border:1px solid #d4b86a;border-radius:4px;padding:2px 8px;white-space:nowrap;margin-top:2px}
+.dq-text{font-size:13px;color:#1a1410;line-height:1.8}
+.dq-none{color:#bbb;font-style:italic}
+@media print{.detail-btn{display:none!important}.detail-row{display:table-row!important}.detail-inner{border-top:1px solid #e0d0b0}}
+@media print{
+  body{background:white}
+  .header{background:#2a1a42!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .summary{display:none}
+  .type-summary{display:none}
+  .section-title{break-before:avoid}
+  thead tr{background:#2a1a42!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  table{font-size:9pt}
+  td,th{padding:5px 5px!important}
+  @page{size:A4 landscape;margin:10mm}
+  .lottery-panel{display:none}
+}
+/* ── 抽選UI ── */
+.lottery-panel{background:linear-gradient(135deg,#1a1233,#2d1a4a);border:2px solid #c9a84c;border-radius:16px;padding:22px 24px;margin:20px auto;max-width:700px;text-align:center;box-shadow:0 6px 28px rgba(74,40,120,.3)}
+.lottery-panel h2{font-size:17px;color:#f1d99b;margin-bottom:8px;letter-spacing:.1em}
+.lottery-subtitle{font-size:13px;color:#a88fd0;margin-bottom:16px}
+.btn-lottery{background:linear-gradient(135deg,#c9a84c,#f1d99b,#c9a84c);color:#1a1233;border:none;border-radius:999px;padding:15px 42px;font-size:16px;font-weight:bold;cursor:pointer;letter-spacing:.12em;box-shadow:0 4px 18px rgba(201,168,76,.5);font-family:inherit;transition:.2s}
+.btn-lottery:hover{transform:scale(1.04);box-shadow:0 6px 24px rgba(201,168,76,.7)}
+.btn-lottery:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.btn-reset{background:transparent;border:1px solid #c9a84c;border-radius:999px;padding:10px 24px;font-size:13px;cursor:pointer;color:#f1d99b;margin-left:14px;font-family:inherit;transition:.2s}
+.btn-reset:hover{background:rgba(201,168,76,.15)}
+.lottery-status{font-size:13px;color:#a88fd0;margin:10px 0 0;min-height:20px}
+.winner-display{margin-top:18px;padding-top:16px;border-top:1px solid rgba(201,168,76,.35)}
+.winner-count{font-size:26px;font-weight:bold;color:#f1d99b;margin-bottom:10px;text-shadow:0 0 12px rgba(241,217,155,.4)}
+.winner-list{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:8px}
+.winner-chip{background:rgba(201,168,76,.25);color:#f1d99b;border:1px solid rgba(201,168,76,.5);border-radius:999px;padding:5px 16px;font-size:13px}
+tbody tr.winner{background:rgba(201,168,76,.13)!important;outline:2px solid rgba(201,168,76,.6)}
+tbody tr.winner .name{color:#4a2878;font-weight:bold}
+tbody tr.winner .no::before{content:"✦";color:#c9a84c;margin-right:2px}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>月の扉｜開運パスポート第1の鑑定書 ｜ 鑑定結果リスト</h1>
+  <p>個別鑑定20名抽選用｜6月8日発表｜みずきかのん監修</p>
+  <p style="font-size:12px;margin-top:8px;opacity:.65;letter-spacing:.06em">行をクリックすると、その方の月の扉｜開運パスポート第1の鑑定書が新しいタブで開きます</p>
+  <p style="font-size:12px;margin-top:8px;color:#f1d99b;letter-spacing:.06em">各鑑定書の「かのんからの一言」欄には、本命宿・お悩み・宿曜テーマから自動生成した文章が入ります</p>
+</div>
+
+<div class="summary">
+  <div class="summary-box"><div class="num">41</div><div class="lbl">総応募者数</div></div>
+  <div class="summary-box"><div class="num">20</div><div class="lbl">抽選当選予定数</div></div>
+  <div class="summary-box" style="border-color:#a8d8a8"><div class="num" style="color:#2a6a3a">14</div><div class="lbl">癒しの月タイプ</div></div>
+  <div class="summary-box" style="border-color:#a8a8d8"><div class="num" style="color:#2a2a7a">4</div><div class="lbl">導きの月タイプ</div></div>
+  <div class="summary-box" style="border-color:#d8a8c8"><div class="num" style="color:#7a2a5a">6</div><div class="lbl">表現の月タイプ</div></div>
+  <div class="summary-box" style="border-color:#d8c0a0"><div class="num" style="color:#7a4a1a">8</div><div class="lbl">変容の月タイプ</div></div>
+  <div class="summary-box" style="border-color:#b0d890"><div class="num" style="color:#3a6a1a">9</div><div class="lbl">豊かさ循環タイプ</div></div>
+</div>
+
+<div class="lottery-panel">
+  <h2>✦ 個別鑑定60分｜抽選20名 ✦</h2>
+  <p class="lottery-subtitle">6月8日発表｜みずきかのん監修</p>
+  <button class="btn-lottery" id="lotteryBtn" onclick="runLottery()">🌙 抽選スタート</button>
+  <button class="btn-reset" onclick="resetLottery()">リセット</button>
+  <p class="lottery-status" id="lotteryStatus">ボタンを押すと41名からランダムに20名を選びます</p>
+  <div class="winner-display" id="winnerDisplay" style="display:none">
+    <div class="winner-count" id="winnerCount"></div>
+    <div class="winner-list" id="winnerList"></div>
+  </div>
+</div>
+
+<div class="container">
+  <p class="section-title">◈ 応募者一覧（全41名）</p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th class="no">No.</th>
+          <th>お名前</th>
+          <th>生年月日</th>
+          <th>旧暦</th>
+          <th>本命宿</th>
+          <th>天命グループ</th>
+          <th>天命タイプ</th>
+          <th>開運アイテム</th>
+          <th>お悩みテーマ</th>
+          <th class="lottery-col">抽選</th>
+          <th class="detail-col">ご質問</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-name="ちえ" data-birth="1977-02-01"><td class="no">1</td><td class="name">ちえ</td><td class="birth">1977年2月1日</td><td class="lunar">1976年12月14日</td><td class="shuku">柳宿</td><td><span class="group-badge g-癒し">癒し</span></td><td class="type-name">癒しの月タイプ</td><td><span class="item-tag">ティッシュ</span></td><td class="concern">仕事</td><td class="lottery-col"><input type="checkbox" class="lottery-check"></td></tr>
+        <tr data-name="RENA CHEN" data-birth="1996-01-04"><td class="no">2</td><td class="name">RENA CHEN</td><td class="birth">1996年1月4日</td><td class="lunar">1995年11月14日</td><td class="shuku">井宿</td><td><span class="group-badge g-癒し">癒し</span></td><td class="type-name">癒しの月タイプ</td><td><span class="item-tag">ナイトランプ</span></td><td class="concern">仕事・お金</td><td class="lottery-col"><input type="checkbox" class="lottery-check"></td></tr>
+        <tr data-name="福田真弓" data-birth="1966-12-31"><td class="no">3</td><td class="name">福田真弓</td><td class="birth">1966年12月31日</td><td class="lunar">1966年11月20日</td><td class="shuku">軫宿</td><td><span class="group-badge g-癒し">癒し</span></td><td class="type-name">癒しの月タイプ</td><td><span class="item-tag">味噌汁</span></td><td class="concern">仕事</td><td class="lottery-col"><input type="checkbox" class="lottery-check"></td></tr>
+        <tr data-name="宮城あい" data-birth="1985-10-03"><td class="no">4</td><td class="name">宮城あい</td><td class="birth">1985年10月3日</td><td class="lunar">1985年8月19日</td><td class="shuku">觜宿</td><td><span class="group-badge g-変容">変容</span></td><td class="type-name">変容の月タイプ</td><td><span class="item-tag">カーテン</span></td><td class="concern">恋愛・家族・健康</td><td class="lottery-col"><input type="checkbox" class="lottery-check"></td></tr>
+        <tr data-name="青山智美" data-birth="1957-01-25"><td class="no">5</td><td class="name">青山智美</td><td class="birth">1957年1月25日</td><td class="lunar">1956年12月25日</td><td class="shuku">箕宿</td><td><span class="group-badge g-豊かさ循環">豊かさ循環</span></td><td class="type-name">豊かさ循環タイプ</td><td><span class="item-tag">食器</span></td><td class="concern">仕事</td><td class="lottery-col"><input type="checkbox" class="lottery-check"></td></tr>
+        <tr data-name="堀佳子" data-birth="1959-09-29"><td class="no">6</td><td class="name">堀佳子</td><td class="birth">1959年9月29日</td><td class="lunar">1959年8月27日</td><td class="shuku">軫宿</td><td><span class="group-badge g-癒し">癒し</span></td><td class="type-name">癒しの月タイプ</td><td><span class="item-tag">味噌汁</span></td><td class="concern">仕事</td><td class="lottery-col"><input type="checkbox" class="lottery-check"></td></tr>
+        <tr data-name="Takada Emiko" data-birth="1967-09-23"><td class="no">7</td><td class="name">Takada Emiko</td><td class="birth">1967年9月23日</td><td class="lunar">1967年8月20日</td><td class="shuku">参宿</td><td><span class="group-badge g-導き">導き</span></td><td class="type-name">導きの月タイプ</td><td><span class="item-tag">スイッチ</span></td><td class="concern">仕事</td><td class="lottery-col"><input type="checkbox" class="lottery-check"></td></tr>
+        <tr data-name="栗田知佳" data-birth="1959-01-28"><td class="no">8</td><td class="name">栗田知佳</td><td class="birth">1959年1月28日</td><td class="lunar">1958年12月20日</td><td class="shuku">亢宿</td><td><span class="group-badge g-変容">変容</span></td><td class="type-name">変容の月タイプ</td><td><span class="item-tag">鍵</span></td><td class="concern">自分らしさ・生き方</td><td class="lottery-col"><input type="checkbox" class="lottery-check"></td></tr>
+        <tr data-name="" data-birth="1998-12-15"><td class="no">9</td><td class="name">（名前不明）</td><td class="birth">1998年12月15日</td><td class="lunar">1998年10月27日</td><td class="shuku">房宿</td><td><span class="group-badge g-豊かさ循環">豊かさ循環</span></td><td class="type-name">豊かさ循環タイプ</td><td><span class="item-tag">ベッド</span></td><td class="concern">恋愛</td><td class="lottery-col"><input type="checkbox" class="lottery-check"></td></tr>
+        <tr data-name="高田慎一" data-birth="1982-05-26"><td class="no">10</td><td class="name">高田慎一</td><td class="birth">1982年5月26日</td><td class="lunar">1982年閏4月4日</td><td class="shuku">井宿</td><td><span class="group-badge g-癒し">癒し</span></td><td class="type-name">癒しの月タイプ</td><td><span class="item-tag">ナイトランプ</span></td><td class="concern">恋愛</td><td class="lottery-col"><input type="checkbox" class="lottery-check"></td></tr>
+        <tr data-name="yoko" data-birth="1971-01-15"><td class="no">11</td><td class="name">yoko</td><td class="birth">1971年1月15日</td><td class="lunar">1970年12月19日</td><td class="shuku">角宿</td><td><span class="group-badge g-導き">導き</span></td><td class="type-name">導きの月タイプ</td><td><span class="item-tag">玄関</span></td><td class="concern">仕事</td><td class="lottery-col"><input type="checkbox" class="lottery-check"></td></tr>
+        <tr data-name="M.UME" data-birth="1958-07-03"><td class="no">12</td><td class="name">M.UME</td><td class="birth">1958年7月3日</td><td class="lunar">1958年5月17日</td><td class="shuku">女宿</td><td><span class="group-badge g-癒し">癒し</span></td><td class="type-name">癒しの月タイプ</td><td><span class="item-tag">服</span></td><td class="concern">自分らしさ・生き方</td><td class="lottery-col"><input type="checkbox" class="lottery-check"></td></tr>
+        <tr data-name="惠子" data-birth="1978-01-03"><td class="no">13</td><td class="name">惠子</td><td class="birth">1978年1月3日<br><span style="font-size:10px;color:#c00">※生年月日要確認</span></td><td class="lunar">1977年11月24日</td><td class="shuku">房宿</td><td><span class="group-badge g-豊かさ循環">豊かさ循環</span></td><td class="type-name">豊かさ循環タイプ</td><td><span class="item-tag">ベッド</span></td><td class="concern">自分らしさ・生き方</td><td class="lottery-col"><input type="checkbox" class="lottery-check"></td></tr>
+        <tr data-name="" data-birth="1971-01-06"><td class="no">14</td><td class="name">（名前不明）</td><td class="birth">1971年1月6日</td><td class="lunar">1970年12月10日</td><td class="shuku">觜宿</td><td><span class="group-badge g-変容">変容</span></td><td class="type-name">変容の月タイプ</td><td><span class="item-tag">カーテン</span></td><td class="concern">自分らしさ・生き方</td><td class="lottery-col"><input type="checkbox" class="lottery-check"></td></tr>
+        <tr data-name="田中茂治" data-birth="1962-01-07"><td class="no">15</td><td class="name">田中茂治</td><td class="birth">1962年1月7日</td><td class="lunar">1961年12月2日</td><td class="shuku">危宿</td><td><span class="group-badge g-変容">変容</span></td><td class="type-name">変容の月タイプ</td><td><span class="item-tag">メガネ</span></td><td class="concern">お金・その他</td><td class="lottery-col"><input type="checkbox" class="lottery-check"></td></tr>
+        <tr data-name="美波晶子" data-birth="1966-02-04"><td class="no">16</td><td class="name">美波晶子</td><td class="birth">1966年2月4日</td><td class="lunar">1966年1月15日</td><td class="shuku">翼宿</td><td><span class="group-badge g-表現">表現</span></td><td class="type-name">表現の月タイプ</td><td><span class="item-tag">照明</span></td><td class="concern">お金</td><td class="lottery-col"><input type="checkbox" class="lottery-check"></td></tr>
+        <tr data-name="天野美穂" data-birth="1969-09-09"><td class="no">17</td><td class="name">天野美穂</td><td class="birth">1969年9月9日</td><td class="lunar">1969年7月28日</td><td class="shuku">張宿</td><td><span class="group-badge g-表現">表現</span></td><td class="type-name">表現の月タイプ</td><td><span class="item-tag">SNS</span></td><td class="concern">仕事</td><td class="lottery-col"><input type="checkbox" class="lottery-check"></td></tr>
+        <tr data-name="kishunaあっこ" data-birth="1975-04-29"><td class="no">18</td><td class="name">kishunaあっこ</td><td class="birth">1975年4月29日</td><td class="lunar">1975年3月18日</td><td class="shuku">尾宿</td><td><span class="group-badge g-変容">変容</span></td><td class="type-name">変容の月タイプ</td><td><span class="item-tag">仕事道具</span></td><td class="concern">自分らしさ・生き方</td><td class="lottery-col"><input type="checkbox" class="lottery-check"></td></tr>
+        <tr data-name="須黒あゆ子" data-birth="1971-09-20"><td class="no">19</td><td class="name">須黒あゆ子</td><td class="birth">1971年9月20日</td><td class="lunar">1971年8月2日</td><td class="shuku">亢宿</td><td><span class="group-badge g-変容">変容</span></td><td class="type-name">変容の月タイプ</td><td><span class="item-tag">鍵</span></td><td class="concern">自分らしさ・生き方</td><td class="lottery-col"><input type="checkbox" class="lottery-check"></td></tr>
+        <tr data-name="丸山早百合" data-birth="1966-01-14"><td class="no">20</td><td class="name">丸山早百合</td><td class="birth">1966年1月14日</td><td class="lunar">1965年12月23日</td><td class="shuku">心宿</td><td><span class="group-badge g-表現">表現</span></td><td class="type-name">表現の月タイプ</td><td><span class="item-tag">キャンドル</span></td><td class="concern">お金</td><td class="lottery-col"><input type="checkbox" class="lottery-check"></td></tr>
+        <tr data-name="新田道子" data-birth="1969-01-10"><td class="no">21</td><td class="name">新田道子</td><td class="birth">1969年1月10日</td><td class="lunar">1968年11月22日</td><td class="shuku">亢宿</td><td><span class="group-badge g-変容">変容</span></td><td class="type-name">変容の月タイプ</td><td><span class="item-tag">鍵</span></td><td class="concern">仕事</td><td class="lottery-col"><input type="checkbox" class="lottery-check"></td></tr>
+        <tr data-name="古澤真希" data-birth="1987-08-26"><td class="no">22</td><td class="name">古澤真希</td><td class="birth">1987年8月26日</td><td class="lunar">1987年7月3日</td><td class="shuku">軫宿</td><td><span class="group-badge g-癒し">癒し</span></td><td class="type-name">癒しの月タイプ</td><td><span class="item-tag">味噌汁</span></td><td class="concern">お金</td><td class="lottery-col"><input type="checkbox" class="lottery-check"></td></tr>
+        <tr data-name="Ooyama Miyoko" data-birth="1974-12-27"><td class="no">23</td><td class="name">Ooyama Miyoko</td><td class="birth">1974年12月27日</td><td class="lunar">1974年11月14日</td><td class="shuku">井宿</td><td><span class="group-badge g-癒し">癒し</span></td><td class="type-name">癒しの月タイプ</td><td><span class="item-tag">ナイトランプ</span></td><td class="concern">恋愛・仕事</td><td class="lottery-col"><input type="checkbox" class="lottery-check"></td></tr>
+        <tr data-name="AKEMI" data-birth="1962-07-07"><td class="no">24</td><td class="name">AKEMI</td><td class="birth">1962年7月7日</td><td class="lunar">1962年6月6日</td><td class="shuku">軫宿</td><td><span class="group-badge g-癒し">癒し</span></td><td class="type-name">癒しの月タイプ</td><td><span class="item-tag">味噌汁</span></td><td class="concern">お金</td><td class="lottery-col"><input type="checkbox" class="lottery-check"></td></tr>
+        <tr data-name="池原詩乃" data-birth="1969-08-01"><td class="no">25</td><td class="name">池原詩乃</td><td class="birth">1969年8月1日</td><td class="lunar">1969年6月19日</td><td class="shuku">壁宿</td><td><span class="group-badge g-癒し">癒し</span></td><td class="type-name">癒しの月タイプ</td><td><span class="item-tag">バスタオル</span></td><td class="concern">仕事</td><td class="lottery-col"><input type="checkbox" class="lottery-check"></td></tr>
+        <tr data-name="chisako" data-birth="1966-03-22"><td class="no">26</td><td class="name">🌟chisako🌟</td><td class="birth">1966年3月22日</td><td class="lunar">1966年3月1日</td><td class="shuku">胃宿</td><td><span class="group-badge g-豊かさ循環">豊かさ循環</span></td><td class="type-name">豊かさ循環タイプ</td><td><span class="item-tag">食べ物</span></td><td class="concern">お金</td><td class="lottery-col"><input type="checkbox" class="lottery-check"></td></tr>
+        <tr data-name="ひらやままり" data-birth="1974-02-14"><td class="no">27</td><td class="name">ひらやままり</td><td class="birth">1974年2月14日</td><td class="lunar">1974年1月23日</td><td class="shuku">箕宿</td><td><span class="group-badge g-豊かさ循環">豊かさ循環</span></td><td class="type-name">豊かさ循環タイプ</td><td><span class="item-tag">食器</span></td><td class="concern">家族</td><td class="lottery-col"><input type="checkbox" class="lottery-check"></td></tr>
+        <tr data-name="Noriyuki Okamoto" data-birth="1972-03-11"><td class="no">28</td><td class="name">Noriyuki Okamoto</td><td class="birth">1972年3月11日</td><td class="lunar">1972年1月26日</td><td class="shuku">虚宿</td><td><span class="group-badge g-豊かさ循環">豊かさ循環</span></td><td class="type-name">豊かさ循環タイプ</td><td><span class="item-tag">空間</span></td><td class="concern">お金</td><td class="lottery-col"><input type="checkbox" class="lottery-check"></td></tr>
+        <tr data-name="tomomi" data-birth="1977-04-15"><td class="no">29</td><td class="name">tomomi</td><td class="birth">1977年4月15日</td><td class="lunar">1977年2月27日</td><td class="shuku">壁宿</td><td><span class="group-badge g-癒し">癒し</span></td><td class="type-name">癒しの月タイプ</td><td><span class="item-tag">バスタオル</span></td><td class="concern">お金</td><td class="lottery-col"><input type="checkbox" class="lottery-check"></td></tr>
+        <tr data-name="SachikoO" data-birth="1980-01-31"><td class="no">30</td><td class="name">SachikoO</td><td class="birth">1980年1月31日</td><td class="lunar">1979年12月14日</td><td class="shuku">柳宿</td><td><span class="group-badge g-癒し">癒し</span></td><td class="type-name">癒しの月タイプ</td><td><span class="item-tag">ティッシュ</span></td><td class="concern">恋愛</td><td class="lottery-col"><input type="checkbox" class="lottery-check"></td></tr>
+        <tr data-name="" data-birth="1959-02-26"><td class="no">31</td><td class="name">（名前不明）</td><td class="birth">1959年2月26日</td><td class="lunar">1959年1月19日</td><td class="shuku">氐宿</td><td><span class="group-badge g-豊かさ循環">豊かさ循環</span></td><td class="type-name">豊かさ循環タイプ</td><td><span class="item-tag">財布</span></td><td class="concern">健康</td><td class="lottery-col"><input type="checkbox" class="lottery-check"></td></tr>
+        <tr data-name="hides" data-birth="1968-10-17"><td class="no">32</td><td class="name">hides</td><td class="birth">1968年10月17日</td><td class="lunar">1968年8月26日</td><td class="shuku">翼宿</td><td><span class="group-badge g-表現">表現</span></td><td class="type-name">表現の月タイプ</td><td><span class="item-tag">照明</span></td><td class="concern">仕事・お金</td><td class="lottery-col"><input type="checkbox" class="lottery-check"></td></tr>
+        <tr data-name="古屋七重" data-birth="1984-04-21"><td class="no">33</td><td class="name">古屋七重</td><td class="birth">1984年4月21日</td><td class="lunar">1984年3月21日</td><td class="shuku">女宿</td><td><span class="group-badge g-癒し">癒し</span></td><td class="type-name">癒しの月タイプ</td><td><span class="item-tag">服</span></td><td class="concern">お金</td><td class="lottery-col"><input type="checkbox" class="lottery-check"></td></tr>
+        <tr data-name="大貫一恵" data-birth="1957-06-03"><td class="no">34</td><td class="name">大貫一恵</td><td class="birth">1957年6月3日</td><td class="lunar">1957年5月6日</td><td class="shuku">張宿</td><td><span class="group-badge g-表現">表現</span></td><td class="type-name">表現の月タイプ</td><td><span class="item-tag">SNS</span></td><td class="concern">お金</td><td class="lottery-col"><input type="checkbox" class="lottery-check"></td></tr>
+        <tr data-name="朱里" data-birth="1960-01-31"><td class="no">35</td><td class="name">朱里</td><td class="birth">1960年1月31日</td><td class="lunar">1960年1月4日</td><td class="shuku">婁宿</td><td><span class="group-badge g-豊かさ循環">豊かさ循環</span></td><td class="type-name">豊かさ循環タイプ</td><td><span class="item-tag">花</span></td><td class="concern">仕事</td><td class="lottery-col"><input type="checkbox" class="lottery-check"></td></tr>
+        <tr data-name="佐藤ひろこ" data-birth="1978-07-03"><td class="no">36</td><td class="name">佐藤ひろこ</td><td class="birth">1978年7月3日</td><td class="lunar">1978年5月28日</td><td class="shuku">参宿</td><td><span class="group-badge g-導き">導き</span></td><td class="type-name">導きの月タイプ</td><td><span class="item-tag">スイッチ</span></td><td class="concern">仕事</td><td class="lottery-col"><input type="checkbox" class="lottery-check"></td></tr>
+        <tr data-name="齊藤美紀" data-birth="1972-02-11"><td class="no">37</td><td class="name">齊藤美紀</td><td class="birth">1972年2月11日</td><td class="lunar">1971年12月27日</td><td class="shuku">女宿</td><td><span class="group-badge g-癒し">癒し</span></td><td class="type-name">癒しの月タイプ</td><td><span class="item-tag">服</span></td><td class="concern">仕事</td><td class="lottery-col"><input type="checkbox" class="lottery-check"></td></tr>
+        <tr data-name="fumie" data-birth="1971-03-27"><td class="no">38</td><td class="name">fumie</td><td class="birth">1971年3月27日</td><td class="lunar">1971年3月1日</td><td class="shuku">胃宿</td><td><span class="group-badge g-豊かさ循環">豊かさ循環</span></td><td class="type-name">豊かさ循環タイプ</td><td><span class="item-tag">食べ物</span></td><td class="concern">仕事</td><td class="lottery-col"><input type="checkbox" class="lottery-check"></td></tr>
+        <tr data-name="渡辺ゆかり" data-birth="1968-02-05"><td class="no">39</td><td class="name">渡辺ゆかり</td><td class="birth">1968年2月5日</td><td class="lunar">1968年1月7日</td><td class="shuku">畢宿</td><td><span class="group-badge g-表現">表現</span></td><td class="type-name">表現の月タイプ</td><td><span class="item-tag">歯ブラシ</span></td><td class="concern">自分らしさ・生き方</td><td class="lottery-col"><input type="checkbox" class="lottery-check"></td></tr>
+        <tr data-name="川﨑智貴" data-birth="1986-07-29"><td class="no">40</td><td class="name">川﨑智貴</td><td class="birth">1986年7月29日</td><td class="lunar">1986年6月23日</td><td class="shuku">昴宿</td><td><span class="group-badge g-導き">導き</span></td><td class="type-name">導きの月タイプ</td><td><span class="item-tag">鏡</span></td><td class="concern">恋愛</td><td class="lottery-col"><input type="checkbox" class="lottery-check"></td></tr>
+        <tr data-name="徳田英弘" data-birth="1961-07-17"><td class="no">41</td><td class="name">徳田英弘</td><td class="birth">1961年7月17日</td><td class="lunar">1961年6月5日</td><td class="shuku">翼宿</td><td><span class="group-badge g-表現">表現</span></td><td class="type-name">表現の月タイプ</td><td><span class="item-tag">照明</span></td><td class="concern">家族</td><td class="lottery-col"><input type="checkbox" class="lottery-check"></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="section-title" style="margin-top:28px">◈ タイプ別集計</p>
+  <div class="type-summary">
+    <div class="ts-box"><div class="ts-type">癒しの月タイプ</div><div class="ts-num">14名</div><div class="ts-bar" style="background:#a8d8a8;width:100%"></div></div>
+    <div class="ts-box"><div class="ts-type">豊かさ循環タイプ</div><div class="ts-num">9名</div><div class="ts-bar" style="background:#b0d890;width:64%"></div></div>
+    <div class="ts-box"><div class="ts-type">変容の月タイプ</div><div class="ts-num">8名</div><div class="ts-bar" style="background:#d8c0a0;width:57%"></div></div>
+    <div class="ts-box"><div class="ts-type">表現の月タイプ</div><div class="ts-num">6名</div><div class="ts-bar" style="background:#d8a8c8;width:43%"></div></div>
+    <div class="ts-box"><div class="ts-type">導きの月タイプ</div><div class="ts-num">4名</div><div class="ts-bar" style="background:#a8a8d8;width:29%"></div></div>
+  </div>
+
+  <p style="margin-top:20px;font-size:11px;color:#888;text-align:center;padding-bottom:20px">
+    ※ No.13（惠子様）の生年月日は原データが「1378/01/03」のため「1978年1月3日」として計算。要確認。<br>
+    ※ No.9・14・31 はお名前が未記入のため「（名前不明）」としています。<br>
+    ※ 旧暦変換は宿曜占星術の算出方法に基づきます。
+  </p>
+</div>
+<script>
+// ── お客様のご質問データ ──
+var questionData={
+  1:{q:"ライスワークではなくライフワークにシフトチェンジしたいのですが、本当にやりたいことが何なのかわからなくなっています。",q2:"お金を増やしたい、人間関係にも悩んでます。"},
+  2:{q:"今適応障害で休職中です。心地よく生活するには月収50万以上必要と思っていますが、休職前と同じサラリーマンの仕事以外でお金をいただいて生活できるようになりたいと思っており、どうすればいいか悩んでいます。",q2:""},
+  3:{q:"自分の仕事が広がらない",q2:""},
+  4:{q:"今交際中の人（1973年4月28日生まれ）がいるのですが、自分が離婚経験があり、人と一緒に生きていくことにあまり自信がありません。このタイミングで7年片思いしていた人（1981年10月8日生まれ）に好きだと気がついたと言ってもらいました。揺れている時点で、本当に結婚に向いていない気もしますが、私はどちらの人の方が幸せに出来るでしょうか？",q2:""},
+  5:{q:"稼げない。",q2:"スキルアップを目指している"},
+  6:{q:"お仕事の拡大に必要な事",q2:"新しい人に広げていきたい"},
+  7:{q:"自分は整ってきたと思いますが、自分が悩み苦しんできたことを、同じような悩みを抱えた女性が繰り返さずに済むように講座を開催しようと思っていますが、申し込み者なく、方向性があっているのか気になっています。",q2:"仕事の方向性で悩んでいる。"},
+  8:{q:"これからの人との結びつき",q2:"知り合いと何らかのイベントを一緒にやることが増えていきそう。注意すべき点を知りたい。"},
+  9:{q:"独身なので、今後結婚できるのかな？と少しだけ不安です。",q2:"周りが結婚していく中で、なんだか自分1人寂しい気がしています。もちろん、いい人がいれば結婚したいと思っています。自分1人の時間が圧倒的に長いので、自分ひとりで自分の機嫌を取れる方法を増やしていっています。"},
+  10:{q:"（記載なし）",q2:""},
+  11:{q:"使命と思えることを喜びながら仕事にして、自立していきたいです。",q2:"寝食忘れるほどの生きてきた意味を感じた仕事がしたいです。5月より新しいインテリアの仕事にチャレンジしますが、指名と結びつくのか広がるばかりでまとまらないのでは、と不安があります。"},
+  12:{q:"今後の生き方",q2:"3月末で退職し、今後の生き方を模索中"},
+  13:{q:"特に困ったことはないのですが、人生に退屈しています。",q2:"ビジネスにも挑戦してみたけれど、人間関係のストレスで消耗し、ヤル気を失っています。嫉妬されること、ライバル視されることが多く、疲れました。"},
+  14:{q:"昨年は自分探しでだいぶ内省してました（苦笑）",q2:"定年まであと5年、自分で興味のある事を模索中。仕事もきちんと終わりを見据えて後輩育成したり、会社の売上に貢献したいと取組中。恋愛については昨年終止符を打った元カレとは友人関係になり、しばらくは一人で丁寧な暮らしを楽しんでいる最中。"},
+  15:{q:"損害賠償請求の訴訟を起こされました",q2:"知人女性が離婚調停にて正式離婚した直後、元夫から慰謝料請求され、代理弁護士から金沢裁判所の訴訟郵便が届きました。損害賠償請求の裁判は一般に1〜2年かかると言われており、早々に決着をつけて年金生活をゆっくり過ごしたいとのこと。"},
+  16:{q:"クリエイターになって5年。ずっと順調だったが、ここ半年ほど仕事がない状態。年金の繰上げ受給を申請したが額が安くてびっくり。また両親の介護・家族との孤独感・彼氏との将来（結婚願望がない）など複数の悩みあり。",q2:"離婚してひとり暮らし8年半。好きなことを仕事にし、好きな場所に引越し、好きな彼もいて今は幸せだが、何せ収入が不安定。"},
+  17:{q:"3月末に退職して起業に専念する予定だったが、諸事情で6月末まで延長することになりました。同僚の手術のため・人事異動による職場調整役として残ることに。6月末でやめるべきか延長すべきか悩んでいます。",q2:"本格的にフラワーエッセンスや九星気学などの仕事にシフトしたい。"},
+  18:{q:"以前のように活発に動けない、頭が回らない感じが取れないのが悩みです",q2:"来月から転職。他にも継続している仕事はあるが、熱量が出るようなものがない"},
+  19:{q:"半年後に退職することに決めたので、その後の働き方について何かアドバイスがあればお願いします。",q2:"9月末で今の仕事を退職。新しい仕事をすでに始めているがそのことについても相談したい。"},
+  20:{q:"最近リウマチを発症し、仕事は休職中です。肉体的にきつい病棟ナースのお仕事は出来ず、症状が安定するまで転職も難しく、経済的な不安に押しつぶされそうになる時もあります。",q2:""},
+  21:{q:"（記載なし）",q2:""},
+  22:{q:"収入が沢山欲しいです",q2:"借金をずっと返済し続けていましたが、妊娠を機に自己破産を行いました。しっかりお金で困らない生活を楽しみたいです。"},
+  23:{q:"仕事のパートナーが欲しい",q2:"毎日楽しい"},
+  24:{q:"気分が落ち込みがちになる",q2:""},
+  25:{q:"（記載なし）",q2:""},
+  26:{q:"保育教諭の定年を迎えて4月から再雇用になりました。収入が減っています。",q2:"ヒーラーの活動ができていない"},
+  27:{q:"家族円満で仲良しです。今後の健康運など家族の運勢が気になります。息子の今年度の高校受験が今1番の気がかりです。",q2:"家族が増えました。上の子2人は結婚して、長女のお腹に赤ちゃんが授かりました。これからの家族全員の健康と幸福を願っています。"},
+  28:{q:"家族介助のために未経験の職種を希望しているが、年齢・経歴的に求人情報では探すのが困難",q2:"夫婦と子ども共に障害者となり、全員が障害年金受給の非課税世帯となりました"},
+  29:{q:"収入の柱を増やしたい",q2:"副業をいくつかやってみているが、思うように伸びない"},
+  30:{q:"付き合っている人が仕事多忙で会えなくなった。お互い想い合っているのはわかるので、どうしたら良いか。",q2:""},
+  31:{q:"（記載なし）",q2:""},
+  32:{q:"（記載なし）",q2:""},
+  33:{q:"お金を使うことに不安を感じる",q2:"好きなアクセサリー作りを思いっきりやりたいが体力と気力がついていかない"},
+  34:{q:"経済的な安定が欲しい",q2:"経済的なことで発生している身内とのトラブル"},
+  35:{q:"日本から鬱と痴呆を無くすヨガリハビリセンターを開設したい",q2:"ヨガスクールを横浜で36年間続けている。横浜市スポーツセンターにもスタッフを派遣中"},
+  36:{q:"今年自分の転換期を迎えているので、今後の方向性などについてアドバイスをお願いします。",q2:"第三の人生のはじまり。まだ取り組むテーマが定まっていないが、熱量をもって取り組めそうなものを選びたい。"},
+  37:{q:"（記載なし）",q2:""},
+  38:{q:"やりたい事が、なかなか始められない。",q2:"仕事をしたいけど、思い通りに動けない。"},
+  39:{q:"ダブルワーク卒業を早くしたいと思っています。",q2:""},
+  40:{q:"（チャットGPTを活用して自己統合が進んでいます。さらに自己統合、自己愛を深めていきたいと思います。）",q2:""},
+  41:{q:"青春を彷徨っている息子のことが心配",q2:"どちらにも進めない（進路で迷っている様子）"}
+};
+
+// ── 鑑定したい内容データ（フォーム回答 col6より）──
+var contentData={
+  1:"仕事ワンポイント鑑定",
+  2:"仕事ワンポイント鑑定",
+  3:"仕事ワンポイント鑑定",
+  4:"恋愛ワンポイント鑑定",
+  5:"LINE•コミュ専用特典鑑定",
+  6:"60分鑑定（抽選20名）",
+  7:"誕生日から導く「開運アイテムメッセージ」",
+  8:"誕生日から導く「開運アイテムメッセージ」",
+  9:"誕生日から導く「開運アイテムメッセージ」",
+  10:"",
+  11:"誕生日から導く「開運アイテムメッセージ」",
+  12:"仕事ワンポイント鑑定",
+  13:"仕事ワンポイント鑑定",
+  14:"恋愛ワンポイント鑑定",
+  15:"月読みヒーリングコミュ専用特典",
+  16:"誕生日から導く「開運アイテムメッセージ」",
+  17:"LINE•コミュ専用特典鑑定",
+  18:"誕生日から導く「開運アイテムメッセージ」",
+  19:"仕事ワンポイント鑑定",
+  20:"誕生日から導く「開運アイテムメッセージ」",
+  21:"誕生日から導く「開運アイテムメッセージ」",
+  22:"60分鑑定（抽選20名）",
+  23:"誕生日から導く「開運アイテムメッセージ」",
+  24:"仕事ワンポイント鑑定",
+  25:"誕生日から導く「開運アイテムメッセージ」",
+  26:"仕事ワンポイント鑑定",
+  27:"誕生日から導く「開運アイテムメッセージ」",
+  28:"誕生日から導く「開運アイテムメッセージ」",
+  29:"60分鑑定（抽選20名）",
+  30:"恋愛ワンポイント鑑定",
+  31:"誕生日から導く「開運アイテムメッセージ」",
+  32:"7日間ミニ体験ワーク",
+  33:"誕生日から導く「開運アイテムメッセージ」",
+  34:"仕事ワンポイント鑑定",
+  35:"誕生日から導く「開運アイテムメッセージ」",
+  36:"60分鑑定（抽選20名）",
+  37:"誕生日から導く「開運アイテムメッセージ」",
+  38:"仕事ワンポイント鑑定",
+  39:"誕生日から導く「開運アイテムメッセージ」",
+  40:"誕生日から導く「開運アイテムメッセージ」",
+  41:"誕生日から導く「開運アイテムメッセージ」"
+};
+function escHTML(text){
+  return String(text||'').replace(/[&<>"']/g,function(ch){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];
+  });
+}
+function previewText(text){
+  if(!text||text==='（記載なし）') return '<span class="dq-none">—</span>';
+  return '<span>'+escHTML(text)+'</span>';
+}
+// ヘッダーに「鑑定したい内容」列を追加（抽選の前）
+(function(){
+  var headerRow=document.querySelector('thead tr');
+  var lotteryTh=headerRow.querySelector('.lottery-col');
+  var qTh=document.createElement('th');
+  qTh.textContent='K列：具体的なお悩み';
+  headerRow.insertBefore(qTh,lotteryTh);
+  var q2Th=document.createElement('th');
+  q2Th.textContent='L列：現在の状況';
+  headerRow.insertBefore(q2Th,lotteryTh);
+  var th=document.createElement('th');
+  th.textContent='鑑定したい内容';
+  headerRow.insertBefore(th,lotteryTh);
+})();
+
+// ── 行クリック → 鑑定書を開く ──
+document.querySelectorAll('tbody tr[data-birth]').forEach(function(tr){
+  tr.addEventListener('click',function(e){
+    if(e.target.type==='checkbox'||e.target.classList.contains('detail-btn')) return;
+    var name=tr.dataset.name||'';
+    var birth=tr.dataset.birth;
+    if(!birth) return;
+    var noCell2=tr.querySelector('.no');
+    var no2=noCell2?parseInt(noCell2.textContent.trim()):0;
+    var shukuCell=tr.querySelector('.shuku');
+    var concernCell=tr.querySelector('.concern');
+    var shuku=shukuCell?shukuCell.textContent.trim():'';
+    var concern=concernCell?concernCell.textContent.trim():'';
+    var qData=questionData[no2]||{};
+    var qParam=qData.q&&qData.q!=='（記載なし）'?'&q='+encodeURIComponent(qData.q):'';
+    var q2Param=qData.q2?'&q2='+encodeURIComponent(qData.q2):'';
+    var pidParam='&participantId='+encodeURIComponent(String(no2||''));
+    var shukuParam=shuku?'&shuku='+encodeURIComponent(shuku):'';
+    var concernParam=concern?'&concern='+encodeURIComponent(concern):'';
+    window.open('tsukiyomi_moon_seed_diagnosis.html?name='+encodeURIComponent(name)+'&birth='+birth+shukuParam+concernParam+pidParam+qParam+q2Param+'&forceAdvice=1','_blank');
+  });
+
+  // 詳細ボタンと詳細行を動的追加
+  var noCell=tr.querySelector('.no');
+  if(!noCell) return;
+  var no=parseInt(noCell.textContent.trim());
+  var data=questionData[no];
+
+  // K/L列のお悩みを一覧にも表示
+  var qCell=document.createElement('td');
+  qCell.className='question-preview';
+  qCell.innerHTML=data?previewText(data.q):'<span class="dq-none">—</span>';
+  var q2Cell=document.createElement('td');
+  q2Cell.className='question-preview';
+  q2Cell.innerHTML=data?previewText(data.q2):'<span class="dq-none">—</span>';
+  var lotteryTd=tr.querySelector('.lottery-col');
+  tr.insertBefore(qCell,lotteryTd);
+  tr.insertBefore(q2Cell,lotteryTd);
+
+  // 鑑定したい内容セルを挿入（抽選列の前）
+  var cCell=document.createElement('td');
+  cCell.className='content-col';
+  var cText=contentData[no]||'';
+  cCell.innerHTML=cText?'<span class="content-tag">'+cText+'</span>':'<span class="dq-none">—</span>';
+  tr.insertBefore(cCell,lotteryTd);
+
+  // ボタンセルを追加
+  var btnCell=document.createElement('td');
+  btnCell.className='detail-col';
+  btnCell.innerHTML='<button class="detail-btn" onclick="event.stopPropagation();toggleQ(this)">詳細 ▼</button>';
+  tr.appendChild(btnCell);
+
+  // 詳細行を作成
+  if(!data) return;
+  var dtr=document.createElement('tr');
+  dtr.className='detail-row';
+  dtr.style.display='none';
+  var q3Html=contentData[no]?('<div class="dq-item"><span class="dq-label" style="background:#e8f0ff;border-color:#a0b8e8;color:#1a3a7a">鑑定したい内容</span><span class="dq-text">'+contentData[no]+'</span></div>'):'';
+  var qHtml=data.q?('<div class="dq-item"><span class="dq-label" style="white-space:normal;max-width:130px;line-height:1.4">具体的なお悩みや、今気になっていること</span><span class="dq-text">'+data.q+'</span></div>'):'';
+  var q2Html=data.q2?('<div class="dq-item"><span class="dq-label" style="white-space:normal;max-width:130px;line-height:1.4">現在の状況について、差し支えない範囲</span><span class="dq-text">'+data.q2+'</span></div>'):'';
+  dtr.innerHTML='<td colspan="14"><div class="detail-inner">'+q3Html+qHtml+q2Html+'</div></td>';
+  tr.parentNode.insertBefore(dtr,tr.nextSibling);
+});
+
+function toggleQ(btn){
+  var dtr=btn.closest('tr').nextElementSibling;
+  if(dtr&&dtr.classList.contains('detail-row')){
+    var open=dtr.style.display==='none';
+    dtr.style.display=open?'table-row':'none';
+    btn.textContent=open?'詳細 ▲':'詳細 ▼';
+    btn.classList.toggle('open',open);
+  }
+}
+
+// ── ランダム抽選 ──
+function runLottery(){
+  var rows=Array.from(document.querySelectorAll('tbody tr[data-birth]:not(.detail-row)'));
+  // Fisher-Yatesシャッフル
+  for(var i=rows.length-1;i>0;i--){
+    var j=Math.floor(Math.random()*(i+1));
+    var tmp=rows[i]; rows[i]=rows[j]; rows[j]=tmp;
+  }
+  var winners=rows.slice(0,20);
+  // まず全リセット
+  rows.forEach(function(r){
+    r.classList.remove('winner');
+    var cb=r.querySelector('.lottery-check');
+    if(cb) cb.checked=false;
+  });
+  // 当選者をマーク
+  winners.forEach(function(r){
+    r.classList.add('winner');
+    var cb=r.querySelector('.lottery-check');
+    if(cb) cb.checked=true;
+  });
+  // No.順にソートして表示
+  var sorted=winners.slice().sort(function(a,b){
+    var na=parseInt(a.querySelector('.no').textContent)||0;
+    var nb=parseInt(b.querySelector('.no').textContent)||0;
+    return na-nb;
+  });
+  var chips=sorted.map(function(r){
+    var no=r.querySelector('.no').textContent.trim();
+    var name=r.querySelector('.name').textContent.trim();
+    return '<span class="winner-chip">'+no+'. '+name+'</span>';
+  }).join('');
+  document.getElementById('winnerCount').textContent='当選 '+winners.length+' 名 ✦';
+  document.getElementById('winnerList').innerHTML=chips;
+  document.getElementById('winnerDisplay').style.display='block';
+  document.getElementById('lotteryStatus').textContent='✦ 抽選完了！金色ハイライトの行が当選者です。';
+  document.getElementById('lotteryBtn').disabled=true;
+  // 一覧まで自動スクロール
+  document.querySelector('.container').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function resetLottery(){
+  var rows=Array.from(document.querySelectorAll('tbody tr[data-birth]:not(.detail-row)'));
+  rows.forEach(function(r){
+    r.classList.remove('winner');
+    var cb=r.querySelector('.lottery-check');
+    if(cb) cb.checked=false;
+  });
+  document.getElementById('winnerDisplay').style.display='none';
+  document.getElementById('lotteryStatus').textContent='ボタンを押すと41名からランダムに20名を選びます';
+  document.getElementById('lotteryBtn').disabled=false;
+}
+</script>
+</body>
+</html>

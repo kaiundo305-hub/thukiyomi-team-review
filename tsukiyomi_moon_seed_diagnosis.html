@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>月読みワンダーランド 月の扉｜開運パスポート第1の鑑定書</title>
+<style>
+  :root{
+    --bg1:#1b1233; --bg2:#3a235f; --gold:#d8b56d; --gold2:#f1d99b;
+    --white:#fffaf2; --muted:#e5d9ef; --card:rgba(255,255,255,.10);
+    --line:rgba(241,217,155,.45);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
+    color:var(--white); background:
+      radial-gradient(circle at 18% 8%, rgba(132,93,176,.55) 0, transparent 24%),
+      radial-gradient(circle at 82% 18%, rgba(241,217,155,.16) 0, transparent 22%),
+      radial-gradient(circle at 50% 92%, rgba(100,160,220,.14) 0, transparent 28%),
+      linear-gradient(145deg,var(--bg1),var(--bg2));
+    min-height:100vh; line-height:1.8;
+  }
+  .stars:before{content:""; position:fixed; inset:0; pointer-events:none; opacity:.34; background-image:
+    radial-gradient(circle at 7% 16%, rgba(255,255,255,.9) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 22% 72%, rgba(241,217,155,.9) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 41% 28%, rgba(255,255,255,.8) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 63% 84%, rgba(255,255,255,.75) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 79% 35%, rgba(241,217,155,.75) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 94% 66%, rgba(255,255,255,.85) 0 1px, transparent 1.5px);
+    background-size:211px 197px,263px 241px,307px 283px,233px 251px,281px 223px,337px 299px;}
+  .stars:after{content:""; position:fixed; inset:0; pointer-events:none; opacity:.18; background:
+    radial-gradient(circle at 50% 30%, transparent 0 18%, rgba(241,217,155,.22) 18.5%, transparent 19.2%),
+    radial-gradient(circle at 50% 30%, transparent 0 28%, rgba(241,217,155,.12) 28.5%, transparent 29.1%);
+  }
+  .wrap{max-width:860px; margin:auto; padding:28px 18px 60px; position:relative;}
+  .hero,.card{border:1px solid var(--line); background:
+    linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.055)),
+    radial-gradient(circle at 50% 0%, rgba(241,217,155,.12), transparent 42%);
+    border-radius:28px; padding:30px; box-shadow:0 18px 60px rgba(0,0,0,.25), inset 0 0 34px rgba(241,217,155,.06); backdrop-filter: blur(8px); position:relative; overflow:hidden;}
+  .hero:before,.card:before{content:"";position:absolute;inset:12px;border:1px solid rgba(241,217,155,.22);border-radius:22px;pointer-events:none}
+  .hero:after,.card:after{content:"✦";position:absolute;top:14px;right:20px;color:rgba(241,217,155,.58);font-size:18px;letter-spacing:0;text-shadow:0 0 12px rgba(241,217,155,.45);pointer-events:none}
+  .hero{text-align:center; margin-top:18px;}
+  .moon{width:82px;height:82px;border-radius:50%; margin:0 auto 12px; background:radial-gradient(circle at 30% 30%,#fff7d7,#d7b66d 64%,#9c7b3e); box-shadow:0 0 35px rgba(241,217,155,.55)}
+  h1{font-size:clamp(28px,6vw,46px); letter-spacing:.06em; margin:0; color:var(--gold2)}
+  h2{font-size:26px;color:var(--gold2); margin:0 0 14px;}
+  h3{font-size:21px;color:var(--gold2); margin:24px 0 8px;}
+  .sub{font-size:17px; color:var(--muted); margin:10px 0 22px;}
+  .btn{appearance:none; border:0; cursor:pointer; border-radius:999px; padding:14px 26px; font-size:17px; font-family:inherit; color:#271733; background:linear-gradient(90deg,var(--gold2),var(--gold)); box-shadow:0 8px 24px rgba(0,0,0,.22); margin:8px 6px;}
+  .btn.secondary{background:transparent; color:var(--gold2); border:1px solid var(--line);}
+  .hidden{display:none!important}
+  .card{margin-top:20px;}
+  label{display:block; margin:10px 0 6px; color:var(--gold2);}
+  input,select,textarea{width:100%; padding:13px 14px; border-radius:14px; border:1px solid var(--line); background:rgba(255,255,255,.10); color:var(--white); font-size:16px;font-family:inherit;}
+  textarea{min-height:96px;resize:vertical;line-height:1.75}
+  option{color:#222;}
+  .question{padding:18px 0; border-top:1px solid rgba(255,255,255,.12)}
+  .qtitle{font-size:18px; color:var(--gold2); margin-bottom:10px;}
+  .choice{display:block; padding:12px 14px; border:1px solid rgba(241,217,155,.32); border-radius:16px; margin:9px 0; background:rgba(255,255,255,.07); cursor:pointer;}
+  .choice input{width:auto; margin-right:8px;}
+  .result-title{font-size:30px; color:var(--gold2); text-align:center; line-height:1.5;text-shadow:0 0 18px rgba(241,217,155,.22);}
+  .badge{display:inline-block; border:1px solid var(--line); border-radius:999px; padding:4px 14px; color:var(--gold2); margin:4px; font-size:14px;}
+  .grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:14px;}
+  .mini{background:rgba(255,255,255,.07); border:1px solid rgba(241,217,155,.26); border-radius:18px; padding:16px; display:flex; flex-direction:column;}
+  .mini h3{margin:0 0 10px; min-height:2.8em; display:flex; align-items:flex-start; font-size:18px;}
+  .mini p{flex:1; margin:0; line-height:1.85;}
+  .note{font-size:14px;color:#e8def2; opacity:.9;}
+  a{color:var(--gold2)}
+  .balance-row{display:flex;align-items:center;gap:8px;margin:5px 0}
+  .balance-label{min-width:68px;font-size:13px;color:var(--gold2)}
+  .balance-bar{flex:1;height:8px;background:rgba(255,255,255,.15);border-radius:4px;overflow:hidden}
+  .balance-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:4px}
+  .balance-num{font-size:12px;color:var(--muted);min-width:36px;text-align:right}
+  .harmony-card{padding:16px;border-radius:16px;margin:12px 0}
+  .harmony-perfect{background:rgba(241,217,155,.16);border:1px solid rgba(241,217,155,.55)}
+  .harmony-bridge{background:rgba(180,120,255,.11);border:1px solid rgba(180,120,255,.42)}
+  .harmony-transform{background:rgba(100,160,220,.11);border:1px solid rgba(100,160,220,.42)}
+  .level-badge{display:inline-block;padding:3px 12px;border-radius:999px;font-size:12px;margin-bottom:8px}
+  .lv-perfect{background:rgba(241,217,155,.32);color:var(--gold2)}
+  .lv-bridge{background:rgba(180,120,255,.24);color:#d4a0ff}
+  .lv-transform{background:rgba(100,160,220,.24);color:#a0c8f0}
+  .second-copy{font-size:14px;color:var(--muted);margin-top:6px;line-height:1.6}
+  .basis-card{margin:16px 0;padding:16px 18px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(241,217,155,.28)}
+  .basis-label{font-size:11px;letter-spacing:.2em;color:var(--gold2);margin:0 0 10px;opacity:.8}
+  .basis-chain{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:12px;font-size:13px}
+  .basis-step{background:rgba(241,217,155,.14);border:1px solid rgba(241,217,155,.3);border-radius:8px;padding:4px 10px;color:var(--gold2)}
+  .basis-arrow{color:var(--gold2);opacity:.6;font-size:12px}
+  .basis-reason{font-size:14px;color:var(--muted);line-height:1.8;margin:0;border-left:2px solid rgba(241,217,155,.4);padding-left:12px}
+  .neko-card{margin:24px 0 8px;border-radius:22px;overflow:hidden;background:linear-gradient(160deg,#fff9e8,#fef3cc);border:2px solid rgba(241,210,80,.45);box-shadow:0 8px 28px rgba(180,150,60,.18)}
+  .neko-bar{background:linear-gradient(90deg,rgba(241,200,70,.38),rgba(241,217,140,.22));padding:9px 18px;font-size:12px;letter-spacing:.2em;color:#c8960a}
+  .neko-inner{display:flex;gap:14px;padding:16px 18px;align-items:flex-start}
+  .neko-avatar{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:6px}
+  .neko-photo{width:100px;border-radius:14px;object-fit:cover;display:block}
+  .neko-name-tag{font-size:10px;color:#8a6200;text-align:center;line-height:1.5;white-space:nowrap}
+  .neko-bubble{flex:1;background:rgba(255,255,255,.65);border-radius:4px 16px 16px 16px;padding:14px 16px;font-size:14px;line-height:2;color:#3a2800;white-space:pre-line;border:1px solid rgba(241,210,80,.32)}
+  .neko-phrase{margin-top:12px;padding-top:10px;border-top:1px solid rgba(200,150,10,.24);font-size:13px;color:#8a6200;font-weight:bold;letter-spacing:.06em}
+  .challenge-intro{font-size:14px;color:var(--muted);line-height:1.8;margin:6px 0 14px}
+  .challenge-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(196px,1fr));gap:10px}
+  .day-card{background:rgba(255,255,255,.06);border:1px solid rgba(241,217,155,.2);border-radius:16px;padding:14px;position:relative}
+  .day-card.today{background:rgba(241,217,155,.13);border-color:rgba(241,217,155,.52);box-shadow:0 0 18px rgba(241,217,155,.18)}
+  .day-today-badge{display:inline-block;background:rgba(241,217,155,.28);color:var(--gold2);font-size:10px;padding:2px 9px;border-radius:999px;margin-bottom:6px;letter-spacing:.08em}
+  .day-num{font-size:11px;color:var(--gold2);letter-spacing:.18em;margin-bottom:4px;opacity:.8}
+  .day-title{font-size:14px;color:var(--gold2);font-weight:bold;margin-bottom:6px;line-height:1.4}
+  .day-action{font-size:13px;color:var(--muted);line-height:1.75}
+  .copy-btn{appearance:none;border:1px solid var(--line);background:rgba(255,255,255,.08);color:var(--gold2);border-radius:999px;padding:10px 22px;font-size:14px;font-family:inherit;cursor:pointer;margin-top:14px;letter-spacing:.06em}
+  .copy-btn:hover{background:rgba(241,217,155,.15)}
+  .second-report-preview{margin:24px 0 16px;padding:22px 24px;border-radius:20px;background:linear-gradient(160deg,rgba(255,250,242,.12),rgba(241,217,155,.08));border:1px solid rgba(241,217,155,.38);box-shadow:inset 0 0 28px rgba(241,217,155,.06)}
+  .second-report-preview-label{font-size:11px;letter-spacing:.24em;color:var(--gold2);margin:0 0 10px;text-align:center;opacity:.86}
+  .second-report-preview-title{font-size:20px;color:var(--gold2);font-weight:bold;text-align:center;line-height:1.65;margin:0 0 14px}
+  .second-report-preview-body{font-size:14px;color:var(--muted);line-height:2;margin:0 0 16px}
+  .second-report-pages{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:14px}
+  .second-report-page{border:1px solid rgba(241,217,155,.28);border-radius:14px;padding:14px;background:rgba(255,255,255,.06)}
+  .second-report-page strong{display:block;color:var(--gold2);font-size:13px;margin-bottom:6px}
+  .second-report-page span{display:block;color:var(--muted);font-size:12px;line-height:1.75}
+  .live-card{background:rgba(220,80,80,.10);border-color:rgba(220,80,80,.42)!important;box-shadow:0 0 16px rgba(220,80,80,.14)!important}
+  .live-badge{display:inline-block;background:rgba(220,60,60,.85);color:#fff;font-size:10px;font-weight:bold;padding:2px 9px;border-radius:999px;margin-bottom:6px;letter-spacing:.12em}
+  .cta-block{margin:28px 0;border-radius:24px;overflow:hidden;background:linear-gradient(160deg,rgba(241,217,155,.12),rgba(180,120,255,.1));border:1px solid rgba(241,217,155,.4);padding:26px 22px;text-align:center}
+  .cta-eyebrow{font-size:12px;letter-spacing:.22em;color:var(--gold2);margin:0 0 8px;opacity:.8}
+  .cta-title{font-size:22px;color:var(--gold2);font-weight:bold;margin:0 0 10px;letter-spacing:.08em}
+  .cta-desc{font-size:14px;color:var(--muted);line-height:1.9;margin:0 0 18px}
+  .live-schedule{display:flex;justify-content:center;gap:12px;margin:0 0 20px;flex-wrap:wrap}
+  .ls-item{background:rgba(255,255,255,.08);border:1px solid rgba(220,60,60,.35);border-radius:14px;padding:10px 18px;min-width:100px}
+  .ls-day{font-size:16px;font-weight:bold;color:#f08080;margin-bottom:3px}
+  .ls-label{font-size:12px;color:var(--muted)}
+  .cta-join-btn{display:inline-block;background:linear-gradient(90deg,var(--gold2),var(--gold));color:#271733;border-radius:999px;padding:14px 30px;font-size:16px;font-weight:bold;font-family:inherit;text-decoration:none;letter-spacing:.06em;box-shadow:0 8px 24px rgba(0,0,0,.22);cursor:pointer}
+  .cta-note{font-size:12px;color:var(--muted);margin:14px 0 0;opacity:.75}
+  [contenteditable]{outline:none;border-radius:6px;cursor:text;transition:background .15s}
+  [contenteditable]:hover{background:rgba(241,217,155,.10);outline:1px dashed rgba(241,217,155,.4)}
+  [contenteditable]:focus{background:rgba(241,217,155,.15);outline:1px solid rgba(241,217,155,.6)}
+  .edit-hint{font-size:10px;color:var(--muted);text-align:right;opacity:.55;margin:4px 2px 0;letter-spacing:.06em}
+  .memo-block{margin:22px 0;padding:16px 18px;border-radius:16px;border:1px dashed rgba(241,217,155,.42);background:rgba(241,217,155,.06)}
+  .memo-label{font-size:11px;color:var(--gold2);letter-spacing:.14em;margin-bottom:8px}
+  .memo-body{min-height:56px;font-size:14px;color:var(--muted);line-height:1.9;padding:4px 2px}
+  .memo-body:empty:before{content:attr(data-ph);opacity:.4;pointer-events:none;display:block}
+  .print-frame,.print-footer{display:none}
+  #resultBody{border-left:1px solid rgba(241,217,155,.34);border-right:1px solid rgba(241,217,155,.34);padding-left:22px;padding-right:22px}
+  @media print{
+    [contenteditable]:hover,[contenteditable]:focus{background:none!important;outline:none!important}
+    .edit-hint{display:none!important}
+    .memo-block{border:1px solid rgba(201,163,74,.4)!important;background:rgba(201,163,74,.04)!important}
+    .memo-body:empty{display:none}
+  }
+  .lottery-notice{margin:24px 0 8px;padding:18px 22px;border-radius:18px;border:1px solid rgba(241,217,155,.48);background:rgba(241,217,155,.10);text-align:center}
+  .lottery-notice p{margin:5px 0;line-height:1.8}
+  .lottery-title{font-size:16px;color:var(--gold2);font-weight:bold;letter-spacing:.08em;margin-bottom:8px!important}
+@media print{
+  /* ── 印刷時は文章が自然に流れるよう、毎ページ固定枠は使わない ── */
+  .print-frame{
+    display:none!important;
+  }
+  .print-frame::after{
+    display:none!important;
+  }
+  /* ── フッターも毎ページ固定せず、本文の流れを優先 ── */
+  .print-footer{
+    display:none!important;
+  }
+  /* ── 基本設定 ── */
+  body{background:white!important;color:#1a1410!important;font-size:10.5pt!important;line-height:1.58!important}
+  .stars:before,.stars:after{display:none!important}
+  /* ── 非表示 ── */
+  .btn,.copy-btn,.cta-join-btn,.edit-hint{display:none!important}
+  .lottery-notice{display:none!important}
+  .live-badge,.day-today-badge{display:none!important}
+  /* ── カード背景 ── */
+  .hero,.card,.wrap{background:none!important;border:none!important;box-shadow:none!important;backdrop-filter:none!important}
+  .wrap::after,.wrap::before,.hero::before,.hero::after,.card::before,.card::after{display:none!important}
+  #resultBody{
+    border-left:0.9pt solid #b89438!important;
+    border-right:0.9pt solid #b89438!important;
+    padding-left:9mm!important;
+    padding-right:9mm!important;
+    color:#1a1410!important;
+    -webkit-print-color-adjust:exact;
+    print-color-adjust:exact;
+  }
+  #resultBody p,
+  #resultBody li,
+  #resultBody strong,
+  #resultBody [contenteditable="true"],
+  #resultBody .basis-reason,
+  #resultBody .day-action,
+  #resultBody .challenge-intro,
+  #resultBody .cta-desc,
+  #resultBody .cta-note,
+  #resultBody .memo-body{
+    color:#1a1410!important;
+  }
+  #resultBody h3,
+  #resultBody .basis-label,
+  #resultBody .memo-label{
+    color:#7a5010!important;
+  }
+  #resultBody::before{
+    content:'✦';
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    height:8.5mm;
+    margin:0 -9mm 8mm;
+    color:#9b772b;
+    font-size:8pt;
+    letter-spacing:.18em;
+    border-top:1.35pt solid #b89438;
+    border-bottom:0.45pt solid #d7c188;
+    background:
+      linear-gradient(90deg,transparent 0 4mm,rgba(184,148,56,.38) 4mm,rgba(184,148,56,.38) calc(50% - 8mm),transparent calc(50% - 8mm),transparent calc(50% + 8mm),rgba(184,148,56,.38) calc(50% + 8mm),rgba(184,148,56,.38) calc(100% - 4mm),transparent calc(100% - 4mm)),
+      linear-gradient(90deg,transparent 0 8mm,rgba(215,193,136,.28) 8mm,rgba(215,193,136,.28) calc(100% - 8mm),transparent calc(100% - 8mm));
+    background-size:100% 1px,100% 1px;
+    background-position:center 39%,center 61%;
+    background-repeat:no-repeat;
+    -webkit-print-color-adjust:exact;
+    print-color-adjust:exact;
+  }
+  #resultBody::after{
+    content:'✦';
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    height:8mm;
+    margin:8mm -9mm 0;
+    color:#9b772b;
+    font-size:8pt;
+    letter-spacing:.18em;
+    border-top:0.45pt solid #d7c188;
+    border-bottom:1.35pt solid #b89438;
+    background:
+      linear-gradient(90deg,transparent 0 4mm,rgba(184,148,56,.38) 4mm,rgba(184,148,56,.38) calc(50% - 8mm),transparent calc(50% - 8mm),transparent calc(50% + 8mm),rgba(184,148,56,.38) calc(50% + 8mm),rgba(184,148,56,.38) calc(100% - 4mm),transparent calc(100% - 4mm)),
+      linear-gradient(90deg,transparent 0 8mm,rgba(215,193,136,.28) 8mm,rgba(215,193,136,.28) calc(100% - 8mm),transparent calc(100% - 8mm));
+    background-size:100% 1px,100% 1px;
+    background-position:center 39%,center 61%;
+    background-repeat:no-repeat;
+    -webkit-print-color-adjust:exact;
+    print-color-adjust:exact;
+  }
+  .mini{background:rgba(0,0,0,.02)!important;border:1px solid #d8c89a!important}
+  .harmony-card{background:rgba(0,0,0,.02)!important;border:1px solid #c8a87a!important}
+  .basis-card{background:rgba(0,0,0,.02)!important;border:1px solid #d8c89a!important}
+  .neko-card{background:#fffbf0!important;border:1px solid #c8a84b!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .neko-bar{color:#7a5010!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .neko-bubble{background:none!important;color:#2a1810!important;border:none!important;border-radius:0!important}
+  .neko-phrase{color:#7a5010!important;border-top:1px solid #d0c0a0!important}
+  .neko-inner{padding:8px 0!important}
+  .cta-block{background:#fffbf0!important;border:1.5pt solid #c9a84c!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .ls-item{border-color:#c8a84b!important;background:#fffbf0!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .ls-day{color:#7a3030!important}
+  .memo-block{border:1px solid #d0c0a0!important;background:none!important}
+  .memo-body[data-kanon-message="true"]{color:#111!important;font-weight:500!important}
+  .memo-body:empty{display:none}
+  .second-report-preview{background:#fffbf0!important;border:1.5pt solid #c9a84c!important;box-shadow:none!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .second-report-preview-label,.second-report-preview-title{color:#7a5010!important}
+  .second-report-preview-body,.second-report-page span{color:#2a1810!important}
+  .second-report-page{background:#fffdf6!important;border:1px solid #d8c89a!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .second-report-page strong{color:#7a5010!important}
+  /* ── テキスト色 ── */
+  h1,h2,h3{color:#1a1410!important}
+  p,li,span{color:#2a1810!important;line-height:1.58!important}
+  .badge{color:#3a2800!important;border-color:#c8a84b!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .result-title{color:#2a1810!important}
+  .basis-step{color:#3a2800!important;background:rgba(0,0,0,.04)!important}
+  .basis-reason,.basis-label,.basis-arrow,.basis-chain{color:#444!important}
+  .cta-eyebrow{color:#7a5010!important;letter-spacing:.2em!important}
+  .cta-title,.cta-desc,.cta-note,.ls-label{color:#2a1810!important}
+  #result ul li span,#result ul li strong{color:#2a1810!important}
+  #result ul li{border-bottom-color:#d8c89a!important;color:#2a1810!important}
+  .level-badge{background:rgba(0,0,0,.05)!important;color:#444!important}
+  .result-title{font-size:22pt!important;line-height:1.35!important}
+  h3{font-size:13.5pt!important;margin:10pt 0 4pt!important}
+  .grid{gap:6pt!important}
+  .mini{padding:8pt!important}
+  .mini h3{font-size:11pt!important;min-height:auto!important;margin:0 0 4pt!important}
+  .harmony-card{padding:8pt 9pt!important;margin:6pt 0!important}
+  .basis-card{padding:8pt 9pt!important;margin:7pt 0!important}
+  .basis-label{margin-bottom:5pt!important}
+  .basis-chain{gap:3pt!important;margin-bottom:6pt!important;font-size:8.5pt!important}
+  .basis-step{padding:2pt 5pt!important}
+  .memo-block{margin:8pt 0!important;padding:8pt 9pt!important}
+  .memo-body{min-height:34pt!important;line-height:1.55!important}
+  .neko-card{margin:10pt 0 4pt!important}
+  .neko-bar{padding:5pt 9pt!important}
+  .neko-bubble{font-size:9.5pt!important;line-height:1.6!important;padding:6pt 8pt!important}
+  .neko-photo{width:68pt!important}
+  .cta-block{margin:12pt 0!important;padding:12pt 14pt!important;border-radius:12pt!important}
+  .live-schedule{gap:6pt!important;margin-bottom:8pt!important}
+  .ls-item{padding:5pt 9pt!important;min-width:auto!important}
+  .second-report-preview{margin:12pt 0 8pt!important;padding:12pt 14pt!important}
+  .second-report-preview-title{font-size:14pt!important;margin-bottom:6pt!important}
+  .second-report-preview-body{margin-bottom:8pt!important}
+  .second-report-pages{gap:6pt!important;margin-top:8pt!important}
+  .second-report-page{padding:8pt!important}
+  #result ul li{padding:6pt 0!important}
+  #result p,
+  #result li,
+  #result .mini,
+  #result .harmony-card,
+  #result .basis-card,
+  #result .memo-block,
+  #result .neko-card,
+  #result .second-report-preview,
+  #result .second-report-page{
+    break-inside:avoid!important;
+    page-break-inside:avoid!important;
+  }
+  #result p{
+    orphans:3;
+    widows:3;
+  }
+  #result h3,
+  #result .memo-label,
+  #result .basis-label,
+  #result .level-badge{
+    break-after:avoid!important;
+    page-break-after:avoid!important;
+  }
+  /* ── ページ区切り ── */
+  .cta-block{page-break-before:auto}
+  h3{page-break-after:avoid}
+  .mini,.harmony-card,.basis-card,li{break-inside:avoid}
+  /* ── レイアウト ── */
+  .wrap{padding:11mm 13mm 17mm!important;max-width:none!important;margin:0!important}
+  .grid{grid-template-columns:1fr 1fr 1fr!important}
+  @page{size:A4 portrait;margin:6mm}
+}
+</style>
+</head>
+<body class="stars">
+<div class="wrap">
+  <section id="top" class="hero">
+    <div class="moon"></div>
+    <h1>月の扉｜開運パスポート第1の鑑定書</h1>
+    <p class="sub">月とともに、今を整えていく月読み</p>
+    <p>あなたの中に眠る天命の扉へ。<br>生年月日から導く本命宿をもとに、今のあなたに宿る才能の種と因果の流れを読み解きます。<br>未来を決めるものではなく、自分らしい人生の流れを整えるための羅針盤です。</p>
+    <button class="btn" onclick="showSection('form')">開運パスポートをひらく</button>
+  </section>
+
+  <section id="form" class="card hidden">
+    <h2>生年月日を入力してください</h2>
+    <label>お名前</label><input id="name" placeholder="例：かのん" />
+    <label>生年月日</label><input id="birth" type="date" onchange="autoCalcShuku()" />
+    <div id="shukuResult" style="min-height:1.4em;margin:6px 0 2px;font-size:13px;color:var(--gold2)"></div>
+    <label>本命宿（生年月日から自動計算・手動変更も可）</label>
+    <select id="shuku">
+      <option value="">選択してください</option>
+    </select>
+    <label>具体的なお悩みや、今気になっていること</label>
+    <textarea id="concernInput" placeholder="例：仕事の方向性、人間関係、恋愛、お金のことなど"></textarea>
+    <label>現在の状況について、差し支えない範囲で教えてください</label>
+    <textarea id="situationInput" placeholder="例：今どんな状態か、何に迷っているか、どんな流れを整えたいか"></textarea>
+    <button class="btn" onclick="generateReading()">開運パスポートをひらく</button>
+    <button class="btn secondary" onclick="showSection('top')">戻る</button>
+  </section>
+
+  <section id="result" class="card hidden">
+    <div id="resultBody"></div>
+    <button class="btn" onclick="window.print()">結果を印刷する</button>
+    <button class="btn secondary" onclick="restart()">もう一度診断する</button>
+  </section>
+</div>
+<script>
+const shukuList=["昴宿","畢宿","觜宿","参宿","井宿","鬼宿","柳宿","星宿","張宿","翼宿","軫宿","角宿","亢宿","氐宿","房宿","心宿","尾宿","箕宿","斗宿","女宿","虚宿","危宿","室宿","壁宿","奎宿","婁宿","胃宿"];
+const groupToType={"癒し":"A","導き":"B","表現":"C","変容":"D","豊かさ循環":"E"};
+// 旧暦変換データ（1900-2100）
+const lunarMonthStart={1:"室宿",2:"奎宿",3:"胃宿",4:"畢宿",5:"参宿",6:"鬼宿",7:"張宿",8:"角宿",9:"氐宿",10:"心宿",11:"斗宿",12:"虚宿"};
+const lunarInfo=[0x04bd8,0x04ae0,0x0a570,0x054d5,0x0d260,0x0d950,0x16554,0x056a0,0x09ad0,0x055d2,0x04ae0,0x0a5b6,0x0a4d0,0x0d250,0x1d255,0x0b540,0x0d6a0,0x0ada2,0x095b0,0x14977,0x04970,0x0a4b0,0x0b4b5,0x06a50,0x06d40,0x1ab54,0x02b60,0x09570,0x052f2,0x04970,0x06566,0x0d4a0,0x0ea50,0x06e95,0x05ad0,0x02b60,0x186e3,0x092e0,0x1c8d7,0x0c950,0x0d4a0,0x1d8a6,0x0b550,0x056a0,0x1a5b4,0x025d0,0x092d0,0x0d2b2,0x0a950,0x0b557,0x06ca0,0x0b550,0x15355,0x04da0,0x0a5d0,0x14573,0x052d0,0x0a9a8,0x0e950,0x06aa0,0x0aea6,0x0ab50,0x04b60,0x0aae4,0x0a570,0x05260,0x0f263,0x0d950,0x05b57,0x056a0,0x096d0,0x04dd5,0x04ad0,0x0a4d0,0x0d4d4,0x0d250,0x0d558,0x0b540,0x0b6a0,0x195a6,0x095b0,0x049b0,0x0a974,0x0a4b0,0x0b27a,0x06a50,0x06d40,0x0af46,0x0ab60,0x09570,0x04af5,0x04970,0x064b0,0x074a3,0x0ea50,0x06b58,0x055c0,0x0ab60,0x096d5,0x092e0,0x0c960,0x0d954,0x0d4a0,0x0da50,0x07552,0x056a0,0x0abb7,0x025d0,0x092d0,0x0cab5,0x0a950,0x0b4a0,0x0baa4,0x0ad50,0x055d9,0x04ba0,0x0a5b0,0x15176,0x052b0,0x0a930,0x07954,0x06aa0,0x0ad50,0x05b52,0x04b60,0x0a6e6,0x0a4e0,0x0d260,0x0ea65,0x0d530,0x05aa0,0x076a3,0x096d0,0x04afb,0x04ad0,0x0a4d0,0x1d0b6,0x0d250,0x0d520,0x0dd45,0x0b5a0,0x056d0,0x055b2,0x049b0,0x0a577,0x0a4b0,0x0aa50,0x1b255,0x06d20,0x0ada0,0x14b63,0x09370,0x049f8,0x04970,0x064b0,0x168a6,0x0ea50,0x06b20,0x1a6c4,0x0aae0,0x0a2e0,0x0d2e3,0x0c960,0x0d557,0x0d4a0,0x0da50,0x05d55,0x056a0,0x0a6d0,0x055d4,0x052d0,0x0a9b8,0x0a950,0x0b4a0,0x0b6a6,0x0ad50,0x055a0,0x0aba4,0x0a5b0,0x052b0,0x0b273,0x06930,0x07337,0x06aa0,0x0ad50,0x14b55,0x04b60,0x0a570,0x054e4,0x0d160,0x0e968,0x0d520,0x0daa0,0x16aa6,0x056d0,0x04ae0,0x0a9d4,0x0a2d0,0x0d150,0x0f252,0x0d520];
+function lYearDays(y){var s=348;for(var i=0x8000;i>0x8;i>>=1)s+=(lunarInfo[y-1900]&i)?1:0;return s+leapDays(y)}
+function leapMonth(y){return lunarInfo[y-1900]&0xf}
+function leapDays(y){return leapMonth(y)?((lunarInfo[y-1900]&0x10000)?30:29):0}
+function monthDays(y,m){return(lunarInfo[y-1900]&(0x10000>>m))?30:29}
+function solarToLunar(date){var base=new Date(1900,0,31),offset=Math.floor((date-base)/86400000),i,temp=0;for(i=1900;i<2101&&offset>0;i++){temp=lYearDays(i);offset-=temp}if(offset<0){offset+=temp;i--}var year=i,leap=leapMonth(year),isLeap=false,month;for(month=1;month<13&&offset>0;month++){if(leap>0&&month==(leap+1)&&!isLeap){--month;isLeap=true;temp=leapDays(year)}else{temp=monthDays(year,month)}if(isLeap&&month==(leap+1))isLeap=false;offset-=temp}if(offset==0&&leap>0&&month==leap+1){if(isLeap)isLeap=false;else{isLeap=true;--month}}if(offset<0){offset+=temp;--month}return{year:year,month:month,day:offset+1,isLeap:isLeap}}
+function shukuFromLunar(month,day){var start=lunarMonthStart[month],idx=shukuList.indexOf(start);return shukuList[(idx+day-1)%27]}
+function autoCalcShuku(){
+ var birth=document.getElementById('birth').value;
+ if(!birth)return;
+ try{
+   var d=new Date(birth+'T00:00:00'),l=solarToLunar(d),s=shukuFromLunar(l.month,l.day);
+   document.getElementById('shuku').value=s;
+   document.getElementById('shukuResult').textContent='旧暦：'+l.year+'年'+(l.isLeap?'閏':'')+l.month+'月'+l.day+'日 → 本命宿：'+s;
+ }catch(e){document.getElementById('shukuResult').textContent=''}
+}
+const shukuData = {
+ "昴宿":{group:"導き", item:"鏡", itemAction:"鏡を見るとき", essence:"月の鏡の宿命から授かった気品で、人が迷うとき静かに正しい方向を照らし出す宿", reason:"昴宿は七つの星が集まる輝きの宿。多くをひとつに束ね、人の目を引き、方向を示す力を宿曜では「導き」の資質と読みます。"},
+ "畢宿":{group:"表現", item:"歯ブラシ", itemAction:"歯ブラシを使うとき", essence:"一滴の水が長い年月をかけて石を穿つように、日々の丁寧な積み重ねで本物の美しさを磨き上げる宿", reason:"畢宿は丁寧さと持続の宿。積み重ねた美しさを外へ伝える力を持ち、宿曜では「表現」の資質と読みます。"},
+ "觜宿":{group:"変容", item:"カーテン", itemAction:"カーテンを開けるとき・閉めるとき", essence:"夜明けの瞬間に闇と光の境を引くカーテンのように、言葉の力で古い思い込みを新しい夜明けへと切り替える宿", reason:"觜宿は切り替えと洞察の宿。言葉と鋭い観察で古いものを新しい形へ変える力を、宿曜では「変容」の資質と読みます。"},
+ "参宿":{group:"導き", item:"スイッチ", itemAction:"スイッチを入れるとき・切るとき", essence:"長い夜の果てに最初の一歩の炎を灯し、止まった流れに動き出す勇気の引き金を与える宿", reason:"参宿は行動と開拓の宿。最初の一歩を踏み出す力で流れを開く資質を、宿曜では「導き」と読みます。"},
+ "井宿":{group:"癒し", item:"ナイトランプ", itemAction:"ランプを灯すとき・消すとき", essence:"深夜の優しい灯りが孤独を和らげるように、人と人の間に安心の橋をかけ温かな場を満たしていく宿", reason:"井宿は繁栄とつながりの宿。人と人を結び、安心の場を整える力を、宿曜では「癒し」の資質と読みます。"},
+ "鬼宿":{group:"変容", item:"ゴミ箱", itemAction:"ゴミ箱を空にするとき", essence:"満月の引力が海の水を入れ替えるように、魂に積もった不要なものを手放し深い再生へと導く宿", reason:"鬼宿は浄化と再生の宿。不要なものを手放し魂を新たにする力を、宿曜では「変容」の資質と読みます。"},
+ "柳宿":{group:"癒し", item:"ティッシュ", itemAction:"ティッシュを手に取るとき", essence:"川面に映る月が揺れながら波を受け止めるように、人のどんな感情をもそのまま抱きしめ心の水面を静かにほどく宿", reason:"柳宿は感情の受容と共感の宿。深い感情を受け止める力を、宿曜では「癒し」の資質と読みます。"},
+ "星宿":{group:"表現", item:"音・BGM", itemAction:"音楽を流すとき・止めるとき", essence:"夜空でひときわ輝く星が暗闇を照らすように、存在感と美意識という名の光で場全体に生命を吹き込む宿", reason:"星宿は輝きと美意識の宿。存在感で場を照らし出す力を、宿曜では「表現」の資質と読みます。"},
+ "張宿":{group:"表現", item:"SNS", itemAction:"SNSを開くとき・投稿するとき", essence:"月の引力が遠い海を揺り動かすように、その天性の魅力と包容力で見知らぬ心までをも引き寄せ広げていく宿", reason:"張宿は広がりと包容の宿。魅力を外へ届け人の心を惹きつける力を、宿曜では「表現」の資質と読みます。"},
+ "翼宿":{group:"表現", item:"照明", itemAction:"照明をつけるとき・消すとき", essence:"大空を翔る翼が地平の彼方まで届くように、理想と気品という光を高く掲げ世界の端まで照らしていく宿", reason:"翼宿は飛翔と理想の宿。高い品格で最後まで丁寧に届ける力を、宿曜では「表現」の資質と読みます。"},
+ "軫宿":{group:"癒し", item:"味噌汁", itemAction:"味噌汁をつくるとき・口にするとき", essence:"朝露が大地の奥まで染み込むように、気づかれないほど細やかな配慮で人の心と体の根っこから整えていく宿", reason:"軫宿は細やかな配慮と社交の宿。気づきと温かさで心身を整える力を、宿曜では「癒し」の資質と読みます。"},
+ "角宿":{group:"導き", item:"玄関", itemAction:"玄関を出るとき・帰るとき", essence:"東の空に最初の光が差し込む星のように、成長の入口を開き次の世界へと一歩踏み出す勇気を灯す宿", reason:"角宿は始まりと調和の宿。成長の入口を開き人を次へ促す力を、宿曜では「導き」の資質と読みます。"},
+ "亢宿":{group:"変容", item:"鍵", itemAction:"鍵を差し込むとき・開けるとき", essence:"月が欠けながら光を蓄え再び満ちるように、揺るぎない信念を内側に宿し続け、やがて静かに人生の扉を開く宿", reason:"亢宿は信念と変化の宿。強い意志で人生を変容させていく力を、宿曜では「変容」の資質と読みます。"},
+ "氐宿":{group:"豊かさ循環", item:"財布", itemAction:"財布を開くとき・閉じるとき", essence:"大地が季節をかけて作物を育てるように、現実の土台を丁寧に整え豊かさが根付く器を着実に形にしていく宿", reason:"氐宿は調整と土台の宿。現実を整え価値の器を形にする力を、宿曜では「豊かさ循環」の資質と読みます。"},
+ "房宿":{group:"豊かさ循環", item:"ベッド", itemAction:"ベッドに入るとき・起き上がるとき", essence:"満月の夜に安心が満ちるように、受け取る力と温かな居場所を育て人が戻ってこられる器を広げていく宿", reason:"房宿は豊かさと行動力の宿。受け取る力と安心の場を育てる資質を、宿曜では「豊かさ循環」と読みます。"},
+ "心宿":{group:"表現", item:"キャンドル", itemAction:"キャンドルに火を灯すとき・消すとき", essence:"暗闇に揺れるキャンドルの炎が見る人の心を揺らすように、感情の深さと誠実さで人の奥底に届く表現をもたらす宿", reason:"心宿は感情の深みと直感の宿。魂の深さから人を動かす表現力を、宿曜では「表現」の資質と読みます。"},
+ "尾宿":{group:"変容", item:"仕事道具", itemAction:"仕事道具を手に取るとき・片付けるとき", essence:"研ぎ澄まされた刃が迷いなく仕事をするように、強い集中力で自分の役割を磨き上げ本物の力に変えていく宿", reason:"尾宿は集中と磨き上げの宿。役割を深めながら自己を変容させる力を、宿曜では「変容」の資質と読みます。"},
+ "箕宿":{group:"豊かさ循環", item:"食器", itemAction:"食器を手に取るとき・洗うとき", essence:"風に乗る種が思わぬ場所で芽吹くように、自由な生命力で豊かさの流れをあらゆる方向へ軽やかに運んでいく宿", reason:"箕宿は自由と先見の宿。生命力でどこへでも豊かさを運ぶ力を、宿曜では「豊かさ循環」の資質と読みます。"},
+ "斗宿":{group:"導き", item:"手帳", itemAction:"手帳を開くとき・閉じるとき", essence:"夜の海で航海者を迷わせない北極星のように、大きな視野で人生の地図を描き人々が進む方向を示し続ける宿", reason:"斗宿は誠実さと蓄積の宿。大局を見渡し正確に道を示す力を、宿曜では「導き」の資質と読みます。"},
+ "女宿":{group:"癒し", item:"服", itemAction:"服を着るとき・脱ぐとき", essence:"月光がやわらかく全てを包むように、暮らしの細部を整えることで自分と周囲の価値を静かに守り続ける宿", reason:"女宿は奉仕と日常の守りの宿。暮らしを整え人の価値を守る力を、宿曜では「癒し」の資質と読みます。"},
+ "虚宿":{group:"豊かさ循環", item:"空間", itemAction:"部屋の空間を整えるとき", essence:"月と月の間の暗闇が次の輝きを準備するように、余白と沈黙の中から誰も気づかなかった可能性を生み出す深遠な宿", reason:"虚宿は洞察と神秘の宿。余白の中から新たな可能性を生む力を、宿曜では「豊かさ循環」の資質と読みます。"},
+ "危宿":{group:"変容", item:"メガネ", itemAction:"メガネをかけるとき・外すとき", essence:"光の当たる角度が変わると隠れていた宝石が現れるように、視点の転換で人生に潜む真実を新たに映し出す宿", reason:"危宿は革新と独創の宿。視点を変え真実を映し出す力を、宿曜では「変容」の資質と読みます。"},
+ "室宿":{group:"導き", item:"家", itemAction:"家を出るとき・帰るとき", essence:"旅の夜に窓から漏れる灯りが帰り道を照らすように、人が戻れる安心の居場所と揺るぎない土台を守り続ける宿", reason:"室宿は献身と忠実の宿。安心の基盤を守り人が戻れる場をつくる力を、宿曜では「導き」の資質と読みます。"},
+ "壁宿":{group:"癒し", item:"バスタオル", itemAction:"バスタオルで体を包むとき", essence:"満月の月光が海を清め浄化するように、守りと清めの力で人を支え魂に宿る古い疲れを洗い流していく宿", reason:"壁宿は知恵と継承の宿。守りと清めで人を支える力を、宿曜では「癒し」の資質と読みます。"},
+ "奎宿":{group:"表現", item:"ミネラルウォーター", itemAction:"水を口にするとき", essence:"清らかな泉から詩が生まれるように、理想と感動を美しい言葉と形に変えて世界へ届けていく宿", reason:"奎宿は文才と芸術の宿。美しい言葉と感動を伝える力を、宿曜では「表現」の資質と読みます。"},
+ "婁宿":{group:"豊かさ循環", item:"花", itemAction:"花を手にするとき・飾るとき", essence:"月の雫を受けて花が開くように、人を育て喜びの種をまき循環の庭をどこまでも広げていく宿", reason:"婁宿は正義と育みの宿。人を育て喜びの循環を広げる力を、宿曜では「豊かさ循環」の資質と読みます。"},
+ "胃宿":{group:"豊かさ循環", item:"食べ物", itemAction:"食べ物を口にするとき", essence:"大地の恵みが体を満たし力になるように、現実の豊かさを着実に積み上げ人の土台を養い続ける宿", reason:"胃宿は蓄積と安定の宿。現実の豊かさを着実に積み上げる力を、宿曜では「豊かさ循環」の資質と読みます。"}
+};
+const types = {
+ A:{name:"癒しの月タイプ", key:"癒し", copy:"あなたが静かにそこにいるだけで、人の心はほどけていくようです。", destiny:"月が海の波を引き寄せるように、あなたの存在は人の奥底にある痛みをやさしく照らし出す本来の資質を持っています。", tenmei:"誰かの言葉を最後まで抱きしめる時間を持つことで、因果の流れが整いやすくなります。急がず、受け取ることを自分に許すことが、あなたの月の使い道です。", mission:"傷ついた人が再び歩き出すための「月明かりの道」となっていく流れがあるようです。その才能の種は、日常の小さな選択の中に静かに息づいています。", action:"今夜、誰かの話を遮らずに最後まで聴いてみてください。その沈黙の中にこそ、あなたの月の力が宿っています。"},
+ B:{name:"導きの月タイプ", key:"導き", copy:"暗闇の中でも、あなたの目には道筋が見えているようです。", destiny:"嵐の夜の灯台のように、本質を見抜く眼差しという才能の種が宿っています。その流れを整えることで、人の心に寄り添う力が開きやすくなります。", tenmei:"感じた違和感を言葉にしていくことで、因果の流れが動き始めます。判断や助言を求められる場面で、本来の資質が自然に発揮されます。", mission:"人生の地図を描く「星読みの賢者」として、人々が自分の道を選ぶそばで光り続ける流れがあるようです。焦らず、今を整えることから始めてください。", action:"心の中で「おかしい」と感じたことを一文だけ書き留めてください。そこに因果の流れを読む種があります。"},
+ C:{name:"表現の月タイプ", key:"表現", copy:"あなたの言葉は、人の心の奥にある扉をそっとノックする力を持っているようです。", destiny:"月が夜空に姿を変えながら輝き続けるように、感性と表現力という才能の種を本来の資質として持っています。発信を通じて、その流れが整いやすくなります。", tenmei:"言葉を外へ出すことで、願いが叶いやすい流れが動き始めます。感じたことを形にする行為そのものが、あなたの月の使い道です。", mission:"人々の心の奥にある声を代弁する「月の吟遊詩人」として、時を超えた影響力を持つ可能性があります。その種を丁寧に育てていくことが大切です。", action:"感じたことを、たった一行でいいので外に出してください。その一行が、誰かの心の流れを整えるかもしれません。"},
+ D:{name:"変容の月タイプ", key:"変容", copy:"あなたが現れるところに、古い季節の終わりと新しい夜明けの流れがやってくるようです。", destiny:"月が欠けるたびに次の満月の力を蓄えるように、「終わり」を恐れずに月の流れとともに進む本来の資質を持っています。", tenmei:"何かを丁寧に終わらせることで、新しい流れが整いやすくなります。手放しと受け取りの循環が、あなたの月の本質的な使い道です。", mission:"人生の転換点に自然と現れる「変容の月の使者」として、再生の物語を紡いでいく流れがあるようです。自分の変化を静かに受け取ることから始まります。", action:"もう必要のないものを一つだけ手放してください。物でも、習慣でも、思い込みでも。それが月の流れを整える新月の儀式です。"},
+ E:{name:"豊かさ循環タイプ", key:"豊かさ循環", copy:"あなたの手を通ると、止まっていた流れがまた動き始めるようです。", destiny:"潮の満ち引きが海を動かすように、ご縁・物・価値の流れを整える才能の種を本来の資質として持っています。", tenmei:"日々の小さな整えが、願いが叶いやすい流れをつくっていきます。暮らしを丁寧に扱うことそのものが、あなたの月の本質的な使い道です。", mission:"豊かさの循環を地上に根付かせる「月の錬金術師」として、月とともに進む流れがあるようです。まず自分の暮らしを丁寧に整えることから始めてください。", action:"毎日使うものを一つ選び、感謝しながら丁寧に磨いてください。その行為がエネルギーの流れを整えていきます。"}
+};
+const nekoSvg='<img src="neko-tenshi.png" class="neko-photo" alt="かのんねこ天使">';
+
+const nekoMessages={
+ A:(item,shuku,ia)=>`${shuku}の月の流れが、あなたにそっと伝えてくれたことがあるの。\n「${item}」はね、あなたの中にある癒しの才能の種を、静かに育ててくれる守りなんだよ。\n${ia}、まず自分のために感謝の気持ちをそっと添えてみてね。\nあなたが満たされると、周りの流れも自然と整っていくの。\n焦らなくていいよ。月とともに、今を整えていけば大丈夫。`,
+ B:(item,shuku,ia)=>`${shuku}の月の流れを読んでいたら、素敵なことが見えてきたよ。\n「${item}」はね、あなたの本来の資質——道を示す力を整えてくれる存在なの。\n${ia}、ひと呼吸おいて「これでいい」と心の中でつぶやいてみて。\n因果の流れが少しずつ見えやすくなるかもしれないよ。\nあなたの中にある答えを、信じてみてね。`,
+ C:(item,shuku,ia)=>`${shuku}の月が、あなたの才能の種についてこっそり教えてくれたよ。\n「${item}」はね、あなたの感性の流れを整えてくれる大切な守りなの。\n${ia}、「今日も心が動いた瞬間があった」と心の中でそっと思ってみてね。\n表現の流れが少しずつ開いていく可能性があるよ。\nあなたの言葉は、誰かの心の流れを整えるかもしれないから。`,
+ D:(item,shuku,ia)=>`${shuku}の月がね、あなたにやさしいメッセージを持ってきてくれたよ。\n「${item}」は、変容の流れを整えてくれる守りなの。\n${ia}、感謝の気持ちをそっと込めてみてね。\nそのたびに、新しい月の流れが動き始める可能性があるよ。\n焦らなくていい。月とともに、少しずつ整えていけば大丈夫。`,
+ E:(item,shuku,ia)=>`${shuku}の月の流れから、素敵なことが見えてきたよ。\n「${item}」はね、豊かさの因果の流れを整えるスイッチになるかもしれないの。\n${ia}、「受け取っていいんだよ」って自分に伝えてみてね。\n月とともに整えていくと、願いが叶いやすい流れが少しずつ動き始めるよ。`
+};
+
+function getKanonMessageKey(name,birth,shuku){
+ const p=new URLSearchParams(location.search);
+ const personKey=p.get('participantId')||p.get('email')||'';
+ return ['tsukiyomiMoonSeedKanonMessage',personKey,name||'',birth||'',shuku||''].join('::');
+}
+function getDiagnosisEditKey(name,birth,shuku){
+ const p=new URLSearchParams(location.search);
+ const personKey=p.get('participantId')||p.get('email')||'';
+ return ['tsukiyomiMoonSeedFullEdit',personKey,name||'',birth||'',shuku||''].join('::');
+}
+function setupKanonMessageAutosave(storageKey){
+ const el=document.querySelector('[data-kanon-message]');
+ if(!el)return;
+ const saved=localStorage.getItem(storageKey);
+ if(saved!==null && saved.replace(/<br\s*\/?>/gi,'').trim()!=='')el.innerHTML=saved;
+ const save=function(){localStorage.setItem(storageKey,el.innerHTML)};
+ el.addEventListener('input',save);
+ el.addEventListener('blur',save);
+}
+function setupDiagnosisEditAutosave(storageKey){
+ const fields=[...document.querySelectorAll('#resultBody [contenteditable="true"]')];
+ if(!fields.length)return;
+ try{
+   const saved=JSON.parse(localStorage.getItem(storageKey)||'{}');
+   if(saved&&Array.isArray(saved.fields)){
+     fields.forEach(function(el,i){
+       if(typeof saved.fields[i]==='string'){
+         const isEmpty=saved.fields[i].replace(/<br\s*\/?>/gi,'').trim()==='';
+         if(!(el.hasAttribute('data-kanon-message')&&isEmpty))el.innerHTML=saved.fields[i];
+       }
+     });
+   }
+ }catch(e){}
+ const save=function(){
+   const payload={
+     savedAt:new Date().toISOString(),
+     fields:fields.map(function(el){return el.innerHTML;})
+   };
+   localStorage.setItem(storageKey,JSON.stringify(payload));
+ };
+ fields.forEach(function(el){
+   el.addEventListener('input',save);
+   el.addEventListener('blur',save);
+ });
+ save();
+}
+
+const challenges={
+ A:[
+  {title:"癒しの耳を開く",      action:"誰かの話を5分間、遮らずに最後まで聴く。相槌だけでいい。"},
+  {title:"感情のひとことメモ",  action:"今の自分の気持ちを一言で書き留める。正直でいい。"},
+  {title:"開運アイテムへの感謝",action:"{item}を丁寧に拭いて、声に出して「ありがとう」と言う。"},
+  {title:"そっと寄り添う練習",  action:"無理していそうな人のそばに、何も言わずにいる時間を作る。"},
+  {title:"自分への言葉",        action:"鏡を見て「よく頑張ってるね」と声に出して伝える。"},
+  {title:"癒された瞬間を集める",action:"今週、心がほっとした瞬間を3つ書き出す。"},
+  {title:"7日間の振り返り",     action:"「私は癒しの月タイプ」と声に出し、今週起きた変化を一つ書く。"}
+ ],
+ B:[
+  {title:"直感を書き留める",    action:"今日感じた「なんかおかしい」を一文だけ書き留める。"},
+  {title:"一言アドバイスを贈る",action:"迷っている誰かに、アドバイスを一言だけ伝えてみる。"},
+  {title:"開運アイテムと問いかけ",action:"{item}を手に持ち、今一番大切な判断を静かに思い浮かべる。"},
+  {title:"違和感を言葉にする",  action:"「おかしい」と感じていることを紙に書き出す。誰にも見せなくていい。"},
+  {title:"整理のための対話",    action:"難しい判断を誰かに話す。答えをもらうためでなく、整理のため。"},
+  {title:"直感を振り返る",      action:"今週「あの判断は正しかった」と思えた瞬間を一つ書く。"},
+  {title:"7日間の振り返り",     action:"「私の直感は人を助けた」瞬間を思い出し、次に活かしたい場面を書く。"}
+ ],
+ C:[
+  {title:"「心が動いた」を一つ", action:"今日感じた「心が動いた瞬間」を、写真か言葉に一つ残す。"},
+  {title:"一行だけ発信する",    action:"SNSかメモに、自分の言葉を一行だけ書く。完璧でなくていい。"},
+  {title:"開運アイテムから聞く",action:"{item}を見つめ、それが今のあなたに伝えたいことを想像する。"},
+  {title:"具体的な「好き」を伝える",action:"誰かに「あなたの○○が好き」と、具体的に伝える。"},
+  {title:"未来の自分への手紙",  action:"15年後の自分へ、3行だけ手紙を書く。"},
+  {title:"一番好きな表現を選ぶ",action:"今週の発信や言葉の中で、一番好きなものを選んで丸をつける。"},
+  {title:"7日間の振り返り",     action:"「私の言葉は誰かに届く」と声に出し、次に伝えたいことを一つ決める。"}
+ ],
+ D:[
+  {title:"一つだけ手放す",      action:"使わなくなったものを一つだけ手放す。物でも習慣でも思い込みでもいい。"},
+  {title:"終わらせたいことを書く",action:"「終わらせたいこと」を紙に書いて、くるくる丸める。捨てなくていい。"},
+  {title:"開運アイテムに感謝する",action:"{item}に「あなたが来てくれてありがとう」と声に出して伝える。"},
+  {title:"新しい5分を試す",     action:"新しいルーティンを一つだけ試す。5分でいい。"},
+  {title:"変化を書き出す",      action:"変わったこと・変わりたいことを3つ書き出す。"},
+  {title:"始まりを振り返る",    action:"「終わらせたから始まったこと」を一つだけ思い出して書く。"},
+  {title:"7日間の振り返り",     action:"「私は変容の月の使者」と声に出し、次の季節への誓いを一文書く。"}
+ ],
+ E:[
+  {title:"一か所だけ整える",    action:"財布・机・玄関のどこか一か所だけ、丁寧に整える。"},
+  {title:"受け取る宣言",        action:"「受け取っていい」と3回声に出す。朝でも夜でもどこでもOK。"},
+  {title:"開運アイテムを磨く",  action:"{item}を磨きながら、今の暮らしへの感謝を一つ思い浮かべる。"},
+  {title:"感謝を言葉にする",    action:"お金・時間・ご縁、受け取ったものへの感謝を誰かに伝える。"},
+  {title:"豊かさを集める",      action:"「豊かさを感じた瞬間」を3つ書き出す。どんな小さなことでもOK。"},
+  {title:"循環を起こす",        action:"使わなくなったものを誰かに譲る、または感謝して手放す。"},
+  {title:"7日間の振り返り",     action:"「私は豊かさの月の錬金術師」と声に出し、次に循環させたいことを決める。"}
+ ]
+};
+
+function detectTheme(text){
+ const t=(text||"").toLowerCase();
+ if(/恋愛|結婚|パートナー|夫|妻|彼|彼女|愛/.test(text)) return "love";
+ if(/仕事|職場|転職|起業|収入|お金|売上|副業|働/.test(text)) return "work";
+ if(/人間関係|家族|親|子|友人|孤独|関係/.test(text)) return "relation";
+ if(/不安|自信|迷い|しんど|疲れ|落ち込み|焦り/.test(text)) return "mind";
+ return "general";
+}
+
+const concreteFocus={
+ A:{
+   love:"相手に合わせすぎて、本音が後回しになっているサインが出ています。",
+   work:"責任感で抱え込み、休む前に頑張り切ってしまう流れが出ています。",
+   relation:"気を遣いすぎて、優しさが義務に変わる場面が増えています。",
+   mind:"心が疲れていても『大丈夫なふり』で進みやすい時期です。",
+   general:"今は、安心を先に整えるほど流れが戻るタイミングです。"
+ },
+ B:{
+   love:"違和感に気づいているのに、結論を急がず保留している状態です。",
+   work:"判断材料はあるのに、最終決断だけが先延ばしになっています。",
+   relation:"相手の意図を読みすぎて、自分の軸が揺れやすくなっています。",
+   mind:"頭では整理できていても、腹落ちが追いついていない状態です。",
+   general:"答えは外ではなく、すでにあなたの直感の中にあります。"
+ },
+ C:{
+   love:"気持ちはあるのに、伝え方を迷って止まる流れが見えます。",
+   work:"価値はあるのに、発信量の少なさで届き切っていない状態です。",
+   relation:"言いたいことを飲み込み、後で一人で抱えやすい時期です。",
+   mind:"心が動いているのに、言葉にする前に引っ込める癖が出ています。",
+   general:"表現した分だけ、運の流れが現実側で動き始めます。"
+ },
+ D:{
+   love:"終わったはずの感情を抱え、次の関係に進みにくくなっています。",
+   work:"古いやり方を手放せず、新しい挑戦の入口で止まりやすい状態です。",
+   relation:"無理な関係を続けることで、日常のエネルギーが削られています。",
+   mind:"『変わりたい』と『まだ怖い』が同時にある転換点です。",
+   general:"手放しを1つ決めると、次の扉が具体的に開き始めます。"
+ },
+ E:{
+   love:"与える側に偏り、受け取る許可が不足しやすい状態です。",
+   work:"努力は積めているので、次は受け取り方の設計が鍵です。",
+   relation:"支える力は十分。境界線を整えると循環が戻ります。",
+   mind:"不足を見る癖が強く、すでにある豊かさを見逃しやすい時期です。",
+   general:"小さな整えを続けるほど、運とご縁の循環が強まります。"
+ }
+};
+
+const concreteCause={
+ A:"因果の核は『先に自分を満たす許可』です。ここが整うと、対人運が静かに改善します。",
+ B:"因果の核は『違和感を言語化する勇気』です。曖昧さを減らすほど流れが速くなります。",
+ C:"因果の核は『表現の回数』です。質より先に回数を置くと、現実の反応が変わります。",
+ D:"因果の核は『終わらせる決断』です。区切りをつけた瞬間に新しい縁が入りやすくなります。",
+ E:"因果の核は『受け取りの器』です。整えるほど、同じ努力でも成果量が変わってきます。"
+};
+
+const concreteAction48h={
+ love:"48時間以内に『本当はこうされると嬉しい』を1文で書き、信頼できる相手に伝える準備をしてください。",
+ work:"48時間以内に、今の悩みを『やめる・続ける・試す』の3列で3行だけ整理してください。",
+ relation:"48時間以内に、消耗する関係を1つ特定し『今週はここまで』の境界線を1つ決めてください。",
+ mind:"48時間以内に、寝る前1分で『今日よかったこと』を3つ書き、心の土台を回復してください。",
+ general:"48時間以内に、開運アイテム「{item}」を整えながら『今週手放すこと』を1つ決めてください。"
+};
+
+const shukuOracleThemes={
+ "昴宿":"美意識・上質さ","畢宿":"安定・継続・守る力","觜宿":"言葉・知性・丁寧さ","参宿":"好奇心・行動力・情報",
+ "井宿":"循環・広がり・分かち合い","鬼宿":"癒し・安心・共感","柳宿":"情緒・感情解放・やさしさ","星宿":"存在感・自己表現",
+ "張宿":"喜び・華やかさ・拡大","翼宿":"理想・学び・構想","軫宿":"調和・気遣い・人間関係","角宿":"始まり・視野・新しい見方",
+ "亢宿":"誇り・自尊心・社会性","氐宿":"境界線・調整・守り","房宿":"深い魅力・情熱","心宿":"本音・心・情熱",
+ "尾宿":"集中・突破・前進","箕宿":"自由・解放・勢い","斗宿":"器・支える力・大きな視点","女宿":"管理・秩序・整理",
+ "虚宿":"余白・内省・空白","危宿":"変化・危機管理・境界","室宿":"居場所・守護・拠点","壁宿":"境界・内省・守り",
+ "奎宿":"品位・感性・美しいもの","婁宿":"育成・世話・日々のケア","胃宿":"満たす・食べる力・所有"
+};
+
+const kanonThemeAdvice={
+ love:"愛情運は、相手を変えることよりも『自分はどう扱われると安心するのか』を知るところから整います。",
+ work:"仕事運は、今の役割を『何を続け、何を手放し、何を試すか』に小さく分けることで動き始めます。",
+ relation:"人間関係運は、すべての人に合わせることではなく、心が疲れすぎない距離感を決めることで整います。",
+ mind:"心の流れは、頑張りを増やすよりも安心の土台を戻すことで整います。まずは小さな回復を優先してください。",
+ general:"今の流れは、大きく変えるよりも日常の扱い方を一つ整えることで動き始めます。"
+};
+
+function buildPersonalFocus(baseText,shuku,sd,concernTheme){
+ const shukuTheme=shukuOracleThemes[shuku]||sd.group;
+ const themeLead={
+   love:"愛情運の入口では、",
+   work:"仕事や役割の流れでは、",
+   relation:"人間関係の場面では、",
+   mind:"心の整えでは、",
+   general:"今の流れでは、"
+ }[concernTheme]||"今の流れでは、";
+ return themeLead+shuku+'の「'+shukuTheme+'」が少し眠り、'+baseText+' 開運のお守りである「'+sd.item+'」の扱い方にも、その現在地が映りやすくなっています。';
+}
+
+function buildPersonalCause(baseText,shuku,sd){
+ const shukuTheme=shukuOracleThemes[shuku]||sd.group;
+ return baseText+' '+shuku+'は「'+shukuTheme+'」を日常の中で育てる宿です。だからこそ、特別な出来事よりも、毎日触れる「'+sd.item+'」をどう扱うかに、今の因果の流れが表れます。';
+}
+
+function buildPersonalAction(baseText,shuku,sd,concernTheme){
+ const shukuTheme=shukuOracleThemes[shuku]||sd.group;
+ const suffix={
+   love:"その後で『私はどう扱われると安心するか』を一文だけ書いてください。",
+   work:"その後で『今週ひとつだけ形にすること』を一文だけ決めてください。",
+   relation:"その後で『無理なく関われる距離感』を一文だけ決めてください。",
+   mind:"その後で『今日の私を責めない言葉』を一文だけ残してください。",
+   general:"その後で『今週の整えの一歩』を一文だけ残してください。"
+ }[concernTheme]||"その後で『今週の整えの一歩』を一文だけ残してください。";
+ return baseText+' 仕上げに、'+sd.item+'へ「'+shuku+'の'+shukuTheme+'を日常で活かします」と心の中で伝え、'+suffix;
+}
+
+function buildKanonAdvice(name,shuku,sd,typeData,typeKey,concernTheme,formQ,formQ2,focusText,causeText,act48){
+ const shukuTheme=shukuOracleThemes[shuku]||sd.group;
+ const concernLead=kanonThemeAdvice[concernTheme]||kanonThemeAdvice.general;
+ const concernText=(formQ||formQ2)?'ご相談内容を拝見すると、今は答えを急ぐよりも、まず心の流れを整えるタイミングに見えます。':'今は、月の流れと日常の整え方を結び直すタイミングに見えます。';
+ return name+'さんへ。<br>'+
+ '宿曜占星術で見ると、'+shuku+'には「'+shukuTheme+'」という流れが宿っています。これは、'+sd.reason+'<br><br>'+
+ concernText+' '+focusText+'<br><br>'+
+ concernLead+' '+causeText+'<br><br>'+
+ '開運のお守りは「'+sd.item+'」です。日用品はただの物ではなく、今の心の扱い方や運の流れを映す小さな鏡です。'+sd.item+'を丁寧に扱うたびに、'+shuku+'の宿命が日常の中で少しずつ活かされていきます。<br><br>'+
+ 'まずは、'+act48+' その小さな一歩が、宿命を活かし、天命で生きる流れへつながっていきます。';
+}
+
+function buildItemPowerText(shuku,item){
+ const map={
+   "歯ブラシ":"開運アイテムは「歯ブラシ」です。毎日の歯みがきが、気の流れを整える開運行動になります。丁寧に磨くほど、{shuku}の運気が育っていきます。",
+   "鏡":"開運アイテムは「鏡」です。鏡を見るたびに姿勢と表情を整えることが、運の通り道を整える行動になります。",
+   "カーテン":"開運アイテムは「カーテン」です。朝に開け、夜に閉めるリズムを丁寧にすると、気持ちの切り替え力が育ちます。",
+   "スイッチ":"開運アイテムは「スイッチ」です。オン・オフを意識して切り替えるほど、決断力と集中力の流れが整います。",
+   "ナイトランプ":"開運アイテムは「ナイトランプ」です。夜にやさしい灯りをともすことで、不安がほどけ、安心の流れが育ちます。",
+   "ゴミ箱":"開運アイテムは「ゴミ箱」です。不要なものを手放すたびに、滞っていた運の流れが入れ替わります。",
+   "ティッシュ":"開運アイテムは「すべてを受け止めてくれるティッシュ」です。涙やため息をそっと受け止める動作を丁寧にすると、心の浄化が進みます。",
+   "音・BGM":"開運アイテムは「音・BGM」です。今の自分に合う音を選ぶことが、心の波を整える開運行動になります。",
+   "SNS":"開運アイテムは「SNS」です。一言でも本音を投稿するたびに、表現運とご縁の流れが開いていきます。",
+   "照明":"開運アイテムは「照明」です。朝夕で光を整えると、思考が澄み、行動の質が上がります。",
+   "味噌汁":"開運アイテムは「味噌汁」です。体をあたためる習慣が、心身の土台運を整えてくれます。",
+   "玄関":"開運アイテムは「玄関」です。靴をそろえ空気を入れ替えるだけで、出会い運と行動運が上がります。",
+   "鍵":"開運アイテムは「鍵」です。鍵を丁寧に扱うほど、人生の扉を開くタイミングが整います。",
+   "財布":"開運アイテムは「財布」です。レシートを整え感謝して使うほど、金運の循環が安定します。",
+   "ベッド":"開運アイテムは「ベッド」です。寝具を整えて眠ることが、回復運と受け取り運を育てます。",
+   "キャンドル":"開運アイテムは「キャンドル」です。短時間でも灯りを見つめると、感情が静まり直感が通りやすくなります。",
+   "仕事道具":"開運アイテムは「仕事道具」です。使う前後に整えるほど、仕事運と成果運が高まります。",
+   "食器":"開運アイテムは「食器」です。洗う・拭くを丁寧にすることで、暮らし全体の循環運が育ちます。",
+   "手帳":"開運アイテムは「手帳」です。予定と気持ちを一行ずつ書くことで、判断の軸が整います。",
+   "服":"開運アイテムは「服」です。今日の自分を大切にする一着を選ぶことが、自己信頼を高める行動になります。",
+   "空間":"開運アイテムは「空間」です。余白をつくるほど、思考と運の流れに新しい道が生まれます。",
+   "メガネ":"開運アイテムは「メガネ」です。拭いて視界を整える行為が、視点転換の運を強めます。",
+   "家":"開運アイテムは「家」です。帰宅時の『ただいま』を丁寧にすると、安心の土台運が深まります。",
+   "バスタオル":"開運アイテムは「バスタオル」です。体をやさしく包む習慣が、浄化と回復の流れを整えます。",
+   "ミネラルウォーター":"開運アイテムは「ミネラルウォーター」です。意識して飲むたびに、言葉と感性の巡りが澄んでいきます。",
+   "花":"開運アイテムは「花」です。1輪でも飾ることで、場の気がやわらぎ、ご縁運が育ちます。",
+   "食べ物":"開運アイテムは「食べ物」です。『いただきます』を丁寧に言うことで、現実運と実り運が安定します。"
+ };
+ const base=map[item] || (shuku + "の流れに乗るとき、このアイテムが月のエネルギーをあなたへ届けます。毎日丁寧に扱うことで、宿命の扉が静かに開いていきます。");
+ return base.replace('{shuku}',shuku);
+}
+
+function buildAction48Text(baseText,item){
+ const actionMap={
+   "歯ブラシ":"48時間以内に、開運アイテム「歯ブラシ」を新しく整えてください。歯みがきを丁寧に行うこと自体が開運アクションです。",
+   "鏡":"48時間以内に、鏡を拭いてから自分の目を見て『今日の私で進む』と一言宣言してください。",
+   "カーテン":"48時間以内に、朝いちばんにカーテンを開けて3呼吸し、気持ちの切り替えを言葉にしてください。",
+   "鍵":"48時間以内に、鍵を拭いて『開きたい扉』を1つ書いてください。",
+   "財布":"48時間以内に、財布の中を整えて『今月受け取りたい豊かさ』を1つ書いてください。",
+   "ベッド":"48時間以内に、寝具を整えてから眠り、翌朝の気分を一言メモしてください。",
+   "SNS":"48時間以内に、今の本音を1行だけ投稿または下書きして、表現の流れを動かしてください。",
+   "食器":"48時間以内に、食器を1つ丁寧に磨き、『今日ありがとう』を声に出してください。"
+ };
+ if(actionMap[item]) return actionMap[item];
+ return baseText.replace('{item}',item);
+}
+
+function init(){
+ const s=document.getElementById('shuku');
+ shukuList.forEach(x=>{let o=document.createElement('option');o.value=x;o.textContent=x;s.appendChild(o);});
+}
+function showSection(id){['top','form','result'].forEach(x=>document.getElementById(x).classList.add('hidden'));document.getElementById(id).classList.remove('hidden');window.scrollTo(0,0);}
+function generateReading(){
+ const nm=document.getElementById('name').value||'あなた';
+ const shuku=document.getElementById('shuku').value;
+ if(!shuku){alert('本命宿を選択してください。');return;}
+ const sd=shukuData[shuku];
+ const topKey=groupToType[sd.group];
+ const t=types[topKey];
+ const today=new Date();
+ const sentDateStr=today.getFullYear()+'年'+(today.getMonth()+1)+'月'+today.getDate()+'日';
+ const birthVal=document.getElementById('birth').value||'';
+ const kanonMessageKey=getKanonMessageKey(nm,birthVal,shuku);
+ const diagnosisEditKey=getDiagnosisEditKey(nm,birthVal,shuku);
+ const formQ=(document.getElementById('concernInput')&&document.getElementById('concernInput').value.trim())||urlQ||'';
+ const formQ2=(document.getElementById('situationInput')&&document.getElementById('situationInput').value.trim())||urlQ2||'';
+ const concernHTML=(formQ||formQ2)?
+  '<div class="basis-card" style="border-color:rgba(180,120,255,.42);background:rgba(180,120,255,.07);margin-top:16px">'+
+  '<p class="basis-label" style="color:#c090ff">✦ ご相談内容</p>'+
+  (formQ?'<div style="margin-bottom:12px"><p style="font-size:11px;color:#c090ff;letter-spacing:.12em;margin:0 0 5px">具体的なお悩みや、今気になっていること</p><p contenteditable="true" class="basis-reason">'+formQ+'</p></div>':'')+
+  (formQ2?'<div><p style="font-size:11px;color:#c090ff;letter-spacing:.12em;margin:0 0 5px">現在の状況について、差し支えない範囲</p><p contenteditable="true" class="basis-reason">'+formQ2+'</p></div>':'')+
+  '</div>':'';
+ const bridgeMsgMap={
+  A:nm+'さんの今に、'+shuku+'は静かに寄り添っています。その悩みはきっと、あなたの中にある癒しの力が動き始めているサインです。',
+  B:nm+'さんが感じている迷いの向こうに、'+shuku+'の灯りがすでに道を照らし始めています。',
+  C:nm+'さんの思いは、'+shuku+'の表現の力によって、やがて力ある言葉となって誰かの心へ届きます。',
+  D:nm+'さんが感じているその揺らぎは、'+shuku+'の変容の力が新しい季節を準備しているサインかもしれません。',
+  E:nm+'さんが望む豊かさへの道を、'+shuku+'はすでに知っています。今の整えが、その流れを開いていきます。'
+ };
+ const bridgeMsg=formQ?bridgeMsgMap[topKey]:'';
+ const mergedConcern=((formQ||"")+" "+(formQ2||"")).trim();
+ const concernTheme=detectTheme(mergedConcern);
+ const baseFocusText=concreteFocus[topKey][concernTheme]||concreteFocus[topKey].general;
+ const baseCauseText=concreteCause[topKey];
+ const baseAct48=buildAction48Text((concreteAction48h[concernTheme]||concreteAction48h.general),sd.item);
+ const focusText=buildPersonalFocus(baseFocusText,shuku,sd,concernTheme);
+ const causeText=buildPersonalCause(baseCauseText,shuku,sd);
+ const act48=buildPersonalAction(baseAct48,shuku,sd,concernTheme);
+ const itemPowerText=buildItemPowerText(shuku,sd.item);
+ const kanonAdvice=buildKanonAdvice(nm,shuku,sd,t,topKey,concernTheme,formQ,formQ2,focusText,causeText,act48);
+ const destinyMsg=`${shuku}が宿す「${sd.group}」という才能の種は、あなたの日常の選択の中に静かに宿っています。本来の資質を活かしているとき、人は自然と自分らしくいられます。月の流れとともに今を整えることで、因果の流れが少しずつ動き始める可能性があります。`;
+ const lunarStr=(()=>{try{const d=new Date(document.getElementById('birth').value+'T00:00:00'),l=solarToLunar(d);return l.year+'年'+(l.isLeap?'閏':'')+l.month+'月'+l.day+'日'}catch(e){return '—'}})();
+ const basisCardHTML='<div class="basis-card">'+
+  '<p class="basis-label">✦ 宿曜占星術とは</p>'+
+  '<p class="basis-reason" style="margin-bottom:12px">宿曜占星術（しゅくようせんせいじゅつ）は、インド発祥の古代占星術が空海によって日本に伝えられた、1200年以上の歴史をもつ占いです。月の運行をもとに27の星宿（せいしゅく）で、人の運命・才能・天命を読み解きます。西洋占星術が太陽の動きを重視するのに対し、宿曜は月の位置を基準とするため、より個人の内面・本質・魂の傾向を細やかに映し出すといわれています。</p>'+
+  '<p class="basis-label">天命の根拠（宿曜占星術による算出）</p>'+
+  '<div class="basis-chain">'+
+   '<span class="basis-step">生年月日</span><span class="basis-arrow">→</span>'+
+   '<span class="basis-step">旧暦 '+lunarStr+'</span><span class="basis-arrow">→</span>'+
+   '<span class="basis-step">本命宿：'+shuku+'</span><span class="basis-arrow">→</span>'+
+   '<span class="basis-step">「'+sd.group+'」の宿</span><span class="basis-arrow">→</span>'+
+   '<span class="basis-step">'+t.name+'</span>'+
+  '</div>'+
+  '<p class="basis-reason">'+sd.reason+'</p>'+
+ '</div>';
+ const challengePlaces=['ムーンゲート','月鏡の湖','整えの広場','シャドウの森','月の庭園','願いの丘','月の城'];
+ const challengeFlow=[
+   {title:"今の私を知る",body:"まずは、今の自分の声をやさしく受け取ります。"},
+   {title:"月からのメッセージを受け取る",body:"頭で考えすぎていたことを少しゆるめ、必要な言葉を受け取ります。"},
+   {title:"感謝とご縁を見つめる",body:"足りないものではなく、すでに支えてくれているものに光を当てます。"},
+   {title:"感情をほどき、手放す",body:"過去の思い込みや不安を、責めずにやさしく整理します。"},
+   {title:"日常の運を整える",body:"身近なアイテムを通して、毎日の小さな開運スイッチを見つけます。"},
+   {title:"未来の私から言葉を受け取る",body:"これからの自分に必要な許可と希望を、日記の中に残します。"},
+   {title:"第2の鑑定書へつなぐ",body:"7日間の記録が、あなた専用の第2の鑑定書へと育っていきます。"}
+ ];
+ const challengeHTML=challengeFlow.map((d,i)=>{
+   return '<li style="padding:12px 0;border-bottom:1px solid rgba(241,217,155,.15)">'+
+     '<span style="font-size:10px;color:var(--gold2);letter-spacing:.16em;opacity:.75">✦ '+challengePlaces[i]+'</span><br>'+
+     '<span style="font-size:12px;color:var(--gold2);letter-spacing:.1em">Day '+(i+1)+'</span>　<strong style="color:var(--gold2)">'+d.title+'</strong><br>'+
+     '<span style="font-size:13px;color:var(--muted);line-height:1.85">'+d.body+'</span>'+
+   '</li>';
+ }).join('');
+ const forwardParams=(function(){
+  const p=new URLSearchParams(location.search);
+  const out=new URLSearchParams();
+  out.set('name',nm);
+  if(birthVal) out.set('birth',birthVal);
+  if(shuku) out.set('shuku',shuku);
+  ['zodiac','email','participantId','concern','q','q2'].forEach(function(k){
+    const v=p.get(k);
+    if(v) out.set(k,v);
+  });
+  if(formQ) out.set('q',formQ);
+  if(formQ2) out.set('q2',formQ2);
+  return out.toString();
+ })();
+ document.getElementById('resultBody').innerHTML=`
+ <div style="text-align:center;margin-bottom:8px">
+   <p style="display:inline-block;padding:6px 18px;border-radius:999px;border:1px solid rgba(241,217,155,.55);background:rgba(241,217,155,.08);color:var(--gold2);font-size:15px;letter-spacing:.2em;margin:0">✦ 月の扉が、今ひらかれました ✦</p>
+ </div>
+ <div style="text-align:center;margin:14px 0 22px;padding:16px 24px;border-top:1px solid rgba(241,217,155,.28);border-bottom:1px solid rgba(241,217,155,.28)">
+   <p style="font-size:14px;color:var(--muted);line-height:2.1;margin:0">全国出版オーディションへのご支援、ありがとうございます。<br>この鑑定書は、あなたへの感謝をこめた、<span style="color:var(--gold2)">月からの贈り物</span>です。</p>
+ </div>
+ <div style="margin:0 auto 14px;max-width:560px;padding:18px 22px;border:1px solid rgba(241,217,155,.58);border-radius:20px;background:radial-gradient(circle at 50% 0%,rgba(241,217,155,.16),transparent 56%),rgba(241,217,155,.06);box-shadow:0 0 28px rgba(241,217,155,.12),inset 0 0 24px rgba(255,250,242,.04)">
+   <p style="font-size:12px;color:rgba(241,217,155,.86);letter-spacing:.28em;margin:0 0 8px;text-align:center">— ✦ 月読みワンダーランド ✦ —</p>
+   <p class="result-title" style="margin:0">${nm}さんの<br>月の扉｜開運パスポート第1の鑑定書</p>
+ </div>
+ <div style="margin:0 auto 18px;max-width:620px;padding:16px 22px;border-radius:18px;border:1px solid rgba(241,217,155,.48);background:linear-gradient(160deg,rgba(241,217,155,.12),rgba(255,255,255,.05));text-align:center">
+   <p style="font-size:11px;letter-spacing:.22em;color:var(--gold2);margin:0 0 8px">応援投票ありがとう企画</p>
+   <p style="font-size:16px;color:var(--gold2);font-weight:bold;line-height:1.8;margin:0">この鑑定書は、7日間の月読み日記への招待状です。</p>
+   <p style="font-size:13px;color:#ffe6a8;line-height:1.9;margin:10px 0 0;font-weight:bold">【予告】6月15日（月）双子座新月から始まります。<br><span style="color:var(--muted);font-weight:normal">新月は、願いを始めるタイミング。テーマは</span><span style="color:#ffe6a8">コミュニケーション、学び、友情、夫婦関係</span><span style="color:var(--muted);font-weight:normal">などです。</span></p>
+   <p style="font-size:13px;color:#ffe6a8;line-height:1.9;margin:8px 0 0;font-weight:bold">7日間コンプリートすると、あなたの記録から<br>「月の扉｜第2の鑑定書」が開きます。</p>
+ </div>
+ <p style="text-align:center;color:var(--gold2);font-size:14px;letter-spacing:.12em;margin:-4px 0 12px">あなたの中に眠る天命の扉へ</p>
+ <p style="text-align:center;color:var(--muted);font-size:15px;margin:2px 0 6px;letter-spacing:.08em">${shuku} ✦ ${t.name}</p>
+ <div style="text-align:center">
+   <span class="badge">本命宿：${shuku}</span>
+   <span class="badge">天命：${t.key}</span>
+   <span class="badge">月の守り：${sd.item}</span>
+ </div>
+ ${concernHTML}
+ ${bridgeMsg?'<div style="margin:16px 0;padding:16px 20px;border-radius:14px;border-left:3px solid rgba(241,217,155,.55);background:rgba(241,217,155,.05)"><p style="font-size:14px;color:var(--muted);line-height:2;margin:0;font-style:italic">'+bridgeMsg+'</p></div>':''}
+ <div class="harmony-card harmony-bridge" style="margin-top:14px">
+   <span class="level-badge lv-bridge">✦ いまの現在地（具体）</span>
+   <p contenteditable="true" style="margin:8px 0 0;line-height:1.9">${focusText}</p>
+ </div>
+ <div class="harmony-card harmony-transform">
+   <span class="level-badge lv-transform">✦ 因果の読み解き（核心）</span>
+   <p contenteditable="true" style="margin:8px 0 0;line-height:1.9">${causeText}</p>
+ </div>
+ <div class="harmony-card harmony-perfect">
+   <span class="level-badge lv-perfect">✦ 48時間アクション</span>
+   <p contenteditable="true" style="margin:8px 0 0;line-height:1.9">${act48}</p>
+ </div>
+ <p class="edit-hint">✏ テキストをクリックして編集・追記できます</p>
+ <h3>✦ 月からのメッセージ</h3>
+ <p><strong contenteditable="true">${t.copy}</strong></p>
+ <p contenteditable="true" style="line-height:1.9;color:var(--muted);margin-top:8px">${t.destiny}</p>
+ <div class="grid">
+   <div class="mini"><h3>宿命 ｜ ${shuku}が宿す本質</h3><p contenteditable="true">${sd.essence}</p></div>
+   <div class="mini"><h3>天命 ｜ 月の本質的な使命</h3><p contenteditable="true">${t.tenmei}</p></div>
+   <div class="mini"><h3>使命 ｜ やがて開く扉</h3><p contenteditable="true">${t.mission}</p></div>
+ </div>
+ <h3>✧ 月が映し出す 宿命の啓示</h3>
+ <div class="harmony-card harmony-perfect">
+   <span class="level-badge lv-perfect">✦ 月が照らす啓示</span>
+   <div style="font-size:15px;font-weight:bold;color:var(--gold2);margin-bottom:8px">${shuku} × ${t.name}</div>
+   <p contenteditable="true" style="margin:0;line-height:1.8">${destinyMsg}</p>
+ </div>
+ ${basisCardHTML}
+ <h3>✧ 月が授けた 開運のお守り（パワーアイテム）</h3>
+ <p contenteditable="true"><strong>${sd.item}</strong><br>${itemPowerText}</p>
+ <div class="neko-card">
+   <div class="neko-bar">✦　月の案内人　にゃんてん　✦</div>
+   <div class="neko-inner">
+     <div class="neko-avatar">
+       ${nekoSvg}
+       <div class="neko-name-tag">にゃんてん<br>月の案内人</div>
+     </div>
+     <div class="neko-bubble" contenteditable="true">${nekoMessages[topKey](sd.item,shuku,sd.itemAction)}<div class="neko-phrase">「モノに宿る流れを見てごらん」</div></div>
+   </div>
+ </div>
+ <h3>✦ 月に寄せる 今日の誓い</h3>
+ <p contenteditable="true">${t.action}</p>
+ ${formQ||formQ2?'<div class="memo-block"><div class="memo-label">✦ あなたのお悩みに寄り添うメモ</div><div class="memo-body" contenteditable="true">'+(formQ?('・いまのお悩み：'+formQ+'<br>'):'')+(formQ2?('・現在の状況：'+formQ2):'')+'</div></div>':''}
+ <div class="memo-block">
+   <div class="memo-label">✦ かのんからの一言</div>
+   <div class="memo-body" contenteditable="true" data-kanon-message="true" data-ph="月の流れから、あなたへ具体的な一歩を…">${kanonAdvice}</div>
+ </div>
+ <div class="cta-block">
+   <p class="cta-eyebrow">✦　プレゼント企画第二弾　✦</p>
+   <p class="cta-title">月読み日記 7日間チャレンジ</p>
+   <p class="cta-desc">鑑定書を読んで終わりにせず、7日間だけ月と日常アイテムに向き合うことで、今の自分の声と未来の願いを整えていく体験です。</p>
+   <div style="margin:0 auto 20px;padding:14px 18px;border-radius:16px;border:1px solid rgba(241,217,155,.5);background:rgba(241,217,155,.1);max-width:560px">
+     <p style="font-size:16px;color:var(--gold2);font-weight:bold;line-height:1.8;margin:0">7日間の月読み日記をコンプリートすると、<br>あなたの記録から「月の扉｜第2の鑑定書」が開きます。</p>
+   </div>
+   <ul style="list-style:none;padding:0;margin:0 auto 20px;display:inline-flex;flex-direction:column;gap:8px;font-size:14px;color:var(--muted);line-height:1.8;text-align:left">
+     <li>・迷いが減り、人生の流れが整い始める</li>
+     <li>・自分の才能や役割が見えてくる</li>
+     <li>・ご縁やタイミングが変わり始める</li>
+     <li>・「私の人生、これでいい」が増えていく</li>
+   </ul>
+   <div class="live-schedule">
+     <div class="ls-item"><div class="ls-day">Day 1</div><div class="ls-label">スタートライブ</div></div>
+     <div class="ls-item"><div class="ls-day">Day 4</div><div class="ls-label">中日チェックイン</div></div>
+     <div class="ls-item"><div class="ls-day">Day 7</div><div class="ls-label">最終ライブ</div></div>
+   </div>
+   <p class="cta-note">7日間の記録がそろった時、第2の鑑定書への扉が開きます</p>
+ </div>
+ <h3>✦ 月読み日記 7日間チャレンジ</h3>
+ <p class="challenge-intro">このチャレンジは、正解を探すものではありません。毎日ほんの少し、自分の心・感謝・日常アイテムに目を向けることで、運の流れを整えていく小さな旅です。</p>
+ <ul style="list-style:none;padding:0;margin:0 0 8px">${challengeHTML}</ul>
+ <div style="margin:24px 0 16px;padding:20px 24px;border-radius:18px;background:rgba(241,217,155,.07);border:1px solid rgba(241,217,155,.28);text-align:center">
+   <p style="font-size:11px;letter-spacing:.24em;color:var(--gold2);margin:0 0 8px">✦　7日間のプレゼント　✦</p>
+   <p style="font-size:17px;font-weight:bold;color:var(--gold2);margin:0 0 10px">月読み日記</p>
+   <p style="font-size:14px;color:var(--muted);line-height:1.9;margin:0">毎日3分、写メとひと言を残すだけで、あなたの感謝習慣の「物」語が始まります。<br>7日後、その記録は第2の鑑定書の種になります。</p>
+ </div>
+ <div class="second-report-preview">
+   <p class="second-report-preview-label">✦　7日後に開く見本　✦</p>
+   <p class="second-report-preview-title">月の扉｜第2の鑑定書</p>
+   <p class="second-report-preview-body">7日間の月読み日記をコンプリートすると、あなたが書いた言葉、写メに残した日常アイテム、感謝や手放しの記録をもとに、今の流れをもう一段深く読み解く鑑定書が開きます。</p>
+   <div class="second-report-pages">
+     <div class="second-report-page">
+       <strong>1. 7日間の記録から見える現在地</strong>
+       <span>いま何に心が動き、どんな願いが育ち始めているのかを読み解きます。</span>
+     </div>
+     <div class="second-report-page">
+       <strong>2. 日常アイテムに表れた開運スイッチ</strong>
+       <span>あなたが選んだモノに宿る流れから、運を動かす扱い方を見つけます。</span>
+     </div>
+     <div class="second-report-page">
+       <strong>3. 次に開く27日の月読みの道</strong>
+       <span>宿曜27宿の巡りへ進むことで、人生の縮図をやさしく整えていきます。</span>
+     </div>
+   </div>
+   <p style="font-size:13px;color:var(--gold2);line-height:1.9;text-align:center;margin:16px 0 0">これは、7日間を書き終えた方だけに開く、次の扉です。</p>
+ </div>
+ <div style="margin:28px 0 0;padding:24px;border-radius:20px;background:rgba(241,217,155,.08);border:1px solid rgba(241,217,155,.3)">
+   <h3 style="margin-top:0;font-size:18px">✦ この鑑定書の受け取り方</h3>
+   <p>この鑑定書は、未来を決めるものではありません。<br>月とともに、<strong>今の自分を知るための、静かな羅針盤</strong>です。</p>
+   <p>すべてを一度に理解しなくていい。<br>すべてをすぐに実践しなくていい。</p>
+   <p style="margin-bottom:0">今のあなたに響く言葉だけを、そっと胸に受け取ってください。<br><span style="color:var(--gold2);font-size:14px">月は、いつもあなたのそばにいます。</span></p>
+ </div>
+ <div style="margin:40px 0 0;padding:36px 24px;border-radius:22px;background:linear-gradient(160deg,rgba(241,217,155,.09),rgba(180,120,255,.07));border:1px solid rgba(241,217,155,.3);text-align:center">
+   <p style="font-size:12px;letter-spacing:.28em;color:var(--gold2);margin:0 0 20px">✦ ✦ ✦</p>
+   <p style="font-size:18px;color:var(--gold2);font-weight:bold;margin:0 0 16px;line-height:1.8">${nm}さんの天命の種は、<br>すでにここに宿っています。</p>
+   <p style="font-size:14px;color:var(--muted);line-height:2.2;margin:0 0 24px">急がなくていい。<br>完璧でなくていい。<br>月とともに、ゆっくりと整えていきましょう。</p>
+   <div style="width:36px;height:1px;background:rgba(241,217,155,.45);margin:0 auto 20px"></div>
+   <p style="font-size:14px;color:var(--gold2);margin:0 0 4px;letter-spacing:.14em">みずきかのん</p>
+   <p style="font-size:11px;color:var(--muted);letter-spacing:.16em;margin:0">月読み師</p>
+   <p style="font-size:12px;color:var(--muted);letter-spacing:.12em;margin:10px 0 0">送信日：<span contenteditable="true">${sentDateStr}</span></p>
+   <div style="width:30px;height:1px;background:rgba(241,217,155,.35);margin:24px auto 18px"></div>
+   <p style="font-size:13px;color:var(--muted);line-height:2;margin:0">今回は、全国出版オーディション応援投票への感謝をこめて、<br><span style="color:var(--gold2);font-weight:bold;letter-spacing:.06em">まだ一般公開前の「月読みワンダーランド」へご招待</span>しています。</p>
+   <p style="font-size:13px;color:var(--muted);line-height:2;margin:14px 0 0">6月15日から始まる、ふたご座新月の願いとともに、<br><span style="color:var(--gold2);font-weight:bold">7日間の月読み日記チャレンジ</span>へ、ぜひご参加ください。</p>
+   <p style="font-size:13px;color:var(--muted);line-height:2;margin:14px 0 0">7日間をコンプリートすると、あなたの記録から<br><span style="font-size:13px;color:var(--gold2);font-weight:bold">第2の鑑定書が開きます。</span><br>ライブ配信も予定しております。<br>お会いできますのを楽しみにしております。</p>
+   <a href="wonderland_gate.html?${forwardParams}" class="cta-join-btn" style="margin-top:24px">7日間の月読み日記を始める</a>
+ </div>
+	 `;
+	 setupKanonMessageAutosave(kanonMessageKey);
+	 setupDiagnosisEditAutosave(diagnosisEditKey);
+	 if(new URLSearchParams(location.search).get('forceAdvice')==='1'){
+	   const adviceEl=document.querySelector('[data-kanon-message]');
+	   if(adviceEl){
+	     adviceEl.innerHTML=kanonAdvice;
+	     localStorage.setItem(kanonMessageKey,kanonAdvice);
+	   }
+	 }
+	 showSection('result');
+	}
+function copyChallenge(typeKey,shuku,item){
+ const lines=challenges[typeKey].map((d,i)=>{
+   const action=d.action.replace('{item}',item);
+   return `【Day ${i+1}】${d.title}\n${action}`;
+ }).join('\n\n');
+ const text=`✦ 7日間チャレンジ（${shuku} × ${types[typeKey].name}）✦\n\n${lines}\n\n— 月読みワンダーランド 月の扉｜開運パスポート第1の鑑定書より`;
+ if(navigator.clipboard){navigator.clipboard.writeText(text).then(()=>alert('コピーしました！SNSやメモ帳に貼り付けてお使いください。'));}
+ else{prompt('以下をコピーしてください',text);}
+}
+function restart(){showSection('top');}
+init();
+// URLパラメータから自動生成（鑑定リストからの呼び出し用）
+let urlQ='', urlQ2='';
+(function(){
+ const p=new URLSearchParams(location.search);
+ const name=p.get('name'), birth=p.get('birth');
+ if(birth){
+   if(name) document.getElementById('name').value=decodeURIComponent(name);
+   document.getElementById('birth').value=birth;
+   urlQ=p.get('q')?decodeURIComponent(p.get('q')):'';
+   urlQ2=p.get('q2')?decodeURIComponent(p.get('q2')):'';
+   if(document.getElementById('concernInput')) document.getElementById('concernInput').value=urlQ;
+   if(document.getElementById('situationInput')) document.getElementById('situationInput').value=urlQ2;
+   autoCalcShuku();
+   if(document.getElementById('shuku').value) generateReading();
+ }
+})();
+</script>
+<div class="print-frame"></div>
+<div class="print-footer">
+  <span>Shukuyo Astrology ／ 宿曜占星術 月の扉｜開運パスポート第1の鑑定書</span>
+  <span>みずきかのん　月読み師</span>
+</div>
+</body>
+</html>
