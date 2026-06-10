@@ -1,13 +1,12 @@
-align-items: flex-start;{
+.passport-cover-page{
   margin:0 auto 24px;
   text-align:center;
-  align-items: flex-start;
 }
 
 .cover-image{
   display:block;
   width:min(100%,680px);
-  height:94vh;
+  height:auto;
   margin:20px auto 24px;
   border-radius:18px;
   border:1px solid rgba(241,217,155,.42);
@@ -44,12 +43,11 @@ align-items: flex-start;{
 
   .passport-cover-page{
     display:flex!important;
-    align-items:flex-start!important;
+    align-items:center!important;
     justify-content:center!important;
     min-height:270mm!important;
     margin:0!important;
     padding:0!important;
-    padding-top:0 !important;
     break-before:auto!important;
     page-break-before:auto!important;
     break-after:page!important;
