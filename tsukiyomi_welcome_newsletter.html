@@ -1,0 +1,688 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>月読みワンダーランド｜天命の扉が開きます</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Sacramento&display=swap" rel="stylesheet">
+  <style>
+    /* ── 変数 ── */
+    :root {
+      --paper:   #fffaf0;
+      --paper2:  #fef5dc;
+      --ink:     #2a1f10;
+      --ink2:    #4a3820;
+      --gold:    #a87932;
+      --gold2:   #c9a34a;
+      --gold3:   #e8cc80;
+      --gold4:   #f5e5b0;
+      --muted:   #7a6248;
+      --border:  rgba(168,121,50,.55);
+      --border2: rgba(168,121,50,.25);
+      --line:    rgba(168,121,50,.38);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { background: #e8dcc8; }
+
+    body {
+      font-family: "Hiragino Mincho ProN", "Yu Mincho", "YuMincho", "Noto Serif JP", serif;
+      color: var(--ink);
+      background: #e8dcc8;
+      min-height: 100vh;
+      padding: 40px 16px 60px;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    /* ── 用紙本体 ── */
+    .letter {
+      max-width: 680px;
+      margin: 0 auto;
+      background: var(--paper);
+      position: relative;
+      padding: 0;
+      box-shadow: 0 8px 40px rgba(80,50,10,.22), 0 2px 8px rgba(0,0,0,.12);
+    }
+
+    /* 外枠（二重） */
+    .letter-outer {
+      padding: 20px;
+      border: 2px solid var(--gold);
+    }
+    .letter-inner {
+      border: 1px solid var(--gold2);
+      padding: 36px 40px 40px;
+      background:
+        radial-gradient(ellipse at 50% 0%, rgba(232,204,128,.22) 0%, transparent 55%),
+        radial-gradient(ellipse at 50% 100%, rgba(232,204,128,.12) 0%, transparent 45%),
+        var(--paper);
+    }
+
+    /* 四隅の飾り紋 */
+    .letter-outer::before,
+    .letter-outer::after,
+    .letter-inner::before,
+    .letter-inner::after {
+      position: absolute; font-size: 1rem; color: var(--gold2); pointer-events: none;
+    }
+    .letter-outer::before  { content: "✦"; top:  8px; left:  10px; }
+    .letter-outer::after   { content: "✦"; bottom: 8px; right: 10px; }
+    .letter-inner::before  { content: "◈"; top: 26px; left: 28px; font-size: .75rem; }
+    .letter-inner::after   { content: "◈"; bottom: 46px; right: 46px; font-size: .75rem; }
+
+    /* ── ヘッダー ── */
+    .nl-header {
+      padding-bottom: 28px;
+      margin-bottom: 28px;
+      border-bottom: 1px solid var(--border2);
+      position: relative;
+    }
+
+    .nl-header::after {
+      content: "◇ ◆ ◇";
+      position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%);
+      font-size: .55rem; color: var(--gold2); background: var(--paper);
+      padding: 0 12px; letter-spacing: 4px;
+    }
+
+    .moon-circle {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 36% 36%, #fff5d0 0%, #d8b56d 50%, #a07030 100%);
+      box-shadow: 0 0 24px rgba(168,121,50,.35), 0 2px 8px rgba(0,0,0,.15);
+      margin: 0 auto 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem;
+    }
+
+    .nl-kicker {
+      font-size: .68rem; letter-spacing: .15em; color: var(--gold);
+      margin-bottom: 10px; display: block;
+    }
+
+    .nl-title {
+      font-size: 1.42rem;
+      letter-spacing: .1em;
+      white-space: nowrap;
+      color: var(--gold);
+      font-weight: 400;
+      line-height: 1.55;
+      margin-bottom: 8px;
+    }
+
+    .nl-subtitle {
+      font-size: .8rem; letter-spacing: .2em; color: var(--muted);
+    }
+
+    /* ── 開封メッセージ ── */
+    .open-message {
+      background: linear-gradient(135deg, rgba(232,204,128,.18), rgba(254,245,220,.6));
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      padding: 26px 28px;
+      margin-bottom: 28px;
+      text-align: center;
+      position: relative;
+    }
+    .open-message::before,
+    .open-message::after {
+      content: "── ✦ ──";
+      display: block; font-size: .72rem; color: var(--gold2);
+      letter-spacing: .2em; margin-bottom: 10px;
+    }
+    .open-message::after { margin-bottom: 0; margin-top: 10px; }
+
+    .open-text {
+      font-size: 1.05rem; letter-spacing: .1em; line-height: 2;
+      color: var(--gold);
+      font-weight: 500;
+    }
+
+    /* ── 本文段落 ── */
+    .nl-body { font-size: .93rem; line-height: 2.1; color: var(--ink2); letter-spacing: .06em; }
+    .nl-body + .nl-body { margin-top: 14px; }
+
+    em { font-style: normal; color: var(--gold); }
+
+    /* ── 金線区切り ── */
+    .divider {
+      display: flex; align-items: center; gap: 10px;
+      margin: 26px 0; color: var(--gold2); font-size: .6rem;
+    }
+    .divider::before, .divider::after {
+      content: ""; flex: 1; height: 1px; background: var(--line);
+    }
+
+    /* ── セクション見出し ── */
+    .section-head {
+      font-size: .7rem; letter-spacing: .3em; color: var(--gold);
+      display: block; text-align: center; margin-bottom: 16px;
+    }
+
+    /* ── 引用ボックス ── */
+    .quote-box {
+      border-left: 3px solid var(--gold2);
+      background: rgba(232,204,128,.10);
+      padding: 14px 18px;
+      margin: 18px 0;
+      font-size: .9rem; line-height: 1.95; color: var(--ink2);
+    }
+
+    /* ── プレゼントカード ── */
+    .gift-wrap {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+      margin: 18px 0;
+    }
+    @media (max-width: 500px) { .gift-wrap { grid-template-columns: 1fr; } }
+
+    .gift {
+      border: 1px solid var(--border);
+      background: linear-gradient(160deg, rgba(254,245,220,.8), rgba(232,204,128,.08));
+      padding: 20px 16px;
+      text-align: center;
+      position: relative;
+    }
+    .gift::before {
+      content: ""; position: absolute; top: 0; left: 0; right: 0;
+      height: 2px; background: linear-gradient(90deg, transparent, var(--gold2), transparent);
+    }
+    .gift-badge {
+      display: inline-block;
+      font-size: .72rem; letter-spacing: .22em;
+      background: linear-gradient(135deg, #c9a34a, #a87932, #c9a34a);
+      color: #fffaf0;
+      padding: 5px 16px; margin-bottom: 12px;
+      border: 1px solid rgba(255,248,210,.4);
+      box-shadow: 0 2px 8px rgba(168,121,50,.25), inset 0 1px 0 rgba(255,248,210,.3);
+      font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+    }
+    .gift-icon { font-size: 1.8rem; display: block; margin-bottom: 8px; }
+    .gift-title { font-size: .95rem; letter-spacing: .1em; color: var(--gold); margin-bottom: 8px; }
+    .gift-note { font-size: .8rem; line-height: 1.85; color: var(--muted); }
+
+    /* ── フロー ── */
+    .flow { margin: 18px 0; display: flex; flex-direction: column; gap: 0; }
+    .flow-item {
+      display: flex; gap: 16px; align-items: flex-start;
+      border: 1px solid var(--border2);
+      background: rgba(232,204,128,.06);
+      padding: 16px 18px;
+    }
+    .flow-num {
+      flex-shrink: 0; width: 32px; height: 32px;
+      border-radius: 50%; border: 1px solid var(--gold2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .72rem; letter-spacing: .05em; color: var(--gold);
+    }
+    .flow-body { flex: 1; }
+    .flow-title { font-size: .92rem; color: var(--ink); letter-spacing: .08em; margin-bottom: 4px; }
+    .flow-note  { font-size: .8rem; color: var(--muted); line-height: 1.8; }
+    .flow-arrow {
+      text-align: center; font-size: .8rem; color: var(--gold2);
+      padding: 4px 0; opacity: .7;
+    }
+
+    /* ── キャッチ帯 ── */
+    .catch-band {
+      border-top: 1px solid var(--border2);
+      border-bottom: 1px solid var(--border2);
+      padding: 24px 20px;
+      margin: 26px 0;
+      text-align: center;
+      background: linear-gradient(135deg, rgba(232,204,128,.12), rgba(254,245,220,.4));
+    }
+    .catch-main {
+      font-size: clamp(.95rem, 2.5vw, 1.1rem);
+      letter-spacing: .14em; color: var(--gold);
+      line-height: 1.9; margin-bottom: 10px;
+    }
+    .catch-sub {
+      font-size: .82rem; color: var(--muted); letter-spacing: .1em; line-height: 1.9;
+    }
+
+    /* ── コンセプトキーワード ── */
+    .keywords {
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 16px;
+      margin: 16px 0;
+    }
+    .kw {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: .82rem; letter-spacing: .1em; color: var(--gold);
+    }
+    .kw::before { content: "◈"; font-size: .65rem; }
+
+    /* ── 結びの言葉 ── */
+    .closing {
+      text-align: center;
+      padding: 24px 0 8px;
+      margin-top: 10px;
+    }
+    .closing-text {
+      font-size: .9rem; letter-spacing: .14em; line-height: 2.2; color: var(--ink2);
+    }
+    .signature {
+      display: block;
+      font-family: 'Sacramento', cursive;
+      font-size: 2rem;
+      color: var(--gold);
+      text-align: center;
+      margin-top: 24px;
+      letter-spacing: .04em;
+      line-height: 1.3;
+      text-shadow: 0 1px 4px rgba(168,121,50,.2);
+    }
+    .signature-sub {
+      display: block;
+      text-align: center;
+      font-size: .72rem;
+      letter-spacing: .25em;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    .closing-tagline {
+      display: block; margin-top: 16px;
+      font-size: 1rem; letter-spacing: .22em; color: var(--gold);
+    }
+
+    /* ── フッター ── */
+    .nl-footer {
+      text-align: center; margin-top: 28px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border2);
+      font-size: .7rem; letter-spacing: .2em; color: var(--muted);
+      line-height: 2;
+    }
+
+    /* ══════════════════════════════
+       7つの力フロー（コンパクト）
+    ══════════════════════════════ */
+    .power-compact {
+      display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin: 14px 0;
+    }
+    @media (max-width: 500px) { .power-compact { grid-template-columns: repeat(4, 1fr); } }
+    .pc-item {
+      border: 1px solid var(--border); background: rgba(232,204,128,.06);
+      padding: 10px 6px; text-align: center; position: relative;
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .pc-item::before {
+      content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold2), transparent);
+    }
+    .pc-num  { font-size: .56rem; color: var(--gold); display: block; margin-bottom: 4px; flex: 1; }
+    .pc-name { font-size: .75rem; color: var(--gold); display: block; margin-bottom: 3px; }
+    .pc-sub  { font-size: .63rem; color: var(--muted); margin-top: auto; }
+
+    /* 招待4ステップ */
+    .invite-compact { display: flex; flex-direction: column; gap: 0; margin: 14px 0; }
+    .ic-item {
+      display: flex; gap: 12px; align-items: flex-start;
+      border: 1px solid var(--border2); background: rgba(232,204,128,.05); padding: 12px 14px;
+    }
+    .ic-num {
+      flex-shrink: 0; width: 24px; height: 24px; border-radius: 50%;
+      border: 1px solid var(--gold2); display: flex; align-items: center; justify-content: center;
+      font-size: .65rem; color: var(--gold);
+    }
+    .ic-title { font-size: .85rem; color: var(--gold); display: block; margin-bottom: 3px; }
+    .ic-note  { font-size: .78rem; color: var(--muted); line-height: 1.7; }
+    .ic-arrow { text-align: center; font-size: .75rem; color: var(--gold2); opacity: .6; padding: 2px 0; }
+
+    /* ══════════════════════════════
+       イラスト配置
+    ══════════════════════════════ */
+
+    /* ヘッダー：テキスト左列 ＋ にゃんてん右列（グリッドで完全分離） */
+    .header-grid {
+      display: grid;
+      grid-template-columns: 1fr 112px;
+      gap: 12px;
+      align-items: center;
+    }
+    .header-text { text-align: center; }
+
+    .header-nyantan {
+      position: static;
+      text-align: center;
+      align-self: center;
+    }
+    .nyantan-img {
+      width: 108px; display: block; margin: 0 auto 6px;
+      mix-blend-mode: multiply;
+    }
+    .nyantan-label {
+      font-size: .65rem; color: var(--muted); letter-spacing: .06em; line-height: 1.6;
+    }
+
+    /* 鑑定書イラスト（CSS製） */
+    .kanteisho-art {
+      width: 80%; max-width: 110px;
+      margin: 0 auto 10px;
+      display: block;
+      aspect-ratio: 3/4;
+      position: relative;
+      background:
+        linear-gradient(160deg, rgba(255,252,242,.88) 0%, rgba(254,248,228,.90) 100%),
+        url('welcome.png') center/cover no-repeat;
+      border: 2px solid var(--gold);
+      box-shadow:
+        0 2px 12px rgba(168,121,50,.28),
+        inset 0 0 0 4px rgba(255,252,242,.95),
+        inset 0 0 0 5px rgba(168,121,50,.35);
+      overflow: hidden;
+    }
+    .kanteisho-art::before {
+      content: "";
+      position: absolute; inset: 8px;
+      border: 1px solid rgba(168,121,50,.5);
+      pointer-events: none; z-index: 2;
+    }
+    .kanteisho-art::after {
+      content: "";
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% 20%, rgba(255,248,210,.55) 0%, transparent 60%);
+      pointer-events: none; z-index: 1;
+    }
+    .kanteisho-moon {
+      position: absolute; top: 13%; left: 50%; transform: translateX(-50%);
+      width: 30px; height: 30px; border-radius: 50%; z-index: 3;
+      background: radial-gradient(circle at 36% 34%, #fff7d0 0%, #d8b56d 52%, #a07030 100%);
+      box-shadow: 0 0 10px rgba(168,121,50,.50), 0 1px 4px rgba(0,0,0,.12);
+    }
+    .kanteisho-title {
+      position: absolute; bottom: 26%; left: 0; right: 0; z-index: 3;
+      text-align: center;
+      font-size: .54rem; letter-spacing: .2em;
+      color: var(--gold3);
+      font-weight: 600;
+      line-height: 1.8;
+    }
+    .kanteisho-stars {
+      position: absolute; top: 52%; left: 0; right: 0; z-index: 3;
+      text-align: center; font-size: .52rem;
+      color: rgba(168,121,50,.65); letter-spacing: 4px;
+    }
+    .kanteisho-deco {
+      position: absolute; bottom: 10%; left: 0; right: 0; z-index: 3;
+      text-align: center; font-size: .46rem;
+      color: rgba(168,121,50,.55); letter-spacing: .14em;
+    }
+
+    /* プレゼントカード画像（両方共通・完全統一） */
+    .kanteisho-img,
+    .diary-cover-img {
+      width: 100%;
+      max-width: 128px;
+      aspect-ratio: 3 / 4;
+      object-fit: cover;
+      display: block;
+      margin: 0 auto 12px;
+      box-shadow: 0 4px 18px rgba(168,121,50,.32), 0 1px 5px rgba(0,0,0,.18);
+    }
+
+    /* 背景透かし（全体マップ） */
+    .bg-watermark {
+      position: absolute; inset: 0; z-index: 0; pointer-events: none;
+      /*
+        【マップ画像の設定方法】
+        全体マップ画像を images/ フォルダに保存し、
+        下の行のコメントを外してファイル名を合わせてください。
+      */
+      background-image: url('welcome.png');
+      background-size: cover; background-position: center;
+      opacity: .05;
+    }
+    .letter-outer { position: relative; z-index: 1; }
+
+    /* マップ専用セクション */
+    .map-section {
+      margin: 4px 0 20px;
+      text-align: center;
+    }
+    .map-full-img {
+      width: 100%; display: block;
+      margin: 10px auto 0;
+    }
+
+
+    /* ══════════════════════════════
+       印刷（PDF保存）用
+    ══════════════════════════════ */
+    @media print {
+      html, body { background: var(--paper) !important; padding: 0 !important; }
+      .letter { box-shadow: none !important; max-width: 100% !important; }
+      body {
+        -webkit-print-color-adjust: exact; print-color-adjust: exact;
+        orphans: 3; widows: 3;
+      }
+      /* ページ分割を防ぐ */
+      .open-message, .gift, .flow-item, .catch-band,
+      .closing, .nl-footer, .keywords { page-break-inside: avoid; }
+
+      /* ── マップ画像：専用ページ・枠なし・中央配置 ── */
+      .map-section {
+        page-break-before: always;
+        page-break-after: always;
+        border: none !important;
+        background: none !important;
+        display: flex !important;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 227mm;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      .map-section .section-head { display: none !important; }
+      .map-full-img {
+        border: none !important;
+        width: 100% !important;
+        max-height: 227mm;
+        object-fit: contain;
+        display: block;
+        margin: auto !important;
+      }
+
+      /* ── 最終ページ：上下を紙いっぱいに ── */
+      .closing {
+        page-break-before: always;
+        min-height: 227mm;
+        display: flex !important;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      .letter-inner { padding-bottom: 0 !important; }
+      .nl-footer { display: none !important; }
+    }
+
+    @page {
+      size: A4;
+      margin: 15mm 12mm 20mm;
+    }
+  </style>
+</head>
+<body>
+
+<div class="letter">
+  <div class="bg-watermark"></div>
+  <div class="letter-outer">
+    <div class="letter-inner">
+
+      <!-- ▸ ヘッダー -->
+      <header class="nl-header">
+        <div class="header-grid">
+          <div class="header-text">
+            <div class="moon-circle">🌙</div>
+            <span class="nl-kicker">TSUKIYOMI WONDERLAND<br>みずきかのん</span>
+            <h1 class="nl-title">月読みワンダーランドへ、ようこそ</h1>
+            <p class="nl-subtitle">月とともに、今を整えていく世界へのご案内</p>
+          </div>
+          <div class="header-nyantan">
+            <img src="images/neko-tenshi.png" alt="月の案内人 にゃんてん" class="nyantan-img" onerror="this.style.display='none'">
+            <p class="nyantan-label">月の案内人<br>にゃんてん</p>
+          </div>
+        </div>
+      </header>
+
+      <!-- ▸ 扉が開くメッセージ -->
+      <div class="open-message">
+        <p class="open-text">
+          これから月読みワンダーランドの扉が開き、<br>
+          あなたの天命を生きる<em>月の種</em>が芽吹きます。
+        </p>
+      </div>
+
+      <!-- ▸ コンセプト -->
+      <p class="nl-body" style="text-align:center; font-family:'Hiragino Mincho ProN','Yu Mincho',serif; letter-spacing:.08em;">
+        「本当の自分」との出会いが、ここから動き出します。
+      </p>
+      <p class="nl-body">
+        お悩み解決や目標・夢を叶えるために、まず一番大切なのは、<em>ご自身の在り方・考え方・物の見方・振る舞い方</em>が今どういう状況なのかを、しっかりと受け止めることです。
+      </p>
+
+      <div class="quote-box">
+        問題に出会ったとき、その部分に関して思考も行動もふと止まってしまいます。<br>
+        流れを変えたいのに、同じ場所をぐるぐると巡り続ける——そんな経験はありませんか。
+      </div>
+
+      <p class="nl-body">
+        まずご自身のことをゆっくりと見つめることで、現状がはっきりと見えてきます。月読み鑑定と月読み日記は、あなたの「いい流れ」を予測し、心と状況を「整理」するためのものです。<em>すべては「自分を知ること」から始めていきましょう。</em>
+      </p>
+
+      <div class="divider">✦ ✦ ✦</div>
+
+      <!-- ▸ 2つのプレゼント -->
+      <span class="section-head">— 2つのプレゼント —</span>
+
+      <div class="gift-wrap">
+        <div class="gift">
+          <span class="gift-badge">✦ プレゼント １ ✦</span>
+          <img src="images/moon_passport_cover.png" alt="月の扉｜開運パスポート 第1の鑑定書" class="kanteisho-img" onerror="this.style.display='none'">
+          <p class="gift-title">第一の鑑定書</p>
+          <p class="gift-note">天命鑑定書をプレゼント。あなたの宿命・命宿から、今の自分を深く知る第一歩です。</p>
+        </div>
+        <div class="gift">
+          <span class="gift-badge">✦ プレゼント ２ ✦</span>
+          <img src="images/moon_diary_cover.png" alt="月読み日記" class="diary-cover-img" onerror="this.style.display='none'">
+          <p class="gift-title">7日間 月読み日記チャレンジ</p>
+          <p class="gift-note">毎日ひとつの問いと向き合う日記。書くことで、夢の実現へのヒアリングが自然と進みます。</p>
+        </div>
+      </div>
+
+      <div class="divider">◇ ◆ ◇</div>
+
+      <!-- ▸ 招待の流れ -->
+      <span class="section-head">— ワンダーランドへの招待の流れ —</span>
+      <div class="invite-compact">
+        <div class="ic-item">
+          <div class="ic-num">1</div>
+          <div>
+            <span class="ic-title">📜 月の種 開運パスポート診断</span>
+            <span class="ic-note">あなたの中の「月の種」を受け取る。天命鑑定書（第一弾）をプレゼント。</span>
+          </div>
+        </div>
+        <div class="ic-arrow">▼</div>
+        <div class="ic-item">
+          <div class="ic-num">2</div>
+          <div>
+            <span class="ic-title">📖 7日間 月読み日記体験</span>
+            <span class="ic-note">ワンダーランドの扉が開き、月とつながる7日間の体験。</span>
+          </div>
+        </div>
+        <div class="ic-arrow">▼</div>
+        <div class="ic-item">
+          <div class="ic-num">3</div>
+          <div>
+            <span class="ic-title">✉ 第二の鑑定書プレゼント</span>
+            <span class="ic-note">あなたの「月の種」の成長レポートをお届け。</span>
+          </div>
+        </div>
+        <div class="ic-arrow">▼</div>
+        <div class="ic-item">
+          <div class="ic-num">4</div>
+          <div>
+            <span class="ic-title">🌟 特別ご招待（抽選20名様）</span>
+            <span class="ic-note">月読命の個別鑑定60分プレゼント。月読命の宮殿で、あなただけの物語を紐解きます。</span>
+          </div>
+        </div>
+      </div>
+      <p style="text-align:center; font-size:.7rem; letter-spacing:.14em; color:var(--gold); margin: 8px 0 0;">すべての扉を体験された方はワンダーランドの「先行住民」です</p>
+
+      <div class="divider">✦ ✦ ✦</div>
+
+      <!-- ▸ 7つの力の旅 -->
+      <span class="section-head">— 月読み育整力メソッド　7つの力の旅 —</span>
+      <div class="power-compact">
+        <div class="pc-item"><span class="pc-num">① 気づく力</span><span class="pc-name"></span><span class="pc-sub">感情解放</span></div>
+        <div class="pc-item"><span class="pc-num">② 受入れ力</span><span class="pc-name"></span><span class="pc-sub">理解</span></div>
+        <div class="pc-item"><span class="pc-num">③ 整える力</span><span class="pc-name"></span><span class="pc-sub">自己理解</span></div>
+        <div class="pc-item"><span class="pc-num">④ 感謝する力</span><span class="pc-name"></span><span class="pc-sub">浄化・お陰様</span></div>
+        <div class="pc-item"><span class="pc-num">⑤ 育てる力</span><span class="pc-name"></span><span class="pc-sub">創造・直感</span></div>
+        <div class="pc-item"><span class="pc-num">⑥ 受け取る力</span><span class="pc-name"></span><span class="pc-sub">現実創造</span></div>
+        <div class="pc-item"><span class="pc-num">⑦ 宿す力</span><span class="pc-name"></span><span class="pc-sub">使命・天命</span></div>
+      </div>
+      <p style="text-align:center; font-size:.75rem; color:var(--muted); letter-spacing:.1em; margin-bottom:4px;">月の種を受け取る → 7つの力を育てる → 使命とともに生きる未来へ</p>
+
+      <div class="divider">✦ ✦ ✦</div>
+
+      <!-- ▸ ワンダーランドマップ -->
+      <div class="map-section">
+        <span class="section-head">— 月読みワンダーランド 全体マップ —</span>
+        <img src="welcome.png" alt="月読みワンダーランド全体マップ" class="map-full-img" onerror="this.style.display='none'">
+      </div>
+
+      <div class="divider">◇ ◆ ◇</div>
+
+      <!-- ▸ キャッチコピー帯 -->
+      <div class="catch-band">
+        <p class="catch-main">
+          ひとつひとつの開運アイテムを受け取りながら、<br>
+          一歩ずつお陰様の恵みに繋がり、自分を整えていく。<br>
+          唯一無二のあなたの天命の道を育て、<br>
+          開運していく。
+        </p>
+        <p class="catch-sub">
+          毎日が活気にあふれ、生きがいを感じられる——<br>
+          月読みワンダーランドは、そんな世界を目指しています。
+        </p>
+      </div>
+
+      <!-- ▸ コンセプトキーワード -->
+      <div class="keywords">
+        <span class="kw">自分を知る</span>
+        <span class="kw">整える</span>
+        <span class="kw">天命を生きる</span>
+        <span class="kw">毎日に活気を</span>
+        <span class="kw">夢を実現する</span>
+      </div>
+
+      <div class="divider">◇ ◆ ◇</div>
+
+      <!-- ▸ 結び -->
+      <div class="closing">
+        <p class="closing-text">
+          皆様の夢へのチャレンジ・理想の実現・お悩み解決を、<br>
+          月読みワンダーランドは全力でサポートしていきます。
+        </p>
+        <span class="closing-tagline">月はいつも寄り添ってくれています。<br>あなたらしい光の人生を、ここから創っていきましょう。</span>
+        <span class="signature">Kanon</span>
+        <span class="signature-sub">みずきかのん</span>
+      </div>
+
+      <!-- ▸ フッター -->
+      <footer class="nl-footer">
+        <p>TSUKIYOMI WONDERLAND &nbsp;｜&nbsp; みずきかのん</p>
+        <p>月とともに、今を整えていく</p>
+      </footer>
+
+    </div><!-- /.letter-inner -->
+  </div><!-- /.letter-outer -->
+</div><!-- /.letter -->
+
+</body>
+</html>
