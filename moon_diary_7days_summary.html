@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>7日間の月読み日記まとめ | 月読みワンダーランド</title>
+  <meta name="description" content="7日間の月読み日記を、写メ・記録・気づきとともに一冊のように見返すページです。">
+  <link rel="stylesheet" href="style.css?v=diary-paper-20260530">
+  <style>
+    .summary-shell{width:min(1060px,calc(100% - 28px));margin:0 auto;padding:34px 0 56px}
+    .summary-hero{margin:0 auto 28px;padding:36px 24px;border:1px solid rgba(241,217,155,.4);border-radius:24px;background:linear-gradient(160deg,rgba(255,250,242,.13),rgba(241,217,155,.07));box-shadow:0 24px 72px rgba(0,0,0,.28);text-align:center}
+    .summary-hero .summary-kicker{margin:0 0 12px;color:var(--gold2);font-size:12px;letter-spacing:.28em}
+    .summary-hero h1{margin:0;color:var(--white);font-size:clamp(30px,6vw,52px);line-height:1.45;letter-spacing:.06em}
+    .summary-hero p{max-width:720px;margin:16px auto 0;color:var(--muted);font-size:15px;line-height:2}
+    .summary-count{display:inline-flex;align-items:center;justify-content:center;margin-top:20px;padding:10px 18px;border:1px solid rgba(241,217,155,.45);border-radius:999px;color:var(--gold2);font-size:14px;letter-spacing:.08em;background:rgba(255,250,242,.08)}
+    .summary-board{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin:26px 0}
+    .summary-dot{padding:12px 8px;border:1px solid rgba(241,217,155,.3);border-radius:14px;background:rgba(255,255,255,.06);text-align:center}
+    .summary-dot strong{display:block;color:var(--white);font-size:13px}
+    .summary-dot span{display:block;margin-top:4px;color:var(--muted);font-size:11px}
+    .summary-dot.is-filled{background:rgba(241,217,155,.16);border-color:rgba(241,217,155,.62)}
+    .summary-grid{display:grid;gap:22px}
+    .summary-day{position:relative;padding:26px 24px;border:1px solid rgba(184,139,61,.34);border-radius:22px;background:linear-gradient(180deg,#fffaf2,#f8eedc);box-shadow:0 18px 52px rgba(28,18,49,.22);color:#3f3228;overflow:hidden}
+    .summary-day:before{content:"";position:absolute;inset:14px;border:1px solid rgba(184,139,61,.18);border-radius:16px;pointer-events:none}
+    .summary-day-header{display:grid;grid-template-columns:88px 1fr;gap:16px;align-items:center;margin-bottom:18px}
+    .summary-day-number{display:flex;align-items:center;justify-content:center;width:72px;height:72px;border:1px solid rgba(184,139,61,.4);border-radius:50%;color:#a8792d;font-size:28px;background:rgba(255,255,255,.45)}
+    .summary-day h2{margin:0;color:#3f3228;font-size:24px;line-height:1.5;letter-spacing:.04em}
+    .summary-day .summary-theme{display:block;margin-top:4px;color:#8a5e22;font-size:13px;letter-spacing:.08em}
+    .summary-content{display:grid;grid-template-columns:220px 1fr;gap:20px;align-items:start}
+    .summary-photo{min-height:180px;border:1px solid rgba(184,139,61,.24);border-radius:16px;background:rgba(184,139,61,.08);display:flex;align-items:center;justify-content:center;overflow:hidden;color:#a8792d;font-size:13px;line-height:1.8;text-align:center}
+    .summary-photo img{width:100%;height:100%;object-fit:cover;display:block}
+    .summary-text{display:grid;gap:12px}
+    .summary-entry{padding:13px 14px;border-left:3px solid #b9893b;background:rgba(255,255,255,.5);border-radius:10px;color:#4e4033;font-size:14px;line-height:1.9;white-space:pre-wrap}
+    .summary-entry strong{display:block;margin-bottom:4px;color:#8a5e22;font-size:12px;letter-spacing:.1em}
+    .summary-empty{color:#8a7866;font-size:14px;line-height:1.9}
+    .moon-clues{margin:28px auto 0;padding:26px 22px;border:1px solid rgba(241,217,155,.36);border-radius:22px;background:rgba(255,250,242,.08);box-shadow:0 18px 58px rgba(0,0,0,.2)}
+    .moon-clues h2{margin:0;color:var(--white);font-size:clamp(24px,4vw,34px);line-height:1.55;text-align:center;letter-spacing:.06em}
+    .moon-clues p{max-width:720px;margin:12px auto 0;color:var(--muted);font-size:14px;line-height:2;text-align:center}
+    .clue-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:20px}
+    .clue-card{padding:16px 14px;border:1px solid rgba(241,217,155,.28);border-radius:15px;background:linear-gradient(180deg,rgba(241,217,155,.16),rgba(255,250,242,.06));text-align:center}
+    .clue-card span{display:block;color:var(--gold2);font-size:11px;letter-spacing:.18em}
+    .clue-card strong{display:block;margin-top:8px;color:var(--white);font-size:15px;line-height:1.6}
+    .clue-card small{display:block;margin-top:7px;color:var(--muted);font-size:12px;line-height:1.7}
+    .second-report-bridge{margin:30px auto 0;padding:28px 24px;border:1px solid rgba(241,217,155,.42);border-radius:22px;background:linear-gradient(160deg,rgba(255,250,242,.14),rgba(241,217,155,.08));box-shadow:0 20px 64px rgba(0,0,0,.24);text-align:center}
+    .second-report-bridge .bridge-kicker{margin:0 0 10px;color:var(--gold2);font-size:12px;letter-spacing:.24em}
+    .second-report-bridge h2{margin:0;color:var(--white);font-size:clamp(24px,4vw,34px);line-height:1.55;letter-spacing:.05em}
+    .second-report-bridge p{max-width:720px;margin:14px auto 0;color:var(--muted);font-size:14px;line-height:2}
+    .second-report-bridge .moon-button{margin-top:18px}
+    .summary-actions{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:30px}
+    .summary-actions a,.summary-actions button{appearance:none;border:0;text-decoration:none;cursor:pointer}
+    .print-button{font-family:inherit}
+    @media(max-width:820px){.summary-board{grid-template-columns:repeat(4,1fr)}.summary-content{grid-template-columns:1fr}.summary-photo{min-height:150px}.summary-day-header{grid-template-columns:68px 1fr}.summary-day-number{width:58px;height:58px;font-size:23px}.clue-grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:520px){.summary-shell{width:min(100% - 18px,1060px)}.summary-board{grid-template-columns:repeat(2,1fr)}.summary-day{padding:22px 16px}.summary-hero{padding:30px 18px}.clue-grid{grid-template-columns:1fr}}
+    @media print{body{background:#fff!important}.summary-shell{width:100%;padding:0}.summary-hero,.summary-actions,.summary-board{display:none}.summary-day{break-inside:avoid;page-break-inside:avoid;box-shadow:none;margin-bottom:14mm}.summary-grid{gap:0}}
+  </style>
+</head>
+<body>
+  <main class="summary-shell">
+    <section class="summary-hero" aria-labelledby="summary-title">
+      <p class="summary-kicker">MY MOON DIARY STORY</p>
+      <h1 id="summary-title">7日間の月読み日記まとめ</h1>
+      <p>
+        ここでは、7日間で書いた言葉、写メに残した日常アイテム、心に浮かんだ気づきを一冊のように見返します。
+        これは、第2の鑑定書へ渡す「あなた自身の月の手がかり」を確認するページです。
+      </p>
+      <div class="summary-count" data-summary-count>記録を読み込んでいます</div>
+    </section>
+
+    <section class="summary-board" data-summary-board aria-label="7日間の記録状況"></section>
+    <section class="summary-grid" data-summary-grid aria-label="7日間の月読み日記まとめ"></section>
+
+    <section class="moon-clues" aria-labelledby="moon-clues-title">
+      <h2 id="moon-clues-title">第2の鑑定書に渡る4つの手がかり</h2>
+      <p>
+        書いた内容が完璧でなくても大丈夫です。
+        写真、言葉、感謝、行動の中に、今のあなたの現在地と次の願いがあらわれています。
+      </p>
+      <div class="clue-grid">
+        <div class="clue-card"><span>PHOTO</span><strong>写メに残したもの</strong><small>日常アイテムに映る、今の心の向き</small></div>
+        <div class="clue-card"><span>WORDS</span><strong>何度も出てきた言葉</strong><small>本音や願いが集まりやすい場所</small></div>
+        <div class="clue-card"><span>THANKS</span><strong>感謝できたこと</strong><small>すでに受け取っている恵みの流れ</small></div>
+        <div class="clue-card"><span>NEXT</span><strong>次に進みたい一歩</strong><small>未来を育てる小さな開運アクション</small></div>
+      </div>
+    </section>
+
+    <section class="second-report-bridge" aria-labelledby="second-report-title">
+      <p class="bridge-kicker">COMPLETE GIFT</p>
+      <h2 id="second-report-title">第2の鑑定書を受け取る準備が整いました</h2>
+      <p>
+        7日間で残した言葉は、今のあなたに寄り添う第2の鑑定書へ反映されていきます。
+        月読みワンダーランドから、次の一通を受け取る入口へ進みましょう。
+      </p>
+      <a class="moon-button" href="moon_seed_deep_report.html" data-keep-query>第2の鑑定書の入口へ進む</a>
+    </section>
+
+    <div class="summary-actions">
+      <a class="quiet-button" href="my_manual_修正版.html" data-keep-query>月読み日記BOOKへ戻る</a>
+      <button class="quiet-button print-button" type="button" onclick="window.print()">印刷する</button>
+    </div>
+  </main>
+
+  <script>
+    (function(){
+      var params = new URLSearchParams(window.location.search || '');
+      var profile = {
+        name: params.get('name') || 'あなた',
+        birth: params.get('birth') || '',
+        participantId: params.get('participantId') || '',
+        shuku: params.get('shuku') || ''
+      };
+      var identity = profile.participantId || profile.birth || profile.name || 'guest';
+      var identityCandidates = [];
+      [identity, profile.participantId, profile.birth, profile.name, 'guest'].forEach(function(value){
+        if(value && identityCandidates.indexOf(value) === -1) identityCandidates.push(value);
+      });
+      var days = [
+        { day:1, title:'今の私', theme:'月の種に気づく' },
+        { day:2, title:'心の声', theme:'月鏡に映す' },
+        { day:3, title:'感謝', theme:'日用品に宿る力' },
+        { day:4, title:'手放し', theme:'感情をほどく' },
+        { day:5, title:'整え', theme:'日常の運を動かす' },
+        { day:6, title:'未来', theme:'願いを受け取る' },
+        { day:7, title:'開花', theme:'第2の鑑定書へ' }
+      ];
+
+      function keepQuery(){
+        document.querySelectorAll('[data-keep-query]').forEach(function(link){
+          var href = link.getAttribute('href') || '';
+          if(window.location.search && href.indexOf('?') === -1) link.setAttribute('href', href + window.location.search);
+        });
+      }
+
+      function labelText(label){
+        var map = {
+          '1':'1つ目の記録',
+          '2':'2つ目の記録',
+          '3':'3つ目の記録',
+          '4':'4つ目の記録',
+          '日用品オラクルカード':'日用品オラクルカード'
+        };
+        return map[label] || label || '記録';
+      }
+
+      function compactTexts(texts){
+        var seen = {};
+        return texts.filter(function(item){
+          var text = String(item.text || '').trim();
+          if(!text || text.length < 2) return false;
+          if(text.indexOf('http') === 0) return false;
+          if(text.indexOf('{') === 0 && text.indexOf('"') !== -1) return false;
+          if(text.indexOf('sheet connection') !== -1) return false;
+          if(text.indexOf('diary sync connection test') !== -1) return false;
+          if(seen[text]) return false;
+          seen[text] = true;
+          return true;
+        }).slice(0, 8);
+      }
+
+      function parseMaybe(value){
+        if(!value) return null;
+        try { return JSON.parse(value); } catch(error) { return value; }
+      }
+
+      function dayPattern(day){
+        return new RegExp('(^|[^0-9])(?:day|challenge_day|diary_day|日記 day)[_ -]?' + day + '([^0-9]|$)', 'i');
+      }
+
+      function isOldDayCandidate(key, value, day){
+        if(!key) return false;
+        if(key.indexOf('structuredDiary') !== -1) return false;
+        if(key.indexOf('sheetSync') !== -1 || key.indexOf('outbox') !== -1 || key.indexOf('setup') !== -1) return false;
+        if(key.indexOf('introReflection') !== -1 || key.indexOf('manual') !== -1) return false;
+        var text = key + ' ' + JSON.stringify(value || '');
+        if(!dayPattern(day).test(text)) return false;
+        if(/connection_test|sheet_sync|diary_sync_setup/i.test(text)) return false;
+        return /tsukiyomi|diary|challenge|moon|day/i.test(key);
+      }
+
+      function walkOld(value, label, out){
+        if(value == null) return;
+        if(typeof value === 'string') {
+          var text = value.trim();
+          if(!text) return;
+          if(text.indexOf('data:image/') === 0) {
+            out.images.push(text);
+          } else if(text.length > 1) {
+            out.texts.push({ label: label || '記録', text: text });
+          }
+          return;
+        }
+        if(typeof value === 'number' || typeof value === 'boolean') return;
+        if(Array.isArray(value)) {
+          value.forEach(function(item, index){ walkOld(item, label || String(index + 1), out); });
+          return;
+        }
+        if(typeof value === 'object') {
+          Object.keys(value).forEach(function(key){
+            if(/^(name|birth|email|participantId|savedAt|savedAtJst|secretKey|url|page|recordType|profile)$/i.test(key)) return;
+            if(/photo|image|dataUrl|preview/i.test(key)) {
+              walkOld(value[key], key, out);
+              return;
+            }
+            if(/line|text|value|entry|diary|answer|question|fields|payload/i.test(key)) {
+              walkOld(value[key], key, out);
+            }
+          });
+        }
+      }
+
+      function collectOldDay(day){
+        var out = { texts: [], images: [] };
+        for(var i = 0; i < localStorage.length; i++) {
+          var key = localStorage.key(i);
+          var value = parseMaybe(localStorage.getItem(key));
+          if(!isOldDayCandidate(key, value, day)) continue;
+          walkOld(value, '', out);
+        }
+        out.texts = compactTexts(out.texts);
+        return out;
+      }
+
+      function collectDay(day){
+        var record = {};
+        for(var i = 0; i < identityCandidates.length; i++) {
+          var key = 'tsukiyomi:structuredDiary:v1:' + identityCandidates[i] + ':day:' + day;
+          try {
+            record = JSON.parse(localStorage.getItem(key) || '{}');
+          } catch(error) {
+            record = {};
+          }
+          if(record && record.day) break;
+        }
+        var texts = [];
+        if(Array.isArray(record.lines)) {
+          record.lines.forEach(function(line){
+            if(line && String(line.text || '').trim()) {
+              texts.push({
+                label: line.placeholder || line.number || '記録',
+                text: line.text
+              });
+            }
+          });
+        }
+        if(Array.isArray(record.extras)) {
+          record.extras.forEach(function(extra){
+            if(extra && String(extra.text || '').trim()) {
+              texts.push({
+                label: extra.key || '記録',
+                text: extra.text
+              });
+            }
+          });
+        }
+        var old = collectOldDay(day);
+        if(!texts.length && old.texts.length) texts = old.texts;
+        var images = record.photoDataUrl ? [record.photoDataUrl] : [];
+        if(!images.length && old.images.length) images = old.images;
+        return {
+          texts: compactTexts(texts),
+          images: images,
+          savedAtJst: record.savedAtJst || ''
+        };
+      }
+
+      function renderBoard(records){
+        var board = document.querySelector('[data-summary-board]');
+        if(!board) return;
+        board.innerHTML = '';
+        records.forEach(function(record){
+          var card = document.createElement('div');
+          card.className = 'summary-dot' + (record.texts.length || record.images.length ? ' is-filled' : '');
+          card.innerHTML = '<strong>Day ' + record.day + '</strong><span>' + (record.texts.length || record.images.length ? '記録あり' : '未記録') + '</span>';
+          board.appendChild(card);
+        });
+      }
+
+      function renderDay(record){
+        var section = document.createElement('article');
+        section.className = 'summary-day';
+        var photoHtml = record.images.length ?
+          '<div class="summary-photo"><img src="' + record.images[0] + '" alt="Day' + record.day + 'の写メ"></div>' :
+          '<div class="summary-photo">写メの記録は<br>まだありません</div>';
+        var textHtml = record.texts.length ? record.texts.map(function(item){
+          return '<div class="summary-entry"><strong>' + escapeHtml(labelText(item.label)) + '</strong>' + escapeHtml(item.text) + '</div>';
+        }).join('') : '<p class="summary-empty">まだ記録はありません。Day' + record.day + 'を書くと、ここにあなたの言葉が入ります。</p>';
+        section.innerHTML =
+          '<header class="summary-day-header">' +
+            '<div class="summary-day-number">' + record.day + '</div>' +
+            '<div><h2>Day' + record.day + ' ' + escapeHtml(record.title) + '</h2><span class="summary-theme">' + escapeHtml(record.theme) + '</span></div>' +
+          '</header>' +
+          '<div class="summary-content">' + photoHtml + '<div class="summary-text">' + textHtml + '</div></div>';
+        return section;
+      }
+
+      function escapeHtml(text){
+        return String(text || '').replace(/[&<>"']/g, function(ch){
+          return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];
+        });
+      }
+
+      function render(){
+        keepQuery();
+        var records = days.map(function(meta){
+          var record = collectDay(meta.day);
+          record.day = meta.day;
+          record.title = meta.title;
+          record.theme = meta.theme;
+          return record;
+        });
+        var filled = records.filter(function(record){ return record.texts.length || record.images.length; }).length;
+        var count = document.querySelector('[data-summary-count]');
+        if(count) count.textContent = '7日間中 ' + filled + '日分の記録があります';
+        renderBoard(records);
+        var grid = document.querySelector('[data-summary-grid]');
+        if(grid) {
+          grid.innerHTML = '';
+          records.forEach(function(record){ grid.appendChild(renderDay(record)); });
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', render);
+    })();
+  </script>
+</body>
+</html>

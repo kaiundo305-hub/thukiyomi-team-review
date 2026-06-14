@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Day5 月の庭園 | 月読みワンダーランド</title>
+  <meta name="description" content="月読みワンダーランド7日間チャレンジ Day5。感謝を育て、月読み日記に残します。">
+  <link rel="stylesheet" href="style.css?v=diary-paper-20260530">
+</head>
+<body>
+  <main class="challenge-shell" data-challenge-day="5">
+    <article class="challenge-card">
+      <div class="moon-mark" aria-hidden="true"></div>
+      <header class="challenge-header">
+        <div>
+          <p class="day-label">DAY 5 / TSUKI NO TEIEN</p>
+          <h1 class="challenge-title">月の庭園</h1>
+          <span class="challenge-theme">テーマ：感謝を育てる</span>
+        </div>
+        <aside class="challenge-guide" aria-label="月の案内人 にゃんてん">
+          <img src="images/neko-tenshi.png" alt="月の案内人 にゃんてん" onerror="this.onerror=null;this.src='neko-tenshi.png';">
+          <p>今日は、小さなありがとうを心の庭に植える日です。</p>
+        </aside>
+      </header>
+      <section class="challenge-calendar" data-challenge-calendar aria-label="7日間チャレンジの進行"></section>
+
+      <section class="challenge-body" aria-labelledby="day5-message">
+        <p id="day5-message">
+          月の庭園では、大きな出来事だけを探さなくて大丈夫です。
+          いつもの朝、誰かの一言、身体が動いてくれたこと、静かな時間があったこと。
+          小さな感謝に気づくほど、今の自分を支える力が少しずつ育っていきます。
+        </p>
+
+        <div class="moon-question">
+          今日、ありがとうと思えたことは何ですか？
+        </div>
+
+        <div class="diary-panel">
+          <label for="day5-diary">月読み日記 Day5</label>
+          <p class="diary-hint day1-item-lead">
+            今日の整えアイテムを写メして、あなたを支えてくれている恵みに感謝を向けてみましょう。
+          </p>
+          <div class="moon-item-upload day1-item-upload">
+            <label class="moon-item-upload-label" for="day5-item-photo">今日の整えアイテムを写メする</label>
+            <input id="day5-item-photo" type="file" accept="image/*" data-diary-item-photo>
+            <div class="moon-item-preview day1-item-preview" data-diary-item-preview>
+              <span>今日のアイテム写真を選ぶと、ここに表示されます。</span>
+            </div>
+          </div>
+          <div class="diary-line-notes" aria-label="月読み日記 Day5 記入欄">
+            <div class="diary-line-note">
+              <span>1</span>
+              <textarea data-diary-day-line="1" placeholder="今日の整えアイテム名と、心地よかった理由"></textarea>
+            </div>
+            <div class="diary-line-note">
+              <span>2</span>
+              <textarea data-diary-day-line="2" placeholder="このアイテムが、今日の私にくれた安心や豊かさ"></textarea>
+            </div>
+            <div class="diary-line-note">
+              <span>3</span>
+              <textarea data-diary-day-line="3" placeholder="ありがとうを伝えたいこと"></textarea>
+            </div>
+            <div class="diary-line-note">
+              <span>4</span>
+              <textarea data-diary-day-line="4" placeholder="この感謝を、明日の行動に変えるなら"></textarea>
+            </div>
+          </div>
+          <textarea id="day5-diary" data-diary-day="5" hidden aria-hidden="true"></textarea>
+          <p class="diary-hint">
+            ささやかなことで大丈夫です。感謝は、今を整え、これからを育てる種になります。
+          </p>
+          <div class="save-row">
+            <button class="moon-button" type="button" data-save-diary>日記を保存する</button>
+            <span class="save-status" data-save-status aria-live="polite"></span>
+          </div>
+        </div>
+      </section>
+
+      <nav class="challenge-nav" aria-label="チャレンジの移動">
+        <a class="quiet-button" href="challenge_day4_sync.html" data-keep-query>Day4へ戻る</a>
+        <a class="moon-button" href="challenge_day6_sync.html" data-keep-query>Day6へ進む</a>
+      </nav>
+    </article>
+
+    <footer class="gate-footer">
+      Shukuyo Astrology / 月読みワンダーランド<br>
+      みずきかのん　月読み師
+    </footer>
+  </main>
+
+  <script src="app.js"></script>
+  <script src="diary_fresh_start.js?v=20260610a"></script>
+  <script src="diary_structured_save.js?v=20260610c"></script>
+  <script src="diary_data_sync.js?v=20260610syncfix"></script>
+</body>
+</html>
