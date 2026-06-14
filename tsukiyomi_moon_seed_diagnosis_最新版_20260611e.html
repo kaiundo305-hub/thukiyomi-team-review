@@ -563,8 +563,15 @@ function setupKanonMessageAutosave(storageKey){
  if(shouldClearSavedState()){
   localStorage.removeItem(storageKey);
  }
- const saved=localStorage.getItem(storageKey);
- if(saved!==null && saved.replace(/<br\s*\/?>/gi,'').trim()!=='')el.innerHTML=stripInlineColors(saved);
+ // participantIdなしのフォールバックキーも試みる
+ const p=new URLSearchParams(location.search);
+ const nm=p.get('name')||''; const br=p.get('birth')||''; const sk=p.get('shuku')||'';
+ const fallbackKey=['tsukiyomiMoonSeedKanonMessage','',nm,br,sk].join('::');
+ const saved=localStorage.getItem(storageKey)||(storageKey!==fallbackKey?localStorage.getItem(fallbackKey):null);
+ if(saved!==null && saved.replace(/<br\s*\/?>/gi,'').trim()!==''){
+  el.innerHTML=stripInlineColors(saved);
+  localStorage.setItem(storageKey,el.innerHTML); // 正しいキーで保存し直す
+ }
  const save=function(){localStorage.setItem(storageKey,el.innerHTML)};
  el.addEventListener('input',save);
  el.addEventListener('blur',save);
