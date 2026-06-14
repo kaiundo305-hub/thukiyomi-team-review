@@ -185,6 +185,13 @@
       .nl-subtitle { letter-spacing: .1em; }
       .open-message { padding: 18px 14px; }
       .nl-body { font-size: .88rem; }
+      /* にゃんてん：横グリッドをやめて縦並び */
+      .header-grid {
+        grid-template-columns: 1fr;
+        justify-items: center;
+      }
+      .header-nyantan { order: -1; margin-bottom: 8px; }
+      .nyantan-img { width: 80px; }
     }
 
     .gift {
