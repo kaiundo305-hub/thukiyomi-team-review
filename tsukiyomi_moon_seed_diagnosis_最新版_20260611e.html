@@ -433,6 +433,7 @@
   @page{size:A4 portrait;margin:9mm 6mm 8mm}
 }
 </style>
+<script src="kanon_messages.js" onerror="console.log('kanon_messages.js not found')"></script>
 </head>
 <body class="stars">
 <div class="wrap">
@@ -554,7 +555,15 @@ function setupKanonMessageAutosave(storageKey){
   localStorage.removeItem(storageKey);
  }
  const saved=localStorage.getItem(storageKey);
- if(saved!==null && saved.replace(/<br\s*\/?>/gi,'').trim()!=='')el.innerHTML=saved;
+ if(saved!==null && saved.replace(/<br\s*\/?>/gi,'').trim()!==''){
+  el.innerHTML=saved;
+ } else {
+  const pid=new URLSearchParams(location.search).get('participantId')||'';
+  if(typeof KANON_PRESET_MESSAGES!=='undefined' && pid && KANON_PRESET_MESSAGES[pid]){
+   el.innerHTML=KANON_PRESET_MESSAGES[pid];
+   localStorage.setItem(storageKey,KANON_PRESET_MESSAGES[pid]);
+  }
+ }
  const save=function(){localStorage.setItem(storageKey,el.innerHTML)};
  el.addEventListener('input',save);
  el.addEventListener('blur',save);
