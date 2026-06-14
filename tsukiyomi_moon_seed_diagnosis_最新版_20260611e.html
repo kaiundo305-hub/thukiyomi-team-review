@@ -547,31 +547,14 @@ function shouldClearSavedState(){
  const p=new URLSearchParams(location.search);
  return p.get('clearCache')==='1';
 }
-function stripInlineColors(html){
- var d=document.createElement('div');
- d.innerHTML=html;
- d.querySelectorAll('[style]').forEach(function(n){
-  n.style.color='';
-  n.style.fontSize='';
-  if(!n.getAttribute('style').trim())n.removeAttribute('style');
- });
- return d.innerHTML;
-}
 function setupKanonMessageAutosave(storageKey){
  const el=document.querySelector('[data-kanon-message]');
  if(!el)return;
  if(shouldClearSavedState()){
   localStorage.removeItem(storageKey);
  }
- // participantIdなしのフォールバックキーも試みる
- const p=new URLSearchParams(location.search);
- const nm=p.get('name')||''; const br=p.get('birth')||''; const sk=p.get('shuku')||'';
- const fallbackKey=['tsukiyomiMoonSeedKanonMessage','',nm,br,sk].join('::');
- const saved=localStorage.getItem(storageKey)||(storageKey!==fallbackKey?localStorage.getItem(fallbackKey):null);
- if(saved!==null && saved.replace(/<br\s*\/?>/gi,'').trim()!==''){
-  el.innerHTML=stripInlineColors(saved);
-  localStorage.setItem(storageKey,el.innerHTML); // 正しいキーで保存し直す
- }
+ const saved=localStorage.getItem(storageKey);
+ if(saved!==null && saved.replace(/<br\s*\/?>/gi,'').trim()!=='')el.innerHTML=saved;
  const save=function(){localStorage.setItem(storageKey,el.innerHTML)};
  el.addEventListener('input',save);
  el.addEventListener('blur',save);
