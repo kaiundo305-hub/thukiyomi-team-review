@@ -151,6 +151,10 @@
   [contenteditable]{outline:none;border-radius:6px;cursor:text;transition:background .15s}
   [contenteditable]:hover{background:rgba(241,217,155,.10);outline:1px dashed rgba(241,217,155,.4)}
   [contenteditable]:focus{background:rgba(241,217,155,.15);outline:1px solid rgba(241,217,155,.6)}
+  /* 参加者ビュー：編集不可 */
+  body.participant-readonly [contenteditable]{pointer-events:none!important;cursor:default!important;user-select:text!important}
+  body.participant-readonly [contenteditable]:hover,body.participant-readonly [contenteditable]:focus{background:none!important;outline:none!important}
+  body.participant-readonly .edit-hint{display:none!important}
   .edit-hint{font-size:10px;color:var(--muted);text-align:right;opacity:.55;margin:4px 2px 0;letter-spacing:.06em}
   .memo-block{margin:22px 0;padding:16px 18px;border-radius:16px;border:1px dashed rgba(241,217,155,.42);background:rgba(241,217,155,.06)}
   .memo-label{font-size:11px;color:var(--gold2);letter-spacing:.14em;margin-bottom:8px}
@@ -1253,6 +1257,16 @@ function copyChallenge(typeKey,shuku,item){
 }
 function restart(){showSection('top');}
 init();
+
+// 参加者ビュー（GitHub Pages + pid/participantId）では編集を無効化
+(function(){
+  if(location.protocol==='https:'){
+    var _p=new URLSearchParams(location.search);
+    if(_p.get('pid')||_p.get('participantId')){
+      document.body.classList.add('participant-readonly');
+    }
+  }
+})();
 // URLパラメータから自動生成（鑑定リストからの呼び出し用）
 let urlQ='', urlQ2='';
 (function(){
