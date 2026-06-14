@@ -182,17 +182,60 @@
   .lottery-notice p{margin:5px 0;line-height:1.8}
   .lottery-title{font-size:16px;color:var(--gold2);font-weight:bold;letter-spacing:.08em;margin-bottom:8px!important}
 @media print{
-  /* ── 印刷時は文章が自然に流れるよう、毎ページ固定枠は使わない ── */
+  /* ── 毎ページ固定の装飾ヘッダー枠 ── */
   .print-frame{
-    display:none!important;
+    display:block!important;
+    position:fixed;
+    top:-14mm;left:-6mm;right:-6mm;
+    height:14mm;
+    background:linear-gradient(to right,#fffdf6,#fff8e0 22%,#fff2c0 44%,#ffe898 50%,#fff2c0 56%,#fff8e0 78%,#fffdf6);
+    border-top:2pt solid #c9a84c;
+    border-bottom:2pt solid #c9a84c;
+    z-index:9999;
+    -webkit-print-color-adjust:exact;
+    print-color-adjust:exact;
+  }
+  .print-frame::before{
+    content:'✦ ✧ ✦　　☽　月の種｜開運パスポート　第１の鑑定書　☾　　✦ ✧ ✦';
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    height:100%;
+    font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
+    font-size:7.5pt;
+    letter-spacing:.28em;
+    color:#7a4a10;
+    border-top:0.7pt solid #e0cc88;
+    border-bottom:0.7pt solid #e0cc88;
+    -webkit-print-color-adjust:exact;
+    print-color-adjust:exact;
   }
   .print-frame::after{
     display:none!important;
   }
-  /* ── フッターも毎ページ固定せず、本文の流れを優先 ── */
+  /* ── 毎ページ固定の装飾フッター枠 ── */
   .print-footer{
-    display:none!important;
+    display:flex!important;
+    position:fixed;
+    bottom:-12mm;left:-6mm;right:-6mm;
+    height:12mm;
+    background:linear-gradient(to right,#fffdf6,#fff8e0 22%,#fff2c0 44%,#ffe898 50%,#fff2c0 56%,#fff8e0 78%,#fffdf6);
+    border-top:2pt solid #c9a84c;
+    border-bottom:1.5pt solid #c9a84c;
+    align-items:center;
+    justify-content:center;
+    font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
+    font-size:6.5pt;
+    letter-spacing:.22em;
+    color:#7a4a10;
+    z-index:9999;
+    -webkit-print-color-adjust:exact;
+    print-color-adjust:exact;
   }
+  .print-footer::before{content:'✦　';font-size:8pt;color:#c9a84c;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .print-footer::after{content:'　✦';font-size:8pt;color:#c9a84c;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .print-footer span{color:#7a4a10!important;font-size:6.5pt!important}
+  .print-footer span+span::before{content:'　｜　';color:#c9a84c!important}
   /* ── 基本設定 ── */
   html{background:#fff6dc!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   body{background:#fff6dc!important;color:#1a1410!important;font-size:10.5pt!important;line-height:1.58!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
@@ -204,6 +247,7 @@
   /* ── カード背景 ── */
   .hero,.card,.wrap{background:none!important;border:none!important;box-shadow:none!important;backdrop-filter:none!important}
   .wrap::after,.wrap::before,.hero::before,.hero::after,.card::before,.card::after{display:none!important}
+  #result.card{margin:0!important;padding:0!important}
   #resultBody{
     border-left:0.9pt solid #b89438!important;
     border-right:0.9pt solid #b89438!important;
@@ -269,42 +313,36 @@
     padding-top:9mm!important;
   }
   #resultBody .report-page-start::before{
-    content:'✦';
+    content:'✦ ✧ ✦　　☽　月読みワンダーランド 月の種｜開運パスポート　☾　　✦ ✧ ✦';
     display:flex;
     align-items:center;
     justify-content:center;
-    height:8.5mm;
-    margin:0 -9mm 10.5mm;
-    color:#9b772b;
-    font-size:8pt;
-    letter-spacing:.18em;
-    border-top:1.35pt solid #b89438;
-    border-bottom:0.45pt solid #d7c188;
-    background:
-      linear-gradient(90deg,transparent 0 4mm,rgba(184,148,56,.38) 4mm,rgba(184,148,56,.38) calc(50% - 8mm),transparent calc(50% - 8mm),transparent calc(50% + 8mm),rgba(184,148,56,.38) calc(50% + 8mm),rgba(184,148,56,.38) calc(100% - 4mm),transparent calc(100% - 4mm)),
-      linear-gradient(90deg,transparent 0 8mm,rgba(215,193,136,.28) 8mm,rgba(215,193,136,.28) calc(100% - 8mm),transparent calc(100% - 8mm));
-    background-size:100% 1px,100% 1px;
-    background-repeat:no-repeat;
-    background-position:center 2.6mm,center 5.2mm;
+    height:12mm;
+    margin:0 -9mm 10mm;
+    font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
+    font-size:7.5pt;
+    letter-spacing:.22em;
+    color:#7a4a10;
+    border-top:2pt solid #c9a84c;
+    border-bottom:1pt solid #d4b86a;
+    background:linear-gradient(to right,#fffdf6,#fff8e0 22%,#fff2c0 44%,#ffe898 50%,#fff2c0 56%,#fff8e0 78%,#fffdf6);
+    -webkit-print-color-adjust:exact;
+    print-color-adjust:exact;
   }
   #resultBody::after{
-    content:'✦';
+    content:'✦ ✧ ✦　　☾　月読みワンダーランド　みずきかのん　月読み師　☽　　✦ ✧ ✦';
     display:flex;
     align-items:center;
     justify-content:center;
-    height:8mm;
-    margin:8mm -9mm 0;
-    color:#9b772b;
-    font-size:8pt;
-    letter-spacing:.18em;
-    border-top:0.45pt solid #d7c188;
-    border-bottom:1.35pt solid #b89438;
-    background:
-      linear-gradient(90deg,transparent 0 4mm,rgba(184,148,56,.38) 4mm,rgba(184,148,56,.38) calc(50% - 8mm),transparent calc(50% - 8mm),transparent calc(50% + 8mm),rgba(184,148,56,.38) calc(50% + 8mm),rgba(184,148,56,.38) calc(100% - 4mm),transparent calc(100% - 4mm)),
-      linear-gradient(90deg,transparent 0 8mm,rgba(215,193,136,.28) 8mm,rgba(215,193,136,.28) calc(100% - 8mm),transparent calc(100% - 8mm));
-    background-size:100% 1px,100% 1px;
-    background-position:center 39%,center 61%;
-    background-repeat:no-repeat;
+    height:12mm;
+    margin:10mm -9mm 0;
+    font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
+    font-size:7.5pt;
+    letter-spacing:.2em;
+    color:#7a4a10;
+    border-top:1pt solid #d4b86a;
+    border-bottom:2pt solid #c9a84c;
+    background:linear-gradient(to right,#fffdf6,#fff8e0 22%,#fff2c0 44%,#ffe898 50%,#fff2c0 56%,#fff8e0 78%,#fffdf6);
     -webkit-print-color-adjust:exact;
     print-color-adjust:exact;
   }
@@ -435,9 +473,9 @@
   h3{page-break-after:avoid}
   .mini,.harmony-card,.basis-card,li{break-inside:avoid}
   /* ── レイアウト ── */
-  .wrap{padding:15mm 13mm 18mm!important;max-width:none!important;margin:0!important}
+  .wrap{padding:4mm 13mm 4mm!important;max-width:none!important;margin:0!important}
   .grid{grid-template-columns:1fr 1fr 1fr!important}
-  @page{size:A4 portrait;margin:9mm 6mm 8mm}
+  @page{size:A4 portrait;margin:16mm 6mm 14mm}
 }
 </style>
 <script src="kanon_messages.js?v=20260615" onerror="console.log('kanon_messages.js not found')"></script>
@@ -1289,7 +1327,7 @@ let urlQ='', urlQ2='';
 </script>
 <div class="print-frame"></div>
 <div class="print-footer">
-  <span>Shukuyo Astrology ／ 宿曜占星術 月の種｜開運パスポート第1の鑑定書</span>
+  <span>月読みワンダーランド</span>
   <span>みずきかのん　月読み師</span>
 </div>
 </body>
