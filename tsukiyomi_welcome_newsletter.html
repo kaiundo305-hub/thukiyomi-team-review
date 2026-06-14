@@ -185,11 +185,11 @@
       .nl-body { font-size: .88rem; }
       /* にゃんてん：横グリッドをやめて縦並び */
       .header-grid {
-        grid-template-columns: 1fr;
-        justify-items: center;
+        grid-template-columns: 1fr !important;
+        justify-items: center !important;
       }
-      .header-nyantan { order: -1; margin-bottom: 8px; }
-      .nyantan-img { width: 80px; }
+      .header-nyantan { order: -1 !important; margin-bottom: 8px; }
+      .nyantan-img { width: 64px !important; }
     }
 
     .gift {
@@ -364,7 +364,7 @@
       align-self: center;
     }
     .nyantan-img {
-      width: 108px; display: block; margin: 0 auto 6px;
+      width: min(88px, 22vw); display: block; margin: 0 auto 6px;
       mix-blend-mode: multiply;
     }
     .nyantan-label {
