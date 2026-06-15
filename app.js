@@ -388,6 +388,23 @@
     render();
   }
 
+  // ── 日付ベースのDay解放管理 ──
+  var DAY1_UNLOCK = new Date(2026, 5, 15, 0, 0, 0); // 2026-06-15 JST
+
+  function getDayUnlockDate(dayNum) {
+    return new Date(DAY1_UNLOCK.getFullYear(), DAY1_UNLOCK.getMonth(), DAY1_UNLOCK.getDate() + (dayNum - 1));
+  }
+
+  function isDayUnlocked(dayNum) {
+    return new Date() >= getDayUnlockDate(dayNum);
+  }
+
+  function formatUnlockDate(dayNum) {
+    var d = getDayUnlockDate(dayNum);
+    var wd = ['日','月','火','水','木','金','土'][d.getDay()];
+    return (d.getMonth() + 1) + '月' + d.getDate() + '日（' + wd + '）';
+  }
+
   function setupChallengeCalendar() {
     var shell = document.querySelector("[data-challenge-day]");
     var calendar = document.querySelector("[data-challenge-calendar]");
@@ -398,15 +415,63 @@
     var items = [];
     for (var day = 1; day <= 7; day++) {
       var isCurrent = day === currentDay;
-      var cls = "challenge-calendar-day" + (isCurrent ? " is-current" : "");
-      var href = "challenge_day" + day + ".html" + search;
-      items.push(
-        '<a class="' + cls + '" href="' + href + '">' +
-          '<span>Day ' + day + '</span>' +
-        "</a>"
-      );
+      var locked = !isDayUnlocked(day);
+      var cls = "challenge-calendar-day" + (isCurrent ? " is-current" : "") + (locked ? " is-locked" : "");
+      var href = "challenge_day" + day + "_sync.html" + search;
+      if (locked) {
+        items.push(
+          '<span class="' + cls + '" style="opacity:.42;cursor:default" title="' + formatUnlockDate(day) + 'にひらきます">' +
+            '<span>Day ' + day + '</span>' +
+            '<small style="display:block;font-size:9px;margin-top:2px">🔒</small>' +
+          '</span>'
+        );
+      } else {
+        items.push(
+          '<a class="' + cls + '" href="' + href + '">' +
+            '<span>Day ' + day + '</span>' +
+          '</a>'
+        );
+      }
     }
     calendar.innerHTML = '<div class="challenge-calendar-title">7日間チャレンジ</div><div class="challenge-calendar-grid">' + items.join("") + "</div>";
+  }
+
+  function setupDayProgressLock() {
+    var shell = document.querySelector("[data-challenge-day]");
+    if (!shell) return;
+    var currentDay = Number(shell.getAttribute("data-challenge-day"));
+    if (!currentDay) return;
+
+    // 現在のページがまだ解放前なら本文をロック表示
+    if (!isDayUnlocked(currentDay)) {
+      var unlockStr = formatUnlockDate(currentDay);
+      var body = document.querySelector(".challenge-body");
+      if (body) {
+        body.innerHTML =
+          '<div style="text-align:center;padding:56px 20px 48px">' +
+          '<p style="font-size:40px;margin:0 0 18px;opacity:.8">🔒</p>' +
+          '<p style="font-size:18px;color:var(--gold2,#f1d99b);font-weight:bold;margin:0 0 14px;letter-spacing:.06em">Day' + currentDay + '</p>' +
+          '<p style="color:var(--muted,#e5d9ef);font-size:15px;line-height:2.1;margin:0">' + unlockStr + 'からひらきます。<br>その日を、楽しみにお待ちください 🌙</p>' +
+          '</div>';
+      }
+    }
+
+    // 次のDayへ進むボタンをロック
+    var nextDay = currentDay + 1;
+    if (nextDay > 7 || isDayUnlocked(nextDay)) return;
+    var unlockNext = formatUnlockDate(nextDay);
+    document.querySelectorAll('a').forEach(function(link) {
+      var href = (link.getAttribute('href') || '');
+      if (href.indexOf('challenge_day' + nextDay) !== -1) {
+        link.style.opacity = '.45';
+        link.style.cursor = 'not-allowed';
+        link.removeAttribute('href');
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          alert('Day' + nextDay + 'は' + unlockNext + 'からひらきます✨\nその日が来たらお進みください。');
+        });
+      }
+    });
   }
 
   function setupYearJourney() {
@@ -1638,5 +1703,6 @@
     setupDeepReport();
     setupSheetSyncSetup();
     setupChallengeOpenLock();
+    setupDayProgressLock();
   });
 })();
