@@ -2,7 +2,7 @@
   var CONFIG_URL_KEY = 'tsukiyomi:sheetSync:url';
   var CONFIG_SECRET_KEY = 'tsukiyomi:sheetSync:secretKey';
   var OUTBOX_KEY = 'tsukiyomi:diarySync:outbox';
-  var DEFAULT_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbw0crAKQgBOoZhUhBVQT8cClNIoelCsg3tZSog_EaLalfKoRg2qFgR-Ptga_k180pu_/exec';
+  var DEFAULT_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxIffIfAOptA-WR6jjT9dg8Fc0yb9HpwsLTR-ZG43Nw12_KR_Yi0Xj9IT_FAyXGV_Ic/exec';
   var DEFAULT_SECRET_KEY = 'tsukiyomi-2026-key';
 
   function getParams(){
