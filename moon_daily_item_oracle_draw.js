@@ -152,13 +152,21 @@
     updateHidden(root, card);
   }
 
+  function hideDrawButton(root){
+    var drawButton = root.querySelector('[data-draw-oracle-card]');
+    if(drawButton) drawButton.style.display = 'none';
+  }
+
   document.addEventListener('DOMContentLoaded', function(){
     var root = document.querySelector('[data-daily-item-oracle]');
     if(!root) return;
     var drawButton = root.querySelector('[data-draw-oracle-card]');
     var applyButton = root.querySelector('[data-apply-oracle-card]');
     var currentRecord = loadCard();
-    if(currentRecord) showCard(root, currentRecord);
+    if(currentRecord) {
+      showCard(root, currentRecord);
+      hideDrawButton(root);
+    }
 
     if(drawButton) {
       drawButton.addEventListener('click', function(){
@@ -167,6 +175,7 @@
         currentRecord = { card: card, drawnAtJst: todayJst() };
         saveCard(card);
         showCard(root, currentRecord);
+        hideDrawButton(root);
         var status = root.querySelector('[data-card-status]');
         if(status) status.textContent = 'カードを受け取りました';
       });
