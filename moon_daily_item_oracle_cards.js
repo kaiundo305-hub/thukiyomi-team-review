@@ -11,7 +11,7 @@
       action: '鏡をやさしく拭き、今日の自分の目を3秒見つめましょう。',
       question: '鏡の中の私に、今日伝えたい言葉は何ですか。',
       gratitude: '私の本当の姿をいつも映し続けてくれてありがとう。',
-      image: 'images/oracle/item_001.png'
+      image: 'images/oracle/item_001.jpg'
     },
     {
       id: 'item_002',
@@ -24,7 +24,7 @@
       action: 'お気に入りのマグカップで、温かい飲み物を一杯いれましょう。',
       question: '今の私が本当に受け取りたいものは何ですか。',
       gratitude: '毎日私を満たして支えてくれてありがとう。',
-      image: 'images/oracle/item_002.png'
+      image: 'images/oracle/item_002.jpeg'
     },
     {
       id: 'item_003',
@@ -37,7 +37,7 @@
       action: '手帳を開き、今週の大事なことを3つ書き出してみましょう。',
       question: '今の私が一番伝えたい・届けたいことは何ですか。',
       gratitude: '私の言葉と計画をいつも受け止めてくれてありがとう。',
-      image: 'images/oracle/item_003.png'
+      image: 'images/oracle/item_003.jpg'
     },
     {
       id: 'item_004',
@@ -50,7 +50,7 @@
       action: 'スニーカーを整えて履き、今日5分だけ外を歩いてみましょう。',
       question: '今の私が「踏み出したい」と思っているのはどんな一歩ですか。',
       gratitude: '私の一歩一歩をいつも支えてくれてありがとう。',
-      image: 'images/oracle/item_004.png'
+      image: 'images/oracle/item_004.jpg'
     },
     {
       id: 'item_005',
@@ -63,7 +63,7 @@
       action: '水筒にお気に入りの飲み物を入れ、今日一日手元に置きましょう。',
       question: '今の私が補いたい・満たしたいものは何ですか。',
       gratitude: '私のエネルギーをいつも補ってくれてありがとう。',
-      image: 'images/oracle/item_005.png'
+      image: 'images/oracle/item_005.jpg'
     },
     {
       id: 'item_006',
@@ -76,7 +76,7 @@
       action: '白いハンカチを広げ、手のひらでやさしく押さえてみましょう。',
       question: '今の私がそっと受け止めてほしいものは何ですか。',
       gratitude: '私の涙も不安も、やさしく受け取ってくれてありがとう。',
-      image: 'images/oracle/item_006.png'
+      image: 'images/oracle/item_006.jpg'
     },
     {
       id: 'item_007',
@@ -89,7 +89,7 @@
       action: 'ヘアブラシでゆっくり髪を梳かしながら、心の流れも整えましょう。',
       question: '今の私の中で、解きほぐしたい感情や流れは何ですか。',
       gratitude: '流れを整えてしなやかさを引き出してくれてありがとう。',
-      image: 'images/oracle/item_007.png'
+      image: 'images/oracle/item_007.jpg'
     },
     {
       id: 'item_008',
@@ -102,7 +102,7 @@
       action: 'スタンドライトをつけて、自分の作業スペースを明るく整えましょう。',
       question: '今の私が光を当てたい・輝かせたいものは何ですか。',
       gratitude: '私の周りをいつも明るく照らしてくれてありがとう。',
-      image: 'images/oracle/item_008.png'
+      image: 'images/oracle/item_008.jpeg'
     },
     {
       id: 'item_009',
@@ -115,7 +115,7 @@
       action: 'エプロンをつけて、誰かのために何かひとつ作ってみましょう。',
       question: '今の私が温かく包んであげたい人や場は何ですか。',
       gratitude: '私の「誰かのために」という気持ちをいつも支えてくれてありがとう。',
-      image: 'images/oracle/item_009.png'
+      image: 'images/oracle/item_009.jpeg'
     },
     {
       id: 'item_010',
@@ -128,7 +128,7 @@
       action: 'ストールを肩に羽織り、自分をやさしく包んでみましょう。',
       question: '今の私が守りたい・大切にしたい境界線は何ですか。',
       gratitude: '自由でいながらやさしく守ってくれてありがとう。',
-      image: 'images/oracle/item_010.png'
+      image: 'images/oracle/item_010.jpeg'
     },
     {
       id: 'item_011',
@@ -141,7 +141,7 @@
       action: 'カレンダーを見て、今月残りの大事な日をひとつ確認しましょう。',
       question: '今の私が整えたい・見直したい流れや時間は何ですか。',
       gratitude: '私の時間と方向をいつも整えてくれてありがとう。',
-      image: 'images/oracle/item_011.png'
+      image: 'images/oracle/item_011.jpeg'
     },
     {
       id: 'item_012',
@@ -154,7 +154,7 @@
       action: '花瓶に水を満たし、何か一輪飾ってみましょう。なければ空のまま磨いてください。',
       question: '今の私の中で、芽吹かせたい可能性は何ですか。',
       gratitude: '美しさと成長の余白をいつも教えてくれてありがとう。',
-      image: 'images/oracle/item_012.png'
+      image: 'images/oracle/item_012.jpeg'
     },
     {
       id: 'item_013',
@@ -167,7 +167,7 @@
       action: '服の一枚にアイロンをかけ、自分の姿勢も一緒に整えましょう。',
       question: '今の私が整えたい「見え方・姿勢・印象」は何ですか。',
       gratitude: 'しわを伸ばしてすっきりさせてくれてありがとう。',
-      image: 'images/oracle/item_013.png'
+      image: 'images/oracle/item_013.jpeg'
     },
     {
       id: 'item_014',
@@ -180,7 +180,7 @@
       action: '玄関マットを持ち上げ、玄関をすっきり掃除してみましょう。',
       question: '今の私の「土台・基盤」として守りたいものは何ですか。',
       gratitude: '帰るたびに私をやさしく迎えてくれてありがとう。',
-      image: 'images/oracle/item_014.png'
+      image: 'images/oracle/item_014.jpeg'
     },
     {
       id: 'item_015',
@@ -193,7 +193,7 @@
       action: '手持ちの鍵をひとつ手に取り、「どんな扉を開きたいか」を想像しましょう。',
       question: '今の私が開きたい「扉や可能性」は何ですか。',
       gratitude: '大切なものを守り、新しい世界を開いてくれてありがとう。',
-      image: 'images/oracle/item_015.png'
+      image: 'images/oracle/item_015.jpeg'
     },
     {
       id: 'item_016',
@@ -206,7 +206,7 @@
       action: 'キャンドルに火を灯し（なければ部屋の明かりを見つめ）、願いをひとつ心の中で唱えましょう。',
       question: '今の私の中で、灯し続けたい願いや情熱は何ですか。',
       gratitude: '私の心の火をいつも灯し続けてくれてありがとう。',
-      image: 'images/oracle/item_016.png'
+      image: 'images/oracle/item_016.jpeg'
     },
     {
       id: 'item_017',
@@ -219,7 +219,7 @@
       action: 'バッグの中を整理し、本当に必要なものだけを残しましょう。',
       question: '今の私が持ち続けたい「経験・想い・力」は何ですか。',
       gratitude: '私の大切なものをいつも一緒に運んでくれてありがとう。',
-      image: 'images/oracle/item_017.png'
+      image: 'images/oracle/item_017.jpeg'
     },
     {
       id: 'item_018',
@@ -232,7 +232,7 @@
       action: 'かごに今日使うものだけを集め、必要と不要を分けてみましょう。',
       question: '今の私が「収穫したい・手放したい」ものは何ですか。',
       gratitude: '大切なものを集めて守ってくれてありがとう。',
-      image: 'images/oracle/item_018.png'
+      image: 'images/oracle/item_018.jpeg'
     },
     {
       id: 'item_019',
@@ -245,7 +245,7 @@
       action: 'おたまを手に取り、誰かに分け与えるイメージで今日の料理に使いましょう。',
       question: '今の私が誰かに分け与えたいものは何ですか。',
       gratitude: '適切な量を分かち合う力を教えてくれてありがとう。',
-      image: 'images/oracle/item_019.png'
+      image: 'images/oracle/item_019.jpeg'
     },
     {
       id: 'item_020',
@@ -258,7 +258,7 @@
       action: '裁縫箱を開いて中を確認し、修繕が必要なものをひとつ見つけましょう。',
       question: '今の私がひと針ずつ丁寧に縫い直したいものは何ですか。',
       gratitude: '丁寧に修復する力と創造の喜びを教えてくれてありがとう。',
-      image: 'images/oracle/item_020.png'
+      image: 'images/oracle/item_020.jpeg'
     },
     {
       id: 'item_021',
@@ -271,7 +271,7 @@
       action: '空のノートを開き、最初のページに今日の日付だけを書きましょう。',
       question: '今の私の中にある「まだ言葉にしていない可能性」は何ですか。',
       gratitude: '真っ白な余白で可能性を広げてくれてありがとう。',
-      image: 'images/oracle/item_021.png'
+      image: 'images/oracle/item_021.jpeg'
     },
     {
       id: 'item_022',
@@ -284,7 +284,7 @@
       action: '折りたたみ傘をバッグに入れ、今日の「備え」をひとつ確認しましょう。',
       question: '今の私が備えておきたい・守っておきたいものは何ですか。',
       gratitude: '急な変化からいつも守ってくれてありがとう。',
-      image: 'images/oracle/item_022.png'
+      image: 'images/oracle/item_022.jpeg'
     },
     {
       id: 'item_023',
@@ -297,7 +297,7 @@
       action: '玄関のドアを拭いて整え、「ここが私の場所」と心の中で宣言しましょう。',
       question: '今の私が整えたい「居場所・場のエネルギー」は何ですか。',
       gratitude: '私を迎え入れ、世界への入口となってくれてありがとう。',
-      image: 'images/oracle/item_023.png'
+      image: 'images/oracle/item_023.jpeg'
     },
     {
       id: 'item_024',
@@ -310,7 +310,7 @@
       action: '本棚を一度眺め、なぜか目に留まった一冊を手に取ってみましょう。',
       question: '今の私に届けたい言葉を持っているのは、どんな本ですか。',
       gratitude: '私の内側を育ててくれた言葉たちに、ありがとう。',
-      image: 'images/oracle/item_024.png'
+      image: 'images/oracle/item_024.jpeg'
     },
     {
       id: 'item_025',
@@ -323,7 +323,7 @@
       action: '赤いリボンを手に取り（なければ赤いものをひとつ見つけ）、大切なつながりをひとつ思い浮かべましょう。',
       question: '今の私が結びたい・大切にしたいご縁は何ですか。',
       gratitude: '大切なご縁を美しく結んでくれてありがとう。',
-      image: 'images/oracle/item_025.png'
+      image: 'images/oracle/item_025.jpeg'
     },
     {
       id: 'item_026',
@@ -336,7 +336,7 @@
       action: 'ヘアゴムで髪をひとつにまとめ、今日集中したいことをひとつ決めましょう。',
       question: '今の私がひとつにまとめたい「関係・想い・エネルギー」は何ですか。',
       gratitude: 'ばらばらなものをまとめて整えてくれてありがとう。',
-      image: 'images/oracle/item_026.png'
+      image: 'images/oracle/item_026.jpeg'
     },
     {
       id: 'item_027',
@@ -349,7 +349,7 @@
       action: '小物入れを開き、中のものを一度出して整理してみましょう。',
       question: '今の私が大切に守りたい・蓄えたいものは何ですか。',
       gratitude: '大切なものをいつも守って整えてくれてありがとう。',
-      image: 'images/oracle/item_027.png'
+      image: 'images/oracle/item_027.jpeg'
     }
   ];
 })();
