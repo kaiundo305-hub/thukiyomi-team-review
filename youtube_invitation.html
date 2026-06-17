@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>月読みワンダーランド｜特別プレゼント 天命鑑定書</title>
+<style>
+  :root{
+    --bg1:#1b1233; --bg2:#3a235f; --gold:#d8b56d; --gold2:#f1d99b;
+    --white:#fffaf2; --muted:#e5d9ef; --line:rgba(241,217,155,.45);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
+    color:var(--white);
+    background:
+      radial-gradient(circle at 18% 8%, rgba(132,93,176,.55) 0, transparent 24%),
+      radial-gradient(circle at 82% 18%, rgba(241,217,155,.16) 0, transparent 22%),
+      radial-gradient(circle at 50% 92%, rgba(100,160,220,.14) 0, transparent 28%),
+      linear-gradient(145deg,var(--bg1),var(--bg2));
+    min-height:100vh; line-height:1.8;
+  }
+  .stars:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.34;background-image:
+    radial-gradient(circle at 7% 16%, rgba(255,255,255,.9) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 22% 72%, rgba(241,217,155,.9) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 41% 28%, rgba(255,255,255,.8) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 63% 84%, rgba(255,255,255,.75) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 79% 35%, rgba(241,217,155,.75) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 94% 66%, rgba(255,255,255,.85) 0 1px, transparent 1.5px);
+    background-size:211px 197px,263px 241px,307px 283px,233px 251px,281px 223px,337px 299px;}
+  .wrap{max-width:540px;margin:auto;padding:32px 18px 60px;position:relative}
+  .hero{text-align:center;padding:36px 28px 28px;
+    border:1px solid var(--line);
+    background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.055)),
+      radial-gradient(circle at 50% 0%,rgba(241,217,155,.12),transparent 42%);
+    border-radius:28px;
+    box-shadow:0 18px 60px rgba(0,0,0,.25),inset 0 0 34px rgba(241,217,155,.06);
+    backdrop-filter:blur(8px);
+    position:relative;overflow:hidden;
+    margin-bottom:20px;
+  }
+  .hero:before{content:"";position:absolute;inset:12px;border:1px solid rgba(241,217,155,.22);border-radius:22px;pointer-events:none}
+  .moon{width:70px;height:70px;border-radius:50%;margin:0 auto 16px;
+    background:radial-gradient(circle at 30% 30%,#fff7d7,#d7b66d 64%,#9c7b3e);
+    box-shadow:0 0 35px rgba(241,217,155,.55)}
+  .eyebrow{font-size:12px;letter-spacing:.28em;color:rgba(241,217,155,.78);margin-bottom:10px}
+  h1{font-size:clamp(22px,5vw,34px);letter-spacing:.06em;color:var(--gold2);line-height:1.4;margin-bottom:10px}
+  .desc{font-size:15px;color:var(--muted);line-height:1.9;margin-bottom:6px}
+  .card{
+    border:1px solid var(--line);
+    background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.05));
+    border-radius:22px;padding:28px;
+    box-shadow:0 12px 40px rgba(0,0,0,.2);
+    backdrop-filter:blur(6px);
+    position:relative;overflow:hidden;
+    margin-bottom:20px;
+  }
+  .card:before{content:"";position:absolute;inset:10px;border:1px solid rgba(241,217,155,.18);border-radius:18px;pointer-events:none}
+  label{display:block;margin:14px 0 6px;color:var(--gold2);font-size:14px;letter-spacing:.06em}
+  input{
+    width:100%;padding:13px 16px;border-radius:14px;
+    border:1px solid rgba(241,217,155,.35);
+    background:rgba(255,255,255,.10);
+    color:var(--white);font-size:16px;font-family:inherit;
+  }
+  input::placeholder{color:rgba(255,250,242,.38)}
+  input:focus{outline:none;border-color:rgba(241,217,155,.7);background:rgba(255,255,255,.14)}
+  .shuku-badge{
+    margin:8px 0 2px;padding:8px 14px;border-radius:12px;
+    background:rgba(241,217,155,.12);border:1px solid rgba(241,217,155,.3);
+    font-size:14px;color:var(--gold2);min-height:36px;
+    transition:all .3s;
+  }
+  .btn{
+    width:100%;padding:17px;border-radius:999px;border:0;cursor:pointer;
+    font-size:17px;font-family:inherit;font-weight:bold;letter-spacing:.06em;
+    color:#271733;
+    background:linear-gradient(90deg,var(--gold2),var(--gold));
+    box-shadow:0 8px 28px rgba(0,0,0,.28);
+    margin-top:20px;transition:opacity .2s,transform .1s;
+  }
+  .btn:hover{opacity:.9}
+  .btn:active{transform:scale(.98)}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .note{font-size:13px;color:rgba(255,250,242,.5);text-align:center;margin-top:10px;line-height:1.7}
+
+  /* サンキュー画面 */
+  #thanks{display:none}
+  .thanks-icon{font-size:48px;text-align:center;margin-bottom:16px}
+  h2{font-size:22px;color:var(--gold2);text-align:center;margin-bottom:12px;line-height:1.5}
+  .thanks-desc{font-size:15px;color:var(--muted);line-height:1.9;text-align:center;margin-bottom:20px}
+  .kansei-box{
+    background:rgba(241,217,155,.1);border:1px solid rgba(241,217,155,.4);
+    border-radius:16px;padding:18px;margin-bottom:18px;
+  }
+  .kansei-label{font-size:12px;letter-spacing:.2em;color:rgba(241,217,155,.7);margin-bottom:8px}
+  .kansei-url{
+    font-size:13px;color:var(--gold2);word-break:break-all;line-height:1.7;
+    background:rgba(0,0,0,.2);border-radius:8px;padding:10px 12px;
+  }
+  .copy-btn{
+    width:100%;padding:12px;border-radius:999px;border:1px solid var(--line);
+    background:transparent;color:var(--gold2);font-size:14px;font-family:inherit;
+    cursor:pointer;margin-top:10px;transition:all .2s;
+  }
+  .copy-btn:hover{background:rgba(241,217,155,.1)}
+  .line-btn{
+    display:block;width:100%;padding:17px;border-radius:999px;border:0;cursor:pointer;
+    font-size:16px;font-family:inherit;font-weight:bold;
+    color:#fff;background:#00b900;
+    box-shadow:0 6px 24px rgba(0,185,0,.3);
+    text-align:center;text-decoration:none;margin-top:6px;
+    transition:opacity .2s;
+  }
+  .line-btn:hover{opacity:.88}
+  .section-label{font-size:12px;letter-spacing:.2em;color:rgba(241,217,155,.68);margin-bottom:10px}
+  .divider{border:none;border-top:1px solid rgba(241,217,155,.2);margin:20px 0}
+  .spinner{display:none;text-align:center;padding:16px 0;color:var(--gold2);font-size:14px;letter-spacing:.1em}
+  .error-msg{display:none;color:#ff6b6b;font-size:14px;text-align:center;margin-top:12px;line-height:1.7}
+</style>
+</head>
+<body class="stars">
+<div class="wrap">
+
+  <!-- フォーム画面 -->
+  <div id="form-section">
+    <div class="hero">
+      <div class="moon"></div>
+      <p class="eyebrow">月読みワンダーランド｜特別プレゼント</p>
+      <h1>あなたの天命鑑定書を<br>プレゼントします</h1>
+      <p class="desc">
+        動画をご視聴いただき、ありがとうございます。<br>
+        生年月日から本命宿を導き、今のあなたに宿る<br>才能の種と因果の流れを読み解きます。
+      </p>
+    </div>
+
+    <div class="card">
+      <label>お名前</label>
+      <input type="text" id="name" placeholder="例：かのん" autocomplete="name" />
+
+      <label>生年月日</label>
+      <input type="date" id="birth" onchange="calcShuku()" autocomplete="bday" />
+      <div class="shuku-badge" id="shuku-badge">生年月日を入力すると本命宿が表示されます</div>
+
+      <label>メールアドレス</label>
+      <input type="email" id="email" placeholder="例：kanon@example.com" autocomplete="email" />
+
+      <div class="spinner" id="spinner">✦ 送信中… しばらくお待ちください ✦</div>
+      <div class="error-msg" id="error-msg"></div>
+
+      <button class="btn" onclick="submit()">✨ 天命鑑定書を受け取る</button>
+      <p class="note">メールアドレスに鑑定書のURLをお届けします。<br>届かない場合は迷惑メールフォルダをご確認ください。</p>
+    </div>
+  </div>
+
+  <!-- サンキュー画面 -->
+  <div id="thanks">
+    <div class="hero">
+      <div class="thanks-icon">🌙</div>
+      <h2>鑑定書をお送りしました</h2>
+      <p class="thanks-desc">
+        ご登録いただいたメールアドレスに<br>
+        天命鑑定書のURLをお届けしました。<br>
+        届くまで少しお待ちください。
+      </p>
+    </div>
+
+    <div class="card">
+      <p class="section-label">✦ 鑑定書を今すぐひらく</p>
+      <div class="kansei-box">
+        <p class="kansei-label">あなたの天命鑑定書URL</p>
+        <div class="kansei-url" id="kansei-url-display"></div>
+        <button class="copy-btn" onclick="copyUrl()">URLをコピー</button>
+      </div>
+      <a class="btn" id="kansei-link" href="#" target="_blank" style="display:block;text-align:center;text-decoration:none;color:#271733">天命鑑定書をひらく →</a>
+    </div>
+
+    <div class="card">
+      <p class="section-label">✦ 7日間チャレンジに参加する</p>
+      <p style="font-size:14px;color:var(--muted);line-height:1.85;margin-bottom:16px">
+        月読みワンダーランドのLINEオープンチャットで<br>
+        月とともに整える7日間体験ができます。<br>
+        ぜひご参加ください。
+      </p>
+      <a class="line-btn" href="https://line.me/ti/g2/n-70sLC85OI-r_c-TXBictpYcs9E90eV4Tc3nA?utm_source=invitation&utm_medium=link_copy&utm_campaign=default" target="_blank">
+        💚 LINEオープンチャットに参加する
+      </a>
+    </div>
+
+    <p class="note" style="margin-top:8px">
+      みずきかのん　月読み師<br>月読みワンダーランド
+    </p>
+  </div>
+
+</div>
+
+<script>
+// ── 宿計算ロジック（鑑定書から移植）──
+const shukuList=["昴宿","畢宿","觜宿","参宿","井宿","鬼宿","柳宿","星宿","張宿","翼宿","軫宿","角宿","亢宿","氐宿","房宿","心宿","尾宿","箕宿","斗宿","女宿","虚宿","危宿","室宿","壁宿","奎宿","婁宿","胃宿"];
+const lunarMonthStart={1:"室宿",2:"奎宿",3:"胃宿",4:"畢宿",5:"参宿",6:"鬼宿",7:"張宿",8:"角宿",9:"氐宿",10:"心宿",11:"斗宿",12:"虚宿"};
+const lunarInfo=[0x04bd8,0x04ae0,0x0a570,0x054d5,0x0d260,0x0d950,0x16554,0x056a0,0x09ad0,0x055d2,0x04ae0,0x0a5b6,0x0a4d0,0x0d250,0x1d255,0x0b540,0x0d6a0,0x0ada2,0x095b0,0x14977,0x04970,0x0a4b0,0x0b4b5,0x06a50,0x06d40,0x1ab54,0x02b60,0x09570,0x052f2,0x04970,0x06566,0x0d4a0,0x0ea50,0x06e95,0x05ad0,0x02b60,0x186e3,0x092e0,0x1c8d7,0x0c950,0x0d4a0,0x1d8a6,0x0b550,0x056a0,0x1a5b4,0x025d0,0x092d0,0x0d2b2,0x0a950,0x0b557,0x06ca0,0x0b550,0x15355,0x04da0,0x0a5d0,0x14573,0x052d0,0x0a9a8,0x0e950,0x06aa0,0x0aea6,0x0ab50,0x04b60,0x0aae4,0x0a570,0x05260,0x0f263,0x0d950,0x05b57,0x056a0,0x096d0,0x04dd5,0x04ad0,0x0a4d0,0x0d4d4,0x0d250,0x0d558,0x0b540,0x0b6a0,0x195a6,0x095b0,0x049b0,0x0a974,0x0a4b0,0x0b27a,0x06a50,0x06d40,0x0af46,0x0ab60,0x09570,0x04af5,0x04970,0x064b0,0x074a3,0x0ea50,0x06b58,0x055c0,0x0ab60,0x096d5,0x092e0,0x0c960,0x0d954,0x0d4a0,0x0da50,0x07552,0x056a0,0x0abb7,0x025d0,0x092d0,0x0cab5,0x0a950,0x0b4a0,0x0baa4,0x0ad50,0x055d9,0x04ba0,0x0a5b0,0x15176,0x052b0,0x0a930,0x07954,0x06aa0,0x0ad50,0x05b52,0x04b60,0x0a6e6,0x0a4e0,0x0d260,0x0ea65,0x0d530,0x05aa0,0x076a3,0x096d0,0x04afb,0x04ad0,0x0a4d0,0x1d0b6,0x0d250,0x0d520,0x0dd45,0x0b5a0,0x056d0,0x055b2,0x049b0,0x0a577,0x0a4b0,0x0aa50,0x1b255,0x06d20,0x0ada0,0x14b63,0x09370,0x049f8,0x04970,0x064b0,0x168a6,0x0ea50,0x06b20,0x1a6c4,0x0aae0,0x0a2e0,0x0d2e3,0x0c960,0x0d557,0x0d4a0,0x0da50,0x05d55,0x056a0,0x0a6d0,0x055d4,0x052d0,0x0a9b8,0x0a950,0x0b4a0,0x0b6a6,0x0ad50,0x055a0,0x0aba4,0x0a5b0,0x052b0,0x0b273,0x06930,0x07337,0x06aa0,0x0ad50,0x14b55,0x04b60,0x0a570,0x054e4,0x0d160,0x0e968,0x0d520,0x0daa0,0x16aa6,0x056d0,0x04ae0,0x0a9d4,0x0a2d0,0x0d150,0x0f252,0x0d520];
+function lYearDays(y){var s=348;for(var i=0x8000;i>0x8;i>>=1)s+=(lunarInfo[y-1900]&i)?1:0;return s+leapDays(y)}
+function leapMonth(y){return lunarInfo[y-1900]&0xf}
+function leapDays(y){return leapMonth(y)?((lunarInfo[y-1900]&0x10000)?30:29):0}
+function monthDays(y,m){return(lunarInfo[y-1900]&(0x10000>>m))?30:29}
+function solarToLunar(date){var base=new Date(1900,0,31),offset=Math.floor((date-base)/86400000),i,temp=0;for(i=1900;i<2101&&offset>0;i++){temp=lYearDays(i);offset-=temp}if(offset<0){offset+=temp;i--}var year=i,leap=leapMonth(year),isLeap=false,month;for(month=1;month<13&&offset>0;month++){if(leap>0&&month==(leap+1)&&!isLeap){--month;isLeap=true;temp=leapDays(year)}else{temp=monthDays(year,month)}if(isLeap&&month==(leap+1))isLeap=false;offset-=temp}if(offset==0&&leap>0&&month==leap+1){if(isLeap)isLeap=false;else{isLeap=true;--month}}if(offset<0){offset+=temp;--month}return{year:year,month:month,day:offset+1,isLeap:isLeap}}
+function shukuFromLunar(month,day){var start=lunarMonthStart[month],idx=shukuList.indexOf(start);return shukuList[(idx+day-1)%27]}
+
+var calcedShuku = '';
+function calcShuku(){
+  var birth = document.getElementById('birth').value;
+  var badge = document.getElementById('shuku-badge');
+  if(!birth){ badge.textContent='生年月日を入力すると本命宿が表示されます'; calcedShuku=''; return; }
+  try{
+    var d = new Date(birth+'T00:00:00'), l = solarToLunar(d), s = shukuFromLunar(l.month, l.day);
+    calcedShuku = s;
+    badge.textContent = '✦ あなたの本命宿：' + s;
+  }catch(e){ badge.textContent='計算できませんでした'; calcedShuku=''; }
+}
+
+// ── GAS WebhookのURL（GASデプロイ後にここを更新）──
+var GAS_URL = 'https://script.google.com/macros/s/AKfycbzSzvzmgMnYJ3raYuoJjqGls362NTWztiMwWko6ujE77Gs6VnPgS3BBODu2cRWBzM-fag/exec';
+
+// ── 鑑定書ベースURL ──
+var BASE_KANSEI = 'https://kaiundo305-hub.github.io/thukiyomi-team-review/tsukiyomi_moon_seed_diagnosis_%E6%9C%80%E6%96%B0%E7%89%88_20260611e.html';
+
+var generatedUrl = '';
+
+function submit(){
+  var name  = document.getElementById('name').value.trim();
+  var birth = document.getElementById('birth').value;
+  var email = document.getElementById('email').value.trim();
+  var errEl = document.getElementById('error-msg');
+  errEl.style.display = 'none';
+
+  if(!name){  showError('お名前を入力してください'); return; }
+  if(!birth){ showError('生年月日を入力してください'); return; }
+  if(!email || !email.includes('@')){ showError('正しいメールアドレスを入力してください'); return; }
+  if(!calcedShuku){ showError('生年月日を入力して本命宿を確認してください'); return; }
+
+  // 鑑定書URLを生成
+  generatedUrl = BASE_KANSEI
+    + '?name='  + encodeURIComponent(name)
+    + '&birth=' + encodeURIComponent(birth)
+    + '&shuku=' + encodeURIComponent(calcedShuku);
+
+  // ボタン無効化・スピナー表示
+  document.querySelector('.btn').disabled = true;
+  document.getElementById('spinner').style.display = 'block';
+
+  // GASにGETリクエスト送信（no-cors不要：GASがJSONPで返す）
+  var url = GAS_URL
+    + '?secretKey=tsukiyomi-2026-key'
+    + '&name='   + encodeURIComponent(name)
+    + '&email='  + encodeURIComponent(email)
+    + '&birth='  + encodeURIComponent(birth)
+    + '&shuku='  + encodeURIComponent(calcedShuku)
+    + '&source=youtube';
+
+  var img = new Image();
+  img.onload = img.onerror = function(){ showThanks(name); };
+  img.src = url;
+
+  // 5秒でタイムアウトしてもサンキュー表示（GASは動作している）
+  setTimeout(function(){ showThanks(name); }, 5000);
+}
+
+function showError(msg){
+  var el = document.getElementById('error-msg');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+function showThanks(name){
+  document.getElementById('form-section').style.display = 'none';
+  document.getElementById('thanks').style.display = 'block';
+  document.getElementById('kansei-url-display').textContent = generatedUrl;
+  document.getElementById('kansei-link').href = generatedUrl;
+  window.scrollTo(0,0);
+}
+
+function copyUrl(){
+  if(!generatedUrl) return;
+  navigator.clipboard.writeText(generatedUrl).then(function(){
+    var btn = document.querySelector('.copy-btn');
+    btn.textContent = 'コピーしました ✓';
+    setTimeout(function(){ btn.textContent = 'URLをコピー'; }, 2000);
+  }).catch(function(){
+    var el = document.getElementById('kansei-url-display');
+    var range = document.createRange();
+    range.selectNode(el);
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+  });
+}
+</script>
+</body>
+</html>
