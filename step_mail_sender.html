@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>双子座新月リマインドメール｜月読みワンダーランド</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0b0e2a;color:#fffaf2;font-family:"Hiragino Kaku Gothic ProN",sans-serif;padding:16px;max-width:1200px;margin:0 auto}
+h1{color:#f1d99b;font-size:1rem;letter-spacing:.08em;border-bottom:1px solid rgba(241,217,155,.3);padding-bottom:12px;margin-bottom:16px}
+
+.day-tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.day-tab{background:rgba(241,217,155,.08);border:1px solid rgba(241,217,155,.25);border-radius:8px;padding:10px 16px;cursor:pointer;font-size:13px;color:#c8b87a;transition:.2s;font-family:inherit;-webkit-tap-highlight-color:transparent}
+.day-tab.active{background:rgba(241,217,155,.2);border-color:#f1d99b;color:#f1d99b;font-weight:bold}
+.day-tab:hover:not(.active){background:rgba(241,217,155,.12)}
+
+.progress-bar-wrap{background:rgba(255,255,255,.1);border-radius:99px;height:8px;margin-bottom:4px}
+.progress-bar{background:linear-gradient(90deg,#f1d99b,#d8b56d);height:8px;border-radius:99px;transition:width .4s}
+.progress-label{font-size:12px;color:#c8b87a;margin-bottom:20px;text-align:right}
+
+.template-box{background:rgba(241,217,155,.07);border:1px solid rgba(241,217,155,.3);border-radius:12px;padding:16px;margin-bottom:24px}
+.template-box h2{color:#f1d99b;font-size:.9rem;margin-bottom:12px;letter-spacing:.1em}
+.template-box label{display:block;font-size:12px;color:#c8b87a;margin-bottom:4px;margin-top:10px}
+.template-box input,.template-box textarea{width:100%;background:#0d1133;color:#fffaf2;border:1px solid rgba(241,217,155,.3);border-radius:8px;padding:10px 12px;font-size:16px;font-family:inherit;resize:vertical}
+.template-box textarea{min-height:180px;line-height:1.75}
+.hint{font-size:11px;color:#888;margin-top:4px}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.card{border:1px solid rgba(241,217,155,.25);border-radius:12px;padding:14px;background:rgba(241,217,155,.04);transition:border-color .2s}
+.card.sent{border-color:rgba(100,220,120,.5);background:rgba(50,180,80,.07)}
+.card-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.no{font-size:11px;color:#888;min-width:22px}
+.name{font-size:15px;color:#f1d99b;font-weight:bold;flex:1}
+.shuku{font-size:11px;color:#c8b87a;background:rgba(200,184,122,.15);border-radius:99px;padding:2px 8px}
+.email-row{display:flex;gap:6px;margin-bottom:10px}
+.email-input{flex:1;min-width:0;background:#0d1133;color:#fffaf2;border:1px solid rgba(241,217,155,.3);border-radius:8px;padding:10px 12px;font-size:16px}
+.email-input::placeholder{color:#555}
+.btn-gmail{background:linear-gradient(90deg,#ea4335,#c62828);color:#fff;border:none;border-radius:8px;padding:10px 14px;font-size:13px;font-weight:bold;cursor:pointer;white-space:nowrap;font-family:inherit;-webkit-tap-highlight-color:transparent}
+.btn-gmail:disabled{background:#444;cursor:not-allowed}
+.btn-gmail:not(:disabled):active{opacity:.75}
+.sent-row{display:flex;align-items:center;gap:8px;margin-top:2px}
+.chk{width:20px;height:20px;cursor:pointer;accent-color:#6ddc8a;flex-shrink:0}
+.sent-label{font-size:13px;color:#8be0a0}
+.unsent-label{font-size:13px;color:#888}
+
+/* ── モバイル最適化 ── */
+@media(max-width:520px){
+  body{padding:12px}
+  h1{font-size:.9rem;letter-spacing:.04em}
+  .day-tabs{gap:6px;margin-bottom:14px}
+  .day-tab{padding:9px 12px;font-size:12px}
+  .template-box{padding:14px}
+  .grid{grid-template-columns:1fr;gap:10px}
+  .card{padding:12px}
+  .email-row{flex-direction:column;gap:8px}
+  .btn-gmail{width:100%;padding:12px;font-size:14px;border-radius:10px}
+  .name{font-size:14px}
+}
+</style>
+</head>
+<body>
+<h1>☽ 双子座新月開運リマインドメール｜7日間ステップメール</h1>
+
+<div class="day-tabs" id="day-tabs">
+  <button class="day-tab" data-day="2">Day2 本音の泉</button>
+  <button class="day-tab" data-day="3">Day3 月の洞窟</button>
+  <button class="day-tab" data-day="4">Day4 解放の滝</button>
+  <button class="day-tab" data-day="5">Day5 月の庭園</button>
+  <button class="day-tab" data-day="6">Day6 願いの丘</button>
+  <button class="day-tab" data-day="7">Day7 月の城</button>
+</div>
+
+<div class="progress-bar-wrap"><div class="progress-bar" id="pbar"></div></div>
+<div class="progress-label" id="plabel">0 / 44 送信済み</div>
+
+<div class="template-box">
+  <h2 id="tmpl-title">📝 Day2 メールテンプレート（編集可）</h2>
+  <label>件名</label>
+  <input type="text" id="tmpl_subj">
+  <label>本文（{{name}} と {{url}} は自動で置換されます）</label>
+  <textarea id="tmpl_body"></textarea>
+  <p class="hint">※ 編集した内容はそのDayごとに自動保存されます</p>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<script>
+const BASE_URL = 'https://kaiundo305-hub.github.io/thukiyomi-team-review/';
+
+const DAY_CONFIGS = {
+  2: {
+    title: 'Day2 本音の泉',
+    subject: '【☽ Day2 双子座新月】今日のオラクルカードを引いてみて',
+    body:
+`{{name}}さん、こんにちは。kanonです。
+
+双子座新月の月読みチャレンジ、Day2へようこそ ☽
+
+今日は、日用品オラクルカードを引く日です。
+あなたに必要な「整えのヒント」を
+日用品を通して受け取ってみましょう。
+
+▼ Day2の月読み日記を開く
+{{url}}
+
+━━ 📱 毎日すぐ開けるようにしましょう ━━
+
+メールを探さなくても良いように、
+リンクをホーム画面に保存しておくのがおすすめです。
+
+【iPhoneの場合】
+① 上のリンクをSafariで開く
+② 画面下の「□↑」（共有ボタン）をタップ
+③「ホーム画面に追加」を選ぶ
+
+【Androidの場合】
+① 上のリンクをChromeで開く
+② 右上の「⋮」をタップ
+③「ホーム画面に追加」を選ぶ
+
+アイコンが追加されたら、毎日1タップで開けます ✨
+━━━━━━━━━━━━━━━━━━━━━━
+
+7日間、一緒に月のリズムを感じていきましょう。
+
+kanon
+
+━━━━━━━━━━━━━━━━━━━━━━
+HARAJYUKU 開運堂　みずきかのん
+moon@kaiundo.me
+━━━━━━━━━━━━━━━━━━━━━━`
+  },
+  3: {
+    title: 'Day3 月の洞窟',
+    subject: '【☽ Day3 双子座新月】月の洞窟で、本音と向き合う',
+    body:
+`{{name}}さん、こんにちは。kanonです。
+
+双子座新月チャレンジ、Day3です ☽
+
+今日は「月の洞窟」。
+誰にも見せていない感情や、心の奥にある本音と
+静かに向き合う時間です。
+
+ジャッジしなくていいです。
+ただ、自分の中にあるものを、言葉にしてみてください。
+書いた言葉は、あなただけの宝物になります。
+
+▼ Day3の月読み日記を開く
+{{url}}
+
+kanon
+
+━━━━━━━━━━━━━━━━━━━━━━
+HARAJYUKU 開運堂　みずきかのん
+moon@kaiundo.me
+━━━━━━━━━━━━━━━━━━━━━━`
+  },
+  4: {
+    title: 'Day4 解放の滝',
+    subject: '【☽ Day4 双子座新月】手放すと、新しい月の風が入る',
+    body:
+`{{name}}さん、こんにちは。kanonです。
+
+双子座新月チャレンジ、Day4です ☽
+
+今日は「解放の滝」。
+もう手放してもいいもの、過去に引きずっていたものを
+水に流すイメージで向き合う日です。
+
+手放すことは、失うことではなく
+スペースを作ること。
+新しい何かが入ってくるための余白です。
+
+▼ Day4の月読み日記を開く
+{{url}}
+
+kanon
+
+━━━━━━━━━━━━━━━━━━━━━━
+HARAJYUKU 開運堂　みずきかのん
+moon@kaiundo.me
+━━━━━━━━━━━━━━━━━━━━━━`
+  },
+  5: {
+    title: 'Day5 月の庭園',
+    subject: '【☽ Day5 双子座新月】あなたを支えてくれている力に気づく日',
+    body:
+`{{name}}さん、こんにちは。kanonです。
+
+双子座新月チャレンジ、Day5です ☽
+
+今日は「月の庭園」。
+感謝を育てる日です。
+
+大きな出来事でなくていい。
+いつもの朝、誰かの一言、体が動いてくれたこと。
+小さな「ありがとう」を見つけるほど、
+自分の中の豊かさが育っていきます。
+
+▼ Day5の月読み日記を開く
+{{url}}
+
+kanon
+
+━━━━━━━━━━━━━━━━━━━━━━
+HARAJYUKU 開運堂　みずきかのん
+moon@kaiundo.me
+━━━━━━━━━━━━━━━━━━━━━━`
+  },
+  6: {
+    title: 'Day6 願いの丘',
+    subject: '【☽ Day6 双子座新月】未来の自分が、あなたを呼んでいます',
+    body:
+`{{name}}さん、こんにちは。kanonです。
+
+双子座新月チャレンジ、いよいよDay6です ☽
+
+今日は「願いの丘」。
+誰かに認められるための夢じゃなくていい。
+本当は、どう生きたいか。
+
+これまでの5日間の気づきを携えて
+少し先の自分を静かに描いてみましょう。
+
+▼ Day6の月読み日記を開く
+{{url}}
+
+明日でいよいよ7日間完成です。
+ここまで来たあなた、すごいです。
+
+kanon
+
+━━━━━━━━━━━━━━━━━━━━━━
+HARAJYUKU 開運堂　みずきかのん
+moon@kaiundo.me
+━━━━━━━━━━━━━━━━━━━━━━`
+  },
+  7: {
+    title: 'Day7 月の城',
+    subject: '【☽ Day7 双子座新月】7日間、完走おめでとうございます🌙',
+    body:
+`{{name}}さん、こんにちは。kanonです。
+
+双子座新月チャレンジ、最終日 Day7です ☽
+
+7日間、本当によく続けました。
+
+月の城にたどり着いた今、
+何かが大きく変わっていなくても大丈夫です。
+
+この7日間で心に残った言葉、
+気づいた本音、小さな感謝、これからの願い。
+その一つひとつが、確かな歩みでした。
+
+▼ Day7の月読み日記を開く
+{{url}}
+
+日記を書いたら、7日間のまとめも見てみてください。
+あなたの言葉が、月の手がかりになっていきます。
+
+完走、おめでとうございます 🌙
+
+kanon
+
+━━━━━━━━━━━━━━━━━━━━━━
+HARAJYUKU 開運堂　みずきかのん
+moon@kaiundo.me
+━━━━━━━━━━━━━━━━━━━━━━`
+  }
+};
+
+const MEMBERS = [
+  {no:1,  name:"ちえ",              shuku:"柳宿", email:"marie020912@gmail.com"},
+  {no:2,  name:"RENA CHEN",         shuku:"井宿", email:"renawaseda19960104@gmail.com"},
+  {no:3,  name:"福田真弓",           shuku:"軫宿", email:"fukuyuraraseitai@gmail.com"},
+  {no:4,  name:"宮城あい",           shuku:"觜宿", email:"thanks_love_welcome@yahoo.co.jp"},
+  {no:5,  name:"青山智美",           shuku:"箕宿", email:"nonene1822@gmail.com"},
+  {no:6,  name:"堀佳子",             shuku:"軫宿", email:""},
+  {no:7,  name:"Takada Emiko",      shuku:"参宿", email:"emikirkwood@hotmail.com"},
+  {no:8,  name:"栗田知佳",           shuku:"亢宿", email:"sakurapiyo0128@yahoo.co.jp"},
+  {no:9,  name:"Kanonさん",         shuku:"房宿", email:"fromneverland@icloud.com"},
+  {no:10, name:"高田慎一",           shuku:"井宿", email:"shininchi.t21@gmail.com"},
+  {no:11, name:"yoko",              shuku:"角宿", email:"happypost1971@gmail.com"},
+  {no:12, name:"M.UME",             shuku:"女宿", email:"emuemu1958@yahoo.co.jp"},
+  {no:13, name:"惠子",               shuku:"房宿", email:"lightuniverse111@gmail.com"},
+  {no:14, name:"（名前不明）",       shuku:"觜宿", email:"hipponaomi@yahoo.co.jp"},
+  {no:15, name:"田中茂治",           shuku:"危宿", email:"shigeshige1718@gmail.com"},
+  {no:16, name:"美波晶子",           shuku:"翼宿", email:"akfeb04@icloud.com"},
+  {no:17, name:"天野美穂",           shuku:"張宿", email:"lepetitjardin151128@gmail.com"},
+  {no:18, name:"kishunaあっこ",      shuku:"尾宿", email:"m1kek0@yahoo.co.jp"},
+  {no:19, name:"須黒あゆ子",         shuku:"亢宿", email:"fishchild16@gmail.com"},
+  {no:20, name:"丸山早百合",         shuku:"心宿", email:"mstdnscsmj@gmail.com"},
+  {no:21, name:"新田道子",           shuku:"亢宿", email:"nyomimasyut407@yahoo.co.jp"},
+  {no:22, name:"古澤真希",           shuku:"軫宿", email:"firewood.hum.a.song.8@gmail.com"},
+  {no:23, name:"Ooyama Miyoko",     shuku:"井宿", email:"namitowa34@gmail.com"},
+  {no:24, name:"AKEMI",             shuku:"軫宿", email:"libera.a3777@gmail.com"},
+  {no:25, name:"池原詩乃",           shuku:"壁宿", email:"ike-yumi-ikeike@docomo.ne.jp"},
+  {no:26, name:"chisako",           shuku:"胃宿", email:"888highpriestess@gmail.com"},
+  {no:27, name:"ひらやままり",       shuku:"箕宿", email:"mari-hmmnfd.327028@docomo.ne.jp"},
+  {no:28, name:"Noriyuki Okamoto",  shuku:"虚宿", email:"ninjakana888@gmail.com"},
+  {no:29, name:"tomomi",            shuku:"壁宿", email:"momotopiyo@yahoo.co.jp"},
+  {no:30, name:"SachikoO",          shuku:"柳宿", email:"felisuko55@gmail.com"},
+  {no:31, name:"（名前不明）",       shuku:"氐宿", email:"tmit2650@gmail.com"},
+  {no:32, name:"hides",             shuku:"翼宿", email:"hs.comun@gmail.com"},
+  {no:33, name:"古屋七重",           shuku:"女宿", email:"sodapopsparkling-mailmagagine@yahoo.co.jp"},
+  {no:34, name:"大貫一恵",           shuku:"張宿", email:"yunokazu2663@gmail.com"},
+  {no:35, name:"朱里",               shuku:"婁宿", email:"junko.japo@gmail.com"},
+  {no:36, name:"佐藤ひろこ",         shuku:"参宿", email:"hiro.cebu@gmail.com"},
+  {no:37, name:"齊藤美紀",           shuku:"女宿", email:"mirinamarmo1214@yahoo.co.jp"},
+  {no:38, name:"fumie",             shuku:"胃宿", email:"kansya-kansya@kdt.biglobe.ne.jp"},
+  {no:39, name:"渡辺ゆかり",         shuku:"畢宿", email:"yuka680219@gmail.com"},
+  {no:40, name:"川﨑智貴",           shuku:"昴宿", email:"6858artdevivre@gmail.com"},
+  {no:41, name:"徳田英弘",           shuku:"翼宿", email:"h.neriya@gmail.com"},
+  {no:42, name:"谷口貴朗",           shuku:"房宿", email:"for.life.clover@gmail.com"},
+  {no:43, name:"かのん",             shuku:"觜宿", email:"velvetmoon0426@gmail.com"},
+  {no:44, name:"熊川",               shuku:"軫宿", email:"basoromyu0317@gmail.com"}
+];
+
+const EMAIL_PFX  = 'gmailSender::email::';
+const SENT_PFX   = 'stepMail::sent::day';
+const SUBJ_PFX   = 'stepMail::subj::day';
+const BODY_PFX   = 'stepMail::body::day';
+
+let currentDay = 2;
+
+function pidOf(no){
+  return String(no).padStart(3, '0');
+}
+
+function getDayUrl(no, day){
+  return BASE_URL + 'challenge_day' + day + '_sync.html?pid=' + pidOf(no);
+}
+
+function loadTemplate(day){
+  const cfg = DAY_CONFIGS[day];
+  const subj = localStorage.getItem(SUBJ_PFX + day) || cfg.subject;
+  const body = localStorage.getItem(BODY_PFX + day) || cfg.body;
+  document.getElementById('tmpl_subj').value = subj;
+  document.getElementById('tmpl_body').value = body;
+  document.getElementById('tmpl-title').textContent = '📝 ' + cfg.title + ' メールテンプレート（編集可）';
+}
+
+function saveTemplate(day){
+  localStorage.setItem(SUBJ_PFX + day, document.getElementById('tmpl_subj').value);
+  localStorage.setItem(BODY_PFX + day, document.getElementById('tmpl_body').value);
+}
+
+function buildSubject(m){
+  return document.getElementById('tmpl_subj').value.replace(/{{name}}/g, m.name);
+}
+
+function buildBody(m, day){
+  const tmpl = document.getElementById('tmpl_body').value;
+  return tmpl
+    .replace(/{{name}}/g, m.name)
+    .replace(/{{url}}/g, getDayUrl(m.no, day));
+}
+
+function copyTextFallback(text){
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.cssText = 'position:fixed;top:-9999px;left:-9999px;opacity:0';
+  document.body.appendChild(ta);
+  ta.focus();
+  ta.select();
+  try{ document.execCommand('copy'); }catch(e){}
+  document.body.removeChild(ta);
+}
+
+function showCopyModal(body, email, subj){
+  let overlay = document.getElementById('copy-overlay');
+  if(overlay) overlay.remove();
+  overlay = document.createElement('div');
+  overlay.id = 'copy-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:9998;display:flex;align-items:flex-end;justify-content:center;padding:0';
+  overlay.innerHTML =
+    '<div style="background:#0d1133;border:1px solid rgba(241,217,155,.4);border-radius:20px 20px 0 0;padding:20px 18px 32px;width:100%;max-width:600px;max-height:90vh;overflow-y:auto">'
+    + '<div style="width:40px;height:4px;background:rgba(255,255,255,.2);border-radius:2px;margin:0 auto 16px"></div>'
+    + '<div style="color:#f1d99b;font-size:.95rem;font-weight:bold;margin-bottom:12px">📋 本文をコピーしてGmailに貼り付けてください</div>'
+    + '<textarea id="modal-body" style="width:100%;height:180px;background:#060918;color:#ddd;border:1px solid rgba(241,217,155,.25);border-radius:8px;padding:10px;font-size:13px;line-height:1.7;resize:none;font-family:inherit">'
+    + body.replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    + '</textarea>'
+    + '<div style="display:flex;flex-direction:column;gap:10px;margin-top:14px">'
+    + '<button id="btn-copy" style="background:linear-gradient(90deg,#f1d99b,#d8b56d);color:#0b0e2a;border:none;border-radius:10px;padding:14px 20px;font-size:15px;font-weight:bold;cursor:pointer;width:100%;font-family:inherit">① 本文をコピー</button>'
+    + '<button id="btn-open" style="background:linear-gradient(90deg,#ea4335,#c62828);color:#fff;border:none;border-radius:10px;padding:14px 20px;font-size:15px;font-weight:bold;cursor:pointer;width:100%;font-family:inherit" disabled>② Gmailを開く →</button>'
+    + '<button onclick="document.getElementById(\'copy-overlay\').remove()" style="background:transparent;color:#888;border:1px solid #444;border-radius:10px;padding:12px 16px;font-size:14px;cursor:pointer;width:100%;font-family:inherit">閉じる</button>'
+    + '</div>'
+    + '<div id="copy-hint" style="color:#888;font-size:12px;margin-top:12px;text-align:center">まず「① 本文をコピー」→ 次に「② Gmailを開く」</div>'
+    + '</div>';
+  document.body.appendChild(overlay);
+
+  document.getElementById('btn-copy').addEventListener('click', function(){
+    const rawBody = document.getElementById('modal-body').value;
+    copyTextFallback(rawBody);
+    if(navigator.clipboard){ navigator.clipboard.writeText(rawBody).catch(function(){}); }
+    this.textContent = '✅ コピーしました！';
+    this.style.background = 'linear-gradient(90deg,#6ddc8a,#3aaf5c)';
+    document.getElementById('btn-open').disabled = false;
+    document.getElementById('copy-hint').style.color = '#f1d99b';
+    document.getElementById('copy-hint').textContent = '次に「② Gmailを開く」→ Gmailの本文欄をクリック → Cmd+V で貼り付けて送信！';
+  });
+
+  document.getElementById('btn-open').addEventListener('click', function(){
+    const url = 'https://mail.google.com/mail/?view=cm&to='
+      + encodeURIComponent(email)
+      + '&su=' + encodeURIComponent(subj);
+    window.open(url, '_blank');
+    document.getElementById('copy-overlay').remove();
+  });
+}
+
+function openGmail(i){
+  const m = MEMBERS[i];
+  const email = document.getElementById('email_'+i).value.trim();
+  if(!email){ alert('メールアドレスを入力してください'); return; }
+  const subj = buildSubject(m);
+  const body = buildBody(m, currentDay);
+  showCopyModal(body, email, subj);
+}
+
+function sentKey(day, i){ return SENT_PFX + day + '::' + i; }
+
+function toggleSent(i){
+  const chk   = document.getElementById('chk_'+i);
+  const card  = document.getElementById('card_'+i);
+  const lbl   = document.getElementById('sentlbl_'+i);
+  localStorage.setItem(sentKey(currentDay, i), chk.checked ? '1' : '');
+  card.classList.toggle('sent', chk.checked);
+  lbl.textContent = chk.checked ? '送信済み ✅' : '未送信';
+  lbl.className = chk.checked ? 'sent-label' : 'unsent-label';
+  updateProgress();
+}
+
+function updateProgress(){
+  const sent = MEMBERS.filter(function(_,i){ return localStorage.getItem(sentKey(currentDay,i))==='1'; }).length;
+  const pct = sent / MEMBERS.length * 100;
+  document.getElementById('pbar').style.width = pct + '%';
+  document.getElementById('plabel').textContent = 'Day' + currentDay + '：' + sent + ' / ' + MEMBERS.length + ' 送信済み';
+}
+
+function renderGrid(){
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  MEMBERS.forEach(function(m, i){
+    const savedEmail = localStorage.getItem(EMAIL_PFX + i) || m.email || '';
+    const isSent = localStorage.getItem(sentKey(currentDay, i)) === '1';
+    const card = document.createElement('div');
+    card.className = 'card' + (isSent ? ' sent' : '');
+    card.id = 'card_' + i;
+    card.innerHTML =
+      '<div class="card-header">'
+        + '<span class="no">' + m.no + '</span>'
+        + '<span class="name">' + m.name + '</span>'
+        + '<span class="shuku">' + m.shuku + '</span>'
+      + '</div>'
+      + '<div style="font-size:11px;color:#666;margin-bottom:8px">Day' + currentDay + ' URL: challenge_day' + currentDay + '_sync.html?pid=' + pidOf(m.no) + '</div>'
+      + '<div class="email-row">'
+        + '<input class="email-input" id="email_' + i + '" type="email" placeholder="メールアドレス" value="' + savedEmail + '">'
+        + '<button class="btn-gmail" onclick="openGmail(' + i + ')">Gmailで開く</button>'
+      + '</div>'
+      + '<div class="sent-row">'
+        + '<input type="checkbox" class="chk" id="chk_' + i + '"' + (isSent ? ' checked' : '') + ' onchange="toggleSent(' + i + ')">'
+        + '<span id="sentlbl_' + i + '" class="' + (isSent ? 'sent-label' : 'unsent-label') + '">' + (isSent ? '送信済み ✅' : '未送信') + '</span>'
+      + '</div>';
+    grid.appendChild(card);
+
+    document.getElementById('email_' + i).addEventListener('input', function(){
+      localStorage.setItem(EMAIL_PFX + i, this.value);
+    });
+  });
+}
+
+function selectDay(day){
+  currentDay = day;
+  document.querySelectorAll('.day-tab').forEach(function(btn){
+    btn.classList.toggle('active', parseInt(btn.dataset.day) === day);
+  });
+  loadTemplate(day);
+  renderGrid();
+  updateProgress();
+}
+
+document.getElementById('day-tabs').addEventListener('click', function(e){
+  const btn = e.target.closest('.day-tab');
+  if(!btn) return;
+  selectDay(parseInt(btn.dataset.day));
+});
+
+document.getElementById('tmpl_subj').addEventListener('input', function(){ saveTemplate(currentDay); });
+document.getElementById('tmpl_body').addEventListener('input', function(){ saveTemplate(currentDay); });
+
+selectDay(2);
+</script>
+</body>
+</html>
