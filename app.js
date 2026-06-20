@@ -1466,26 +1466,104 @@
     var diaryMap = readStructuredDiary(structuredIdentity);
     var hasStructured = Object.keys(diaryMap).length > 0;
 
-    // Day-by-day サマリー表示
-    var summarySection = root.querySelector("[data-deep-diary-summary]");
-    var summaryDays = root.querySelector("[data-deep-diary-days]");
-    if (summaryDays) {
-      summaryDays.innerHTML = buildDiarySummaryHtml(diaryMap);
-      if (summarySection) summarySection.style.display = "";
+    function renderDeepReport(diaryMapToUse) {
+      var hasData = Object.keys(diaryMapToUse).length > 0;
+
+      // Day-by-day サマリー表示
+      var summarySection = root.querySelector("[data-deep-diary-summary]");
+      var summaryDays = root.querySelector("[data-deep-diary-days]");
+      if (summaryDays) {
+        summaryDays.innerHTML = buildDiarySummaryHtml(diaryMapToUse);
+        if (summarySection) summarySection.style.display = hasData ? "" : "none";
+      }
+
+      // 旧フォーマットとのフォールバック
+      var legacyTexts = [];
+      for (var d = 1; d <= 7; d++) {
+        var t = (localStorage.getItem(storageKey(String(d))) || "").trim();
+        if (t) legacyTexts.push(t);
+      }
+
+      if (!hasData && !legacyTexts.length) {
+        if (current) current.textContent = "まだ7日間の記録が見つかりませんでした。日記を書いてから再度開いてください。";
+        if (themes) themes.textContent = "記録が増えると、ここに今のテーマが表示されます。";
+        if (next) next.textContent = "まずは今日の一行から始めれば十分です。";
+        return;
+      }
+
+      // 総合鑑定（目標設定・ギャップ調整）
+      if (hasData) {
+        var comprehensiveText = buildComprehensiveReading(diaryMapToUse, profile.name, profile.shuku, typeKey);
+        if (current) current.textContent = comprehensiveText;
+      } else {
+        var mergedLegacy = legacyTexts.join("\n");
+        var moodLegacy = "neutral";
+        if (mergedLegacy.indexOf("不安") !== -1 || mergedLegacy.indexOf("迷") !== -1) moodLegacy = "anxiety";
+        else if (mergedLegacy.indexOf("感謝") !== -1 || mergedLegacy.indexOf("ありがとう") !== -1) moodLegacy = "gratitude";
+        else if (mergedLegacy.indexOf("願") !== -1 || mergedLegacy.indexOf("未来") !== -1) moodLegacy = "future";
+        if (current) current.textContent = shukuCurrentLine(profile.shuku, moodLegacy, typeKey);
+      }
+
+      // テーマ抽出
+      var allMerged = hasData
+        ? Object.values(diaryMapToUse).map(function(lines){ return lines.map(function(l){ return l.text || ""; }).join("　"); }).join("\n")
+        : legacyTexts.join("\n");
+
+      var tags = [];
+      if (allMerged.indexOf("感謝") !== -1 || allMerged.indexOf("ありがとう") !== -1) tags.push("感謝の循環");
+      if (allMerged.indexOf("本音") !== -1 || allMerged.indexOf("気づ") !== -1) tags.push("本音への気づき");
+      if (allMerged.indexOf("願") !== -1 || allMerged.indexOf("未来") !== -1) tags.push("未来への意志");
+      if (allMerged.indexOf("整え") !== -1 || allMerged.indexOf("習慣") !== -1) tags.push("整える習慣");
+      if (allMerged.indexOf("手放") !== -1 || allMerged.indexOf("軽く") !== -1) tags.push("手放しと再生");
+      if (!tags.length) tags.push("自己理解の深化");
+      if (themes) themes.textContent = tags.join(" / ");
+
+      if (next) {
+        var nextBase = "次の7日間は「" + tags[0] + "」をテーマに整えていきましょう。";
+        var nextShuku = shukuNextSevenSuggestion(profile.shuku, typeKey);
+        next.textContent = nextBase + " " + nextShuku + " 小さな積み重ねが、運気の巡りを安定させます。";
+      }
     }
 
-    // 旧フォーマットとのフォールバック
-    for (var day = 1; day <= 7; day++) {
-      var t = (localStorage.getItem(storageKey(String(day))) || "").trim();
-      if (t) texts.push(t);
-    }
-
-    if (!hasStructured && !texts.length) {
-      if (current) current.textContent = "まだ7日間の記録が見つかりませんでした。日記を書いてから再度開いてください。";
-      if (themes) themes.textContent = "記録が増えると、ここに今のテーマが表示されます。";
-      if (next) next.textContent = "まずは今日の一行から始めれば十分です。";
+    // localStorageにデータがあればそのまま描画
+    if (hasStructured) {
+      renderDeepReport(diaryMap);
       return;
     }
+
+    // localStorageにデータがなければスプレッドシートから取得
+    if (structuredIdentity && structuredIdentity !== "guest") {
+      if (current) current.textContent = "日記データを読み込んでいます…";
+      var syncConfig = (function(){
+        var u = localStorage.getItem("tsukiyomi:sheetSync:url") || "https://script.google.com/macros/s/AKfycbxIffIfAOptA-WR6jjT9dg8Fc0yb9HpwsLTR-ZG43Nw12_KR_Yi0Xj9IT_FAyXGV_Ic/exec";
+        var s = localStorage.getItem("tsukiyomi:sheetSync:secretKey") || "tsukiyomi-2026-key";
+        return { url: u, secretKey: s };
+      })();
+      var fetchUrl = syncConfig.url + "?pid=" + encodeURIComponent(structuredIdentity) + "&secretKey=" + encodeURIComponent(syncConfig.secretKey) + "&t=" + Date.now();
+      fetch(fetchUrl, { redirect: "follow" })
+        .then(function(r){ return r.json(); })
+        .then(function(result){
+          if (result && result.ok && result.days && Object.keys(result.days).length > 0) {
+            var restored = {};
+            for (var dayNum in result.days) {
+              var dayData = result.days[dayNum];
+              var key = "tsukiyomi:structuredDiary:v1:" + structuredIdentity + ":day:" + dayNum;
+              localStorage.setItem(key, JSON.stringify(dayData));
+              if (dayData.lines) {
+                var filled = dayData.lines.filter(function(l){ return (l.text || "").trim().length > 0; });
+                if (filled.length) restored[dayNum] = filled;
+              }
+            }
+            renderDeepReport(restored);
+          } else {
+            renderDeepReport({});
+          }
+        })
+        .catch(function(){ renderDeepReport({}); });
+      return;
+    }
+
+    renderDeepReport({});
 
     // 総合鑑定（目標設定・ギャップ調整）
     if (hasStructured) {
