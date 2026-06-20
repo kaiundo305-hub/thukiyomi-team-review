@@ -3,6 +3,7 @@
   var CONFIG_SECRET_KEY = 'tsukiyomi:sheetSync:secretKey';
   var OUTBOX_KEY = 'tsukiyomi:diarySync:outbox';
   var CACHED_PROFILE_KEY = 'tsukiyomi:diarySync:cachedProfile';
+  var STRUCTURED_DIARY_PREFIX = 'tsukiyomi:structuredDiary:v1:';
   var DEFAULT_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxIffIfAOptA-WR6jjT9dg8Fc0yb9HpwsLTR-ZG43Nw12_KR_Yi0Xj9IT_FAyXGV_Ic/exec';
   var DEFAULT_SECRET_KEY = 'tsukiyomi-2026-key';
 
@@ -85,7 +86,9 @@
   }
 
   function pageName(){
-    return (window.location.pathname.split('/').pop() || 'unknown').replace(/%20/g, ' ');
+    return (window.location.pathname.split('/').pop() || 'unknown')
+      .replace(/%20/g, ' ')
+      .replace('_sync.html', '.html');
   }
 
   function readOutbox(){
@@ -150,13 +153,16 @@
 
   function postRecord(record){
     var config = getConfig();
+    var profile = record.profile || {};
+    var who = profile.participantId ? '参加者ID: ' + profile.participantId : '参加者IDなし';
+    if(profile.name) who += ' / ' + profile.name;
     if(!config.url){
       addOutbox(record);
-      status('スプレッドシートURL未設定のため、この端末に一時保存しました', false);
+      status('スプレッドシートURL未設定のため、この端末に一時保存しました（' + who + '）', false);
       return Promise.resolve({ queued: true });
     }
     postRecordByGetForm(config.url, config.secretKey || '', record);
-    status('送信リクエストを出しました。スプレッドシートの records を確認してください', true);
+    status('送信リクエストを出しました（' + who + '）。スプレッドシートの records を確認してください', true);
     return Promise.resolve({ requested: true });
   }
 
@@ -265,6 +271,102 @@
     return 'diary_record';
   }
 
+  function getCurrentDayKey(){
+    var profile = getProfile();
+    if(!profile.participantId) return null;
+    var day = (pageName().match(/challenge_day(\d+)/) || [])[1];
+    if(!day) return null;
+    return STRUCTURED_DIARY_PREFIX + profile.participantId + ':day:' + day;
+  }
+
+  function autoBackupOnLoad(){
+    window.setTimeout(function(){
+      var key = getCurrentDayKey();
+      if(!key) return;
+      try{
+        var raw = localStorage.getItem(key);
+        if(!raw) return;
+        var diary = JSON.parse(raw);
+        if(!diary || !diary.day) return;
+        var hasContent = (diary.lines || []).some(function(l){ return (l.text || '').trim().length > 0; });
+        if(!hasContent) return;
+        var record = buildRecord('auto_backup', { fields: {'7日間日記専用記録': raw}, source: 'page_load_backup' });
+        var config = getConfig();
+        postRecordByGetForm(config.url || DEFAULT_WEBHOOK_URL, config.secretKey || DEFAULT_SECRET_KEY, record);
+      }catch(e){}
+    }, 2000);
+  }
+
+  function autoRestoreIfNeeded(){
+    var key = getCurrentDayKey();
+    if(!key) return;
+    if(localStorage.getItem(key)) return;
+
+    var profile = getProfile();
+    var day = (pageName().match(/challenge_day(\d+)/) || [])[1];
+    var attemptKey = 'tsukiyomi:restoreAttempted:' + profile.participantId + ':day:' + day;
+    try{
+      if(sessionStorage.getItem(attemptKey)) return;
+      sessionStorage.setItem(attemptKey, '1');
+    }catch(e){ return; }
+
+    var config = getConfig();
+    var gasUrl = config.url || DEFAULT_WEBHOOK_URL;
+    var secretKey = config.secretKey || DEFAULT_SECRET_KEY;
+    var requestUrl = gasUrl + '?pid=' + encodeURIComponent(profile.participantId) + '&secretKey=' + encodeURIComponent(secretKey) + '&t=' + Date.now();
+
+    fetch(requestUrl, { redirect: 'follow' })
+      .then(function(r){ return r.json(); })
+      .then(function(result){
+        if(!result || !result.ok || !result.days) return;
+        var dayData = result.days[day];
+        if(!dayData) return;
+        localStorage.setItem(key, JSON.stringify(dayData));
+        var banner = document.createElement('div');
+        banner.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#3a2a1a;color:#fff;padding:14px 24px;border-radius:12px;z-index:9999;font-size:14px;text-align:center;box-shadow:0 4px 16px rgba(0,0,0,0.3);line-height:1.6;';
+        banner.textContent = '✨ バックアップから日記を復元しました。画面を更新します…';
+        document.body.appendChild(banner);
+        setTimeout(function(){ window.location.reload(); }, 2000);
+      })
+      .catch(function(){});
+  }
+
+  function showNamePromptIfNeeded(){
+    var cached = loadCachedProfile();
+    if(cached.name || cached.participantId) return;
+    var params = getParams();
+    if(params.get('name') || params.get('participantId')) return;
+
+    // モーダル表示
+    var overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.55);z-index:9999;display:flex;align-items:center;justify-content:center;';
+
+    var box = document.createElement('div');
+    box.style.cssText = 'background:#fff;border-radius:16px;padding:32px 24px;max-width:320px;width:90%;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,0.2);';
+
+    box.innerHTML = '<p style="font-size:15px;line-height:1.7;color:#3a2a1a;margin:0 0 18px;">月読みワンダーランドへようこそ。<br>登録したときのお名前を<br>教えてください。</p>'
+      + '<input id="tsukiyomi-name-input" type="text" placeholder="例：山田 花子" style="width:100%;box-sizing:border-box;padding:10px 14px;border:1.5px solid #c8b89a;border-radius:8px;font-size:15px;margin-bottom:16px;outline:none;">'
+      + '<button id="tsukiyomi-name-btn" style="background:#3a2a1a;color:#fff;border:none;border-radius:8px;padding:12px 0;width:100%;font-size:15px;cursor:pointer;">続ける</button>';
+
+    overlay.appendChild(box);
+    document.body.appendChild(overlay);
+
+    var input = document.getElementById('tsukiyomi-name-input');
+    var btn = document.getElementById('tsukiyomi-name-btn');
+
+    input.focus();
+
+    function submit(){
+      var name = (input.value || '').trim();
+      if(!name) { input.style.border = '1.5px solid #c0392b'; return; }
+      saveCachedProfile({ name: name });
+      document.body.removeChild(overlay);
+    }
+
+    btn.addEventListener('click', submit);
+    input.addEventListener('keydown', function(e){ if(e.key === 'Enter') submit(); });
+  }
+
   function attachAutoSync(){
     document.addEventListener('click', function(event){
       var target = event.target.closest('button, a');
@@ -300,4 +402,15 @@
   };
 
   attachAutoSync();
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', function(){
+      showNamePromptIfNeeded();
+      autoRestoreIfNeeded();
+      autoBackupOnLoad();
+    });
+  } else {
+    showNamePromptIfNeeded();
+    autoRestoreIfNeeded();
+    autoBackupOnLoad();
+  }
 })();
