@@ -41,17 +41,23 @@
     localStorage.setItem(storageKey(day), JSON.stringify(record || {}));
   }
 
+  function loadCachedProfile(){
+    try { return JSON.parse(localStorage.getItem('tsukiyomi:diarySync:cachedProfile') || '{}'); }
+    catch(e) { return {}; }
+  }
+
   function profile(){
     var p = params();
+    var cached = loadCachedProfile();
     return {
-      name: p.get('name') || '',
-      birth: p.get('birth') || '',
-      participantId: p.get('participantId') || '',
-      shuku: p.get('shuku') || '',
-      zodiac: p.get('zodiac') || '',
-      concern: p.get('concern') || '',
-      q: p.get('q') || '',
-      q2: p.get('q2') || ''
+      name: p.get('name') || cached.name || '',
+      birth: p.get('birth') || cached.birth || '',
+      participantId: p.get('participantId') || cached.participantId || '',
+      shuku: p.get('shuku') || cached.shuku || '',
+      zodiac: p.get('zodiac') || cached.zodiac || '',
+      concern: p.get('concern') || cached.concern || '',
+      q: p.get('q') || cached.q || '',
+      q2: p.get('q2') || cached.q2 || ''
     };
   }
 

@@ -2,6 +2,7 @@
   var CONFIG_URL_KEY = 'tsukiyomi:sheetSync:url';
   var CONFIG_SECRET_KEY = 'tsukiyomi:sheetSync:secretKey';
   var OUTBOX_KEY = 'tsukiyomi:diarySync:outbox';
+  var CACHED_PROFILE_KEY = 'tsukiyomi:diarySync:cachedProfile';
   var DEFAULT_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxIffIfAOptA-WR6jjT9dg8Fc0yb9HpwsLTR-ZG43Nw12_KR_Yi0Xj9IT_FAyXGV_Ic/exec';
   var DEFAULT_SECRET_KEY = 'tsukiyomi-2026-key';
 
@@ -9,9 +10,20 @@
     return new URLSearchParams(window.location.search || '');
   }
 
+  function loadCachedProfile(){
+    try { return JSON.parse(localStorage.getItem(CACHED_PROFILE_KEY) || '{}'); }
+    catch(e) { return {}; }
+  }
+
+  function saveCachedProfile(p){
+    try { localStorage.setItem(CACHED_PROFILE_KEY, JSON.stringify(p)); }
+    catch(e) {}
+  }
+
   function getProfile(){
     var params = getParams();
-    return {
+    var cached = loadCachedProfile();
+    var fromUrl = {
       name: params.get('name') || '',
       email: params.get('email') || '',
       birth: params.get('birth') || '',
@@ -21,6 +33,28 @@
       concern: params.get('concern') || '',
       q: params.get('q') || '',
       q2: params.get('q2') || ''
+    };
+    // URLパラメータにプロフィール情報がある場合はキャッシュを更新
+    if(fromUrl.participantId || fromUrl.name || fromUrl.birth){
+      var merged = {};
+      var keys = Object.keys(fromUrl);
+      for(var i = 0; i < keys.length; i++){
+        merged[keys[i]] = fromUrl[keys[i]] || cached[keys[i]] || '';
+      }
+      saveCachedProfile(merged);
+      return merged;
+    }
+    // URLパラメータがない場合はキャッシュから補完
+    return {
+      name: cached.name || '',
+      email: cached.email || '',
+      birth: cached.birth || '',
+      zodiac: cached.zodiac || '',
+      shuku: cached.shuku || '',
+      participantId: cached.participantId || '',
+      concern: cached.concern || '',
+      q: cached.q || '',
+      q2: cached.q2 || ''
     };
   }
 
