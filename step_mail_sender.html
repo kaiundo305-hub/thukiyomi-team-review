@@ -71,7 +71,7 @@ h1{color:#f1d99b;font-size:1rem;letter-spacing:.08em;border-bottom:1px solid rgb
 </div>
 
 <div class="progress-bar-wrap"><div class="progress-bar" id="pbar"></div></div>
-<div class="progress-label" id="plabel">0 / 44 送信済み</div>
+<div class="progress-label" id="plabel">0 / 45 送信済み</div>
 
 <div class="template-box">
   <h2 id="tmpl-title">📝 Day2 メールテンプレート（編集可）</h2>
@@ -313,8 +313,8 @@ const MEMBERS = [
   {no:40, name:"川﨑智貴",           shuku:"昴宿", email:"6858artdevivre@gmail.com"},
   {no:41, name:"徳田英弘",           shuku:"翼宿", email:"h.neriya@gmail.com"},
   {no:42, name:"谷口貴朗",           shuku:"房宿", email:"for.life.clover@gmail.com"},
-  {no:43, name:"かのん",             shuku:"觜宿", email:"velvetmoon0426@gmail.com"},
-  {no:44, name:"熊川",               shuku:"軫宿", email:"basoromyu0317@gmail.com"}
+  {no:44, name:"かのん",             shuku:"觜宿", email:"velvetmoon0426@gmail.com"},
+  {no:45, name:"熊川",               shuku:"軫宿", email:"basoromyu0317@gmail.com"}
 ];
 
 const EMAIL_PFX  = 'gmailSender::email::';
@@ -329,6 +329,9 @@ function pidOf(no){
 }
 
 function getDayUrl(no, day){
+  var m = MEMBERS.filter(function(mb){ return mb.no === no; })[0];
+  var email = m ? m.email : '';
+  if(email) return BASE_URL + 'challenge_day' + day + '_sync.html?email=' + encodeURIComponent(email);
   return BASE_URL + 'challenge_day' + day + '_sync.html?pid=' + pidOf(no);
 }
 
@@ -454,7 +457,7 @@ function renderGrid(){
         + '<span class="name">' + m.name + '</span>'
         + '<span class="shuku">' + m.shuku + '</span>'
       + '</div>'
-      + '<div style="font-size:11px;color:#666;margin-bottom:8px">Day' + currentDay + ' URL: challenge_day' + currentDay + '_sync.html?pid=' + pidOf(m.no) + '</div>'
+      + '<div style="font-size:11px;color:#666;margin-bottom:8px">Day' + currentDay + ' URL: ' + getDayUrl(m.no, currentDay) + '</div>'
       + '<div class="email-row">'
         + '<input class="email-input" id="email_' + i + '" type="email" placeholder="メールアドレス" value="' + savedEmail + '">'
         + '<button class="btn-gmail" onclick="openGmail(' + i + ')">Gmailで開く</button>'

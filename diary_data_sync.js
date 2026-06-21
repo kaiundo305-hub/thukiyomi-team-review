@@ -36,7 +36,7 @@
       q2: params.get('q2') || ''
     };
     // URLパラメータにプロフィール情報がある場合はキャッシュを更新
-    if(fromUrl.participantId || fromUrl.name || fromUrl.birth){
+    if(fromUrl.participantId || fromUrl.email || fromUrl.name || fromUrl.birth){
       var merged = {};
       var keys = Object.keys(fromUrl);
       for(var i = 0; i < keys.length; i++){
@@ -273,10 +273,11 @@
 
   function getCurrentDayKey(){
     var profile = getProfile();
-    if(!profile.participantId) return null;
+    var id = profile.email || profile.participantId;
+    if(!id) return null;
     var day = (pageName().match(/challenge_day(\d+)/) || [])[1];
     if(!day) return null;
-    return STRUCTURED_DIARY_PREFIX + profile.participantId + ':day:' + day;
+    return STRUCTURED_DIARY_PREFIX + id + ':day:' + day;
   }
 
   function autoBackupOnLoad(){
@@ -313,7 +314,10 @@
     var config = getConfig();
     var gasUrl = config.url || DEFAULT_WEBHOOK_URL;
     var secretKey = config.secretKey || DEFAULT_SECRET_KEY;
-    var requestUrl = gasUrl + '?pid=' + encodeURIComponent(profile.participantId) + '&secretKey=' + encodeURIComponent(secretKey) + '&t=' + Date.now();
+    var idParam = profile.email
+      ? 'email=' + encodeURIComponent(profile.email)
+      : 'pid=' + encodeURIComponent(profile.participantId);
+    var requestUrl = gasUrl + '?' + idParam + '&secretKey=' + encodeURIComponent(secretKey) + '&t=' + Date.now();
 
     fetch(requestUrl, { redirect: 'follow' })
       .then(function(r){ return r.json(); })
@@ -335,7 +339,7 @@
     var cached = loadCachedProfile();
     if(cached.participantId) return;
     var params = getParams();
-    if(params.get('participantId') || params.get('pid')) return;
+    if(params.get('participantId') || params.get('pid') || params.get('email')) return;
 
     var overlay = document.createElement('div');
     overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.55);z-index:9999;display:flex;align-items:center;justify-content:center;';
