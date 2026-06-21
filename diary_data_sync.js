@@ -333,38 +333,43 @@
 
   function showNamePromptIfNeeded(){
     var cached = loadCachedProfile();
-    if(cached.name || cached.participantId) return;
+    if(cached.participantId) return;
     var params = getParams();
-    if(params.get('name') || params.get('participantId')) return;
+    if(params.get('participantId')) return;
 
-    // モーダル表示
     var overlay = document.createElement('div');
     overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.55);z-index:9999;display:flex;align-items:center;justify-content:center;';
 
     var box = document.createElement('div');
     box.style.cssText = 'background:#fff;border-radius:16px;padding:32px 24px;max-width:320px;width:90%;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,0.2);';
 
-    box.innerHTML = '<p style="font-size:15px;line-height:1.7;color:#3a2a1a;margin:0 0 18px;">月読みワンダーランドへようこそ。<br>登録したときのお名前を<br>教えてください。</p>'
-      + '<input id="tsukiyomi-name-input" type="text" placeholder="例：山田 花子" style="width:100%;box-sizing:border-box;padding:10px 14px;border:1.5px solid #c8b89a;border-radius:8px;font-size:15px;margin-bottom:16px;outline:none;">'
+    box.innerHTML = '<p style="font-size:15px;line-height:1.7;color:#3a2a1a;margin:0 0 18px;">月読みワンダーランドへようこそ。<br>登録したときのお名前と<br>参加者番号を教えてください。</p>'
+      + '<input id="tsukiyomi-name-input" type="text" placeholder="お名前（例：山田 花子）" style="width:100%;box-sizing:border-box;padding:10px 14px;border:1.5px solid #c8b89a;border-radius:8px;font-size:15px;margin-bottom:10px;outline:none;">'
+      + '<input id="tsukiyomi-pid-input" type="number" placeholder="参加者番号（例：29）" style="width:100%;box-sizing:border-box;padding:10px 14px;border:1.5px solid #c8b89a;border-radius:8px;font-size:15px;margin-bottom:10px;outline:none;">'
+      + '<p style="font-size:12px;color:#888;margin:0 0 16px;line-height:1.6;">参加者番号は、送られてきたリンクの一番最後の数字です。</p>'
       + '<button id="tsukiyomi-name-btn" style="background:#3a2a1a;color:#fff;border:none;border-radius:8px;padding:12px 0;width:100%;font-size:15px;cursor:pointer;">続ける</button>';
 
     overlay.appendChild(box);
     document.body.appendChild(overlay);
 
-    var input = document.getElementById('tsukiyomi-name-input');
+    var nameInput = document.getElementById('tsukiyomi-name-input');
+    var pidInput = document.getElementById('tsukiyomi-pid-input');
     var btn = document.getElementById('tsukiyomi-name-btn');
 
-    input.focus();
+    nameInput.focus();
 
     function submit(){
-      var name = (input.value || '').trim();
-      if(!name) { input.style.border = '1.5px solid #c0392b'; return; }
-      saveCachedProfile({ name: name });
+      var name = (nameInput.value || '').trim();
+      var pid = (pidInput.value || '').trim();
+      if(!name){ nameInput.style.border = '1.5px solid #c0392b'; return; }
+      if(!pid){ pidInput.style.border = '1.5px solid #c0392b'; return; }
+      var existing = loadCachedProfile();
+      saveCachedProfile(Object.assign({}, existing, { name: name, participantId: pid }));
       document.body.removeChild(overlay);
     }
 
     btn.addEventListener('click', submit);
-    input.addEventListener('keydown', function(e){ if(e.key === 'Enter') submit(); });
+    pidInput.addEventListener('keydown', function(e){ if(e.key === 'Enter') submit(); });
   }
 
   function attachAutoSync(){

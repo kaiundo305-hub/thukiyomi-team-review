@@ -399,7 +399,7 @@
     for (var day = 1; day <= 7; day++) {
       var isCurrent = day === currentDay;
       var cls = "challenge-calendar-day" + (isCurrent ? " is-current" : "");
-      var href = "challenge_day" + day + ".html" + search;
+      var href = "challenge_day" + day + "_sync.html" + search;
       items.push(
         '<a class="' + cls + '" href="' + href + '">' +
           '<span>Day ' + day + '</span>' +
@@ -1313,7 +1313,140 @@
       };
     }
 
+    var DAY_THEMES = {
+      "1": "いまの心にやさしく気づく",
+      "2": "私の土台の資質を知る",
+      "3": "受け取っている豊かさに気づく",
+      "4": "不要になった思いを軽くする",
+      "5": "小さな習慣で流れを整える",
+      "6": "未来の私と今の私をつなぐ",
+      "7": "私の開運設計図を完成させる"
+    };
+
+    function readStructuredDiary(identity) {
+      var result = {};
+      for (var d = 1; d <= 7; d++) {
+        var key = "tsukiyomi:structuredDiary:v1:" + identity + ":day:" + d;
+        try {
+          var raw = localStorage.getItem(key);
+          if (!raw) continue;
+          var rec = JSON.parse(raw);
+          if (!rec || !rec.lines) continue;
+          var lines = rec.lines.filter(function(l){ return (l.text || "").trim().length > 0; });
+          if (lines.length) result[String(d)] = lines;
+        } catch(e) {}
+      }
+      return result;
+    }
+
+    function buildDiarySummaryHtml(diaryMap) {
+      var html = "";
+      for (var d = 1; d <= 7; d++) {
+        var ds = String(d);
+        var theme = DAY_THEMES[ds] || "";
+        var lines = diaryMap[ds];
+        html += '<div style="margin-bottom:20px;">';
+        html += '<p style="font-size:13px;color:#9a8070;margin:0 0 4px;font-weight:bold;">Day' + d + '　' + theme + '</p>';
+        if (lines && lines.length) {
+          lines.forEach(function(l) {
+            var text = (l.text || "").trim();
+            if (!text) return;
+            var label = (l.placeholder || "").replace(/[（）()「」]/g, "").trim();
+            html += '<p style="font-size:14px;color:#3a2a1a;margin:0 0 4px;line-height:1.7;">';
+            if (label) html += '<span style="font-size:12px;color:#b0957a;">▶ ' + label + '</span><br>';
+            html += text + '</p>';
+          });
+        } else {
+          html += '<p style="font-size:13px;color:#bbb;margin:0;">（記録なし）</p>';
+        }
+        html += '</div>';
+      }
+      return html;
+    }
+
+    function buildComprehensiveReading(diaryMap, name, shuku, typeKey) {
+      var allTexts = [];
+      var dayTexts = {};
+      for (var d = 1; d <= 7; d++) {
+        var ds = String(d);
+        var lines = diaryMap[ds] || [];
+        var dayText = lines.map(function(l){ return (l.text || "").trim(); }).filter(Boolean).join("　");
+        if (dayText) {
+          allTexts.push(dayText);
+          dayTexts[ds] = dayText;
+        }
+      }
+      var merged = allTexts.join("\n");
+
+      // 目標設定（Day6・Day7から抽出）
+      var goalText = (dayTexts["6"] || "") + " " + (dayTexts["7"] || "");
+      var hasGoal = goalText.trim().length > 0;
+
+      // ギャップ・手放し（Day4から抽出）
+      var releaseText = dayTexts["4"] || "";
+      var hasRelease = releaseText.trim().length > 0;
+
+      // 感謝・豊かさ（Day3から抽出）
+      var abundanceText = dayTexts["3"] || "";
+
+      // 現在地（総合鑑定文）
+      var moodState = "neutral";
+      if (merged.indexOf("不安") !== -1 || merged.indexOf("迷") !== -1) moodState = "anxiety";
+      else if (merged.indexOf("感謝") !== -1 || merged.indexOf("ありがとう") !== -1) moodState = "gratitude";
+      else if (merged.indexOf("願") !== -1 || merged.indexOf("未来") !== -1) moodState = "future";
+
+      var currentBase = shukuCurrentLine(shuku, moodState, typeKey);
+
+      var goalSentence = "";
+      if (hasGoal) {
+        goalSentence = "\n\nDay6・Day7の言葉から、あなたが向かいたい方向が見えています。「" + goalText.slice(0, 40) + "…」という言葉が、あなたの目標を示しています。";
+      }
+      var releaseSentence = "";
+      if (hasRelease) {
+        releaseSentence = "\n\nDay4で手放したいと書いた「" + releaseText.slice(0, 30) + "…」は、今もあなたの中にある課題です。ここを丁寧に軽くしていくことが、目標へ近づく整えになります。";
+      }
+
+      return currentBase + goalSentence + releaseSentence;
+    }
+
     var profile = resolveBaseProfile();
+
+    // チェック・編集ツール（kanon_deep_report_editor.html）で保存した内容があれば優先表示
+    var pid = params.get("participantId") || "";
+    if (pid && window.DEEP_REPORT_OVERRIDES && window.DEEP_REPORT_OVERRIDES[pid] && window.DEEP_REPORT_OVERRIDES[pid].done) {
+      var ov = window.DEEP_REPORT_OVERRIDES[pid];
+      if (current && ov.s1) current.textContent = ov.s1;
+      if (themes && ov.s2) themes.textContent = ov.s2;
+      if (shukuView && ov.s3) shukuView.textContent = ov.s3;
+      if (next && ov.s4) next.textContent = ov.s4;
+      var kanonView = root.querySelector("[data-deep-kanon]");
+      if (kanonView && ov.kanon) {
+        kanonView.textContent = ov.kanon;
+        var kanonPanel = kanonView.closest(".completion-panel");
+        if (kanonPanel) kanonPanel.style.display = "";
+      }
+      return;
+    }
+
+    // 自動生成レポートがあれば表示（Day7保存時に生成済みのものを含む）
+    if (window.TsukiyomiReportGen) {
+      var autoIdentity = pid || profile.participantId || profile.birth || profile.name || "guest";
+      var autoReport = TsukiyomiReportGen.load(autoIdentity) || TsukiyomiReportGen.triggerIfReady(profile);
+      if (autoReport && autoReport.s1) {
+        if (current) current.textContent = autoReport.s1;
+        if (themes) themes.textContent = autoReport.s2;
+        if (shukuView) shukuView.textContent = autoReport.s3;
+        if (next) next.textContent = autoReport.s4;
+        var voicesSection = root.querySelector("[data-deep-voices-section]");
+        var voicesContainer = root.querySelector("[data-deep-voices]");
+        if (voicesContainer && autoReport.voicesHtml) {
+          voicesContainer.innerHTML = autoReport.voicesHtml;
+          if (voicesSection) voicesSection.style.display = "";
+        }
+        return;
+      }
+    }
+
     var typeKey = shukuTypeKey(profile.shuku);
     if (shukuView) {
       if (profile.shuku) {
@@ -1328,34 +1461,137 @@
       }
     }
 
-    for (var day = 1; day <= 7; day++) {
-      var t = (localStorage.getItem(storageKey(String(day))) || "").trim();
-      if (t) texts.push(t);
+    // 構造化日記データを優先的に読み込む
+    var structuredIdentity = pid || profile.participantId || profile.birth || profile.name || "guest";
+    var diaryMap = readStructuredDiary(structuredIdentity);
+    var hasStructured = Object.keys(diaryMap).length > 0;
+
+    function renderDeepReport(diaryMapToUse) {
+      var hasData = Object.keys(diaryMapToUse).length > 0;
+
+      // Day-by-day サマリー表示
+      var summarySection = root.querySelector("[data-deep-diary-summary]");
+      var summaryDays = root.querySelector("[data-deep-diary-days]");
+      if (summaryDays) {
+        summaryDays.innerHTML = buildDiarySummaryHtml(diaryMapToUse);
+        if (summarySection) summarySection.style.display = hasData ? "" : "none";
+      }
+
+      // 旧フォーマットとのフォールバック
+      var legacyTexts = [];
+      for (var d = 1; d <= 7; d++) {
+        var t = (localStorage.getItem(storageKey(String(d))) || "").trim();
+        if (t) legacyTexts.push(t);
+      }
+
+      if (!hasData && !legacyTexts.length) {
+        if (current) current.textContent = "まだ7日間の記録が見つかりませんでした。日記を書いてから再度開いてください。";
+        if (themes) themes.textContent = "記録が増えると、ここに今のテーマが表示されます。";
+        if (next) next.textContent = "まずは今日の一行から始めれば十分です。";
+        return;
+      }
+
+      // 総合鑑定（目標設定・ギャップ調整）
+      if (hasData) {
+        var comprehensiveText = buildComprehensiveReading(diaryMapToUse, profile.name, profile.shuku, typeKey);
+        if (current) current.textContent = comprehensiveText;
+      } else {
+        var mergedLegacy = legacyTexts.join("\n");
+        var moodLegacy = "neutral";
+        if (mergedLegacy.indexOf("不安") !== -1 || mergedLegacy.indexOf("迷") !== -1) moodLegacy = "anxiety";
+        else if (mergedLegacy.indexOf("感謝") !== -1 || mergedLegacy.indexOf("ありがとう") !== -1) moodLegacy = "gratitude";
+        else if (mergedLegacy.indexOf("願") !== -1 || mergedLegacy.indexOf("未来") !== -1) moodLegacy = "future";
+        if (current) current.textContent = shukuCurrentLine(profile.shuku, moodLegacy, typeKey);
+      }
+
+      // テーマ抽出
+      var allMerged = hasData
+        ? Object.values(diaryMapToUse).map(function(lines){ return lines.map(function(l){ return l.text || ""; }).join("　"); }).join("\n")
+        : legacyTexts.join("\n");
+
+      var tags = [];
+      if (allMerged.indexOf("感謝") !== -1 || allMerged.indexOf("ありがとう") !== -1) tags.push("感謝の循環");
+      if (allMerged.indexOf("本音") !== -1 || allMerged.indexOf("気づ") !== -1) tags.push("本音への気づき");
+      if (allMerged.indexOf("願") !== -1 || allMerged.indexOf("未来") !== -1) tags.push("未来への意志");
+      if (allMerged.indexOf("整え") !== -1 || allMerged.indexOf("習慣") !== -1) tags.push("整える習慣");
+      if (allMerged.indexOf("手放") !== -1 || allMerged.indexOf("軽く") !== -1) tags.push("手放しと再生");
+      if (!tags.length) tags.push("自己理解の深化");
+      if (themes) themes.textContent = tags.join(" / ");
+
+      if (next) {
+        var nextBase = "次の7日間は「" + tags[0] + "」をテーマに整えていきましょう。";
+        var nextShuku = shukuNextSevenSuggestion(profile.shuku, typeKey);
+        next.textContent = nextBase + " " + nextShuku + " 小さな積み重ねが、運気の巡りを安定させます。";
+      }
     }
-    if (!texts.length) {
-      if (current) current.textContent = "まだ7日間の記録が見つかりませんでした。日記を書いてから再度開いてください。";
-      if (themes) themes.textContent = "記録が増えると、ここに今のテーマが表示されます。";
-      if (next) next.textContent = "まずは今日の一行から始めれば十分です。";
+
+    // localStorageにデータがあればそのまま描画
+    if (hasStructured) {
+      renderDeepReport(diaryMap);
       return;
     }
-    var merged = texts.join("\n");
-    var moodState = "neutral";
-    if (merged.indexOf("不安") !== -1 || merged.indexOf("迷") !== -1) {
-      moodState = "anxiety";
-    } else if (merged.indexOf("感謝") !== -1 || merged.indexOf("ありがとう") !== -1) {
-      moodState = "gratitude";
-    } else if (merged.indexOf("願") !== -1 || merged.indexOf("未来") !== -1) {
-      moodState = "future";
+
+    // localStorageにデータがなければスプレッドシートから取得
+    if (structuredIdentity && structuredIdentity !== "guest") {
+      if (current) current.textContent = "日記データを読み込んでいます…";
+      var syncConfig = (function(){
+        var u = localStorage.getItem("tsukiyomi:sheetSync:url") || "https://script.google.com/macros/s/AKfycbxIffIfAOptA-WR6jjT9dg8Fc0yb9HpwsLTR-ZG43Nw12_KR_Yi0Xj9IT_FAyXGV_Ic/exec";
+        var s = localStorage.getItem("tsukiyomi:sheetSync:secretKey") || "tsukiyomi-2026-key";
+        return { url: u, secretKey: s };
+      })();
+      var fetchUrl = syncConfig.url + "?pid=" + encodeURIComponent(structuredIdentity) + "&secretKey=" + encodeURIComponent(syncConfig.secretKey) + "&t=" + Date.now();
+      fetch(fetchUrl, { redirect: "follow" })
+        .then(function(r){ return r.json(); })
+        .then(function(result){
+          if (result && result.ok && result.days && Object.keys(result.days).length > 0) {
+            var restored = {};
+            for (var dayNum in result.days) {
+              var dayData = result.days[dayNum];
+              var key = "tsukiyomi:structuredDiary:v1:" + structuredIdentity + ":day:" + dayNum;
+              localStorage.setItem(key, JSON.stringify(dayData));
+              if (dayData.lines) {
+                var filled = dayData.lines.filter(function(l){ return (l.text || "").trim().length > 0; });
+                if (filled.length) restored[dayNum] = filled;
+              }
+            }
+            renderDeepReport(restored);
+          } else {
+            renderDeepReport({});
+          }
+        })
+        .catch(function(){ renderDeepReport({}); });
+      return;
     }
-    var mood = shukuCurrentLine(profile.shuku, moodState, typeKey);
-    if (current) current.textContent = mood;
+
+    renderDeepReport({});
+
+    // 総合鑑定（目標設定・ギャップ調整）
+    if (hasStructured) {
+      var comprehensiveText = buildComprehensiveReading(diaryMap, profile.name, profile.shuku, typeKey);
+      if (current) current.textContent = comprehensiveText;
+    } else {
+      var merged = texts.join("\n");
+      var moodState = "neutral";
+      if (merged.indexOf("不安") !== -1 || merged.indexOf("迷") !== -1) moodState = "anxiety";
+      else if (merged.indexOf("感謝") !== -1 || merged.indexOf("ありがとう") !== -1) moodState = "gratitude";
+      else if (merged.indexOf("願") !== -1 || merged.indexOf("未来") !== -1) moodState = "future";
+      if (current) current.textContent = shukuCurrentLine(profile.shuku, moodState, typeKey);
+    }
+
+    // テーマ抽出
+    var allMerged = hasStructured
+      ? Object.values(diaryMap).map(function(lines){ return lines.map(function(l){ return l.text || ""; }).join("　"); }).join("\n")
+      : texts.join("\n");
+
     var tags = [];
-    if (merged.indexOf("感謝") !== -1 || merged.indexOf("ありがとう") !== -1) tags.push("感謝の循環");
-    if (merged.indexOf("本音") !== -1 || merged.indexOf("気づ") !== -1) tags.push("本音への気づき");
-    if (merged.indexOf("願") !== -1 || merged.indexOf("未来") !== -1) tags.push("未来への意志");
-    if (merged.indexOf("整え") !== -1) tags.push("整える習慣");
+    if (allMerged.indexOf("感謝") !== -1 || allMerged.indexOf("ありがとう") !== -1) tags.push("感謝の循環");
+    if (allMerged.indexOf("本音") !== -1 || allMerged.indexOf("気づ") !== -1) tags.push("本音への気づき");
+    if (allMerged.indexOf("願") !== -1 || allMerged.indexOf("未来") !== -1) tags.push("未来への意志");
+    if (allMerged.indexOf("整え") !== -1 || allMerged.indexOf("習慣") !== -1) tags.push("整える習慣");
+    if (allMerged.indexOf("手放") !== -1 || allMerged.indexOf("軽く") !== -1) tags.push("手放しと再生");
     if (!tags.length) tags.push("自己理解の深化");
     if (themes) themes.textContent = tags.join(" / ");
+
     if (next) {
       var nextBase = "次の7日間は「" + tags[0] + "」をテーマに整えていきましょう。";
       var nextShuku = shukuNextSevenSuggestion(profile.shuku, typeKey);
@@ -1593,6 +1829,48 @@
     });
   }
 
+  function setupDiaryHowto() {
+    var panels = Array.prototype.slice.call(document.querySelectorAll(".diary-panel"));
+    panels.forEach(function (panel) {
+      if (panel.querySelector("[data-diary-howto]")) return;
+      if (!panel.querySelector("[data-save-diary], [data-save-moon-diary-book]")) return;
+
+      var itemGuide = document.createElement("details");
+      itemGuide.className = "diary-howto diary-item-guide";
+      itemGuide.setAttribute("data-diary-item-guide", "true");
+      itemGuide.innerHTML =
+        '<summary>整えアイテムとは？</summary>' +
+        '<div class="diary-howto-body">' +
+          '<p>整えアイテムは、今いる場所でふと目に入った日用品です。普段は何気なく使っているものを写真に撮り、1分だけ「どんな役割で私を支えているか」を感じ直します。</p>' +
+          '<p>そのものの恩恵に気づくほど、今日の私を整える小さなパワーアイテムになります。</p>' +
+        '</div>';
+
+      var guide = document.createElement("details");
+      guide.className = "diary-howto";
+      guide.setAttribute("data-diary-howto", "true");
+      guide.innerHTML =
+        '<summary>スマホでの書き方を見る</summary>' +
+        '<div class="diary-howto-body">' +
+          '<ol>' +
+            '<li><strong>写真を選ぶ</strong><span>写真ボタンがある日は、写メを選ぶと下に表示されます。写真なしでも進めます。</span></li>' +
+            '<li><strong>白い欄を押して書く</strong><span>全部を書かなくても大丈夫です。1行だけでも、今の気づきとして残せます。</span></li>' +
+            '<li><strong>日記を保存する</strong><span>書けたら「日記を保存する」を押します。</span></li>' +
+            '<li><strong>保存メッセージを見る</strong><span>保存できると、ボタンの近くに保存のお知らせが出ます。</span></li>' +
+          '</ol>' +
+          '<p>途中で画面を閉じても、また同じリンクから戻って続けられます。</p>' +
+        '</div>';
+
+      var firstHint = panel.querySelector(".diary-hint");
+      if (firstHint && firstHint.parentNode === panel) {
+        firstHint.insertAdjacentElement("afterend", itemGuide);
+        itemGuide.insertAdjacentElement("afterend", guide);
+      } else {
+        panel.insertBefore(guide, panel.firstChild);
+        panel.insertBefore(itemGuide, guide);
+      }
+    });
+  }
+
   function escapeHtml(value) {
     return value
       .replace(/&/g, "&amp;")
@@ -1638,5 +1916,6 @@
     setupDeepReport();
     setupSheetSyncSetup();
     setupChallengeOpenLock();
+    setupDiaryHowto();
   });
 })();
