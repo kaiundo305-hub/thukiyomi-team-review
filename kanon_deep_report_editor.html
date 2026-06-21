@@ -552,7 +552,14 @@ function runGapAnalysis(pid) {
     })
     .then(function(result){
       if (!result || !result.ok || !result.days || Object.keys(result.days).length === 0) {
-        panel.innerHTML = '<p style="color:#e8a0a0;font-size:11px">日記データが見つかりませんでした。スプレッドシートに記録がないか、まだ送信されていない可能性があります。</p>';
+        var fallbackText = [p.q, p.q2].filter(Boolean).join('\n');
+        if (!fallbackText) {
+          panel.innerHTML = '<p style="color:#e8a0a0;font-size:11px">日記データが見つかりませんでした。スプレッドシートに記録がないか、まだ送信されていない可能性があります。</p>';
+          return;
+        }
+        panel.innerHTML = '<p style="color:#aaa;font-size:11px">※日記未提出のためプロフィール情報で分析します</p>';
+        if (diaryTA) diaryTA.value = fallbackText;
+        runGapAnalysisWithText(pid, fallbackText);
         return;
       }
       var lines = [];
