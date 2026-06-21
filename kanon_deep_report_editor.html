@@ -421,7 +421,7 @@ function buildCard(p) {
 
     '<div class="section-label">📔 日記の内容（宿命ギャップ分析用・任意）</div>' +
     '<div class="section-hint">スプレッドシートのDay1〜7の回答をコピーして貼り付けると、宿命との照らし合わせ分析が自動生成に反映されます</div>' +
-    '<textarea class="textarea" name="diary" style="min-height:70px;font-size:12px;color:rgba(220,210,240,.85);line-height:1.8" data-field="diary" placeholder="Day1「今日感謝したことは…」Day2「気づいたことは…」Day3「変化は…」…\n本人の言葉をそのままコピーして貼り付けてください">' + esc(saved.diary || '') + '</textarea>' +
+    '<textarea class="textarea" name="diary" style="min-height:120px;font-size:12px;color:rgba(220,210,240,.85);line-height:1.8" data-field="diary" placeholder="Day1「今日感謝したことは…」Day2「気づいたことは…」Day3「変化は…」…\n本人の言葉をそのままコピーして貼り付けてください">' + esc(saved.diary || '') + '</textarea>' +
     '<button class="btn-analyze" onclick="runGapAnalysis(\'' + p.pid + '\')">🔍 ギャップを分析する</button>' +
     '<div class="gap-panel" id="gap-panel-' + p.pid + '"></div>' +
 
@@ -571,7 +571,11 @@ function runGapAnalysis(pid) {
         dayData.lines.forEach(function(l){ if ((l.text || '').trim()) lines.push(l.text.trim()); });
       }
       var fetchedDiary = lines.join('\n');
-      if (diaryTA) diaryTA.value = fetchedDiary;
+      if (diaryTA) {
+        diaryTA.value = fetchedDiary;
+        diaryTA.style.height = 'auto';
+        diaryTA.style.height = Math.min(diaryTA.scrollHeight, 400) + 'px';
+      }
       runGapAnalysisWithText(pid, fetchedDiary);
     })
     .catch(function(){
