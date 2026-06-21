@@ -30,7 +30,7 @@
       birth: params.get('birth') || '',
       zodiac: params.get('zodiac') || '',
       shuku: params.get('shuku') || '',
-      participantId: params.get('participantId') || '',
+      participantId: params.get('participantId') || params.get('pid') || '',
       concern: params.get('concern') || '',
       q: params.get('q') || '',
       q2: params.get('q2') || ''
@@ -335,7 +335,7 @@
     var cached = loadCachedProfile();
     if(cached.participantId) return;
     var params = getParams();
-    if(params.get('participantId')) return;
+    if(params.get('participantId') || params.get('pid')) return;
 
     var overlay = document.createElement('div');
     overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.55);z-index:9999;display:flex;align-items:center;justify-content:center;';
