@@ -308,6 +308,19 @@ function extractQAction(qText) {
 }
 
 // ===== セクション自動生成 =====
+function pickDiaryLines(diary, count) {
+  if (!diary) return [];
+  var lines = diary.split('\n')
+    .map(function(l){ return l.trim(); })
+    .filter(function(l){ return l.length >= 6; });
+  var result = [];
+  var step = Math.max(1, Math.floor(lines.length / count));
+  for (var i = 0; i < lines.length && result.length < count; i += step) {
+    result.push(lines[i]);
+  }
+  return result;
+}
+
 function openingFromConcern(concern) {
   return /仕事/.test(concern)             ? 'この7日間で、あなたは「働く自分」を深いところから見つめてきました。'
        : /お金/.test(concern)             ? 'この7日間で、あなたは「豊かさ」というテーマと静かに向き合いました。'
@@ -325,14 +338,16 @@ function genSection1(concern, q, shuku, diary) {
     : openingFromConcern(concern);
   var gap = analyzeShukuGap(diary, shuku);
   var a = SHUKU_ANALYSIS[shuku];
+  var quotes = pickDiaryLines(diary, 1);
+  var quoteStr = quotes.length > 0 ? '「' + quotes[0] + '」という言葉を書いていたあなた。' : '';
   if (gap && a) {
     if (gap.aligned) {
-      return opening + '\n\n日記の言葉に、あなたの宿命「' + a.label + '」が自然に現れています。その感覚は本物です。その流れをさらに信じて深めていくときです。';
+      return opening + '\n\n' + quoteStr + '日記の言葉に、あなたの宿命「' + a.label + '」が自然に現れています。その感覚は本物です。その流れをさらに信じて深めていくときです。';
     } else {
-      return opening + '\n\n感情に気づく力は育っています。「' + a.label + '」というあなたの宿命の力が、まだ日常の表に出てきていない段階かもしれません。それは今後の伸びしろです。';
+      return opening + '\n\n' + quoteStr + '感情に気づく力は育っています。「' + a.label + '」というあなたの宿命の力が、まだ日常の表に出てきていない段階かもしれません。それは今後の伸びしろです。';
     }
   }
-  return opening + '\n\n答えはまだ出ていなくていい。今のあなたは、表面的な正解ではなく、心の奥にある本当の動機と向き合う段階にいます。';
+  return opening + '\n\n' + quoteStr + '答えはまだ出ていなくていい。今のあなたは、表面的な正解ではなく、心の奥にある本当の動機と向き合う段階にいます。';
 }
 
 function genSection2(concern, q, shuku, diary) {
@@ -350,7 +365,16 @@ function genSection2(concern, q, shuku, diary) {
     }
   }
 
-  // 日記がない・ヒットなしの場合はqテーマ→concernで構成
+  // 日記あり・ヒットなしの場合も日記から引用
+  if (diary) {
+    var quotes2 = pickDiaryLines(diary, 2);
+    if (quotes2.length > 0) {
+      var q2str = quotes2.map(function(l){ return '「' + l + '」'; }).join('、');
+      return q2str + 'という言葉が、7日間の中で自然に出てきていました。\nこれらはあなたが今感じていることの本音です。その感覚を大切にしてください。';
+    }
+  }
+
+  // 日記がない場合はqテーマ→concernで構成
   if (keyTheme) return '「' + keyTheme + '」のテーマが、7日間を通じてあなたの中で育っています。\nこのテーマは、今のあなたにとって最も大切な開運の扉の一つです。';
   if (/仕事/.test(concern))             return '仕事と使命へのテーマが育っています。あなたが今感じている「こうありたい」という声こそが、次の扉のカギです。';
   if (/お金/.test(concern))             return '豊かさへの意識が、意欲という形で育っています。お金との関係を見つめ直すことが、今のあなたにとって大切なテーマです。';
