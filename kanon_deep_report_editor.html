@@ -538,11 +538,18 @@ function runGapAnalysis(pid) {
   var gasUrl = 'https://script.google.com/macros/s/AKfycbxIffIfAOptA-WR6jjT9dg8Fc0yb9HpwsLTR-ZG43Nw12_KR_Yi0Xj9IT_FAyXGV_Ic/exec';
   var secretKey = 'tsukiyomi-2026-key';
   var email = p.email || '';
-  var idParam = email ? 'email=' + encodeURIComponent(email) : 'pid=' + encodeURIComponent(pid);
-  var fetchUrl = gasUrl + '?' + idParam + '&secretKey=' + encodeURIComponent(secretKey) + '&t=' + Date.now();
 
-  fetch(fetchUrl, { redirect: 'follow' })
-    .then(function(r){ return r.json(); })
+  function fetchAndAnalyze(idParam) {
+    var fetchUrl = gasUrl + '?' + idParam + '&secretKey=' + encodeURIComponent(secretKey) + '&t=' + Date.now();
+    return fetch(fetchUrl, { redirect: 'follow' }).then(function(r){ return r.json(); });
+  }
+
+  fetchAndAnalyze('email=' + encodeURIComponent(email))
+    .then(function(result){
+      if (result && result.ok && result.days && Object.keys(result.days).length > 0) return result;
+      // emailで見つからない場合はpidでフォールバック
+      return fetchAndAnalyze('pid=' + encodeURIComponent(pid));
+    })
     .then(function(result){
       if (!result || !result.ok || !result.days || Object.keys(result.days).length === 0) {
         panel.innerHTML = '<p style="color:#e8a0a0;font-size:11px">日記データが見つかりませんでした。スプレッドシートに記録がないか、まだ送信されていない可能性があります。</p>';
