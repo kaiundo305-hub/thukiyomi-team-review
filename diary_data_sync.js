@@ -347,10 +347,10 @@
     var box = document.createElement('div');
     box.style.cssText = 'background:#fff;border-radius:16px;padding:32px 24px;max-width:320px;width:90%;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,0.2);';
 
-    box.innerHTML = '<p style="font-size:15px;line-height:1.7;color:#3a2a1a;margin:0 0 18px;">月読みワンダーランドへようこそ。<br>登録したときのお名前と<br>参加者番号を教えてください。</p>'
+    box.innerHTML = '<p style="font-size:15px;line-height:1.7;color:#3a2a1a;margin:0 0 18px;">月読みワンダーランドへようこそ。<br>登録したときのお名前と<br>メールアドレスを教えてください。</p>'
       + '<input id="tsukiyomi-name-input" type="text" placeholder="お名前（例：山田 花子）" style="width:100%;box-sizing:border-box;padding:10px 14px;border:1.5px solid #c8b89a;border-radius:8px;font-size:15px;margin-bottom:10px;outline:none;">'
-      + '<input id="tsukiyomi-pid-input" type="number" placeholder="参加者番号（例：29）" style="width:100%;box-sizing:border-box;padding:10px 14px;border:1.5px solid #c8b89a;border-radius:8px;font-size:15px;margin-bottom:10px;outline:none;">'
-      + '<p style="font-size:12px;color:#888;margin:0 0 16px;line-height:1.6;">参加者番号は、送られてきたリンクの一番最後の数字です。</p>'
+      + '<input id="tsukiyomi-pid-input" type="email" placeholder="メールアドレス（登録時のもの）" style="width:100%;box-sizing:border-box;padding:10px 14px;border:1.5px solid #c8b89a;border-radius:8px;font-size:15px;margin-bottom:10px;outline:none;">'
+      + '<p style="font-size:12px;color:#888;margin:0 0 16px;line-height:1.6;">月読みワンダーランドに登録したメールアドレスを入力してください。</p>'
       + '<button id="tsukiyomi-name-btn" style="background:#3a2a1a;color:#fff;border:none;border-radius:8px;padding:12px 0;width:100%;font-size:15px;cursor:pointer;">続ける</button>';
 
     overlay.appendChild(box);
@@ -364,11 +364,11 @@
 
     function submit(){
       var name = (nameInput.value || '').trim();
-      var pid = (pidInput.value || '').trim();
+      var email = (pidInput.value || '').trim();
       if(!name){ nameInput.style.border = '1.5px solid #c0392b'; return; }
-      if(!pid){ pidInput.style.border = '1.5px solid #c0392b'; return; }
+      if(!email){ pidInput.style.border = '1.5px solid #c0392b'; return; }
       var existing = loadCachedProfile();
-      saveCachedProfile(Object.assign({}, existing, { name: name, participantId: pid }));
+      saveCachedProfile(Object.assign({}, existing, { name: name, email: email }));
       document.body.removeChild(overlay);
     }
 
