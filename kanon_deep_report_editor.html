@@ -109,6 +109,8 @@
 
 <div id="cards"></div>
 
+<button class="btn-all" onclick="analyzeAll()" style="background:linear-gradient(90deg,#6ddc9a,#2d8a5a);margin-bottom:0">🔍 全員ギャップ分析</button>
+<p class="hint" id="analyze-all-status" style="margin-top:4px;margin-bottom:8px"></p>
 <button class="btn-all" onclick="saveAll()">✦ 全員まとめて保存</button>
 <button class="btn-export" onclick="openExport()">📤 JSファイルを書き出す（鑑定書に反映）</button>
 <p class="hint">書き出したJSをdeep_report_overrides.jsとして保存し、GitHubにpushすると鑑定書に反映されます</p>
@@ -638,6 +640,28 @@ function saveCard(pid) {
 function saveAll() {
   PARTICIPANTS.forEach(function(p){ saveCard(p.pid); });
   alert('全員分を保存しました！');
+}
+
+function analyzeAll() {
+  var pids = PARTICIPANTS.map(function(p){ return p.pid; });
+  var index = 0;
+  var status = document.getElementById('analyze-all-status');
+  status.textContent = '分析中… 0 / ' + pids.length;
+
+  function next() {
+    if (index >= pids.length) {
+      status.textContent = '✓ 全員の分析が完了しました（' + pids.length + '名）';
+      return;
+    }
+    var pid = pids[index];
+    var p = PARTICIPANTS.find(function(x){ return x.pid === pid; });
+    status.textContent = '分析中… ' + (index + 1) + ' / ' + pids.length + '　（' + p.name + '）';
+    index++;
+    runGapAnalysis(pid);
+    setTimeout(next, 600);
+  }
+
+  next();
 }
 
 // ===== コピー =====
