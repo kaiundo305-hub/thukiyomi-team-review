@@ -89,7 +89,22 @@
         7日間で残した言葉は、今のあなたに寄り添う第2の鑑定書へ反映されていきます。
         月読みワンダーランドから、次の一通を受け取る入口へ進みましょう。
       </p>
-      <a class="moon-button" href="moon_seed_deep_report.html" data-keep-query>第2の鑑定書の入口へ進む</a>
+      <div id="second-report-gate">
+        <p style="color:#e8c96a;font-size:13px;margin:0 0 6px">🌙 第2の鑑定書は明日（6月22日）にお届けします</p>
+        <p style="color:#aaa;font-size:12px;margin:0">今日一日、7日間の記録をゆっくり読み返してみてください。</p>
+      </div>
+      <a id="second-report-link" class="moon-button" href="moon_seed_deep_report.html" data-keep-query style="display:none">第2の鑑定書の入口へ進む</a>
+      <script>
+        (function(){
+          var now = new Date();
+          var jst = new Date(now.getTime() + 9 * 60 * 60 * 1000);
+          var open = new Date('2026-06-22T00:00:00+09:00');
+          if (jst >= open) {
+            document.getElementById('second-report-gate').style.display = 'none';
+            document.getElementById('second-report-link').style.display = '';
+          }
+        })();
+      </script>
     </section>
 
     <div class="summary-actions">
