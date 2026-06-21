@@ -573,7 +573,14 @@ function runGapAnalysis(pid) {
       runGapAnalysisWithText(pid, fetchedDiary);
     })
     .catch(function(){
-      panel.innerHTML = '<p style="color:#e8a0a0;font-size:11px">取得に失敗しました。ネットワーク接続を確認してください。</p>';
+      var fallbackText = [p.q, p.q2].filter(Boolean).join('\n');
+      if (fallbackText) {
+        panel.innerHTML = '<p style="color:#aaa;font-size:11px">※プロフィール情報で分析します</p>';
+        if (diaryTA) diaryTA.value = fallbackText;
+        runGapAnalysisWithText(pid, fallbackText);
+      } else {
+        panel.innerHTML = '<p style="color:#e8a0a0;font-size:11px">取得に失敗しました。ネットワーク接続を確認してください。</p>';
+      }
     });
 
 }
