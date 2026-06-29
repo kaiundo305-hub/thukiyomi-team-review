@@ -222,6 +222,19 @@
 </div>
 
 <!-- 鑑定書プレビューモーダル -->
+<div class="modal-overlay" id="importDiaryModal" onclick="if(event.target===this)this.style.display='none'">
+  <div class="modal-box" style="max-width:700px">
+    <h2>📥 LocalStorageデータから日記を読み込む</h2>
+    <p style="font-size:12px;color:#c8bcd8;margin-bottom:12px">ChromeのDevToolsからエクスポートしたJSONをここに貼り付けてください。日記データを自動で抽出し、指定した参加者の日記欄に反映します。</p>
+    <textarea id="importDiaryJsonInput" class="export-area" style="min-height:160px" placeholder='{"tsukiyomi:structuredDiary:v1:029:day:1": {...}, ...}'></textarea>
+    <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <button class="modal-action-btn" onclick="processImportDiaryJson()">✨ 読み込む</button>
+      <button class="modal-close" onclick="document.getElementById('importDiaryModal').style.display='none'">閉じる</button>
+    </div>
+    <div id="importDiaryResult" style="margin-top:12px"></div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="previewModal" onclick="if(event.target===this)this.style.display='none'">
   <div class="modal-box modal-preview">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
@@ -281,7 +294,7 @@ var PARTICIPANTS = [
   {pid:"040",email:"6858artdevivre@gmail.com",       name:"川﨑智貴",       shuku:"昴宿",concern:"恋愛",           q:"チャットGPTを活用して自己統合が進んでいます。さらに自己統合、自己愛を深めていきたいと思います。"},
   {pid:"041",email:"h.neriya@gmail.com",             name:"徳田英弘",       shuku:"翼宿",concern:"家族",           q:"青春を彷徨っている息子のことが心配。どちらにも進めない（進路で迷っている様子）"},
   {pid:"042",email:"for.life.clover@gmail.com",      name:"谷口貴朗",       shuku:"房宿",concern:"健康",           q:""},
-  {pid:"044",email:"velvetmoon0426@gmail.com",       legacyPid:"043",name:"かのん",shuku:"觜宿",concern:"",       q:""},
+  {pid:"044",email:"velvetmoon0426@gmail.com",       legacyPid:"043",name:"かのん",shuku:"觜宿",concern:"仕事・人間関係", q:"今の流れを整えながら、次の一歩を見つけたい。"},
   {pid:"045",email:"basoromyu0317@gmail.com",        name:"熊川",          shuku:"軫宿",concern:"テスト",         q:"テスト用参加者"}
 ];
 
@@ -1126,6 +1139,7 @@ function buildCard(p) {
     '<textarea class="textarea" style="min-height:70px;font-size:12px;color:rgba(220,210,240,.85);line-height:1.8" data-field="diary" placeholder="Day1「今日感謝したことは…」Day2「気づいたことは…」Day3「変化は…」…\n本人の言葉をそのままコピーして貼り付けてください" oninput="if(this.value.trim()){this.dataset.isFallback=\'\';this.style.borderColor=\'\';this.title=\'\'}">' + esc(saved.diary_is_fallback ? (diaryText || '') : (saved.diary || diaryText || '')) + '</textarea>' +
     '<button type="button" class="btn-analyze" data-gap-action="' + p.pid + '" onclick="runGapAnalysis(\'' + p.pid + '\');return false;">🔍 ギャップを分析する</button>' +
     '<div class="gap-panel" id="gap-panel-' + p.pid + '"></div>' +
+    '<button type="button" class="btn-gen" style="margin-top:6px;font-size:11px;padding:4px 12px;opacity:.9" onclick="importDiaryFromJson(\'' + p.pid + '\');return false;">📥 LocalStorageから日記を読み込む</button>' +
 
     '<div class="section-label" style="margin-top:12px">📝 分析メモ（かのん内部用）</div>' +
     '<div class="section-hint">分析を見て気づいたこと・伝えたいポイントをメモ。自動生成・書き出しには含まれません</div>' +
@@ -2169,7 +2183,7 @@ function showPreview(pid) {
   } catch(e) {}
 
   // 本物の鑑定書ページ（ローカル）を新タブで開く
-  var certPath = '../月読みワンダーランド_公開用/moon_seed_deep_report.html';
+  var certPath = 'moon_seed_deep_report.html';
   var url = certPath + '?pid=' + encodeURIComponent(pid);
   var win = window.open(url, 'preview_cert_' + pid);
   if (!win) {
@@ -2268,6 +2282,91 @@ function downloadPreviewReport() {
   buildJumpNav();
   updateProgress();
 })();
+
+// ===== LocalStorage日記インポート機能 =====
+function importDiaryFromJson(pid) {
+  var modal = document.getElementById('importDiaryModal');
+  modal.dataset.targetPid = pid;
+  document.getElementById('importDiaryJsonInput').value = '';
+  document.getElementById('importDiaryResult').innerHTML = '';
+  modal.style.display = 'block';
+}
+
+function processImportDiaryJson() {
+  var jsonText = (document.getElementById('importDiaryJsonInput').value || '').trim();
+  var targetPid = document.getElementById('importDiaryModal').dataset.targetPid || '';
+  if (!jsonText) { alert('JSONを貼り付けてください'); return; }
+  // Chrome DevTools出力の末尾の "undefined" などを除去
+  jsonText = jsonText.replace(/\s*undefined\s*$/, '').trim();
+  // 先頭に { がなければ補完
+  if (jsonText.charAt(0) !== '{') jsonText = '{' + jsonText;
+  // 末尾の余分なカンマを除去
+  jsonText = jsonText.replace(/,\s*}$/, '}');
+  var data;
+  try { data = JSON.parse(jsonText); } catch(e) {
+    document.getElementById('importDiaryResult').innerHTML = '<p style="color:#e8a0a0">⚠️ JSONのパースに失敗しました: ' + esc(e.message) + '</p>';
+    return;
+  }
+  var byIdentity = {};
+  Object.keys(data).forEach(function(k) {
+    var m = k.match(/tsukiyomi:structuredDiary:v1:([^:]+):day:(\d+)/);
+    if (!m) return;
+    var id = m[1], day = parseInt(m[2]);
+    if (!byIdentity[id]) byIdentity[id] = {};
+    byIdentity[id][day] = data[k];
+  });
+  var identities = Object.keys(byIdentity);
+  if (!identities.length) {
+    document.getElementById('importDiaryResult').innerHTML = '<p style="color:#e8a0a0">⚠️ 日記データ（structuredDiary）が見つかりませんでした。</p>';
+    return;
+  }
+  window._importedDiaryTexts = {};
+  var html = '';
+  identities.forEach(function(id) {
+    var days = byIdentity[id];
+    var nums = Object.keys(days).map(Number).sort(function(a,b){return a-b;});
+    var lines = nums.map(function(n) {
+      var d = days[n];
+      var answers = (d.lines||[]).filter(function(l){return (l.text||'').trim();}).map(function(l){return l.text.trim();});
+      return 'Day'+n+'：'+answers.join('／');
+    });
+    var formatted = lines.join('\n');
+    window._importedDiaryTexts[id] = formatted;
+    var isMatch = (id === targetPid);
+    html += '<div style="margin-bottom:10px;padding:10px;border:1px solid rgba(241,217,155,'+(isMatch?'.5':'.2')+');border-radius:8px;background:rgba(241,217,155,'+(isMatch?'.1':'.03')+')">';
+    html += '<div style="color:#f1d99b;font-size:12px;margin-bottom:6px">identity: <b>'+esc(id)+'</b>'+(isMatch?' ✅ 現在のpidと一致':'')+' （Day '+nums.join('・')+'）</div>';
+    html += '<pre style="white-space:pre-wrap;font-size:11px;color:rgba(220,210,240,.85);max-height:120px;overflow-y:auto;margin-bottom:8px">'+esc(formatted)+'</pre>';
+    html += '<button class="modal-action-btn" onclick="applyDiaryTextToCard(\''+esc(targetPid)+'\',\''+esc(id)+'\')">✅ この日記をpid '+esc(targetPid)+' の日記欄に反映</button>';
+    html += '</div>';
+  });
+  document.getElementById('importDiaryResult').innerHTML = html;
+}
+
+function applyDiaryTextToCard(pid, identity) {
+  var formatted = (window._importedDiaryTexts || {})[identity] || '';
+  if (!formatted) { alert('データが見つかりませんでした'); return; }
+  var cards = document.querySelectorAll('.card');
+  var found = false;
+  for (var i = 0; i < cards.length; i++) {
+    var noEl = cards[i].querySelector('.no');
+    if (noEl && noEl.textContent.trim() === pid) {
+      var diaryTA = cards[i].querySelector('[data-field="diary"]');
+      if (diaryTA) {
+        diaryTA.value = formatted;
+        diaryTA.style.borderColor = 'rgba(109,220,154,.6)';
+        diaryTA.dataset.isFallback = '';
+        found = true;
+      }
+      break;
+    }
+  }
+  document.getElementById('importDiaryModal').style.display = 'none';
+  if (found) {
+    alert('✅ pid ' + pid + ' の日記欄に反映しました！\n続けて「ギャップを分析する」→「自動生成」をクリックしてください。');
+  } else {
+    alert('⚠️ pid ' + pid + ' のカードが見つかりませんでした。');
+  }
+}
 </script>
 </body>
 </html>
