@@ -3,6 +3,7 @@
   var SHEET_WEBHOOK_STORAGE_KEY = STORAGE_PREFIX + "sheet_webhook_url";
   var SHEET_SECRET_STORAGE_KEY = STORAGE_PREFIX + "sheet_secret_key";
   var SHEET_PROFILE_STORAGE_KEY = STORAGE_PREFIX + "sheet_profile";
+  var DEEP_REPORT_SHARED_OVERRIDES_KEY = STORAGE_PREFIX + "deep_report_overrides_v1";
 
   function getParams() {
     return new URLSearchParams(window.location.search);
@@ -45,6 +46,18 @@
     target.textContent = name + "さんの新月にひらく 自分発見ムーンゲート";
   }
 
+  function readIntroWish(identity) {
+    if (!identity) return "";
+    try {
+      var raw = localStorage.getItem("tsukiyomi:introReflection:v1:" + identity) || "";
+      if (!raw) return "";
+      var saved = JSON.parse(raw);
+      return String((saved && (saved.text || saved.wish)) || "").trim();
+    } catch (e) {
+      return "";
+    }
+  }
+
   function storageKey(day) {
     return STORAGE_PREFIX + "day_" + day;
   }
@@ -75,6 +88,24 @@
 
   function setSheetProfile(profile) {
     localStorage.setItem(SHEET_PROFILE_STORAGE_KEY, JSON.stringify(profile || {}));
+  }
+
+  function loadSharedDeepReportOverrides() {
+    try {
+      return JSON.parse(localStorage.getItem(DEEP_REPORT_SHARED_OVERRIDES_KEY) || "{}");
+    } catch (e) {
+      return {};
+    }
+  }
+
+  function getDeepReportOverride(pid) {
+    if (!pid) return null;
+    if (window.DEEP_REPORT_OVERRIDES && window.DEEP_REPORT_OVERRIDES[pid] && window.DEEP_REPORT_OVERRIDES[pid].done) {
+      return window.DEEP_REPORT_OVERRIDES[pid];
+    }
+    var shared = loadSharedDeepReportOverrides();
+    if (shared && shared[pid] && shared[pid].done) return shared[pid];
+    return null;
   }
 
   function collectProfileFromParams() {
@@ -1118,6 +1149,19 @@
     }
   }
 
+  function renderFirstConcern(root, profile) {
+    var section = root.querySelector("[data-deep-first-concern]");
+    if (!section) return;
+    var concern = (profile.concern || "").trim();
+    var q = (profile.q || "").trim();
+    if (!concern && !q) return;
+    var labelEl = section.querySelector("[data-concern-category]");
+    var textEl = section.querySelector("[data-concern-q]");
+    if (labelEl) labelEl.textContent = concern || "お悩み";
+    if (textEl) textEl.textContent = q || concern;
+    section.style.display = "";
+  }
+
   function setupDeepReport() {
     var root = document.querySelector("[data-deep-report]");
     if (!root) return;
@@ -1296,20 +1340,35 @@
     }
 
     function resolveBaseProfile() {
-      var name = params.get("name") || "あなた";
-      var birth = params.get("birth") || "";
+      var pid = params.get("participantId") || params.get("pid") || "";
+      var participantData = (pid && window.PARTICIPANTS_DATA && window.PARTICIPANTS_DATA[pid]) ? window.PARTICIPANTS_DATA[pid] : {};
+      var name = params.get("name") || participantData.name || "あなた";
+      var email = params.get("email") || participantData.email || "";
+      var birth = params.get("birth") || participantData.birth || "";
       var zodiac = normalizeZodiac(params.get("zodiac") || "");
-      var shuku = (params.get("shuku") || params.get("honmei") || params.get("honmeiShuku") || "").replace(/\s/g, "");
+      var shuku = (params.get("shuku") || params.get("honmei") || params.get("honmeiShuku") || participantData.shuku || "").replace(/\s/g, "");
+      var concern = params.get("concern") || participantData.concern || "";
+      var q = params.get("q") || participantData.q || "";
+      var q2 = params.get("q2") || participantData.q2 || "";
+      var newmoon = params.get("newmoon") || participantData.newmoon || participantData.wish || "";
       if (!zodiac && birth) zodiac = zodiacFromBirth(birth);
       try {
         var snap = JSON.parse(localStorage.getItem(day2SnapshotKey) || "{}");
         if (!zodiac) zodiac = normalizeZodiac(snap.zodiac || "");
         if (!shuku) shuku = (snap.shuku || "").replace(/\s/g, "");
       } catch (e) {}
+      if (!newmoon) newmoon = readIntroWish(pid || email || birth || name);
       return {
+        participantId: pid,
+        email: email,
         name: name,
+        birth: birth,
         zodiac: zodiac,
-        shuku: shuku
+        shuku: shuku,
+        concern: concern,
+        q: q,
+        q2: q2,
+        newmoon: newmoon
       };
     }
 
@@ -1337,6 +1396,43 @@
         } catch(e) {}
       }
       return result;
+    }
+
+    function findStructuredDiaryIdentity() {
+      var prefix = "tsukiyomi:structuredDiary:v1:";
+      var scores = {};
+      for (var i = 0; i < localStorage.length; i++) {
+        var key = localStorage.key(i) || "";
+        if (key.indexOf(prefix) !== 0) continue;
+        var match = key.match(/^tsukiyomi:structuredDiary:v1:(.+):day:([1-7])$/);
+        if (!match) continue;
+        var identity = match[1];
+        var day = match[2];
+        try {
+          var rec = JSON.parse(localStorage.getItem(key) || "{}");
+          var hasLines = rec && Array.isArray(rec.lines) && rec.lines.some(function(l){ return (l.text || "").trim(); });
+          if (!hasLines && !(rec && (rec.photoDataUrl || rec.hasPhoto || rec.photoName))) continue;
+          if (!scores[identity]) scores[identity] = { identity: identity, score: 0 };
+          scores[identity].score += day === "7" ? 10 : 1;
+          if (rec.savedAtJst) scores[identity].savedAtJst = rec.savedAtJst;
+        } catch (e) {}
+      }
+      return Object.keys(scores).map(function(key){ return scores[key]; }).sort(function(a, b){
+        if (b.score !== a.score) return b.score - a.score;
+        return String(b.savedAtJst || "").localeCompare(String(a.savedAtJst || ""));
+      })[0]?.identity || "";
+    }
+
+    function readStructuredProfile(identity) {
+      if (!identity) return {};
+      for (var d = 1; d <= 7; d++) {
+        var key = "tsukiyomi:structuredDiary:v1:" + identity + ":day:" + d;
+        try {
+          var rec = JSON.parse(localStorage.getItem(key) || "{}");
+          if (rec && rec.profile) return rec.profile;
+        } catch (e) {}
+      }
+      return {};
     }
 
     function buildDiarySummaryHtml(diaryMap) {
@@ -1410,15 +1506,45 @@
     }
 
     var profile = resolveBaseProfile();
+    var explicitStructuredIdentity = params.get("participantId") || params.get("pid") || profile.participantId || profile.email || profile.birth || (profile.name && profile.name !== "あなた" ? profile.name : "");
+    var detectedStructuredIdentity = explicitStructuredIdentity ? "" : findStructuredDiaryIdentity();
+    if (detectedStructuredIdentity) {
+      var detectedProfile = readStructuredProfile(detectedStructuredIdentity);
+      profile.participantId = profile.participantId || detectedProfile.participantId || detectedStructuredIdentity;
+      profile.email = profile.email || detectedProfile.email || "";
+      profile.name = profile.name !== "あなた" ? profile.name : (detectedProfile.name || "あなた");
+      profile.birth = profile.birth || detectedProfile.birth || "";
+      profile.zodiac = profile.zodiac || normalizeZodiac(detectedProfile.zodiac || "");
+      profile.shuku = profile.shuku || String(detectedProfile.shuku || "").replace(/\s/g, "");
+      profile.concern = profile.concern || detectedProfile.concern || "";
+      profile.q = profile.q || detectedProfile.q || "";
+      profile.q2 = profile.q2 || detectedProfile.q2 || "";
+      profile.newmoon = profile.newmoon || detectedProfile.newmoon || detectedProfile.wish || readIntroWish(detectedStructuredIdentity);
+    }
+
+    renderFirstConcern(root, profile);
+
+    // @@Q@@...@@/Q@@ マーカーを日記引用ブロックに変換してinnerHTML描画
+    function renderDeepSection(el, rawText) {
+      if (!el || !rawText) return;
+      var html = String(rawText)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/@@Q@@([\s\S]*?)@@\/Q@@/g, function(_, inner) {
+          return '<span class="deep-diary-voice"><span class="deep-diary-voice-label">✦ あなたの言葉より</span>' + inner + '</span>';
+        })
+        .replace(/\n/g, '<br>');
+      el.innerHTML = html;
+    }
 
     // チェック・編集ツール（kanon_deep_report_editor.html）で保存した内容があれば優先表示
-    var pid = params.get("participantId") || "";
-    if (pid && window.DEEP_REPORT_OVERRIDES && window.DEEP_REPORT_OVERRIDES[pid] && window.DEEP_REPORT_OVERRIDES[pid].done) {
-      var ov = window.DEEP_REPORT_OVERRIDES[pid];
-      if (current && ov.s1) current.textContent = ov.s1;
-      if (themes && ov.s2) themes.textContent = ov.s2;
-      if (shukuView && ov.s3) shukuView.textContent = ov.s3;
-      if (next && ov.s4) next.textContent = ov.s4;
+    var pid = params.get("participantId") || params.get("pid") || "";
+    var override = getDeepReportOverride(pid);
+    if (override) {
+      var ov = override;
+      if (current && ov.s1) renderDeepSection(current, ov.s1);
+      if (themes && ov.s2) renderDeepSection(themes, ov.s2);
+      if (shukuView && ov.s3) renderDeepSection(shukuView, ov.s3);
+      if (next && ov.s4) renderDeepSection(next, ov.s4);
       var kanonView = root.querySelector("[data-deep-kanon]");
       if (kanonView && ov.kanon) {
         kanonView.textContent = ov.kanon;
@@ -1430,13 +1556,30 @@
 
     // 自動生成レポートがあれば表示（Day7保存時に生成済みのものを含む）
     if (window.TsukiyomiReportGen) {
-      var autoIdentity = pid || profile.participantId || profile.birth || profile.name || "guest";
+      var autoIdentity = detectedStructuredIdentity || pid || profile.participantId || profile.email || profile.birth || profile.name || "guest";
       var autoReport = TsukiyomiReportGen.load(autoIdentity) || TsukiyomiReportGen.triggerIfReady(profile);
+      // 宿データなしで生成されたキャッシュを無効化して再生成
+      if (autoReport && profile.shuku && autoReport.s3 && autoReport.s3.indexOf('宿曜情報がありません') >= 0) {
+        autoReport = TsukiyomiReportGen.generate(profile);
+      }
+      // 名前なしで生成されたキャッシュも再生成（「あなた」で始まる場合）
+      if (autoReport && profile.name && profile.name !== 'あなた' && autoReport.s3 && autoReport.s3.indexOf('あなた') === 0) {
+        autoReport = TsukiyomiReportGen.generate(profile);
+      }
+      if (autoReport && !autoReport.templateHtml) {
+        autoReport = TsukiyomiReportGen.generate(profile);
+      }
       if (autoReport && autoReport.s1) {
-        if (current) current.textContent = autoReport.s1;
-        if (themes) themes.textContent = autoReport.s2;
-        if (shukuView) shukuView.textContent = autoReport.s3;
-        if (next) next.textContent = autoReport.s4;
+        if (current) renderDeepSection(current, autoReport.s1);
+        if (themes) renderDeepSection(themes, autoReport.s2);
+        if (shukuView) renderDeepSection(shukuView, autoReport.s3);
+        if (next) renderDeepSection(next, autoReport.s4);
+        var autoTemplateSection = root.querySelector("[data-deep-template-section]");
+        var autoTemplateContainer = root.querySelector("[data-deep-template]");
+        if (autoTemplateContainer && autoReport.templateHtml) {
+          autoTemplateContainer.innerHTML = autoReport.templateHtml;
+          if (autoTemplateSection) autoTemplateSection.style.display = "";
+        }
         var voicesSection = root.querySelector("[data-deep-voices-section]");
         var voicesContainer = root.querySelector("[data-deep-voices]");
         if (voicesContainer && autoReport.voicesHtml) {
@@ -1462,12 +1605,14 @@
     }
 
     // 構造化日記データを優先的に読み込む
-    var structuredIdentity = pid || profile.participantId || profile.birth || profile.name || "guest";
+    var structuredIdentity = detectedStructuredIdentity || pid || profile.participantId || profile.email || profile.birth || profile.name || "guest";
     var diaryMap = readStructuredDiary(structuredIdentity);
     var hasStructured = Object.keys(diaryMap).length > 0;
 
     function renderDeepReport(diaryMapToUse) {
       var hasData = Object.keys(diaryMapToUse).length > 0;
+      var templateSection = root.querySelector("[data-deep-template-section]");
+      var templateContainer = root.querySelector("[data-deep-template]");
 
       // Day-by-day サマリー表示
       var summarySection = root.querySelector("[data-deep-diary-summary]");
@@ -1475,6 +1620,11 @@
       if (summaryDays) {
         summaryDays.innerHTML = buildDiarySummaryHtml(diaryMapToUse);
         if (summarySection) summarySection.style.display = hasData ? "" : "none";
+      }
+
+      if (templateContainer) {
+        templateContainer.innerHTML = '<p class="deep-guidance-text">新月の願いと7日間の記録がそろうと、ここに分析テンプレートが表示されます。</p>';
+        if (templateSection) templateSection.style.display = "";
       }
 
       // 旧フォーマットとのフォールバック
@@ -1539,7 +1689,11 @@
         var s = localStorage.getItem("tsukiyomi:sheetSync:secretKey") || "tsukiyomi-2026-key";
         return { url: u, secretKey: s };
       })();
-      var fetchUrl = syncConfig.url + "?pid=" + encodeURIComponent(structuredIdentity) + "&secretKey=" + encodeURIComponent(syncConfig.secretKey) + "&t=" + Date.now();
+      var fetchParts = [];
+      if (profile.participantId || pid) fetchParts.push("pid=" + encodeURIComponent(profile.participantId || pid));
+      if (profile.email) fetchParts.push("email=" + encodeURIComponent(profile.email));
+      if (!fetchParts.length) fetchParts.push("pid=" + encodeURIComponent(structuredIdentity));
+      var fetchUrl = syncConfig.url + "?" + fetchParts.join("&") + "&secretKey=" + encodeURIComponent(syncConfig.secretKey) + "&t=" + Date.now();
       fetch(fetchUrl, { redirect: "follow" })
         .then(function(r){ return r.json(); })
         .then(function(result){
@@ -1555,6 +1709,27 @@
               }
             }
             renderDeepReport(restored);
+            if (window.TsukiyomiReportGen) {
+              var fetchedReport = TsukiyomiReportGen.generate(profile);
+              if (fetchedReport && fetchedReport.s1) {
+              if (current) renderDeepSection(current, fetchedReport.s1);
+              if (themes) renderDeepSection(themes, fetchedReport.s2);
+              if (shukuView) renderDeepSection(shukuView, fetchedReport.s3);
+              if (next) renderDeepSection(next, fetchedReport.s4);
+              var fetchedTemplateSection = root.querySelector("[data-deep-template-section]");
+              var fetchedTemplateContainer = root.querySelector("[data-deep-template]");
+              if (fetchedTemplateContainer && fetchedReport.templateHtml) {
+                fetchedTemplateContainer.innerHTML = fetchedReport.templateHtml;
+                if (fetchedTemplateSection) fetchedTemplateSection.style.display = "";
+              }
+              var fetchedVoicesSection = root.querySelector("[data-deep-voices-section]");
+              var fetchedVoicesContainer = root.querySelector("[data-deep-voices]");
+              if (fetchedVoicesContainer && fetchedReport.voicesHtml) {
+                fetchedVoicesContainer.innerHTML = fetchedReport.voicesHtml;
+                if (fetchedVoicesSection) fetchedVoicesSection.style.display = "";
+                }
+              }
+            }
           } else {
             renderDeepReport({});
           }
@@ -1564,6 +1739,7 @@
     }
 
     renderDeepReport({});
+    return;
 
     // 総合鑑定（目標設定・ギャップ調整）
     if (hasStructured) {
@@ -1810,7 +1986,7 @@
     var isOpen = new Date() >= openAt;
     var pageName = window.location.pathname.split("/").pop() || "";
     if (!isOpen && /^challenge_day[1-7]\.html$/.test(pageName)) {
-      window.location.replace("challenge_intro.html" + window.location.search);
+      window.location.replace("my_manual_修正版.html" + window.location.search);
       return;
     }
     var startLinks = Array.prototype.slice.call(document.querySelectorAll("[data-start-locked]"));
