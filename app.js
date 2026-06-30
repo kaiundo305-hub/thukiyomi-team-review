@@ -1551,6 +1551,17 @@
         var kanonPanel = kanonView.closest(".completion-panel");
         if (kanonPanel) kanonPanel.style.display = "";
       }
+      // オーバーライドモードでも日記サマリーを表示する
+      var ovIdentity = params.get("participantId") || params.get("pid") || profile.participantId || profile.email || profile.birth || profile.name || "guest";
+      var ovDiaryMap = readStructuredDiary(ovIdentity);
+      if (Object.keys(ovDiaryMap).length > 0) {
+        var ovSummarySection = root.querySelector("[data-deep-diary-summary]");
+        var ovSummaryDays = root.querySelector("[data-deep-diary-days]");
+        if (ovSummaryDays) {
+          ovSummaryDays.innerHTML = buildDiarySummaryHtml(ovDiaryMap);
+          if (ovSummarySection) ovSummarySection.style.display = "";
+        }
+      }
       return;
     }
 
