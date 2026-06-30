@@ -201,34 +201,38 @@
       </section>
 
       <!-- データバックアップ・復元 -->
-      <section class="completion-panel deep-report-panel deep-report-closing" id="data-backup-section" style="border-top:1px solid rgba(200,180,255,0.1);margin-top:8px;">
-        <h2 style="font-size:15px;color:rgba(200,180,255,0.7);margin-bottom:16px;">📦 日記データのバックアップと復元</h2>
+      <section class="completion-panel deep-report-panel deep-report-closing" id="data-backup-section" style="border-top:1px solid rgba(200,180,255,0.06);margin-top:8px;padding-top:4px;">
+        <details style="cursor:pointer;">
+          <summary style="list-style:none;font-size:11px;color:rgba(200,180,255,0.35);letter-spacing:0.1em;text-align:center;padding:8px 0;user-select:none;">▸ 日記データのバックアップ・復元</summary>
 
-        <div style="background:rgba(0,0,0,0.2);border-radius:10px;padding:16px;margin-bottom:16px;font-size:13px;line-height:2;color:rgba(200,180,255,0.75);">
-          <p style="margin:0 0 8px;"><strong style="color:#e8e0ff;">なぜバックアップが必要？</strong></p>
-          <p style="margin:0 0 4px;">月読み日記の記録はこのブラウザ（Chrome・Safariなど）の中に保存されています。</p>
-          <p style="margin:0 0 4px;">ブラウザの「履歴を消去」や「キャッシュ削除」を行うと、日記データが消えてしまう場合があります。</p>
-          <p style="margin:0;">また、別のパソコンやスマートフォンでは同じデータが見えません。</p>
-        </div>
+          <div style="padding-top:12px;">
+            <div style="background:rgba(0,0,0,0.2);border-radius:10px;padding:16px;margin-bottom:16px;font-size:13px;line-height:2;color:rgba(200,180,255,0.75);">
+              <p style="margin:0 0 8px;"><strong style="color:#e8e0ff;">なぜバックアップが必要？</strong></p>
+              <p style="margin:0 0 4px;">月読み日記の記録はこのブラウザ（Chrome・Safariなど）の中に保存されています。</p>
+              <p style="margin:0 0 4px;">ブラウザの「履歴を消去」や「キャッシュ削除」を行うと、日記データが消えてしまう場合があります。</p>
+              <p style="margin:0;">また、別のパソコンやスマートフォンでは同じデータが見えません。</p>
+            </div>
 
-        <div style="background:rgba(99,102,241,0.06);border:1px solid rgba(99,102,241,0.15);border-radius:10px;padding:14px;margin-bottom:16px;font-size:12px;color:rgba(200,180,255,0.65);line-height:1.9;">
-          <p style="margin:0 0 4px;">📥 <strong style="color:#a5b4fc;">書き出し</strong>：日記データをJSONファイルでダウンロード。大切な場所に保存しておいてください。</p>
-          <p style="margin:0 0 4px;">📤 <strong style="color:#6ee7b7;">復元</strong>：以前ダウンロードしたJSONを読み込んでデータを元に戻します。</p>
-          <p style="margin:0;color:rgba(200,180,255,0.45);">↓ 画面下のナビゲーションバーから操作できます。</p>
-        </div>
-        <div id="restore-status" style="font-size:12px;min-height:18px;"></div>
+            <div style="background:rgba(99,102,241,0.06);border:1px solid rgba(99,102,241,0.15);border-radius:10px;padding:14px;margin-bottom:16px;font-size:12px;color:rgba(200,180,255,0.65);line-height:1.9;">
+              <p style="margin:0 0 4px;">📥 <strong style="color:#a5b4fc;">書き出し</strong>：日記データをJSONファイルでダウンロード。大切な場所に保存しておいてください。</p>
+              <p style="margin:0 0 4px;">📤 <strong style="color:#6ee7b7;">復元</strong>：以前ダウンロードしたJSONを読み込んでデータを元に戻します。</p>
+              <p style="margin:0;color:rgba(200,180,255,0.45);">↓ 画面下のナビゲーションバーから操作できます。</p>
+            </div>
+            <div id="restore-status" style="font-size:12px;min-height:18px;"></div>
 
-        <details style="font-size:12px;color:rgba(200,180,255,0.5);cursor:pointer;">
-          <summary style="margin-bottom:8px;color:rgba(200,180,255,0.6);">💡 運営の方へ：お客様からデータ復元の相談があったとき</summary>
-          <div style="background:rgba(0,0,0,0.2);border-radius:8px;padding:14px;line-height:2;margin-top:8px;">
-            <p style="margin:0 0 6px;color:rgba(200,180,255,0.8);">【お客様への案内手順】</p>
-            <ol style="margin:0;padding-left:20px;color:rgba(200,180,255,0.65);">
-              <li>「以前のブラウザ・端末にバックアップファイル（.json）が残っていますか？」と確認する</li>
-              <li>残っている場合 → 上の「バックアップファイルを選んで復元」から読み込んでもらう</li>
-              <li>バックアップがない場合 → スプレッドシートのデータからCSVで復元可能（かのんへ連絡）</li>
-              <li>スプレッドシートにもない場合 → 日記の再入力をご案内（申し訳ないですがご本人に再記入いただく）</li>
-            </ol>
-            <p style="margin:8px 0 0;color:rgba(200,180,255,0.5);">※ localStorageはブラウザごとに独立しているため、別ブラウザ・別端末への「移行」はJSONファイルの書き出し→読み込みで対応できます。</p>
+            <details style="font-size:12px;color:rgba(200,180,255,0.5);cursor:pointer;">
+              <summary style="margin-bottom:8px;color:rgba(200,180,255,0.6);">💡 運営の方へ：お客様からデータ復元の相談があったとき</summary>
+              <div style="background:rgba(0,0,0,0.2);border-radius:8px;padding:14px;line-height:2;margin-top:8px;">
+                <p style="margin:0 0 6px;color:rgba(200,180,255,0.8);">【お客様への案内手順】</p>
+                <ol style="margin:0;padding-left:20px;color:rgba(200,180,255,0.65);">
+                  <li>「以前のブラウザ・端末にバックアップファイル（.json）が残っていますか？」と確認する</li>
+                  <li>残っている場合 → 上の「バックアップファイルを選んで復元」から読み込んでもらう</li>
+                  <li>バックアップがない場合 → スプレッドシートのデータからCSVで復元可能（かのんへ連絡）</li>
+                  <li>スプレッドシートにもない場合 → 日記の再入力をご案内（申し訳ないですがご本人に再記入いただく）</li>
+                </ol>
+                <p style="margin:8px 0 0;color:rgba(200,180,255,0.5);">※ localStorageはブラウザごとに独立しているため、別ブラウザ・別端末への「移行」はJSONファイルの書き出し→読み込みで対応できます。</p>
+              </div>
+            </details>
           </div>
         </details>
       </section>
@@ -322,7 +326,7 @@
   <script src="diary_structured_save.js?v=20260622" onerror="void 0"></script>
   <script src="participants_data.js?v=20260622" onerror="void 0"></script>
   <script src="shuku_report_gen.js?v=20260626-deep-auto" onerror="void 0"></script>
-  <script src="deep_report_overrides.js?v=20260630" onerror="void 0"></script>
+  <script src="deep_report_overrides.js?v=20260630b" onerror="void 0"></script>
   <script src="app.js?v=20260630-diary-fix"></script>
   <script src="gemini_deep_analysis.js?v=20260626"></script>
   <script>
