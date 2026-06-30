@@ -2873,6 +2873,24 @@ a {
   font-weight: 700;
 }
 
+[data-deep-report] .deep-report-epilogue {
+  text-align: center;
+  padding: 32px 24px 20px;
+  border-top: 1px solid rgba(168, 121, 50, 0.2);
+  margin-top: 4px;
+}
+[data-deep-report] .deep-report-epilogue-text {
+  font-size: 14px;
+  color: var(--paperInk);
+  line-height: 2.1;
+  margin: 0 0 4px;
+  letter-spacing: 0.03em;
+}
+[data-deep-report] .deep-report-epilogue-text strong {
+  color: var(--paperGold);
+  font-weight: 700;
+}
+
 [data-deep-report] .deep-kw-block {
   display: block;
   margin: 16px 0 20px;
