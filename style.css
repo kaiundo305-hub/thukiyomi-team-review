@@ -2823,15 +2823,15 @@ a {
 [data-deep-report] .deep-report-intro-panel {
   margin: 0 0 4px;
   padding: 32px 20px 28px;
-  background: rgba(168, 121, 50, 0.06);
-  border-top: 1px solid rgba(168, 121, 50, 0.22);
-  border-bottom: 1px solid rgba(168, 121, 50, 0.22);
+  background: rgba(0, 0, 0, 0.15);
+  border-top: 1px solid rgba(200, 180, 255, 0.15);
+  border-bottom: 1px solid rgba(200, 180, 255, 0.15);
   text-align: center;
 }
 [data-deep-report] .deep-report-intro-heading {
   font-size: 10px;
   letter-spacing: 0.25em;
-  color: var(--paperGold);
+  color: rgba(200, 180, 255, 0.6);
   margin: 0 0 24px;
 }
 [data-deep-report] .deep-report-intro-list {
@@ -2842,46 +2842,47 @@ a {
   margin: 0 auto;
 }
 [data-deep-report] .deep-report-intro-item {
-  background: rgba(168, 121, 50, 0.06);
-  border: 1px solid rgba(168, 121, 50, 0.22);
-  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(200, 180, 255, 0.18);
+  border-left: 3px solid rgba(168, 121, 50, 0.7);
+  border-radius: 10px;
   padding: 18px 20px 16px;
   text-align: left;
 }
 [data-deep-report] .deep-report-intro-label {
   font-size: 10px;
   letter-spacing: 0.18em;
-  color: var(--paperGold);
+  color: rgba(200, 180, 255, 0.5);
   margin: 0 0 6px;
 }
 [data-deep-report] .deep-report-intro-title {
   font-size: 15px;
   font-weight: 700;
-  color: var(--paperGold);
+  color: #e8d9a0;
   margin: 0 0 10px;
   letter-spacing: 0.05em;
   line-height: 1.4;
 }
 [data-deep-report] .deep-report-intro-body {
   font-size: 12.5px;
-  color: var(--paperInk);
+  color: rgba(200, 180, 255, 0.8);
   line-height: 1.9;
   margin: 0;
 }
 [data-deep-report] .deep-report-intro-body strong {
-  color: var(--paperGold);
+  color: #e8d9a0;
   font-weight: 700;
 }
 
 [data-deep-report] .deep-report-epilogue {
   text-align: center;
   padding: 32px 24px 20px;
-  border-top: 1px solid rgba(168, 121, 50, 0.2);
+  border-top: 1px solid rgba(200, 180, 255, 0.15);
   margin-top: 4px;
 }
 [data-deep-report] .deep-report-epilogue-text {
   font-size: 14px;
-  color: var(--paperInk);
+  color: rgba(200, 180, 255, 0.85);
   line-height: 2.1;
   margin: 0 0 4px;
   letter-spacing: 0.03em;
