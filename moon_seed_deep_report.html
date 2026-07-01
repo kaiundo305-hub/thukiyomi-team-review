@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>月読み日記｜第2の鑑定書 | 月読みワンダーランド</title>
   <meta name="description" content="7日間の月読み日記に残した言葉、写メ、感謝、次の一歩をもとに、おかげさまの流れを読み解く第2の鑑定書です。">
-  <link rel="stylesheet" href="style.css?v=20260630e">
+  <link rel="stylesheet" href="style.css?v=20260701a">
 </head>
 <body>
   <main class="challenge-shell" data-deep-report>
@@ -20,30 +20,31 @@
         <p class="deep-guidance-text">
           完璧な文章でなくても大丈夫です。何気なく残した写真、ふと出てきた言葉、ありがとうと思えた出来事、少しだけ進みたい願い。その一つひとつが、今のあなたの現在地と、次に授かる流れを教えてくれています。
         </p>
+        <p class="deep-guidance-text deep-diary-opening-msg" data-diary-opening-msg></p>
         <div class="deep-template-grid">
           <div class="deep-template-card">
             <span class="deep-template-label">PHOTO</span>
             <h3>写メに残したもの</h3>
             <p class="deep-template-text">日常アイテムに映る、今の心の向き</p>
-            <p class="deep-template-text">写メの記録はまだありません</p>
+            <p class="deep-template-text" data-diary-card="photo">写メの記録はまだありません</p>
           </div>
           <div class="deep-template-card">
             <span class="deep-template-label">WORDS</span>
             <h3>何度も出てきた言葉</h3>
             <p class="deep-template-text">本音や願いが集まりやすい場所</p>
-            <p class="deep-template-text">未来 / 自分 / 願い / 感謝</p>
+            <p class="deep-template-text" data-diary-card="words">未来 / 自分 / 願い / 感謝</p>
           </div>
           <div class="deep-template-card">
             <span class="deep-template-label">THANKS</span>
             <h3>感謝できたこと</h3>
             <p class="deep-template-text">すでに受け取っている恵みの流れ</p>
-            <p class="deep-template-text">日記を書くと、感謝として残した言葉が表示されます</p>
+            <p class="deep-template-text" data-diary-card="thanks">日記を書くと、感謝として残した言葉が表示されます</p>
           </div>
           <div class="deep-template-card">
             <span class="deep-template-label">NEXT</span>
             <h3>次に進みたい一歩</h3>
             <p class="deep-template-text">未来を育てる小さな開運アクション</p>
-            <p class="deep-template-text">日記を書くと、次の一歩として書いた言葉が表示されます</p>
+            <p class="deep-template-text" data-diary-card="next">日記を書くと、次の一歩として書いた言葉が表示されます</p>
           </div>
         </div>
       </section>
@@ -271,6 +272,10 @@
         <p class="deep-report-epilogue-text">次の7日間には、今回見つけた<strong>「自分の歩幅」</strong>を現実へ育てる月の流れが待っています。</p>
         <p class="deep-report-epilogue-text">次のフェーズの扉をひらきましょう。</p>
       </section>
+      <section data-no-diary-cta style="display:none;text-align:center;padding:8px 20px 20px;">
+        <p style="font-size:13px;color:rgba(200,180,255,0.75);line-height:2;margin:0 0 16px;">日記を書けなかった日があっても大丈夫です。<br>月は、いつからでもあなたと歩き始めます。</p>
+        <a class="moon-button" href="moon_diary_book.html" data-keep-query>今日から月読み日記を始める</a>
+      </section>
       <nav class="challenge-nav" aria-label="移動">
         <a class="quiet-button" href="moon_diary_book.html" data-keep-query>月読み日記BOOKへ戻る</a>
         <a class="moon-button disabled-link" href="#" aria-disabled="true" onclick="return false;">第三の鑑定書へ<br>願いを育てる</a>
@@ -353,7 +358,7 @@
   <script src="participants_data.js?v=20260622" onerror="void 0"></script>
   <script src="shuku_report_gen.js?v=20260626-deep-auto" onerror="void 0"></script>
   <script src="deep_report_overrides.js?v=20260630b" onerror="void 0"></script>
-  <script src="app.js?v=20260630-diary-fix"></script>
+  <script src="app.js?v=20260701-diary-msg"></script>
   <script src="gemini_deep_analysis.js?v=20260626"></script>
   <script>
   // 月の4フェーズ記録 — 自動保存・復元

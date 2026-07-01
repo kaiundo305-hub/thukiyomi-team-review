@@ -1382,6 +1382,31 @@
       "7": "私の開運設計図を完成させる"
     };
 
+    function applyDiaryMessages(hasDiary) {
+      var openingMsg = root.querySelector("[data-diary-opening-msg]");
+      if (openingMsg) {
+        if (hasDiary) {
+          openingMsg.textContent = "あなたが残した写真や言葉には、今の心が選んだ大切なしるしが映っています。";
+        } else {
+          openingMsg.innerHTML = "今回は、写真や言葉として残されたしるしはありませんでした。<br>けれど、月の物語はここで終わりではありません。<br>今日から残す小さな一枚やひと言が、次の鑑定書をあなただけの物語へ育てていきます。";
+        }
+      }
+      if (!hasDiary) {
+        var cardMsgs = {
+          photo:  "これから心が動いた景色を一枚残してみましょう",
+          words:  "今日、心に浮かんだ言葉が最初のしるしになります",
+          thanks: "小さな「ありがとう」が月の流れを整えます",
+          next:   "今できる小さな一歩から始めて大丈夫です"
+        };
+        ["photo","words","thanks","next"].forEach(function(k) {
+          var el = root.querySelector("[data-diary-card='" + k + "']");
+          if (el) el.textContent = cardMsgs[k];
+        });
+        var cta = root.querySelector("[data-no-diary-cta]");
+        if (cta) cta.style.display = "";
+      }
+    }
+
     function readStructuredDiary(identity) {
       var result = {};
       for (var d = 1; d <= 7; d++) {
@@ -1529,6 +1554,9 @@
       if (!el || !rawText) return;
       var html = String(rawText)
         .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/@@KW@@([\s\S]*?)@@\/KW@@/g, function(_, inner) {
+          return '<span class="deep-kw-block"><span class="deep-kw-label">✦ 7日間のキーワード</span><span class="deep-kw-words">' + inner + '</span></span>';
+        })
         .replace(/@@Q@@([\s\S]*?)@@\/Q@@/g, function(_, inner) {
           return '<span class="deep-diary-voice"><span class="deep-diary-voice-label">✦ あなたの言葉より</span>' + inner + '</span>';
         })
@@ -1554,7 +1582,8 @@
       // オーバーライドモードでも日記サマリーを表示する
       var ovIdentity = params.get("participantId") || params.get("pid") || profile.participantId || profile.email || profile.birth || profile.name || "guest";
       var ovDiaryMap = readStructuredDiary(ovIdentity);
-      if (Object.keys(ovDiaryMap).length > 0) {
+      var ovHasDiary = Object.keys(ovDiaryMap).length > 0;
+      if (ovHasDiary) {
         var ovSummarySection = root.querySelector("[data-deep-diary-summary]");
         var ovSummaryDays = root.querySelector("[data-deep-diary-days]");
         if (ovSummaryDays) {
@@ -1562,6 +1591,7 @@
           if (ovSummarySection) ovSummarySection.style.display = "";
         }
       }
+      applyDiaryMessages(ovHasDiary);
       return;
     }
 
@@ -1689,8 +1719,11 @@
     // localStorageにデータがあればそのまま描画
     if (hasStructured) {
       renderDeepReport(diaryMap);
+      applyDiaryMessages(true);
       return;
     }
+    // 日記データなし
+    applyDiaryMessages(false);
 
     // localStorageにデータがなければスプレッドシートから取得
     if (structuredIdentity && structuredIdentity !== "guest") {
