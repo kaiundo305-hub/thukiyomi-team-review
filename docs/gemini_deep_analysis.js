@@ -113,9 +113,9 @@
     return text
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
       .replace(/\*\*(.*?)\*\*/g,
-        '<strong style="color:#f1d99b;font-weight:700;">$1</strong>')
+        '<strong style="color:#a87932;font-weight:700;">$1</strong>')
       .replace(/【(.*?)】/g,
-        '<span style="color:#f1d99b;font-weight:600;">【$1】</span>')
+        '<span style="color:#a87932;font-weight:600;">【$1】</span>')
       .replace(/\n/g, '<br>');
   }
 
@@ -129,18 +129,18 @@
     if (!apiKey) {
       container.innerHTML =
         '<div style="background:rgba(0,0,0,0.25);border-radius:12px;padding:24px;line-height:2;">' +
-          '<p style="color:#e8e0ff;font-size:13px;margin:0 0 8px;font-weight:bold;">Gemini APIキーを設定してください</p>' +
-          '<p style="color:rgba(200,180,255,0.7);font-size:12px;margin:0 0 16px;">' +
-            '<a href="https://aistudio.google.com/apikey" target="_blank" style="color:#f1d99b;">Google AI Studio</a>' +
+          '<p style="color:#3d3328;font-size:13px;margin:0 0 8px;font-weight:bold;">Gemini APIキーを設定してください</p>' +
+          '<p style="color:rgba(90,62,40,0.7);font-size:12px;margin:0 0 16px;">' +
+            '<a href="https://aistudio.google.com/apikey" target="_blank" style="color:#a87932;">Google AI Studio</a>' +
             ' で無料のAPIキーを取得し、入力してください。（ブラウザに保存されます）' +
           '</p>' +
           '<input id="gemini-key-input" type="password" placeholder="AIzaSy..." ' +
             'style="width:100%;box-sizing:border-box;background:rgba(0,0,0,0.3);' +
-            'border:1px solid rgba(200,180,255,0.25);border-radius:8px;color:#e8e0ff;' +
+            'border:1px solid rgba(90,62,40,0.25);border-radius:8px;color:#3d3328;' +
             'font-size:13px;padding:10px 12px;font-family:inherit;margin-bottom:12px;">' +
           '<button onclick="TsukiyomiGemini.saveKey()" ' +
             'style="background:rgba(168,121,50,0.35);border:1px solid rgba(168,121,50,0.6);' +
-            'color:#f1d99b;border-radius:8px;padding:10px 22px;font-size:13px;' +
+            'color:#a87932;border-radius:8px;padding:10px 22px;font-size:13px;' +
             'cursor:pointer;font-family:inherit;letter-spacing:0.05em;">保存</button>' +
         '</div>';
       return;
@@ -152,14 +152,14 @@
 
     container.innerHTML =
       '<div style="text-align:center;padding:4px 0 20px;">' +
-        '<p style="font-size:13px;color:rgba(200,180,255,0.75);margin:0 0 18px;line-height:1.9;">' +
+        '<p style="font-size:13px;color:rgba(90,62,40,0.75);margin:0 0 18px;line-height:1.9;">' +
           (hasDiary
             ? '7日間の日記の言葉をもとに、AIが' + name + 'さんだけのフィードバックを生成します。'
             : '日記の記録をもとに、AIが温かいフィードバックを生成します。') +
         '</p>' +
         '<button id="deep-ai-gen-btn" onclick="TsukiyomiGemini.generate()" ' +
           'style="background:linear-gradient(135deg,rgba(168,121,50,0.45),rgba(100,60,10,0.45));' +
-          'border:1px solid rgba(168,121,50,0.75);color:#f1d99b;border-radius:999px;' +
+          'border:1px solid rgba(168,121,50,0.75);color:#a87932;border-radius:999px;' +
           'padding:14px 36px;font-size:14px;font-weight:bold;cursor:pointer;' +
           'font-family:inherit;letter-spacing:0.1em;">' +
           '✦ 日記の言葉からフィードバックを受け取る' +
@@ -168,7 +168,7 @@
       '<div id="gemini-result"></div>' +
       '<p style="text-align:right;margin-top:6px;">' +
         '<button onclick="TsukiyomiGemini.resetKey()" ' +
-          'style="background:none;border:none;color:rgba(200,180,255,0.3);' +
+          'style="background:none;border:none;color:rgba(90,62,40,0.3);' +
           'font-size:10px;cursor:pointer;font-family:inherit;">APIキーを変更</button>' +
       '</p>';
   }
@@ -200,7 +200,7 @@
       btn.textContent = '✦ 月が読み解いています…';
       btn.style.opacity = '0.6';
       resultEl.innerHTML =
-        '<p style="text-align:center;color:rgba(200,180,255,0.5);font-size:13px;padding:20px 0;">' +
+        '<p style="text-align:center;color:rgba(90,62,40,0.5);font-size:13px;padding:20px 0;">' +
         '生成中です。少しお待ちください…</p>';
 
       try {
@@ -213,10 +213,10 @@
 
         resultEl.innerHTML =
           '<div style="background:rgba(0,0,0,0.22);border:1px solid rgba(168,121,50,0.3);' +
-          'border-radius:12px;padding:24px 20px;font-size:13px;color:#e8e0ff;line-height:2.1;margin-top:8px;">' +
+          'border-radius:12px;padding:24px 20px;font-size:13px;color:#3d3328;line-height:2.1;margin-top:8px;">' +
             toHtml(text) +
           '</div>' +
-          '<p style="text-align:right;font-size:11px;color:rgba(200,180,255,0.35);margin-top:6px;">' +
+          '<p style="text-align:right;font-size:11px;color:rgba(90,62,40,0.35);margin-top:6px;">' +
           '✦ Gemini AI による自動生成</p>';
 
         btn.textContent   = '✦ 再生成する';
