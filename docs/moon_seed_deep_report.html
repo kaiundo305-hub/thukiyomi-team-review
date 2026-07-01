@@ -511,6 +511,16 @@
         var saved = localStorage.getItem(PHASE_KEY_PREFIX + identity + ':' + phase);
         if(saved) el.value = saved;
       });
+      // 新月の願いごと：チャレンジイントロ入力をフォールバックとして反映
+      var newMoonEl = document.getElementById('moon-phase-new');
+      if(newMoonEl && !newMoonEl.value){
+        try{
+          var introRaw = localStorage.getItem('tsukiyomi:introReflection:v1:' + identity);
+          var introData = JSON.parse(introRaw || '{}');
+          var introWish = String((introData && (introData.text || introData.wish)) || '').trim();
+          if(introWish) newMoonEl.value = introWish;
+        }catch(e){}
+      }
       // 双子座満月メモ復元
       var geminiEl = document.getElementById('moon-fullmoon-gemini');
       if(geminiEl){
