@@ -1,0 +1,69 @@
+.passport-cover-page{
+  margin:0 auto 24px;
+  text-align:center;
+}
+
+.cover-image{
+  display:block;
+  width:min(100%,680px);
+  height:auto;
+  margin:20px auto 24px;
+  border-radius:18px;
+  border:1px solid rgba(241,217,155,.42);
+  box-shadow:0 26px 70px rgba(0,0,0,.34);
+}
+
+@media print{
+  #resultBody::before{
+    content:none!important;
+    display:none!important;
+  }
+
+  .report-page-start::before{
+    content:'*';
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    height:8.5mm;
+    margin:0 -9mm 8mm;
+    color:#9b772b;
+    font-size:8pt;
+    letter-spacing:.18em;
+    border-top:1.35pt solid #b89438;
+    border-bottom:0.45pt solid #d7c188;
+    background:
+      linear-gradient(90deg,transparent 0 4mm,rgba(184,148,56,.38) 4mm,rgba(184,148,56,.38) calc(50% - 8mm),transparent calc(50% - 8mm),transparent calc(50% + 8mm),rgba(184,148,56,.38) calc(50% + 8mm),rgba(184,148,56,.38) calc(100% - 4mm),transparent calc(100% - 4mm)),
+      linear-gradient(90deg,transparent 0 8mm,rgba(215,193,136,.28) 8mm,rgba(215,193,136,.28) calc(100% - 8mm),transparent calc(100% - 8mm));
+    background-size:100% 1px,100% 1px;
+    background-position:center 39%,center 61%;
+    background-repeat:no-repeat;
+    -webkit-print-color-adjust:exact;
+    print-color-adjust:exact;
+  }
+
+  .passport-cover-page{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    min-height:270mm!important;
+    margin:0!important;
+    padding:0!important;
+    break-before:auto!important;
+    page-break-before:auto!important;
+    break-after:page!important;
+    page-break-after:always!important;
+    break-inside:avoid!important;
+    page-break-inside:avoid!important;
+  }
+
+  .passport-cover-page .cover-image{
+    width:auto!important;
+    max-width:190mm!important;
+    max-height:270mm!important;
+    height:auto!important;
+    margin:0 auto!important;
+    border-radius:8pt!important;
+    box-shadow:none!important;
+    object-fit:contain!important;
+  }
+}
