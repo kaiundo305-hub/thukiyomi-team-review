@@ -155,17 +155,15 @@
         '<p style="font-size:13px;color:rgba(200,180,255,0.75);margin:0 0 18px;line-height:1.9;">' +
           (hasDiary
             ? '7日間の日記の言葉をもとに、AIが' + name + 'さんだけのフィードバックを生成します。'
-            : '日記の記録が見つかりません。<br>月読み日記を書いてから再度開いてください。') +
+            : '日記の記録をもとに、AIが温かいフィードバックを生成します。') +
         '</p>' +
-        (hasDiary
-          ? '<button id="deep-ai-gen-btn" onclick="TsukiyomiGemini.generate()" ' +
-              'style="background:linear-gradient(135deg,rgba(168,121,50,0.45),rgba(100,60,10,0.45));' +
-              'border:1px solid rgba(168,121,50,0.75);color:#f1d99b;border-radius:999px;' +
-              'padding:14px 36px;font-size:14px;font-weight:bold;cursor:pointer;' +
-              'font-family:inherit;letter-spacing:0.1em;">' +
-              '✦ 日記の言葉からフィードバックを受け取る' +
-            '</button>'
-          : '') +
+        '<button id="deep-ai-gen-btn" onclick="TsukiyomiGemini.generate()" ' +
+          'style="background:linear-gradient(135deg,rgba(168,121,50,0.45),rgba(100,60,10,0.45));' +
+          'border:1px solid rgba(168,121,50,0.75);color:#f1d99b;border-radius:999px;' +
+          'padding:14px 36px;font-size:14px;font-weight:bold;cursor:pointer;' +
+          'font-family:inherit;letter-spacing:0.1em;">' +
+          '✦ 日記の言葉からフィードバックを受け取る' +
+        '</button>' +
       '</div>' +
       '<div id="gemini-result"></div>' +
       '<p style="text-align:right;margin-top:6px;">' +
