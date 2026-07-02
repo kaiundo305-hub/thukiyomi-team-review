@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>月読み日記｜第2の鑑定書 | 月読みワンダーランド</title>
   <meta name="description" content="7日間の月読み日記に残した言葉、写メ、感謝、次の一歩をもとに、おかげさまの流れを読み解く第2の鑑定書です。">
-  <link rel="stylesheet" href="style.css?v=20260703c">
+  <link rel="stylesheet" href="style.css?v=20260703d">
 </head>
 <body>
   <main class="challenge-shell" data-deep-report>
@@ -331,42 +331,6 @@
         </div>
       </section>
 
-      <!-- データバックアップ・復元 -->
-      <section class="completion-panel deep-report-panel deep-report-closing" id="data-backup-section" style="border-top:1px solid rgba(90,62,40,0.06);margin-top:8px;padding-top:4px;">
-        <details style="cursor:pointer;">
-          <summary style="list-style:none;font-size:11px;color:rgba(90,62,40,0.35);letter-spacing:0.1em;text-align:center;padding:8px 0;user-select:none;">▸ 日記データのバックアップ・復元</summary>
-
-          <div style="padding-top:12px;">
-            <div style="background:rgba(168,121,50,0.05);border-radius:10px;padding:16px;margin-bottom:16px;font-size:13px;line-height:2;color:#5a3e28;">
-              <p style="margin:0 0 8px;"><strong style="color:#3d3328;">なぜバックアップが必要？</strong></p>
-              <p style="margin:0 0 4px;">月読み日記の記録はこのブラウザ（Chrome・Safariなど）の中に保存されています。</p>
-              <p style="margin:0 0 4px;">ブラウザの「履歴を消去」や「キャッシュ削除」を行うと、日記データが消えてしまう場合があります。</p>
-              <p style="margin:0;">また、別のパソコンやスマートフォンでは同じデータが見えません。</p>
-            </div>
-
-            <div style="background:rgba(168,121,50,0.06);border:1px solid rgba(168,121,50,0.15);border-radius:10px;padding:14px;margin-bottom:16px;font-size:12px;color:rgba(90,62,40,0.65);line-height:1.9;">
-              <p style="margin:0 0 4px;">📥 <strong style="color:#a5b4fc;">書き出し</strong>：日記データをJSONファイルでダウンロード。大切な場所に保存しておいてください。</p>
-              <p style="margin:0 0 4px;">📤 <strong style="color:#6ee7b7;">復元</strong>：以前ダウンロードしたJSONを読み込んでデータを元に戻します。</p>
-              <p style="margin:0;color:rgba(90,62,40,0.45);">↓ 画面下のナビゲーションバーから操作できます。</p>
-            </div>
-            <div id="restore-status" style="font-size:12px;min-height:18px;"></div>
-
-            <details style="font-size:12px;color:rgba(90,62,40,0.5);cursor:pointer;">
-              <summary style="margin-bottom:8px;color:rgba(90,62,40,0.6);">💡 運営の方へ：お客様からデータ復元の相談があったとき</summary>
-              <div style="background:rgba(168,121,50,0.05);border-radius:8px;padding:14px;line-height:2;margin-top:8px;">
-                <p style="margin:0 0 6px;color:rgba(90,62,40,0.8);">【お客様への案内手順】</p>
-                <ol style="margin:0;padding-left:20px;color:rgba(90,62,40,0.65);">
-                  <li>「以前のブラウザ・端末にバックアップファイル（.json）が残っていますか？」と確認する</li>
-                  <li>残っている場合 → 上の「バックアップファイルを選んで復元」から読み込んでもらう</li>
-                  <li>バックアップがない場合 → スプレッドシートのデータからCSVで復元可能（かのんへ連絡）</li>
-                  <li>スプレッドシートにもない場合 → 日記の再入力をご案内（申し訳ないですがご本人に再記入いただく）</li>
-                </ol>
-                <p style="margin:8px 0 0;color:rgba(90,62,40,0.5);">※ localStorageはブラウザごとに独立しているため、別ブラウザ・別端末への「移行」はJSONファイルの書き出し→読み込みで対応できます。</p>
-              </div>
-            </details>
-          </div>
-        </details>
-      </section>
 
       <div style="text-align:center;margin:8px 0 4px;">
         <button onclick="refreshDeepReport()" style="
@@ -494,8 +458,36 @@
     <div style="height:calc(64px + env(safe-area-inset-bottom,0))"></div>
 
     <footer class="gate-footer">
-      Shukuyo Astrology / 月読みワンダーランド<br>
-      みずきかのん　月読み師
+      <div class="footer-backup-section">
+        <details class="footer-backup-details">
+          <summary class="footer-backup-summary">📥 日記データのバックアップ・復元</summary>
+          <div class="footer-backup-body">
+            <div class="footer-backup-note">
+              <p><strong>なぜバックアップが必要？</strong></p>
+              <p>日記の記録はお使いのブラウザ（Chrome・Safariなど）の中に保存されています。「履歴を消去」や「キャッシュ削除」を行うとデータが消えることがあります。また、別の端末では同じデータは見えません。</p>
+            </div>
+            <div class="footer-backup-how">
+              <p>📥 <strong>バックアップ（書き出し）</strong>：画面下のナビ「書き出し」をタップ → JSONファイルをダウンロードして大切な場所に保存してください。</p>
+              <p>📤 <strong>復元</strong>：ナビ「復元」をタップ → 保存したJSONファイルを選んで読み込みます。</p>
+            </div>
+            <div id="restore-status" class="footer-restore-status"></div>
+            <details class="footer-backup-staff">
+              <summary>💡 運営の方へ：お客様からデータ復元の相談があったとき</summary>
+              <div class="footer-backup-staff-body">
+                <p>【お客様への案内手順】</p>
+                <ol>
+                  <li>「以前のブラウザ・端末にバックアップファイル（.json）が残っていますか？」と確認する</li>
+                  <li>残っている場合 → ナビの「復元」から読み込んでもらう</li>
+                  <li>バックアップがない場合 → スプレッドシートのデータからCSVで復元可能（かのんへ連絡）</li>
+                  <li>スプレッドシートにもない場合 → 日記の再入力をご案内</li>
+                </ol>
+                <p>※ localStorageはブラウザごとに独立しているため、別端末への移行はJSONの書き出し→読み込みで対応できます。</p>
+              </div>
+            </details>
+          </div>
+        </details>
+      </div>
+      <p class="footer-brand">Shukuyo Astrology / 月読みワンダーランド<br>みずきかのん　月読み師</p>
     </footer>
   </main>
 
