@@ -489,7 +489,10 @@
         var saved = localStorage.getItem(PHASE_KEY_PREFIX + identity + ':' + phase);
         if(saved) el.value = saved;
       });
-      // 新月の願いごと：チャレンジイントロ入力をフォールバックとして反映
+      // 新月の願いごと：3段フォールバック
+      // ① localStorage moonPhase（上で復元済み）
+      // ② localStorage introReflection（チャレンジイントロ入力）
+      // ③ participants_data.js の newmoonWish
       var newMoonEl = document.getElementById('moon-phase-new');
       if(newMoonEl && !newMoonEl.value){
         try{
@@ -497,6 +500,13 @@
           var introData = JSON.parse(introRaw || '{}');
           var introWish = String((introData && (introData.text || introData.wish)) || '').trim();
           if(introWish) newMoonEl.value = introWish;
+        }catch(e){}
+      }
+      if(newMoonEl && !newMoonEl.value){
+        try{
+          var pdEntry = (typeof PARTICIPANTS_DATA !== 'undefined') && PARTICIPANTS_DATA[identity];
+          var pdWish = pdEntry && String(pdEntry.newmoonWish || '').trim();
+          if(pdWish) newMoonEl.value = pdWish;
         }catch(e){}
       }
       // 双子座満月メモ復元

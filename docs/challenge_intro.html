@@ -196,7 +196,7 @@
       var params = new URLSearchParams(window.location.search);
       var name = params.get('name') || 'あなた';
       var birth = params.get('birth') || '';
-      var participantId = params.get('participantId') || '';
+      var participantId = params.get('participantId') || params.get('pid') || '';
       var shuku = params.get('shuku') || '';
       var identity = participantId || birth || name;
       var key = 'tsukiyomi:introReflection:v1:' + identity;
