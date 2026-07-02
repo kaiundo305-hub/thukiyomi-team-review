@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>月読み日記｜第2の鑑定書 | 月読みワンダーランド</title>
   <meta name="description" content="7日間の月読み日記に残した言葉、写メ、感謝、次の一歩をもとに、おかげさまの流れを読み解く第2の鑑定書です。">
-  <link rel="stylesheet" href="style.css?v=20260702c">
+  <link rel="stylesheet" href="style.css?v=20260702d">
 </head>
 <body>
   <main class="challenge-shell" data-deep-report>
@@ -222,26 +222,6 @@
         <p style="text-align:right;margin-top:8px;font-size:11px;color:rgba(90,62,40,0.4);" id="moon-phase-save-status"></p>
       </section>
 
-      <!-- 月相トラッカー（毎月埋まっていく一覧表） -->
-      <section class="completion-panel deep-report-panel deep-report-closing" data-seal="月相トラッカー" id="moon-phase-tracker-section">
-        <h2 data-seal="月相トラッカー">月のフェーズ<br>一覧トラッカー</h2>
-        <p class="deep-guidance-text" style="color:#3d3328;text-align:center;">月ごとに4つのフェーズに取り組んだら●を押して記録しましょう。12か月分が少しずつ埋まっていきます。</p>
-        <div style="overflow-x:auto;margin-top:24px;">
-          <table id="phase-tracker-table" style="width:100%;border-collapse:collapse;min-width:260px;">
-            <thead>
-              <tr>
-                <th style="padding:8px 10px;font-size:12px;color:var(--paperGold);letter-spacing:.08em;font-weight:600;text-align:left;border-bottom:1px solid rgba(168,121,50,.35);">月</th>
-                <th style="padding:8px 4px;font-size:12px;color:var(--paperGold);font-weight:600;text-align:center;border-bottom:1px solid rgba(168,121,50,.35);line-height:1.6;">🌑<br><span style="font-size:10px;letter-spacing:.04em;">新月</span></th>
-                <th style="padding:8px 4px;font-size:12px;color:var(--paperGold);font-weight:600;text-align:center;border-bottom:1px solid rgba(168,121,50,.35);line-height:1.6;">🌓<br><span style="font-size:10px;letter-spacing:.04em;">上弦</span></th>
-                <th style="padding:8px 4px;font-size:12px;color:var(--paperGold);font-weight:600;text-align:center;border-bottom:1px solid rgba(168,121,50,.35);line-height:1.6;">🌕<br><span style="font-size:10px;letter-spacing:.04em;">満月</span></th>
-                <th style="padding:8px 4px;font-size:12px;color:var(--paperGold);font-weight:600;text-align:center;border-bottom:1px solid rgba(168,121,50,.35);line-height:1.6;">🌗<br><span style="font-size:10px;letter-spacing:.04em;">下弦</span></th>
-              </tr>
-            </thead>
-            <tbody id="phase-tracker-tbody"></tbody>
-          </table>
-        </div>
-      </section>
-
       <!-- ふたご座新月から山羊座満月への旅（振り返り） -->
       <section class="completion-panel deep-report-panel deep-report-closing" data-seal="新月から満月への旅">
         <h2 data-seal="新月から満月への旅">ふたご座新月から<br>山羊座満月への旅</h2>
@@ -392,6 +372,57 @@
         ">🔄 日記を追記したら — 鑑定書を今すぐ更新</button>
         <p id="refresh-status" style="font-size:11px;color:rgba(90,62,40,0.5);margin-top:4px;min-height:16px;"></p>
       </div>
+      <!-- 月相トラッカー（ページ最後：全部埋めたくなる仕掛け） -->
+      <section id="moon-phase-tracker-section" style="
+        position:relative;overflow:hidden;margin-top:24px;
+        padding:clamp(36px,6vw,56px) clamp(20px,5vw,48px);
+        border:1px solid rgba(241,217,155,.28);border-radius:20px;
+        background:
+          radial-gradient(ellipse at 20% 0%,rgba(80,55,20,.55),transparent 42%),
+          radial-gradient(ellipse at 80% 100%,rgba(60,40,15,.4),transparent 42%),
+          radial-gradient(circle at 55% 50%,rgba(241,217,155,.04),transparent 60%),
+          linear-gradient(160deg,#0e1838 0%,#1a1040 60%,#0a0c20 100%);
+        box-shadow:0 28px 72px rgba(2,6,29,.55);
+      ">
+        <div style="position:relative;z-index:1;text-align:center;margin-bottom:28px;">
+          <p style="margin:0 0 10px;font-size:11px;color:rgba(241,217,155,.55);letter-spacing:.26em;">MOON PHASE TRACKER</p>
+          <h2 style="margin:0;font-size:clamp(26px,5vw,36px);color:#fff7e3;line-height:1.45;letter-spacing:.06em;font-weight:500;">
+            月のフェーズ<br>
+            <small style="font-size:.6em;color:rgba(241,217,155,.75);letter-spacing:.12em;">48のしるし</small>
+          </h2>
+          <p style="margin:14px auto 0;max-width:500px;color:rgba(246,235,213,.7);font-size:14px;line-height:2;">
+            月と共に歩んだすべての記録。<br>ひとつひとつのしるしが、あなたの月の旅を証明します。
+          </p>
+          <div style="margin:22px auto 0;max-width:360px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+              <span style="font-size:11px;color:rgba(241,217,155,.5);letter-spacing:.12em;">PROGRESS</span>
+              <span id="tracker-progress-text" style="font-size:13px;color:#f1d99b;font-weight:600;letter-spacing:.05em;">0 / 48</span>
+            </div>
+            <div style="width:100%;height:5px;background:rgba(241,217,155,.1);border-radius:999px;overflow:hidden;">
+              <div id="tracker-progress-bar" style="height:5px;width:0%;background:linear-gradient(90deg,rgba(241,217,155,.45),#f1d99b);border-radius:999px;transition:width .45s ease;"></div>
+            </div>
+          </div>
+        </div>
+        <div style="position:relative;z-index:1;overflow-x:auto;">
+          <table id="phase-tracker-table" style="width:100%;border-collapse:collapse;min-width:260px;">
+            <thead>
+              <tr>
+                <th style="padding:8px 10px;font-size:11px;color:rgba(241,217,155,.45);letter-spacing:.08em;font-weight:500;text-align:left;border-bottom:1px solid rgba(241,217,155,.14);">月</th>
+                <th style="padding:8px 6px;font-size:18px;text-align:center;border-bottom:1px solid rgba(241,217,155,.14);">🌑</th>
+                <th style="padding:8px 6px;font-size:18px;text-align:center;border-bottom:1px solid rgba(241,217,155,.14);">🌓</th>
+                <th style="padding:8px 6px;font-size:18px;text-align:center;border-bottom:1px solid rgba(241,217,155,.14);">🌕</th>
+                <th style="padding:8px 6px;font-size:18px;text-align:center;border-bottom:1px solid rgba(241,217,155,.14);">🌗</th>
+              </tr>
+            </thead>
+            <tbody id="phase-tracker-tbody"></tbody>
+          </table>
+        </div>
+        <p id="tracker-complete-msg" style="display:none;text-align:center;margin:28px 0 0;color:#f1d99b;font-size:16px;line-height:2;letter-spacing:.04em;">
+          ✦ 48のしるし、すべて刻まれました ✦<br>
+          <span style="font-size:13px;color:rgba(241,217,155,.7);">月と共に歩んだ1年間の記録が、ここに完成しました。</span>
+        </p>
+      </section>
+
       <section class="deep-report-epilogue">
         <p class="deep-report-epilogue-text">あなたの物語は、ここで終わりではありません。</p>
         <p class="deep-report-epilogue-text">次の7日間には、今回見つけた<strong>「自分の歩幅」</strong>を現実へ育てる月の流れが待っています。</p>
@@ -542,6 +573,24 @@
         var PHASE_KEY_PREFIX = 'tsukiyomi:moonPhase:v1:';
         var PHASES = ['new','first','full','last'];
         var PHASE_LABELS = ['新月','上弦','満月','下弦'];
+        var PHASE_EMOJIS = ['🌑','🌓','🌕','🌗'];
+
+        function updateProgress(){
+          var d = loadData();
+          var done = 0;
+          for(var j = 0; j < 12; j++){
+            var yr2 = 2026 + Math.floor((6+j)/12);
+            var mo2 = ((6+j)%12)+1;
+            var mk2 = yr2+'-'+('0'+mo2).slice(-2);
+            PHASES.forEach(function(p){ if((d[mk2]||{})[p] || getPhaseText(mk2,p)) done++; });
+          }
+          var bar = document.getElementById('tracker-progress-bar');
+          var txt = document.getElementById('tracker-progress-text');
+          var msg = document.getElementById('tracker-complete-msg');
+          if(bar) bar.style.width = Math.round(done/48*100)+'%';
+          if(txt) txt.textContent = done+' / 48';
+          if(msg) msg.style.display = done>=48 ? 'block' : 'none';
+        }
 
         var now = new Date();
         var CURRENT_MK = now.getFullYear() + '-' + ('0'+(now.getMonth()+1)).slice(-2);
@@ -605,7 +654,11 @@
               d[mk][phase + '_text'] = txt;
               if(txt) d[mk][phase] = true;
               saveData(d);
-              btn.style.background = txt ? 'rgba(168,121,50,.82)' : 'rgba(168,121,50,.06)';
+              btn.style.cssText = txt
+                ? 'width:44px;height:44px;border-radius:50%;cursor:pointer;border:1.5px solid rgba(241,217,155,.72);background:rgba(241,217,155,.13);font-size:22px;line-height:44px;color:rgba(241,217,155,1);box-shadow:0 0 14px rgba(241,217,155,.28);transition:all .2s;text-align:center;padding:0;'
+                : 'width:44px;height:44px;border-radius:50%;cursor:pointer;border:1.5px solid rgba(241,217,155,.18);background:rgba(255,255,255,.03);font-size:0px;line-height:44px;color:rgba(241,217,155,1);transition:all .2s;text-align:center;padding:0;';
+              btn.textContent = txt ? PHASE_EMOJIS[pi] : '';
+              updateProgress();
               closePopup();
             });
             popup.appendChild(memo);
@@ -643,56 +696,57 @@
           var isCurrent = (mk === CURRENT_MK);
           var data = loadData();
           var monthData = data[mk] || {};
+          var allDone = PHASES.every(function(p){ return !!(monthData[p] || getPhaseText(mk,p)); });
 
           var tr = document.createElement('tr');
-          tr.style.cssText = 'border-bottom:1px solid rgba(168,121,50,.10);';
+          tr.style.cssText = 'border-bottom:1px solid rgba(241,217,155,.08);';
 
           var tdM = document.createElement('td');
-          tdM.textContent = isCurrent ? label + ' ◀' : label;
-          tdM.style.cssText = 'padding:9px 10px;font-size:13px;font-weight:600;white-space:nowrap;color:' + (isCurrent ? '#a87932' : '#3d3328') + ';';
+          tdM.style.cssText = 'padding:10px 10px;font-size:13px;font-weight:600;white-space:nowrap;color:'+(isCurrent?'#f1d99b':allDone?'rgba(241,217,155,.95)':'rgba(246,235,213,.55)')+';';
+          tdM.textContent = (allDone ? '✦ ' : '') + label + (isCurrent ? ' ◀' : '');
           tr.appendChild(tdM);
 
           PHASES.forEach(function(phase, pi){
             var td = document.createElement('td');
-            td.style.cssText = 'padding:9px 4px;text-align:center;';
+            td.style.cssText = 'padding:10px 6px;text-align:center;';
             var text = getPhaseText(mk, phase);
             var filled = !!monthData[phase] || !!text;
+            var filledStyle = 'width:44px;height:44px;border-radius:50%;cursor:pointer;border:1.5px solid rgba(241,217,155,.72);background:rgba(241,217,155,.13);font-size:22px;line-height:44px;color:rgba(241,217,155,1);box-shadow:0 0 14px rgba(241,217,155,.28);transition:all .2s;text-align:center;padding:0;';
+            var emptyStyle  = 'width:44px;height:44px;border-radius:50%;cursor:pointer;border:1.5px solid rgba(241,217,155,.18);background:rgba(255,255,255,.03);font-size:0px;line-height:44px;color:rgba(241,217,155,1);transition:all .2s;text-align:center;padding:0;';
             var btn = document.createElement('button');
             btn.type = 'button';
             btn.setAttribute('aria-label', label + ' ' + PHASE_LABELS[pi]);
             btn.setAttribute('aria-pressed', filled ? 'true' : 'false');
-            btn.style.cssText = [
-              'width:30px;height:30px;border-radius:50%;cursor:pointer;',
-              'border:1.5px solid rgba(168,121,50,.6);',
-              'background:' + (filled ? 'rgba(168,121,50,.82)' : 'rgba(168,121,50,.06)') + ';',
-              'transition:background .18s,transform .12s;'
-            ].join('');
-            btn.addEventListener('click', function(mk, phase, pi, isCurrent){
+            btn.style.cssText = filled ? filledStyle : emptyStyle;
+            btn.textContent = filled ? PHASE_EMOJIS[pi] : '';
+            btn.addEventListener('click', function(mk, phase, pi, isCurrent, filledStyle, emptyStyle){
               return function(e){
                 e.stopPropagation();
                 var txt = getPhaseText(mk, phase);
                 if(txt || isCurrent){
                   showPopup(this, mk, phase, pi, txt, isCurrent);
                 } else {
-                  // テキストなし：トグルのみ
                   var d = loadData();
                   if(!d[mk]) d[mk] = {};
                   d[mk][phase] = !d[mk][phase];
                   saveData(d);
                   var f = d[mk][phase];
-                  this.style.background = f ? 'rgba(168,121,50,.82)' : 'rgba(168,121,50,.06)';
+                  this.style.cssText = f ? filledStyle : emptyStyle;
+                  this.textContent = f ? PHASE_EMOJIS[pi] : '';
                   this.setAttribute('aria-pressed', f ? 'true' : 'false');
-                  this.style.transform = 'scale(1.2)';
+                  this.style.transform = 'scale(1.22)';
                   var self = this;
-                  setTimeout(function(){ self.style.transform = ''; }, 140);
+                  setTimeout(function(){ self.style.transform = ''; }, 160);
+                  updateProgress();
                 }
               };
-            }(mk, phase, pi, isCurrent).bind(btn));
+            }(mk, phase, pi, isCurrent, filledStyle, emptyStyle).bind(btn));
             td.appendChild(btn);
             tr.appendChild(td);
           });
           tbody.appendChild(tr);
         }
+        updateProgress();
       })();
       // ──────────────────────────────────────────────────────────────
     });
