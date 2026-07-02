@@ -2749,8 +2749,74 @@ a {
   .save-row,
   .moon-mark,
   .guide-image,
-  .challenge-guide img {
+  .challenge-guide img,
+  .deep-report-print-btn,
+  #moon-phase-tracker-section {
     display: none;
+  }
+
+  /* ── deep report 印刷専用 ── */
+  html:has([data-deep-report]) {
+    scroll-snap-type: none;
+  }
+
+  [data-deep-report] .challenge-card {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+  }
+
+  [data-deep-report] .deep-report-title-block,
+  [data-deep-report] .deep-report-intro-panel,
+  [data-deep-report] .deep-report-panel {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+    min-height: auto;
+    height: auto;
+    scroll-snap-align: none;
+    break-after: page;
+    margin: 0;
+    padding: 40px 36px;
+    border-color: rgba(168, 121, 50, .45);
+    box-shadow: none;
+    background-color: #fdf2dc;
+    background-image:
+      radial-gradient(ellipse at 0% 0%, rgba(168,121,50,.12) 0%, transparent 42%),
+      radial-gradient(ellipse at 100% 100%, rgba(168,121,50,.10) 0%, transparent 42%),
+      linear-gradient(168deg, #fef9ee 0%, #fff7e3 45%, #fdf2dc 100%);
+    background-size: auto, auto, auto;
+  }
+
+  [data-deep-report] .deep-report-title-block {
+    display: grid;
+    grid-template-columns: minmax(0,1fr) 96px;
+    gap: 18px;
+  }
+
+  [data-deep-report] .deep-report-panel h2,
+  [data-deep-report] .deep-report-title-block .challenge-title {
+    color: rgba(60, 35, 8, .95);
+  }
+
+  [data-deep-report] .deep-report-chapter p[data-deep-current],
+  [data-deep-report] .deep-report-chapter p[data-deep-themes],
+  [data-deep-report] .deep-report-chapter p[data-deep-shuku],
+  [data-deep-report] .deep-report-chapter p[data-deep-next] {
+    color: rgba(50, 28, 6, .85);
+    line-height: 2.2;
+    max-width: none;
+  }
+
+  [data-deep-report] .deep-report-intro-item {
+    background: rgba(254, 245, 220, .8);
+    border-color: rgba(168,121,50,.3);
+    break-inside: avoid;
+  }
+
+  [data-deep-report] .deep-report-intro-title,
+  [data-deep-report] .deep-report-intro-body {
+    color: rgba(60, 35, 8, .85);
   }
 }
 
@@ -3043,4 +3109,39 @@ a {
   color: rgba(90,60,30,0.7);
   text-align: center;
   margin-top: 16px;
+}
+
+/* ── 印刷・PDFダウンロードボタン ── */
+.deep-report-print-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 20px;
+  z-index: 9999;
+  display: none;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background-color: #fdf2dc;
+  background-image:
+    linear-gradient(168deg, rgba(254,249,238,.95) 0%, rgba(253,242,220,.95) 100%);
+  border: 1px solid rgba(168, 121, 50, .65);
+  border-radius: 40px;
+  color: rgba(100, 60, 10, .9);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(31,18,8,.18), 0 0 0 1px rgba(168,121,50,.12);
+  transition: box-shadow .2s, transform .15s;
+}
+.deep-report-print-btn:hover {
+  box-shadow: 0 6px 28px rgba(31,18,8,.24), 0 0 0 2px rgba(168,121,50,.22);
+  transform: translateY(-1px);
+}
+.deep-report-print-btn svg {
+  flex-shrink: 0;
+  color: rgba(130, 80, 15, .8);
+}
+[data-deep-report] .deep-report-print-btn {
+  display: flex;
 }
