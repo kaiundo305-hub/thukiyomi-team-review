@@ -1070,11 +1070,14 @@ a {
 [data-deep-report] .deep-report-panel {
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   min-height: 100vh;
   min-height: 100svh;
   scroll-snap-align: start;
   margin-top: clamp(32px, 5svh, 64px);
-  padding: clamp(38px, 6vw, 58px) clamp(24px, 6vw, 54px);
+  padding: clamp(48px, 8vw, 80px) clamp(32px, 7vw, 72px);
   border: 1px solid rgba(168, 121, 50, .78);
   border-radius: 2px;
   background-color: #fdf2dc;
@@ -1146,12 +1149,19 @@ a {
 }
 
 [data-deep-report] .deep-report-panel h2 {
-  margin-bottom: 20px;
+  margin-bottom: clamp(24px, 5vh, 44px);
   color: var(--paperInk);
-  font-size: clamp(24px, 4vw, 34px);
-  line-height: 1.55;
+  font-size: clamp(32px, 6vw, 52px);
+  line-height: 1.6;
   text-align: center;
-  letter-spacing: .08em;
+  letter-spacing: .14em;
+}
+
+[data-deep-report] .deep-report-chapter h2 {
+  font-size: clamp(52px, 11vw, 88px);
+  letter-spacing: .18em;
+  line-height: 1.7;
+  margin-bottom: clamp(44px, 8vh, 80px);
 }
 
 [data-deep-report] .deep-report-panel h2 br {
@@ -1163,10 +1173,10 @@ a {
 [data-deep-report] .deep-report-panel h2::after {
   content: "";
   display: block;
-  width: min(280px, 70%);
+  width: min(180px, 50%);
   height: 1px;
-  margin: 16px auto 0;
-  background: linear-gradient(90deg, transparent, rgba(168, 121, 50, .74), transparent);
+  margin: clamp(18px, 3vh, 28px) auto 0;
+  background: linear-gradient(90deg, transparent, rgba(168, 121, 50, .82), transparent);
 }
 
 [data-deep-report] .deep-report-panel p {
@@ -1180,12 +1190,16 @@ a {
 [data-deep-report] .deep-report-chapter p[data-deep-themes],
 [data-deep-report] .deep-report-chapter p[data-deep-shuku],
 [data-deep-report] .deep-report-chapter p[data-deep-next] {
-  max-width: 760px;
+  max-width: 480px;
   margin: 0 auto;
-  padding: clamp(18px, 3vw, 24px);
-  border-left: 3px solid rgba(168, 121, 50, .62);
-  background: rgba(255, 250, 242, .52);
-  box-shadow: inset 0 0 0 1px rgba(168, 121, 50, .12);
+  padding: 0;
+  border-left: none;
+  background: transparent;
+  box-shadow: none;
+  font-size: clamp(14px, 1.8vw, 16px);
+  line-height: 2.5;
+  text-align: justify;
+  letter-spacing: .06em;
 }
 
 [data-deep-report] .deep-report-guidance {
