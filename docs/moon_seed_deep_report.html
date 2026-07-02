@@ -222,6 +222,26 @@
         <p style="text-align:right;margin-top:8px;font-size:11px;color:rgba(90,62,40,0.4);" id="moon-phase-save-status"></p>
       </section>
 
+      <!-- 月相トラッカー（毎月埋まっていく一覧表） -->
+      <section class="completion-panel deep-report-panel deep-report-closing" data-seal="月相トラッカー" id="moon-phase-tracker-section">
+        <h2 data-seal="月相トラッカー">月のフェーズ<br>一覧トラッカー</h2>
+        <p class="deep-guidance-text" style="color:#3d3328;text-align:center;">月ごとに4つのフェーズに取り組んだら●を押して記録しましょう。12か月分が少しずつ埋まっていきます。</p>
+        <div style="overflow-x:auto;margin-top:24px;">
+          <table id="phase-tracker-table" style="width:100%;border-collapse:collapse;min-width:260px;">
+            <thead>
+              <tr>
+                <th style="padding:8px 10px;font-size:12px;color:var(--paperGold);letter-spacing:.08em;font-weight:600;text-align:left;border-bottom:1px solid rgba(168,121,50,.35);">月</th>
+                <th style="padding:8px 4px;font-size:12px;color:var(--paperGold);font-weight:600;text-align:center;border-bottom:1px solid rgba(168,121,50,.35);line-height:1.6;">🌑<br><span style="font-size:10px;letter-spacing:.04em;">新月</span></th>
+                <th style="padding:8px 4px;font-size:12px;color:var(--paperGold);font-weight:600;text-align:center;border-bottom:1px solid rgba(168,121,50,.35);line-height:1.6;">🌓<br><span style="font-size:10px;letter-spacing:.04em;">上弦</span></th>
+                <th style="padding:8px 4px;font-size:12px;color:var(--paperGold);font-weight:600;text-align:center;border-bottom:1px solid rgba(168,121,50,.35);line-height:1.6;">🌕<br><span style="font-size:10px;letter-spacing:.04em;">満月</span></th>
+                <th style="padding:8px 4px;font-size:12px;color:var(--paperGold);font-weight:600;text-align:center;border-bottom:1px solid rgba(168,121,50,.35);line-height:1.6;">🌗<br><span style="font-size:10px;letter-spacing:.04em;">下弦</span></th>
+              </tr>
+            </thead>
+            <tbody id="phase-tracker-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+
       <!-- ふたご座新月から山羊座満月への旅（振り返り） -->
       <section class="completion-panel deep-report-panel deep-report-closing" data-seal="新月から満月への旅">
         <h2 data-seal="新月から満月への旅">ふたご座新月から<br>山羊座満月への旅</h2>
@@ -515,6 +535,72 @@
         var geminiSaved = localStorage.getItem('moon-fullmoon-gemini');
         if(geminiSaved) geminiEl.value = geminiSaved;
       }
+
+      // ─── 月相トラッカー ───────────────────────────────────────────
+      (function(){
+        var TRACKER_KEY = 'tsukiyomi:phaseTracker:v1:' + identity;
+        var PHASES = ['new','first','full','last'];
+        var PHASE_LABELS = ['新月','上弦','満月','下弦'];
+
+        function loadData(){ try{ return JSON.parse(localStorage.getItem(TRACKER_KEY)||'{}'); }catch(e){ return {}; } }
+        function saveData(d){ localStorage.setItem(TRACKER_KEY, JSON.stringify(d)); }
+
+        var tbody = document.getElementById('phase-tracker-tbody');
+        if(!tbody) return;
+        var data = loadData();
+
+        // 2026-07 から 12か月分
+        for(var i = 0; i < 12; i++){
+          var absMonth = (2026 - 1970) * 12 + 6 + i; // offset from epoch doesn't matter
+          var year = 2026 + Math.floor((6 + i) / 12);
+          var month = ((6 + i) % 12) + 1;
+          var mk = year + '-' + ('0'+month).slice(-2);
+          var label = year + '/' + ('0'+month).slice(-2);
+          var monthData = data[mk] || {};
+
+          var tr = document.createElement('tr');
+          tr.style.cssText = 'border-bottom:1px solid rgba(168,121,50,.10);';
+
+          var tdM = document.createElement('td');
+          tdM.textContent = label;
+          tdM.style.cssText = 'padding:9px 10px;font-size:13px;color:#3d3328;font-weight:600;white-space:nowrap;';
+          tr.appendChild(tdM);
+
+          PHASES.forEach(function(phase, pi){
+            var td = document.createElement('td');
+            td.style.cssText = 'padding:9px 4px;text-align:center;';
+            var filled = !!monthData[phase];
+            var btn = document.createElement('button');
+            btn.type = 'button';
+            btn.setAttribute('aria-label', label + ' ' + PHASE_LABELS[pi]);
+            btn.setAttribute('aria-pressed', filled ? 'true' : 'false');
+            btn.style.cssText = [
+              'width:30px;height:30px;border-radius:50%;cursor:pointer;',
+              'border:1.5px solid rgba(168,121,50,.6);',
+              'background:' + (filled ? 'rgba(168,121,50,.82)' : 'rgba(168,121,50,.06)') + ';',
+              'transition:background .18s,transform .12s;'
+            ].join('');
+            btn.addEventListener('click', function(mk, phase, pi){
+              return function(){
+                var d = loadData();
+                if(!d[mk]) d[mk] = {};
+                d[mk][phase] = !d[mk][phase];
+                saveData(d);
+                var f = d[mk][phase];
+                this.style.background = f ? 'rgba(168,121,50,.82)' : 'rgba(168,121,50,.06)';
+                this.setAttribute('aria-pressed', f ? 'true' : 'false');
+                this.style.transform = 'scale(1.2)';
+                var self = this;
+                setTimeout(function(){ self.style.transform = ''; }, 140);
+              };
+            }(mk, phase, pi).bind(btn));
+            td.appendChild(btn);
+            tr.appendChild(td);
+          });
+          tbody.appendChild(tr);
+        }
+      })();
+      // ──────────────────────────────────────────────────────────────
     });
   })();
   </script>
