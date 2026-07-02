@@ -30,7 +30,11 @@
     /* ── アンティーク用紙背景（深読みレポートのパネル） ── */
     [data-deep-report] .deep-report-panel {
       background: url("images/antique_paper_bg.jpg") center/100% 100% no-repeat !important;
-      box-shadow: 0 24px 56px rgba(31,18,8,.22), inset 0 0 48px rgba(168,121,50,.06) !important;
+      border: none !important;
+      border-radius: 4px !important;
+      padding: clamp(70px, 9vw, 90px) clamp(60px, 8vw, 80px) !important;
+      box-shadow: 0 24px 56px rgba(31,18,8,.28) !important;
+      overflow: hidden !important;
     }
   </style>
 </head>
