@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>月読み日記｜第2の鑑定書 | 月読みワンダーランド</title>
   <meta name="description" content="7日間の月読み日記に残した言葉、写メ、感謝、次の一歩をもとに、おかげさまの流れを読み解く第2の鑑定書です。">
-  <link rel="stylesheet" href="style.css?v=20260702i">
+  <link rel="stylesheet" href="style.css?v=20260702j">
 </head>
 <body>
   <main class="challenge-shell" data-deep-report>
@@ -819,6 +819,85 @@
     };
     reader.readAsText(file, 'utf-8');
   }
+  </script>
+
+  <!-- ページ自動分割：コンテンツが1ページに収まらない場合、同じ大きさのパネルへ分割 -->
+  <script>
+  (function(){
+    var DONE = 'data-paged';
+
+    function splitPanel(panel) {
+      if (panel.hasAttribute(DONE)) return;
+      var pageH  = window.innerHeight;
+      var cs     = getComputedStyle(panel);
+      var pTop   = parseFloat(cs.paddingTop)    || 48;
+      var pBot   = parseFloat(cs.paddingBottom) || 48;
+      var availH = pageH - pTop - pBot;
+
+      var kids = Array.from(panel.children);
+      if (kids.length < 2) { panel.setAttribute(DONE,'1'); return; }
+
+      /* 一時的に高さを解放して子要素の自然な高さを計測 */
+      var sv = { mh: panel.style.minHeight, h: panel.style.height };
+      panel.style.minHeight = '0';
+      panel.style.height    = 'auto';
+
+      var acc = 0, splitAt = -1;
+      for (var i = 0; i < kids.length; i++) {
+        var kcs = getComputedStyle(kids[i]);
+        var kh  = kids[i].getBoundingClientRect().height
+                  + parseFloat(kcs.marginTop    || 0)
+                  + parseFloat(kcs.marginBottom || 0);
+        if (acc + kh > availH && i > 0) { splitAt = i; break; }
+        acc += kh;
+      }
+
+      panel.style.minHeight = sv.mh;
+      panel.style.height    = sv.h;
+
+      if (splitAt < 0) { panel.setAttribute(DONE,'1'); return; }
+
+      /* 続きページを生成（同クラス・同スタイルで複製） */
+      var cont = panel.cloneNode(false);
+      cont.removeAttribute('id');
+      cont.removeAttribute(DONE);
+      cont.setAttribute('data-continuation','1');
+      /* 続きページはコンテンツを上寄せ（本の本文ページ） */
+      cont.style.justifyContent = 'flex-start';
+
+      kids.slice(splitAt).forEach(function(c){ cont.appendChild(c); });
+      panel.setAttribute(DONE,'1');
+      panel.insertAdjacentElement('afterend', cont);
+
+      /* 再帰：続きページもさらに長い場合はまた分割 */
+      splitPanel(cont);
+    }
+
+    function paginateAll() {
+      if (!document.querySelector('[data-deep-report]')) return;
+      document.querySelectorAll('[data-deep-report] .deep-report-panel').forEach(function(p){
+        if (getComputedStyle(p).display === 'none') return;
+        splitPanel(p);
+      });
+    }
+
+    /* 初回：動的コンテンツ（AI生成テキスト）の挿入を待って実行 */
+    window.addEventListener('load', function(){ setTimeout(paginateAll, 1800); });
+
+    /* 鑑定書リフレッシュ後にも再実行 */
+    var _orig = window.refreshDeepReport;
+    window.refreshDeepReport = function(){
+      if (typeof _orig === 'function') _orig.apply(this, arguments);
+      /* 生成完了を待って再ページネーション */
+      setTimeout(function(){
+        document.querySelectorAll('[data-continuation]').forEach(function(el){ el.remove(); });
+        document.querySelectorAll('[' + DONE + ']').forEach(function(el){ el.removeAttribute(DONE); });
+        paginateAll();
+      }, 2500);
+    };
+
+    window.paginateDeepReport = paginateAll;
+  })();
   </script>
 </body>
 </html>
