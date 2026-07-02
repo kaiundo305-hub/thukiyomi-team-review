@@ -1311,6 +1311,16 @@ a {
   margin-right: auto;
 }
 
+[data-deep-report] .deep-report-closing {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+[data-deep-report] .deep-report-closing::before {
+  inset: 28px;
+}
+
 [data-deep-report] .deep-report-voices .diary-voice-item {
   border-bottom-color: rgba(168, 121, 50, .28);
 }
