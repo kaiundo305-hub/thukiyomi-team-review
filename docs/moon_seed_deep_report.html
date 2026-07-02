@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>月読み日記｜第2の鑑定書 | 月読みワンダーランド</title>
   <meta name="description" content="7日間の月読み日記に残した言葉、写メ、感謝、次の一歩をもとに、おかげさまの流れを読み解く第2の鑑定書です。">
-  <link rel="stylesheet" href="style.css?v=20260703d">
+  <link rel="stylesheet" href="style.css?v=20260703e">
 </head>
 <body>
   <main class="challenge-shell" data-deep-report>
@@ -16,7 +16,7 @@
     <article class="challenge-card">
       <img src="images/deep_report_header.png" alt="第2の鑑定書" class="deep-report-header-img" onerror="this.style.display='none'">
       <div class="moon-mark" aria-hidden="true"></div>
-      <section class="completion-panel deep-report-panel deep-report-opening" data-seal="四つのしるし">
+      <section class="completion-panel deep-report-panel deep-report-opening" id="sec-opening" data-seal="四つのしるし">
         <h2 data-seal="四つのしるし">4つのしるし</h2>
         <p class="deep-guidance-text">
           この鑑定書では、7日間の日記を「PHOTO 写メに残したもの」「WORDS 何度も出てきた言葉」「THANKS 感謝できたこと」「NEXT 次に進みたい一歩」の4つから読み解きます。
@@ -68,7 +68,7 @@
         </aside>
       </header>
 
-      <section class="deep-report-intro-panel">
+      <section class="deep-report-intro-panel" id="sec-intro">
         <p class="deep-report-intro-heading">この月読み日記でわかること</p>
         <div class="deep-report-intro-list">
           <div class="deep-report-intro-item">
@@ -89,8 +89,111 @@
         </div>
       </section>
 
+      <!-- 目次ページ -->
+      <nav class="completion-panel deep-report-panel deep-report-toc" id="sec-toc" aria-label="目次">
+        <p class="toc-label">CONTENTS</p>
+        <h2 class="toc-heading">目　次</h2>
+        <div class="toc-divider"></div>
+        <ol class="toc-list">
+          <li class="toc-group-label">前書き</li>
+          <li class="toc-item" data-toc-target="sec-intro">
+            <span class="toc-item-title">はじめに</span>
+            <span class="toc-item-lead"></span>
+            <span class="toc-item-arrow">→</span>
+          </li>
+          <li class="toc-item" data-toc-target="sec-opening">
+            <span class="toc-item-title">4つのしるし</span>
+            <span class="toc-item-lead"></span>
+            <span class="toc-item-arrow">→</span>
+          </li>
+
+          <li class="toc-group-label" data-toc-group="diary">あなたの7日間</li>
+          <li class="toc-item" data-toc-target="sec-first-concern" data-toc-hidden>
+            <span class="toc-item-title">はじまりの旅</span>
+            <span class="toc-item-lead"></span>
+            <span class="toc-item-arrow">→</span>
+          </li>
+          <li class="toc-item" data-toc-target="sec-template">
+            <span class="toc-item-title">4つのキーワード</span>
+            <span class="toc-item-lead"></span>
+            <span class="toc-item-arrow">→</span>
+          </li>
+          <li class="toc-item" data-toc-target="sec-diary-summary" data-toc-hidden>
+            <span class="toc-item-num">☽</span>
+            <span class="toc-item-title">7日間の記録</span>
+            <span class="toc-item-lead"></span>
+            <span class="toc-item-arrow">→</span>
+          </li>
+
+          <li class="toc-group-label">読み解き</li>
+          <li class="toc-item" data-toc-target="sec-ch1">
+            <span class="toc-item-num">一</span>
+            <span class="toc-item-title">今のあなたへ</span>
+            <span class="toc-item-lead"></span>
+            <span class="toc-item-arrow">→</span>
+          </li>
+          <li class="toc-item" data-toc-target="sec-ch2">
+            <span class="toc-item-num">二</span>
+            <span class="toc-item-title">育ち始めた願い</span>
+            <span class="toc-item-lead"></span>
+            <span class="toc-item-arrow">→</span>
+          </li>
+          <li class="toc-item" data-toc-target="sec-ch3">
+            <span class="toc-item-num">三</span>
+            <span class="toc-item-title">あなたの土台資質</span>
+            <span class="toc-item-lead"></span>
+            <span class="toc-item-arrow">→</span>
+          </li>
+          <li class="toc-item" data-toc-target="sec-ch4">
+            <span class="toc-item-num">四</span>
+            <span class="toc-item-title">次の一歩へ</span>
+            <span class="toc-item-lead"></span>
+            <span class="toc-item-arrow">→</span>
+          </li>
+
+          <li class="toc-group-label">終章</li>
+          <li class="toc-item" data-toc-target="sec-voices" data-toc-hidden>
+            <span class="toc-item-title">あなた自身の言葉</span>
+            <span class="toc-item-lead"></span>
+            <span class="toc-item-arrow">→</span>
+          </li>
+          <li class="toc-item" data-toc-target="sec-gained">
+            <span class="toc-item-title">育んだもの</span>
+            <span class="toc-item-lead"></span>
+            <span class="toc-item-arrow">→</span>
+          </li>
+          <li class="toc-item" data-toc-target="sec-wish">
+            <span class="toc-item-title">届けたいもの</span>
+            <span class="toc-item-lead"></span>
+            <span class="toc-item-arrow">→</span>
+          </li>
+
+          <li class="toc-group-label">月のガイド</li>
+          <li class="toc-item" data-toc-target="deep-ai-analysis-section" data-toc-hidden>
+            <span class="toc-item-title">新月からのメッセージ</span>
+            <span class="toc-item-lead"></span>
+            <span class="toc-item-arrow">→</span>
+          </li>
+          <li class="toc-item" data-toc-target="moon-cycle-section">
+            <span class="toc-item-title">月のサイクル</span>
+            <span class="toc-item-lead"></span>
+            <span class="toc-item-arrow">→</span>
+          </li>
+          <li class="toc-item" data-toc-target="sec-moon-journey1">
+            <span class="toc-item-title">新月から満月への旅</span>
+            <span class="toc-item-lead"></span>
+            <span class="toc-item-arrow">→</span>
+          </li>
+          <li class="toc-item" data-toc-target="sec-moon-journey2">
+            <span class="toc-item-title">満月から次の新月まで</span>
+            <span class="toc-item-lead"></span>
+            <span class="toc-item-arrow">→</span>
+          </li>
+        </ol>
+      </nav>
+
       <section class="challenge-body" aria-labelledby="deep-title">
-        <section class="completion-panel deep-report-panel deep-first-concern" data-deep-first-concern style="display:none">
+        <section class="completion-panel deep-report-panel deep-first-concern" id="sec-first-concern" data-deep-first-concern style="display:none">
           <h2 data-seal="旅の出発点">はじまりの旅</h2>
           <p class="deep-guidance-text">7日間の日記を始める前、あなたはこんな想いを抱えていました。</p>
           <div class="deep-first-concern-box">
@@ -102,41 +205,41 @@
         <div class="moon-question" id="deep-title">
           7日間で綴った言葉、写メ、感謝、次の一歩には、あなたを支えてきた「おかげさま」の流れが静かに映し出されています。
         </div>
-        <section class="completion-panel deep-report-panel deep-report-template" data-deep-template-section data-seal="4つのキーワード">
+        <section class="completion-panel deep-report-panel deep-report-template" id="sec-template" data-deep-template-section data-seal="4つのキーワード">
           <h2 data-seal="4つのキーワード">4つのキーワード</h2>
           <div data-deep-template>
             <p class="deep-guidance-text">新月の願いと7日間の記録がそろうと、ここにキーワードが表示されます。</p>
           </div>
         </section>
-        <section class="completion-panel deep-report-panel deep-report-summary" data-deep-diary-summary data-seal="記録" style="display:none">
+        <section class="completion-panel deep-report-panel deep-report-summary" id="sec-diary-summary" data-deep-diary-summary data-seal="記録" style="display:none">
           <h2 data-seal="記録">7日間チャレンジテーマ<br><span style="font-size:0.85em;font-weight:normal;">あなたは、それぞれの質問に、こう書きました。</span></h2>
           <div data-deep-diary-days></div>
         </section>
-        <section class="completion-panel deep-report-panel deep-report-chapter" data-seal="第一章">
+        <section class="completion-panel deep-report-panel deep-report-chapter" id="sec-ch1" data-seal="第一章">
           <h2 data-seal="第一章">今のあなたへ</h2>
           <p data-deep-current>記録を読み込み中です。</p>
         </section>
-        <section class="completion-panel deep-report-panel deep-report-chapter" data-seal="第二章">
+        <section class="completion-panel deep-report-panel deep-report-chapter" id="sec-ch2" data-seal="第二章">
           <h2 data-seal="第二章">育ち始めた願い</h2>
           <p data-deep-themes>記録を読み込み中です。</p>
         </section>
-        <section class="completion-panel deep-report-panel deep-report-chapter" data-seal="第三章">
+        <section class="completion-panel deep-report-panel deep-report-chapter" id="sec-ch3" data-seal="第三章">
           <h2 data-seal="第三章">あなたの土台資質</h2>
           <p data-deep-shuku>宿曜情報を読み込み中です。</p>
         </section>
-        <section class="completion-panel deep-report-panel deep-report-chapter" data-seal="第四章">
+        <section class="completion-panel deep-report-panel deep-report-chapter" id="sec-ch4" data-seal="第四章">
           <h2 data-seal="第四章">次の一歩へ</h2>
           <p data-deep-next>記録を読み込み中です。</p>
         </section>
-        <section class="completion-panel deep-report-panel" style="display:none">
+        <section class="completion-panel deep-report-panel" id="sec-kanon" style="display:none">
           <h2>💙 かのんより</h2>
           <p data-deep-kanon></p>
         </section>
-        <section class="completion-panel deep-report-panel deep-report-voices" data-deep-voices-section data-seal="本人の言葉" style="display:none">
+        <section class="completion-panel deep-report-panel deep-report-voices" id="sec-voices" data-deep-voices-section data-seal="本人の言葉" style="display:none">
           <h2 data-seal="本人の言葉">月読み日記に残された、あなた自身の言葉</h2>
           <div data-deep-voices></div>
         </section>
-        <section class="completion-panel deep-report-panel deep-report-closing" data-seal="育んだもの">
+        <section class="completion-panel deep-report-panel deep-report-closing" id="sec-gained" data-seal="育んだもの">
           <h2 data-seal="育んだもの">育んだもの</h2>
           <p class="deep-guidance-text">
             7日間、よく歩きました。月読み日記を続けることで、あなたの中には3つの恵みが静かに育っています。
@@ -154,7 +257,7 @@
             みっつめは、客観視する力です。自分の言葉を日記に置くことで、感情の流れを少し外から見られるようになります。それが「ぶれない自分」への道です。
           </p>
         </section>
-        <section class="completion-panel deep-report-panel deep-report-closing" data-seal="月読みの願い">
+        <section class="completion-panel deep-report-panel deep-report-closing" id="sec-wish" data-seal="月読みの願い">
           <h2 data-seal="月読みの願い">届けたいもの</h2>
           <p class="deep-guidance-text">
             月読みワンダーランドが届けたいのは、宿命を知り、天命に近づきながら、感謝が自然に育つ毎日です。
@@ -227,7 +330,7 @@
       </section>
 
       <!-- ふたご座新月から山羊座満月への旅（振り返り） -->
-      <section class="completion-panel deep-report-panel deep-report-closing" data-seal="新月から満月への旅">
+      <section class="completion-panel deep-report-panel deep-report-closing" id="sec-moon-journey1" data-seal="新月から満月への旅">
         <h2 data-seal="新月から満月への旅">ふたご座新月から<br>山羊座満月への旅</h2>
         <p class="deep-guidance-text" style="color:#3d3328;">ふたご座の新月に「言葉・好奇心・つながり」の種を蒔いて始まったこの7日間。昨日の山羊座の満月で、その旅は一つの頂きへとたどり着きました。何が芽生え、何が明らかになったかを、今ここで振り返りましょう。</p>
 
@@ -282,7 +385,7 @@
       </section>
 
       <!-- 山羊座満月から次の新月まで（行動アドバイス） -->
-      <section class="completion-panel deep-report-panel deep-report-closing" data-seal="満月から次の新月へ">
+      <section class="completion-panel deep-report-panel deep-report-closing" id="sec-moon-journey2" data-seal="満月から次の新月へ">
         <h2 data-seal="満月から次の新月へ">山羊座満月から<br>次の新月まで</h2>
         <p class="deep-guidance-text" style="color:#3d3328;">昨日の山羊座満月をピークに、月はこれから光を手放しながら下弦の月、そして次の新月へと向かいます。このフェーズは「整理・完結・準備」のとき。山羊座のエネルギーを借りて、着実に次のサイクルへの土台を築いていきましょう。</p>
 
@@ -893,6 +996,54 @@
     };
 
     window.paginateDeepReport = paginateAll;
+  })();
+
+  // ── 目次：クリックでジャンプ ──────────────────────────────────────
+  (function(){
+    function bindToc() {
+      document.querySelectorAll('.toc-item[data-toc-target]').forEach(function(item) {
+        item.addEventListener('click', function() {
+          var targetId = item.getAttribute('data-toc-target');
+          var target = document.getElementById(targetId);
+          if (!target) return;
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      });
+    }
+
+    function syncTocVisibility() {
+      document.querySelectorAll('.toc-item[data-toc-target]').forEach(function(item) {
+        var targetId = item.getAttribute('data-toc-target');
+        var target = document.getElementById(targetId);
+        if (!target) return;
+        var hidden = target.style.display === 'none' || getComputedStyle(target).display === 'none';
+        item.classList.toggle('toc-hidden', hidden);
+      });
+      // グループラベルを hidden 判定：グループ内に表示中アイテムがひとつもなければ非表示
+      document.querySelectorAll('.toc-list .toc-group-label').forEach(function(label) {
+        var next = label.nextElementSibling;
+        var hasVisible = false;
+        while (next && !next.classList.contains('toc-group-label')) {
+          if (!next.classList.contains('toc-hidden') && next.classList.contains('toc-item')) {
+            hasVisible = true;
+            break;
+          }
+          next = next.nextElementSibling;
+        }
+        label.style.display = hasVisible ? '' : 'none';
+      });
+    }
+
+    window.addEventListener('load', function() {
+      bindToc();
+      setTimeout(syncTocVisibility, 2000);
+    });
+
+    var _origRefresh = window.refreshDeepReport;
+    window.refreshDeepReport = function() {
+      if (typeof _origRefresh === 'function') _origRefresh.apply(this, arguments);
+      setTimeout(syncTocVisibility, 2600);
+    };
   })();
   </script>
 </body>
