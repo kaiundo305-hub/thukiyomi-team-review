@@ -1055,7 +1055,8 @@ a {
   padding: clamp(38px, 6vw, 58px) clamp(24px, 6vw, 54px);
   border: 1px solid rgba(168, 121, 50, .78);
   border-radius: 2px;
-  background:
+  background-color: #fdf2dc;
+  background-image:
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56'%3E%3Cpath d='M6 30 L6 6 L30 6' fill='none' stroke='rgb(168,121,50)' stroke-width='1.5' stroke-linecap='round' opacity='0.68'/%3E%3Ccircle cx='6' cy='6' r='3' fill='rgb(168,121,50)' opacity='0.55'/%3E%3C/svg%3E"),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56'%3E%3Cpath d='M50 30 L50 6 L26 6' fill='none' stroke='rgb(168,121,50)' stroke-width='1.5' stroke-linecap='round' opacity='0.68'/%3E%3Ccircle cx='50' cy='6' r='3' fill='rgb(168,121,50)' opacity='0.55'/%3E%3C/svg%3E"),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56'%3E%3Cpath d='M6 26 L6 50 L30 50' fill='none' stroke='rgb(168,121,50)' stroke-width='1.5' stroke-linecap='round' opacity='0.68'/%3E%3Ccircle cx='6' cy='50' r='3' fill='rgb(168,121,50)' opacity='0.55'/%3E%3C/svg%3E"),
@@ -1070,7 +1071,8 @@ a {
     repeating-linear-gradient(0deg, transparent, transparent 23px, rgba(168, 121, 50, .035) 24px),
     linear-gradient(168deg, #fef9ee 0%, #fff7e3 45%, #fdf2dc 100%);
   background-size: 56px 56px, 56px 56px, 56px 56px, 56px 56px, 240px 240px, auto, auto, auto, auto, auto, auto, auto, auto;
-  background-position: top 10px left 10px, top 10px right 10px, bottom 10px left 10px, bottom 10px right 10px, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0;
+  background-position: left 10px top 10px, right 10px top 10px, left 10px bottom 10px, right 10px bottom 10px, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0;
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat;
   color: var(--paperInk);
   box-shadow:
     0 28px 64px rgba(31, 18, 8, .26),
