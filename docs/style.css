@@ -1149,19 +1149,13 @@ a {
 }
 
 [data-deep-report] .deep-report-panel h2 {
-  margin-bottom: clamp(24px, 5vh, 44px);
+  margin-bottom: clamp(28px, 5vh, 48px);
   color: var(--paperInk);
-  font-size: clamp(32px, 6vw, 52px);
-  line-height: 1.6;
+  font-size: clamp(28px, 5vw, 40px);
+  line-height: 1.75;
   text-align: center;
-  letter-spacing: .14em;
-}
-
-[data-deep-report] .deep-report-chapter h2 {
-  font-size: clamp(52px, 11vw, 88px);
   letter-spacing: .18em;
-  line-height: 1.7;
-  margin-bottom: clamp(44px, 8vh, 80px);
+  font-weight: 500;
 }
 
 [data-deep-report] .deep-report-panel h2 br {
