@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 595 842">
+  <defs>
+    <g id="corner-tl">
+      <!-- Vine right arm -->
+      <path d="M33,26 C42,21 51,24 58,19 C64,15 65,8 60,7 C55,6 55,13 60,12" stroke="#a87932" stroke-width="0.9" fill="none" stroke-linecap="round"/>
+      <path d="M60,12 C62,10 64,12 62,14 C60,16 58,14 60,12" fill="#a87932" opacity="0.6"/>
+      <ellipse cx="48" cy="21" rx="3.5" ry="1.8" fill="#a87932" opacity="0.55" transform="rotate(-28 48 21)"/>
+      <ellipse cx="56" cy="16" rx="2.5" ry="1.3" fill="#a87932" opacity="0.45" transform="rotate(-35 56 16)"/>
+      <!-- Vine down arm -->
+      <path d="M26,33 C21,42 24,51 19,58 C15,64 8,65 7,60 C6,55 13,55 12,60" stroke="#a87932" stroke-width="0.9" fill="none" stroke-linecap="round"/>
+      <path d="M12,60 C10,62 12,64 14,62 C16,60 14,58 12,60" fill="#a87932" opacity="0.6"/>
+      <ellipse cx="21" cy="48" rx="1.8" ry="3.5" fill="#a87932" opacity="0.55" transform="rotate(-28 21 48)"/>
+      <ellipse cx="16" cy="56" rx="1.3" ry="2.5" fill="#a87932" opacity="0.45" transform="rotate(-35 16 56)"/>
+      <!-- Central rosette -->
+      <circle cx="28" cy="28" r="8" fill="none" stroke="#a87932" stroke-width="0.7" opacity="0.5"/>
+      <ellipse cx="28" cy="21" rx="2.2" ry="3.8" fill="#a87932" opacity="0.6"/>
+      <ellipse cx="28" cy="35" rx="2.2" ry="3.8" fill="#a87932" opacity="0.6"/>
+      <ellipse cx="21" cy="28" rx="3.8" ry="2.2" fill="#a87932" opacity="0.6"/>
+      <ellipse cx="35" cy="28" rx="3.8" ry="2.2" fill="#a87932" opacity="0.6"/>
+      <circle cx="28" cy="28" r="4" fill="#a87932" opacity="0.65"/>
+      <circle cx="28" cy="28" r="2" fill="#f8f1e3"/>
+      <circle cx="28" cy="28" r="1" fill="#a87932" opacity="0.7"/>
+      <!-- Corner dot -->
+      <circle cx="18" cy="18" r="1.8" fill="#a87932" opacity="0.55"/>
+    </g>
+    <!-- 8-pointed star -->
+    <g id="star8">
+      <path d="M0,-7 L1.2,-1.2 L7,0 L1.2,1.2 L0,7 L-1.2,1.2 L-7,0 L-1.2,-1.2 Z" fill="#a87932" opacity="0.6"/>
+    </g>
+    <!-- Small 4-pointed star -->
+    <g id="star4">
+      <path d="M0,-4 L0.6,-0.6 L4,0 L0.6,0.6 L0,4 L-0.6,0.6 L-4,0 L-0.6,-0.6 Z" fill="#a87932" opacity="0.5"/>
+    </g>
+  </defs>
+
+  <!-- ─── Background ─── -->
+  <rect width="595" height="842" fill="#f8f1e3"/>
+
+  <!-- ─── Border frame ─── -->
+  <rect x="14" y="14" width="567" height="814" fill="none" stroke="#a87932" stroke-width="1.2" opacity="0.65"/>
+
+  <!-- ─── Corner ornaments ─── -->
+  <!-- Top-Left -->
+  <use href="#corner-tl" transform="translate(14,14)" opacity="0.85"/>
+  <!-- Top-Right (mirror X) -->
+  <use href="#corner-tl" transform="translate(581,14) scale(-1,1)" opacity="0.85"/>
+  <!-- Bottom-Left (mirror Y) -->
+  <use href="#corner-tl" transform="translate(14,828) scale(1,-1)" opacity="0.85"/>
+  <!-- Bottom-Right (mirror both) -->
+  <use href="#corner-tl" transform="translate(581,828) scale(-1,-1)" opacity="0.85"/>
+
+  <!-- ─── Top center: Moon + Stars ─── -->
+  <g transform="translate(297.5, 75)" opacity="0.68">
+    <!-- Crescent moon (two-circle method) -->
+    <path d="M0,-32 C17,-32 30,-18 30,0 C30,18 17,32 0,32 C9,26 15,14 15,0 C15,-14 9,-26 0,-32 Z" fill="#a87932"/>
+    <!-- Dots on moon surface -->
+    <circle cx="5" cy="-8" r="1" fill="#f8f1e3" opacity="0.7"/>
+    <circle cx="12" cy="5" r="0.8" fill="#f8f1e3" opacity="0.5"/>
+    <circle cx="8" cy="18" r="0.7" fill="#f8f1e3" opacity="0.5"/>
+
+    <!-- Large 8-pt stars -->
+    <use href="#star8" transform="translate(-52, -8) scale(1.3)"/>
+    <use href="#star8" transform="translate(62, 5) scale(1.1)"/>
+    <use href="#star8" transform="translate(-70, 18) scale(0.8)"/>
+    <use href="#star8" transform="translate(80, -12) scale(0.9)"/>
+
+    <!-- Medium 4-pt stars -->
+    <use href="#star4" transform="translate(-90, -5)"/>
+    <use href="#star4" transform="translate(-38, -22)"/>
+    <use href="#star4" transform="translate(42, -20)"/>
+    <use href="#star4" transform="translate(95, 10)"/>
+    <use href="#star4" transform="translate(-110, 28) scale(0.7)"/>
+    <use href="#star4" transform="translate(108, 28) scale(0.7)"/>
+
+    <!-- Small dots -->
+    <circle cx="-60" cy="8" r="2" fill="#a87932" opacity="0.4"/>
+    <circle cx="-30" cy="-18" r="1.5" fill="#a87932" opacity="0.4"/>
+    <circle cx="35" cy="-15" r="1.5" fill="#a87932" opacity="0.4"/>
+    <circle cx="55" cy="20" r="2" fill="#a87932" opacity="0.35"/>
+    <circle cx="-80" cy="5" r="1.2" fill="#a87932" opacity="0.35"/>
+    <circle cx="88" cy="0" r="1.2" fill="#a87932" opacity="0.35"/>
+    <circle cx="-45" cy="25" r="1" fill="#a87932" opacity="0.3"/>
+    <circle cx="48" cy="28" r="1" fill="#a87932" opacity="0.3"/>
+    <circle cx="-100" cy="15" r="1" fill="#a87932" opacity="0.3"/>
+    <circle cx="100" cy="-5" r="1" fill="#a87932" opacity="0.3"/>
+  </g>
+
+  <!-- ─── Top horizontal divider with star ─── -->
+  <line x1="90" y1="162" x2="270" y2="162" stroke="#a87932" stroke-width="0.8" opacity="0.45"/>
+  <line x1="325" y1="162" x2="505" y2="162" stroke="#a87932" stroke-width="0.8" opacity="0.45"/>
+  <use href="#star4" transform="translate(297.5, 162) scale(0.8)"/>
+
+  <!-- ─── Side decorations LEFT ─── -->
+  <g transform="translate(32, 380)" opacity="0.55">
+    <!-- vertical dot pattern top -->
+    <circle cx="0" cy="-90" r="1.5" fill="#a87932" opacity="0.5"/>
+    <circle cx="0" cy="-78" r="1.5" fill="#a87932" opacity="0.5"/>
+    <circle cx="0" cy="-66" r="1.5" fill="#a87932" opacity="0.5"/>
+    <circle cx="0" cy="-54" r="1.5" fill="#a87932" opacity="0.5"/>
+    <!-- stars -->
+    <use href="#star8" transform="translate(0,-35) scale(0.9)"/>
+    <use href="#star8" transform="translate(0,0) scale(1.1)"/>
+    <use href="#star8" transform="translate(0,38) scale(0.8)"/>
+    <!-- vertical dot pattern bottom -->
+    <circle cx="0" cy="58" r="1.5" fill="#a87932" opacity="0.5"/>
+    <circle cx="0" cy="70" r="1.5" fill="#a87932" opacity="0.5"/>
+    <circle cx="0" cy="82" r="1.5" fill="#a87932" opacity="0.5"/>
+    <circle cx="0" cy="94" r="1.5" fill="#a87932" opacity="0.5"/>
+  </g>
+
+  <!-- ─── Side decorations RIGHT ─── -->
+  <g transform="translate(563, 380)" opacity="0.55">
+    <circle cx="0" cy="-90" r="1.5" fill="#a87932" opacity="0.5"/>
+    <circle cx="0" cy="-78" r="1.5" fill="#a87932" opacity="0.5"/>
+    <circle cx="0" cy="-66" r="1.5" fill="#a87932" opacity="0.5"/>
+    <circle cx="0" cy="-54" r="1.5" fill="#a87932" opacity="0.5"/>
+    <use href="#star8" transform="translate(0,-35) scale(0.9)"/>
+    <use href="#star8" transform="translate(0,0) scale(1.1)"/>
+    <use href="#star8" transform="translate(0,38) scale(0.8)"/>
+    <circle cx="0" cy="58" r="1.5" fill="#a87932" opacity="0.5"/>
+    <circle cx="0" cy="70" r="1.5" fill="#a87932" opacity="0.5"/>
+    <circle cx="0" cy="82" r="1.5" fill="#a87932" opacity="0.5"/>
+    <circle cx="0" cy="94" r="1.5" fill="#a87932" opacity="0.5"/>
+  </g>
+
+  <!-- ─── Bottom divider + text ─── -->
+  <line x1="100" y1="808" x2="240" y2="808" stroke="#a87932" stroke-width="0.7" opacity="0.4"/>
+  <line x1="355" y1="808" x2="495" y2="808" stroke="#a87932" stroke-width="0.7" opacity="0.4"/>
+  <use href="#star4" transform="translate(297.5, 808) scale(0.7)"/>
+  <text x="297.5" y="825" text-anchor="middle" font-family="serif" font-size="11"
+        fill="#a87932" opacity="0.55" letter-spacing="2">✦ 毎日3分、心と未来を整える ✦</text>
+</svg>
