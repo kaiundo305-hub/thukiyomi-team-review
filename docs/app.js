@@ -1549,6 +1549,11 @@
 
     renderFirstConcern(root, profile);
 
+    var recipientEl = root.querySelector("[data-deep-recipient]");
+    if (recipientEl && profile.name && profile.name !== "あなた") {
+      recipientEl.textContent = profile.name + " さんへ";
+    }
+
     // @@Q@@...@@/Q@@ マーカーを日記引用ブロックに変換してinnerHTML描画
     function renderDeepSection(el, rawText) {
       if (!el || !rawText) return;

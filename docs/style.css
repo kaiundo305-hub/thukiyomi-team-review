@@ -1090,6 +1090,17 @@ a {
   letter-spacing: .05em;
 }
 
+.deep-report-recipient {
+  margin-top: 28px;
+  font-size: clamp(17px, 2.5vw, 22px);
+  font-weight: 500;
+  letter-spacing: .18em;
+  color: rgba(130, 88, 24, .85);
+  line-height: 1.6;
+  padding-left: 2px;
+}
+.deep-report-recipient:empty { display: none; }
+
 [data-deep-report] .deep-report-title-block .challenge-guide {
   border-color: rgba(168, 121, 50, .42);
   background: rgba(255, 250, 242, .74);
