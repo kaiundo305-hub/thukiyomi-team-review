@@ -992,7 +992,7 @@ a {
   flex-direction: column;
   justify-content: center;
   background-color: #f8f1e3;
-  background-image: url('images/deep_report_frame.svg');
+  background-image: url('images/deep_report_frame.jpg');
   background-size: 100% 100%;
   background-repeat: no-repeat;
   background-position: top center;
@@ -1165,7 +1165,7 @@ a {
   border: none;
   border-radius: 2px;
   background-color: #f8f1e3;
-  background-image: url('images/deep_report_frame.svg');
+  background-image: url('images/deep_report_frame.jpg');
   background-size: 100% 100%;
   background-repeat: no-repeat;
   background-position: top center;
@@ -2844,7 +2844,7 @@ a {
     border: none;
     box-shadow: none;
     background-color: #f8f1e3;
-    background-image: url('images/deep_report_frame.svg');
+    background-image: url('images/deep_report_frame.jpg');
     background-size: 100% calc(257mm - 32mm);
     background-repeat: no-repeat;
     background-position: top center;
@@ -3030,7 +3030,7 @@ a {
   border-radius: 2px;
   text-align: center;
   background-color: #f8f1e3;
-  background-image: url('images/deep_report_frame.svg');
+  background-image: url('images/deep_report_frame.jpg');
   background-size: 100% 100%;
   background-repeat: no-repeat;
   background-position: top center;
