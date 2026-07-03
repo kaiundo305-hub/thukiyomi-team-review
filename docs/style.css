@@ -2871,6 +2871,7 @@ a {
 
   [data-deep-report] .deep-report-title-block,
   [data-deep-report] .deep-report-intro-panel,
+<<<<<<< HEAD
   [data-deep-report] .deep-report-toc,
   [data-deep-report] .deep-report-panel {
     print-color-adjust: exact;
@@ -2882,6 +2883,17 @@ a {
     break-after: page;
     margin: 0;
     padding: 24px 30px;
+=======
+  [data-deep-report] .deep-report-panel {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+    min-height: auto;
+    height: auto;
+    scroll-snap-align: none;
+    break-after: page;
+    margin: 0;
+    padding: 40px 36px;
+>>>>>>> fd1890da41f17fa38a1133dda3e676e54387469b
     border-color: rgba(168, 121, 50, .45);
     box-shadow: none;
     background-color: #fdf2dc;
@@ -3215,6 +3227,7 @@ a {
   margin-top: 16px;
 }
 
+<<<<<<< HEAD
 /* ── この日記の使い方（はじめにページ） ── */
 .intro-book-wrap {
   position: relative;
@@ -3343,6 +3356,8 @@ a {
   margin: 0;
 }
 
+=======
+>>>>>>> fd1890da41f17fa38a1133dda3e676e54387469b
 /* ── 目次（CONTENTS） ── */
 [data-deep-report] .deep-report-toc {
   justify-content: center;
