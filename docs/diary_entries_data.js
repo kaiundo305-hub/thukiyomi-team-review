@@ -119,8 +119,8 @@ var DIARY_BACKUP_DATA = {
       "days": {}
   },
   "022": {
-      "name": "",
-      "shuku": "",
+      "name": "古澤真希",
+      "shuku": "軫宿",
       "wish": "",
       "days": {
           "3": {
