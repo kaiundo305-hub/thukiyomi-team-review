@@ -1423,6 +1423,25 @@
       return result;
     }
 
+    function readDiaryWithBackup(pid, identity) {
+      var localMap = readStructuredDiary(identity);
+      if (!window.DIARY_BACKUP_DATA || !pid) return localMap;
+      var n = parseInt(pid, 10);
+      var paddedPid = n ? ("000" + n).slice(-3) : pid;
+      var backupEntry = DIARY_BACKUP_DATA[pid] || DIARY_BACKUP_DATA[paddedPid] || null;
+      if (!backupEntry || !backupEntry.days) return localMap;
+      var merged = {};
+      for (var k in localMap) merged[k] = localMap[k];
+      for (var day in backupEntry.days) {
+        if (!merged[day]) {
+          var bLines = backupEntry.days[day].lines || [];
+          var converted = bLines.map(function(l) { return {text: l.a, placeholder: l.q}; });
+          if (converted.length) merged[day] = converted;
+        }
+      }
+      return merged;
+    }
+
     function findStructuredDiaryIdentity() {
       var prefix = "tsukiyomi:structuredDiary:v1:";
       var scores = {};
@@ -1586,7 +1605,8 @@
       }
       // オーバーライドモードでも日記サマリーを表示する
       var ovIdentity = params.get("participantId") || params.get("pid") || profile.participantId || profile.email || profile.birth || profile.name || "guest";
-      var ovDiaryMap = readStructuredDiary(ovIdentity);
+      var ovPid = params.get("participantId") || params.get("pid") || profile.participantId || "";
+      var ovDiaryMap = readDiaryWithBackup(ovPid, ovIdentity);
       var ovHasDiary = Object.keys(ovDiaryMap).length > 0;
       if (ovHasDiary) {
         var ovSummarySection = root.querySelector("[data-deep-diary-summary]");
@@ -1650,9 +1670,9 @@
       }
     }
 
-    // 構造化日記データを優先的に読み込む
+    // 構造化日記データを優先的に読み込む（スプレッドシートバックアップを含む）
     var structuredIdentity = detectedStructuredIdentity || pid || profile.participantId || profile.email || profile.birth || profile.name || "guest";
-    var diaryMap = readStructuredDiary(structuredIdentity);
+    var diaryMap = readDiaryWithBackup(pid, structuredIdentity);
     var hasStructured = Object.keys(diaryMap).length > 0;
 
     function renderDeepReport(diaryMapToUse) {
