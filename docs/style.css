@@ -23,6 +23,10 @@ html {
   scroll-behavior: smooth;
 }
 
+html:has([data-deep-report]) {
+  scroll-snap-type: y proximity;
+}
+
 body {
   position: relative;
   margin: 0;
@@ -312,6 +316,95 @@ a {
   line-height: 1.8;
   text-align: center;
 }
+
+.footer-brand {
+  margin: 0;
+}
+
+.footer-backup-section {
+  margin: 0 auto 20px;
+  max-width: 560px;
+  text-align: left;
+}
+
+.footer-backup-details,
+.footer-backup-staff {
+  cursor: pointer;
+}
+
+.footer-backup-summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: center;
+  font-size: 12px;
+  letter-spacing: .08em;
+  color: rgba(229, 217, 239, .55);
+  padding: 10px 0;
+  transition: color .2s;
+}
+.footer-backup-summary:hover {
+  color: rgba(229, 217, 239, .85);
+}
+.footer-backup-summary::-webkit-details-marker { display: none; }
+
+.footer-backup-body {
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(229, 217, 239, .12);
+  border-radius: 10px;
+  padding: 16px 18px;
+  margin-top: 4px;
+}
+
+.footer-backup-note {
+  font-size: 12px;
+  line-height: 1.9;
+  color: rgba(229, 217, 239, .65);
+  margin-bottom: 12px;
+}
+.footer-backup-note strong {
+  color: rgba(229, 217, 239, .85);
+  display: block;
+  margin-bottom: 4px;
+}
+.footer-backup-note p { margin: 0 0 4px; }
+
+.footer-backup-how {
+  font-size: 12px;
+  line-height: 1.9;
+  color: rgba(229, 217, 239, .6);
+  border-top: 1px solid rgba(229, 217, 239, .1);
+  padding-top: 10px;
+  margin-bottom: 10px;
+}
+.footer-backup-how p { margin: 0 0 4px; }
+.footer-backup-how strong { color: rgba(229, 217, 239, .85); }
+
+.footer-restore-status {
+  font-size: 11px;
+  min-height: 16px;
+  color: rgba(229, 217, 239, .5);
+  margin-bottom: 8px;
+}
+
+.footer-backup-staff summary {
+  list-style: none;
+  font-size: 11px;
+  color: rgba(229, 217, 239, .4);
+  cursor: pointer;
+  padding: 4px 0;
+}
+.footer-backup-staff summary::-webkit-details-marker { display: none; }
+.footer-backup-staff-body {
+  font-size: 11px;
+  line-height: 1.9;
+  color: rgba(229, 217, 239, .45);
+  margin-top: 8px;
+}
+.footer-backup-staff-body p { margin: 0 0 6px; }
+.footer-backup-staff-body ol { margin: 0 0 8px; padding-left: 18px; }
+.footer-backup-staff-body li { margin-bottom: 4px; }
 
 .challenge-shell {
   width: min(880px, calc(100% - 40px));
@@ -863,19 +956,40 @@ a {
   margin-bottom: 32px;
 }
 
+[data-deep-report] .challenge-card {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  overflow: visible;
+  border-radius: 0;
+}
+
+[data-deep-report] .challenge-body {
+  margin-top: 0;
+}
+
 [data-deep-report] .deep-report-header-img {
-  margin-bottom: 24px;
-  filter: saturate(1.04) contrast(1.03);
+  display: none;
 }
 
 [data-deep-report] .deep-report-title-block {
   grid-template-columns: minmax(0, 1fr) 128px;
   gap: 22px;
-  margin: 0 0 30px;
-  padding: clamp(26px, 5vw, 42px);
-  border: 1px solid rgba(168, 121, 50, .62);
+  min-height: 92vh;
+  min-height: 92svh;
+  scroll-snap-align: start;
+  margin: 0 0 clamp(32px, 5svh, 64px);
+  padding: clamp(48px, 8vw, 80px) clamp(32px, 7vw, 72px);
+  border: 1px solid rgba(168, 121, 50, .78);
   border-radius: 2px;
-  background:
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: #fdf2dc;
+  background-image:
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='0.055'/%3E%3C/svg%3E"),
     radial-gradient(ellipse at 0% 0%, rgba(168, 121, 50, .16) 0%, transparent 42%),
     radial-gradient(ellipse at 100% 0%, rgba(140, 100, 42, .10) 0%, transparent 38%),
@@ -884,12 +998,16 @@ a {
     linear-gradient(to right, rgba(130, 88, 24, .20) 0%, transparent 11%, transparent 89%, rgba(130, 88, 24, .20) 100%),
     linear-gradient(to bottom, rgba(130, 88, 24, .17) 0%, transparent 9%, transparent 89%, rgba(130, 88, 24, .17) 100%),
     repeating-linear-gradient(0deg, transparent, transparent 23px, rgba(168, 121, 50, .035) 24px),
-    linear-gradient(168deg, #fef9ee 0%, #fff7e3 45%, #fdf2dc 100%);
-  background-size: 240px 240px, auto, auto, auto, auto, auto, auto, auto, auto;
+    linear-gradient(168deg, rgba(254,249,238,.80) 0%, rgba(255,247,227,.75) 45%, rgba(253,242,220,.80) 100%),
+    url("images/antique_paper_bg.jpg");
+  background-size: 240px 240px, auto, auto, auto, auto, auto, auto, auto, auto, cover;
+  background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, center;
+  background-repeat: repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat;
   color: var(--paperInk);
   box-shadow:
-    0 24px 56px rgba(31, 18, 8, .22),
-    inset 0 0 48px rgba(168, 121, 50, .06);
+    0 28px 64px rgba(31, 18, 8, .26),
+    0 0 0 3px rgba(168, 121, 50, .07),
+    inset 0 0 56px rgba(168, 121, 50, .07);
 }
 
 [data-deep-report] .deep-report-title-block::before,
@@ -1052,10 +1170,18 @@ a {
 [data-deep-report] .deep-report-panel {
   position: relative;
   overflow: hidden;
-  padding: clamp(38px, 6vw, 58px) clamp(24px, 6vw, 54px);
-  border: 1px solid rgba(168, 121, 50, .62);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 92vh;
+  min-height: 92svh;
+  scroll-snap-align: start;
+  margin-top: clamp(32px, 5svh, 64px);
+  padding: clamp(48px, 8vw, 80px) clamp(32px, 7vw, 72px);
+  border: 1px solid rgba(168, 121, 50, .78);
   border-radius: 2px;
-  background:
+  background-color: #fdf2dc;
+  background-image:
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='0.055'/%3E%3C/svg%3E"),
     radial-gradient(ellipse at 0% 0%, rgba(168, 121, 50, .16) 0%, transparent 42%),
     radial-gradient(ellipse at 100% 0%, rgba(140, 100, 42, .10) 0%, transparent 38%),
@@ -1064,12 +1190,16 @@ a {
     linear-gradient(to right, rgba(130, 88, 24, .20) 0%, transparent 11%, transparent 89%, rgba(130, 88, 24, .20) 100%),
     linear-gradient(to bottom, rgba(130, 88, 24, .17) 0%, transparent 9%, transparent 89%, rgba(130, 88, 24, .17) 100%),
     repeating-linear-gradient(0deg, transparent, transparent 23px, rgba(168, 121, 50, .035) 24px),
-    linear-gradient(168deg, #fef9ee 0%, #fff7e3 45%, #fdf2dc 100%);
-  background-size: 240px 240px, auto, auto, auto, auto, auto, auto, auto, auto;
+    linear-gradient(168deg, rgba(254, 249, 238, .80) 0%, rgba(255, 247, 227, .75) 45%, rgba(253, 242, 220, .80) 100%),
+    url("images/antique_paper_bg.jpg");
+  background-size: 240px 240px, auto, auto, auto, auto, auto, auto, auto, auto, cover;
+  background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, center;
+  background-repeat: repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat;
   color: var(--paperInk);
   box-shadow:
-    0 24px 56px rgba(31, 18, 8, .22),
-    inset 0 0 48px rgba(168, 121, 50, .06);
+    0 28px 64px rgba(31, 18, 8, .26),
+    0 0 0 3px rgba(168, 121, 50, .07),
+    inset 0 0 56px rgba(168, 121, 50, .07);
 }
 
 [data-deep-report] .deep-report-panel::before,
@@ -1080,8 +1210,8 @@ a {
 }
 
 [data-deep-report] .deep-report-panel::before {
-  inset: 16px;
-  border: 1px solid rgba(168, 121, 50, .32);
+  inset: 14px;
+  border: 1px solid rgba(168, 121, 50, .48);
 }
 
 [data-deep-report] .deep-report-panel::after {
@@ -1115,12 +1245,13 @@ a {
 }
 
 [data-deep-report] .deep-report-panel h2 {
-  margin-bottom: 20px;
+  margin-bottom: clamp(28px, 5vh, 48px);
   color: var(--paperInk);
-  font-size: clamp(24px, 4vw, 34px);
-  line-height: 1.55;
+  font-size: clamp(28px, 5vw, 40px);
+  line-height: 1.75;
   text-align: center;
-  letter-spacing: .08em;
+  letter-spacing: .18em;
+  font-weight: 500;
 }
 
 [data-deep-report] .deep-report-panel h2 br {
@@ -1132,10 +1263,10 @@ a {
 [data-deep-report] .deep-report-panel h2::after {
   content: "";
   display: block;
-  width: min(280px, 70%);
+  width: min(180px, 50%);
   height: 1px;
-  margin: 16px auto 0;
-  background: linear-gradient(90deg, transparent, rgba(168, 121, 50, .74), transparent);
+  margin: clamp(18px, 3vh, 28px) auto 0;
+  background: linear-gradient(90deg, transparent, rgba(168, 121, 50, .82), transparent);
 }
 
 [data-deep-report] .deep-report-panel p {
@@ -1149,12 +1280,16 @@ a {
 [data-deep-report] .deep-report-chapter p[data-deep-themes],
 [data-deep-report] .deep-report-chapter p[data-deep-shuku],
 [data-deep-report] .deep-report-chapter p[data-deep-next] {
-  max-width: 760px;
+  max-width: 480px;
   margin: 0 auto;
-  padding: clamp(18px, 3vw, 24px);
-  border-left: 3px solid rgba(168, 121, 50, .62);
-  background: rgba(255, 250, 242, .52);
-  box-shadow: inset 0 0 0 1px rgba(168, 121, 50, .12);
+  padding: 0;
+  border-left: none;
+  background: transparent;
+  box-shadow: none;
+  font-size: clamp(14px, 1.8vw, 16px);
+  line-height: 2.5;
+  text-align: justify;
+  letter-spacing: .06em;
 }
 
 [data-deep-report] .deep-report-guidance {
@@ -1229,9 +1364,15 @@ a {
 
 [data-deep-report] .deep-report-opening .deep-template-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
   margin-top: 26px;
+}
+
+@media (min-width: 860px) {
+  [data-deep-report] .deep-report-opening .deep-template-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
 }
 
 [data-deep-report] .deep-report-opening .deep-template-card {
@@ -1272,6 +1413,16 @@ a {
   max-width: 760px;
   margin-left: auto;
   margin-right: auto;
+}
+
+[data-deep-report] .deep-report-closing {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+[data-deep-report] .deep-report-closing::before {
+  inset: 28px;
 }
 
 [data-deep-report] .deep-report-voices .diary-voice-item {
@@ -2538,7 +2689,7 @@ a {
   }
 
   [data-deep-report] .deep-report-title-block {
-    padding: 30px 22px;
+    padding: 40px 24px;
   }
 
   [data-deep-report] .deep-report-title-block .challenge-title {
@@ -2598,6 +2749,11 @@ a {
 }
 
 @media print {
+  @page {
+    size: B5 portrait;
+    margin: 16mm 20mm;
+  }
+
   body {
     color: #2a1810;
     background: #fffaf2;
@@ -2687,8 +2843,84 @@ a {
   .save-row,
   .moon-mark,
   .guide-image,
-  .challenge-guide img {
+  .challenge-guide img,
+  .deep-report-print-btn,
+  .footer-backup-section,
+  #moon-phase-tracker-section {
     display: none;
+  }
+
+  [data-deep-report] .deep-report-toc {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  .toc-item-arrow { display: none; }
+  .toc-item { cursor: default; }
+
+  /* ── deep report 印刷専用 ── */
+  html:has([data-deep-report]) {
+    scroll-snap-type: none;
+  }
+
+  [data-deep-report] .challenge-card {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+  }
+
+  [data-deep-report] .deep-report-title-block,
+  [data-deep-report] .deep-report-intro-panel,
+  [data-deep-report] .deep-report-toc,
+  [data-deep-report] .deep-report-panel {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+    min-height: calc(257mm - 32mm);
+    height: calc(257mm - 32mm);
+    overflow: hidden;
+    scroll-snap-align: none;
+    break-after: page;
+    margin: 0;
+    padding: 24px 30px;
+    border-color: rgba(168, 121, 50, .45);
+    box-shadow: none;
+    background-color: #fdf2dc;
+    background-image:
+      radial-gradient(ellipse at 0% 0%, rgba(168,121,50,.12) 0%, transparent 42%),
+      radial-gradient(ellipse at 100% 100%, rgba(168,121,50,.10) 0%, transparent 42%),
+      linear-gradient(168deg, #fef9ee 0%, #fff7e3 45%, #fdf2dc 100%);
+    background-size: auto, auto, auto;
+  }
+
+  [data-deep-report] .deep-report-title-block {
+    display: grid;
+    grid-template-columns: minmax(0,1fr) 96px;
+    gap: 18px;
+  }
+
+  [data-deep-report] .deep-report-panel h2,
+  [data-deep-report] .deep-report-title-block .challenge-title {
+    color: rgba(60, 35, 8, .95);
+  }
+
+  [data-deep-report] .deep-report-chapter p[data-deep-current],
+  [data-deep-report] .deep-report-chapter p[data-deep-themes],
+  [data-deep-report] .deep-report-chapter p[data-deep-shuku],
+  [data-deep-report] .deep-report-chapter p[data-deep-next] {
+    color: rgba(50, 28, 6, .85);
+    line-height: 2.2;
+    max-width: none;
+  }
+
+  [data-deep-report] .deep-report-intro-item {
+    background: rgba(254, 245, 220, .8);
+    border-color: rgba(168,121,50,.3);
+    break-inside: avoid;
+  }
+
+  [data-deep-report] .deep-report-intro-title,
+  [data-deep-report] .deep-report-intro-body {
+    color: rgba(60, 35, 8, .85);
   }
 }
 
@@ -2821,57 +3053,89 @@ a {
 }
 
 [data-deep-report] .deep-report-intro-panel {
-  margin: 0 0 4px;
-  padding: 32px 20px 28px;
-  background: rgba(0, 0, 0, 0.15);
-  border-top: 1px solid rgba(200, 180, 255, 0.15);
-  border-bottom: 1px solid rgba(200, 180, 255, 0.15);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 92vh;
+  min-height: 92svh;
+  scroll-snap-align: start;
+  margin: 0 0 clamp(32px, 5svh, 64px);
+  padding: clamp(48px, 8vw, 80px) clamp(32px, 7vw, 72px);
+  border: 1px solid rgba(168, 121, 50, .78);
+  border-radius: 2px;
   text-align: center;
+  background-color: #fdf2dc;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='0.055'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse at 0% 0%, rgba(168, 121, 50, .16) 0%, transparent 42%),
+    radial-gradient(ellipse at 100% 0%, rgba(140, 100, 42, .10) 0%, transparent 38%),
+    radial-gradient(ellipse at 0% 100%, rgba(140, 100, 42, .11) 0%, transparent 40%),
+    radial-gradient(ellipse at 100% 100%, rgba(168, 121, 50, .15) 0%, transparent 42%),
+    linear-gradient(to right, rgba(130, 88, 24, .20) 0%, transparent 11%, transparent 89%, rgba(130, 88, 24, .20) 100%),
+    linear-gradient(to bottom, rgba(130, 88, 24, .17) 0%, transparent 9%, transparent 89%, rgba(130, 88, 24, .17) 100%),
+    repeating-linear-gradient(0deg, transparent, transparent 23px, rgba(168, 121, 50, .035) 24px),
+    linear-gradient(168deg, rgba(254,249,238,.80) 0%, rgba(255,247,227,.75) 45%, rgba(253,242,220,.80) 100%),
+    url("images/antique_paper_bg.jpg");
+  background-size: 240px 240px, auto, auto, auto, auto, auto, auto, auto, auto, cover;
+  background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, center;
+  background-repeat: repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat;
+  box-shadow:
+    0 28px 64px rgba(31, 18, 8, .26),
+    0 0 0 3px rgba(168, 121, 50, .07),
+    inset 0 0 56px rgba(168, 121, 50, .07);
 }
 [data-deep-report] .deep-report-intro-heading {
-  font-size: 10px;
-  letter-spacing: 0.25em;
-  color: rgba(200, 180, 255, 0.6);
-  margin: 0 0 24px;
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  color: rgba(130, 88, 24, .6);
+  margin: 0 0 clamp(24px, 4vh, 40px);
+  text-transform: uppercase;
 }
 [data-deep-report] .deep-report-intro-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  max-width: 380px;
+  gap: 20px;
+  max-width: 420px;
   margin: 0 auto;
 }
 [data-deep-report] .deep-report-intro-item {
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(200, 180, 255, 0.18);
-  border-left: 3px solid rgba(168, 121, 50, 0.7);
-  border-radius: 10px;
-  padding: 18px 20px 16px;
+  background: rgba(254, 245, 220, .6);
+  border: 1px solid rgba(168, 121, 50, .22);
+  border-left: 3px solid rgba(168, 121, 50, .7);
+  border-radius: 2px;
+  padding: 18px 22px 16px;
   text-align: left;
 }
 [data-deep-report] .deep-report-intro-label {
   font-size: 10px;
-  letter-spacing: 0.18em;
-  color: rgba(200, 180, 255, 0.5);
+  letter-spacing: 0.2em;
+  color: rgba(130, 88, 24, .55);
   margin: 0 0 6px;
 }
 [data-deep-report] .deep-report-intro-title {
-  font-size: 15px;
-  font-weight: 700;
-  color: #e8d9a0;
+  font-size: 16px;
+  font-weight: 600;
+  color: rgba(80, 45, 10, .9);
   margin: 0 0 10px;
-  letter-spacing: 0.05em;
-  line-height: 1.4;
+  letter-spacing: 0.06em;
+  line-height: 1.5;
 }
 [data-deep-report] .deep-report-intro-body {
-  font-size: 12.5px;
-  color: #e8e0ff;
-  line-height: 1.9;
+  font-size: 13px;
+  color: rgba(80, 45, 10, .75);
+  line-height: 2.0;
   margin: 0;
 }
 [data-deep-report] .deep-report-intro-body strong {
-  color: #f1d99b;
+  color: rgba(130, 75, 10, .9);
   font-weight: 700;
+}
+
+#moon-phase-tracker-section {
+  scroll-snap-align: start;
+  margin-top: clamp(32px, 5svh, 64px) !important;
 }
 
 [data-deep-report] .deep-report-epilogue {
@@ -2949,4 +3213,276 @@ a {
   color: rgba(90,60,30,0.7);
   text-align: center;
   margin-top: 16px;
+}
+
+/* ── この日記の使い方（はじめにページ） ── */
+.intro-book-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+  margin: 0 auto;
+  text-align: center;
+  /* 四隅の装飾 */
+}
+.intro-book-wrap::before,
+.intro-book-wrap::after {
+  content: "✦";
+  position: absolute;
+  font-size: 18px;
+  color: rgba(168, 121, 50, .35);
+  line-height: 1;
+  pointer-events: none;
+}
+.intro-book-wrap::before { top: -8px; left: -8px; }
+.intro-book-wrap::after  { bottom: -8px; right: -8px; }
+
+.intro-book-kicker {
+  font-size: 11px;
+  letter-spacing: .28em;
+  color: rgba(130, 88, 24, .6);
+  margin: 0 0 10px;
+}
+
+.intro-moon-mark {
+  font-size: 32px;
+  color: rgba(130, 88, 24, .55);
+  margin: 0 0 6px;
+  line-height: 1;
+}
+
+.intro-book-title {
+  font-size: clamp(22px, 5vw, 30px);
+  font-weight: 500;
+  letter-spacing: .2em;
+  color: rgba(60, 35, 8, .9);
+  margin: 0 0 8px;
+  line-height: 1.4;
+}
+
+.intro-deco-line {
+  font-size: 12px;
+  letter-spacing: .22em;
+  color: rgba(130, 88, 24, .45);
+  margin: 0 0 8px;
+}
+
+.intro-book-subtitle {
+  font-size: 13px;
+  letter-spacing: .14em;
+  color: rgba(100, 60, 15, .7);
+  margin: 0 0 0;
+}
+
+.intro-divider {
+  width: 80px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(168,121,50,.55), transparent);
+  margin: clamp(14px, 2.5vh, 22px) auto;
+}
+
+.intro-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  text-align: left;
+}
+
+.intro-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: clamp(10px, 1.8vh, 16px) 0;
+  border-bottom: 1px dotted rgba(168, 121, 50, .3);
+}
+.intro-step:last-child {
+  border-bottom: none;
+}
+
+.intro-step-num {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid rgba(168, 121, 50, .55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(130, 88, 24, .8);
+  margin-top: 2px;
+  background: rgba(254, 249, 238, .7);
+}
+
+.intro-step-body { flex: 1; }
+
+.intro-step-title {
+  font-size: clamp(13px, 2.2vw, 15px);
+  font-weight: 600;
+  color: rgba(55, 30, 6, .9);
+  letter-spacing: .05em;
+  margin: 0 0 4px;
+  line-height: 1.5;
+}
+
+.intro-step-desc {
+  font-size: 12px;
+  color: rgba(90, 55, 15, .7);
+  line-height: 1.85;
+  margin: 0;
+}
+
+.intro-book-note {
+  font-size: 12px;
+  color: rgba(90, 55, 15, .65);
+  line-height: 2;
+  letter-spacing: .03em;
+  margin: 0;
+}
+
+/* ── 目次（CONTENTS） ── */
+[data-deep-report] .deep-report-toc {
+  justify-content: center;
+}
+
+.toc-label {
+  font-size: 10px;
+  letter-spacing: .38em;
+  color: rgba(130, 88, 24, .45);
+  text-align: center;
+  margin: 0 0 10px;
+}
+
+.toc-heading {
+  font-size: clamp(26px, 5vw, 38px);
+  font-weight: 400;
+  letter-spacing: .5em;
+  text-align: center;
+  color: rgba(60, 35, 8, .88);
+  margin: 0 0 clamp(20px, 4vh, 36px);
+  line-height: 1.2;
+}
+
+.toc-divider {
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(168,121,50,.6), transparent);
+  margin: 0 auto clamp(20px, 4vh, 36px);
+}
+
+.toc-list {
+  list-style: none;
+  margin: 0 auto;
+  padding: 0;
+  max-width: 440px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.toc-group-label {
+  font-size: 9px;
+  letter-spacing: .28em;
+  color: rgba(130, 88, 24, .45);
+  text-transform: uppercase;
+  padding: 14px 0 4px 4px;
+  border-bottom: 1px solid rgba(168, 121, 50, .18);
+  margin-bottom: 4px;
+}
+.toc-group-label:first-child {
+  padding-top: 0;
+}
+
+.toc-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background .18s;
+}
+.toc-item:hover {
+  background: rgba(168, 121, 50, .08);
+}
+.toc-item[style*="display:none"],
+.toc-item.toc-hidden {
+  display: none;
+}
+
+.toc-item-num {
+  flex-shrink: 0;
+  width: 20px;
+  font-size: 12px;
+  color: rgba(130, 88, 24, .65);
+  text-align: center;
+  font-weight: 500;
+}
+
+.toc-item-title {
+  font-size: 14px;
+  color: rgba(60, 35, 8, .85);
+  letter-spacing: .06em;
+  white-space: nowrap;
+  line-height: 1.4;
+}
+
+.toc-item-lead {
+  flex: 1;
+  height: 1px;
+  background-image: radial-gradient(circle, rgba(168,121,50,.4) 1px, transparent 1px);
+  background-size: 6px 1px;
+  background-repeat: repeat-x;
+  background-position: center;
+  min-width: 12px;
+}
+
+.toc-item-arrow {
+  flex-shrink: 0;
+  font-size: 13px;
+  color: rgba(130, 88, 24, .5);
+  transition: transform .18s, color .18s;
+}
+.toc-item:hover .toc-item-arrow {
+  color: rgba(130, 88, 24, .85);
+  transform: translateX(3px);
+}
+
+/* ── 印刷・PDFダウンロードボタン ── */
+.deep-report-print-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 20px;
+  z-index: 9999;
+  display: none;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background-color: #fdf2dc;
+  background-image:
+    linear-gradient(168deg, rgba(254,249,238,.95) 0%, rgba(253,242,220,.95) 100%);
+  border: 1px solid rgba(168, 121, 50, .65);
+  border-radius: 40px;
+  color: rgba(100, 60, 10, .9);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(31,18,8,.18), 0 0 0 1px rgba(168,121,50,.12);
+  transition: box-shadow .2s, transform .15s;
+}
+.deep-report-print-btn:hover {
+  box-shadow: 0 6px 28px rgba(31,18,8,.24), 0 0 0 2px rgba(168,121,50,.22);
+  transform: translateY(-1px);
+}
+.deep-report-print-btn svg {
+  flex-shrink: 0;
+  color: rgba(130, 80, 15, .8);
+}
+[data-deep-report] .deep-report-print-btn {
+  display: flex;
 }

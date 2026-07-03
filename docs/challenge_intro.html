@@ -74,7 +74,7 @@
   <main class="manual-shell">
     <section class="diary-book-page diary-cover-page" aria-label="月読み日記 書き込みワークBOOK 表紙">
       <figure class="diary-cover-image">
-        <img src="moon_diary_cover.png" alt="月読み日記 書き込みワークBOOK 感謝の習慣が、未来の光を呼び覚ます">
+        <img src="images/moon_diary_cover.png" alt="月読み日記 書き込みワークBOOK 感謝の習慣が、未来の光を呼び覚ます">
       </figure>
       <p class="diary-cover-note">
         月の流れと日常アイテムに向き合い、心の本音をひらきながら、
@@ -84,7 +84,7 @@
 
     <section class="diary-book-page diary-intro-image-page" aria-label="月読み日記 はじめに">
       <figure class="diary-book-image" aria-label="月読み日記 はじめに">
-        <img src="moon_diary_hajimeni.png" alt="月読み日記 はじめに 月を読み、私をひらく。">
+        <img src="images/moon_diary_hajimeni.png" alt="月読み日記 はじめに 月を読み、私をひらく。">
       </figure>
     </section>
 
@@ -196,7 +196,7 @@
       var params = new URLSearchParams(window.location.search);
       var name = params.get('name') || 'あなた';
       var birth = params.get('birth') || '';
-      var participantId = params.get('participantId') || '';
+      var participantId = params.get('participantId') || params.get('pid') || '';
       var shuku = params.get('shuku') || '';
       var identity = participantId || birth || name;
       var key = 'tsukiyomi:introReflection:v1:' + identity;

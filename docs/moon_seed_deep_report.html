@@ -5,37 +5,189 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>月読み日記｜第2の鑑定書 | 月読みワンダーランド</title>
   <meta name="description" content="7日間の月読み日記に残した言葉、写メ、感謝、次の一歩をもとに、おかげさまの流れを読み解く第2の鑑定書です。">
-  <link rel="stylesheet" href="style.css?v=20260701b">
-  <style>
-    /* ── completion-panel章（アンティーク背景）: 暗い茶系 ── */
-    [data-deep-report] .deep-report-panel h2 { color: #a87932 !important; }
-    [data-deep-report] .deep-report-panel h2 small { color: #7a5800 !important; }
-    [data-deep-report] .completion-panel h2 { color: #a87932 !important; }
-    [data-deep-report] .challenge-body p,
-    [data-deep-report] .challenge-body li { color: #3d3328 !important; }
-    .deep-guidance-text { color: #3d3328 !important; }
-    .completion-panel p { color: #3d3328 !important; }
-    /* ── deep-report-opening（4つのしるし冒頭・暗紺背景）: 明るい色で上書き ── */
-    [data-deep-report] .deep-report-opening h2 { color: #fff7e3 !important; }
-    [data-deep-report] .deep-report-opening p,
-    [data-deep-report] .deep-report-opening .deep-guidance-text { color: rgba(246,235,213,.92) !important; }
-    /* ── deep-report-intro-panel（「この月読み日記でわかること」・紫背景）: 明るい色 ── */
-    .deep-report-intro-body { color: #fffaf2 !important; }
-    .deep-report-intro-body strong { color: #f1d99b !important; }
-    .deep-report-intro-label { color: rgba(210,185,255,0.85) !important; }
-    .deep-report-intro-title { color: #f1e4a0 !important; }
-    /* ── epilogue（暗い背景）: 明るい色 ── */
-    .deep-report-epilogue-text { color: #fffaf2 !important; }
-    .deep-report-epilogue-text strong { color: #f1d99b !important; }
-  </style>
+  <link rel="stylesheet" href="style.css?v=20260703g">
 </head>
 <body>
   <main class="challenge-shell" data-deep-report>
+    <button class="deep-report-print-btn" onclick="window.print()" aria-label="印刷またはPDF保存">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      <span>印刷・PDF保存</span>
+    </button>
     <article class="challenge-card">
       <img src="images/deep_report_header.png" alt="第2の鑑定書" class="deep-report-header-img" onerror="this.style.display='none'">
       <div class="moon-mark" aria-hidden="true"></div>
-      <section class="completion-panel deep-report-panel deep-report-opening" data-seal="四つのしるし">
-        <h2 data-seal="四つのしるし">月読み日記にあらわれた<br>4つのしるし</h2>
+
+      <!-- ① 表紙（最初のページ） -->
+      <header class="challenge-header deep-report-title-block">
+        <div>
+          <p class="day-label">SECOND READING</p>
+          <h1 class="challenge-title deep-report-title">
+            <span>月読み日記</span>
+            <small>第2の鑑定書</small>
+          </h1>
+          <span class="challenge-theme">7日間の記録に宿った、月のしるしと次章への導き</span>
+          <p class="catch-heading">天命に生きるための鑑定書です。</p>
+        </div>
+        <aside class="challenge-guide" aria-label="月の案内人 にゃんてん">
+          <img src="images/neko-tenshi.png" alt="月の案内人 にゃんてん" onerror="this.onerror=null;this.src='neko-tenshi.png';">
+          <p>ここまで歩いたあなたへ。日記に残した小さなしるしを、月の導きとして一緒に見つめます。</p>
+        </aside>
+      </header>
+
+      <section class="deep-report-intro-panel" id="sec-intro">
+        <div class="intro-book-wrap">
+          <p class="intro-book-kicker">— ＊ — 月読み日記 — ＊ —</p>
+          <p class="intro-moon-mark" aria-hidden="true">☾</p>
+          <h2 class="intro-book-title">この日記の使い方</h2>
+          <p class="intro-deco-line" aria-hidden="true">— ＊ —</p>
+          <p class="intro-book-subtitle">1日3分、月の種を育てる</p>
+          <div class="intro-divider" aria-hidden="true"></div>
+
+          <ol class="intro-steps">
+            <li class="intro-step">
+              <span class="intro-step-num" aria-hidden="true">1</span>
+              <div class="intro-step-body">
+                <h3 class="intro-step-title">今日の月のテーマを読む</h3>
+                <p class="intro-step-desc">今の月が照らしているテーマを、やさしく受け取ります。</p>
+              </div>
+            </li>
+            <li class="intro-step">
+              <span class="intro-step-num" aria-hidden="true">2</span>
+              <div class="intro-step-body">
+                <h3 class="intro-step-title">今日の整えアイテムを見つめる</h3>
+                <p class="intro-step-desc">身近なモノに宿る働きや、支えてくれている力に気づきます。</p>
+              </div>
+            </li>
+            <li class="intro-step">
+              <span class="intro-step-num" aria-hidden="true">3</span>
+              <div class="intro-step-body">
+                <h3 class="intro-step-title">心の本音を一文で書く</h3>
+                <p class="intro-step-desc">うまくまとめなくて大丈夫です。今の自分の声をそのまま残します。</p>
+              </div>
+            </li>
+            <li class="intro-step">
+              <span class="intro-step-num" aria-hidden="true">4</span>
+              <div class="intro-step-body">
+                <h3 class="intro-step-title">明日の私へ小さな一歩を渡す</h3>
+                <p class="intro-step-desc">今日の気づきを、明日の行動へ静かにつなげます。</p>
+              </div>
+            </li>
+          </ol>
+
+          <div class="intro-divider" aria-hidden="true"></div>
+          <p class="intro-book-note">
+            リアルタイム参加が一番楽しいですが、1日遅れても、2日遅れても大丈夫です。<br>
+            完璧に続けることより、<br>戻ってこられる場所があることを大切にしてください。
+          </p>
+        </div>
+      </section>
+
+      <!-- 目次ページ -->
+      <nav class="completion-panel deep-report-panel deep-report-toc" id="sec-toc" aria-label="目次">
+        <p class="toc-label">CONTENTS</p>
+        <h2 class="toc-heading">目　次</h2>
+        <div class="toc-divider"></div>
+        <ol class="toc-list">
+          <li class="toc-group-label">序　章</li>
+          <li class="toc-item" data-toc-target="sec-intro">
+            <span class="toc-item-title">この日記の使い方</span>
+            <span class="toc-item-lead"></span>
+            <span class="toc-item-arrow">→</span>
+          </li>
+          <li class="toc-item" data-toc-target="sec-opening">
+            <span class="toc-item-title">4つのしるし</span>
+            <span class="toc-item-lead"></span>
+            <span class="toc-item-arrow">→</span>
+          </li>
+
+          <li class="toc-group-label" data-toc-group="diary">あなたの7日間</li>
+          <li class="toc-item" data-toc-target="sec-first-concern" data-toc-hidden>
+            <span class="toc-item-title">はじまりの旅</span>
+            <span class="toc-item-lead"></span>
+            <span class="toc-item-arrow">→</span>
+          </li>
+          <li class="toc-item" data-toc-target="sec-template">
+            <span class="toc-item-title">4つのキーワード</span>
+            <span class="toc-item-lead"></span>
+            <span class="toc-item-arrow">→</span>
+          </li>
+          <li class="toc-item" data-toc-target="sec-diary-summary" data-toc-hidden>
+            <span class="toc-item-num">☽</span>
+            <span class="toc-item-title">7日間の記録</span>
+            <span class="toc-item-lead"></span>
+            <span class="toc-item-arrow">→</span>
+          </li>
+
+          <li class="toc-group-label">読み解き</li>
+          <li class="toc-item" data-toc-target="sec-ch1">
+            <span class="toc-item-num">一</span>
+            <span class="toc-item-title">今のあなたへ</span>
+            <span class="toc-item-lead"></span>
+            <span class="toc-item-arrow">→</span>
+          </li>
+          <li class="toc-item" data-toc-target="sec-ch2">
+            <span class="toc-item-num">二</span>
+            <span class="toc-item-title">育ち始めた願い</span>
+            <span class="toc-item-lead"></span>
+            <span class="toc-item-arrow">→</span>
+          </li>
+          <li class="toc-item" data-toc-target="sec-ch3">
+            <span class="toc-item-num">三</span>
+            <span class="toc-item-title">あなたの土台資質</span>
+            <span class="toc-item-lead"></span>
+            <span class="toc-item-arrow">→</span>
+          </li>
+          <li class="toc-item" data-toc-target="sec-ch4">
+            <span class="toc-item-num">四</span>
+            <span class="toc-item-title">次の一歩へ</span>
+            <span class="toc-item-lead"></span>
+            <span class="toc-item-arrow">→</span>
+          </li>
+
+          <li class="toc-group-label">終章</li>
+          <li class="toc-item" data-toc-target="sec-voices" data-toc-hidden>
+            <span class="toc-item-title">あなた自身の言葉</span>
+            <span class="toc-item-lead"></span>
+            <span class="toc-item-arrow">→</span>
+          </li>
+          <li class="toc-item" data-toc-target="sec-gained">
+            <span class="toc-item-title">育んだもの</span>
+            <span class="toc-item-lead"></span>
+            <span class="toc-item-arrow">→</span>
+          </li>
+          <li class="toc-item" data-toc-target="sec-wish">
+            <span class="toc-item-title">届けたいもの</span>
+            <span class="toc-item-lead"></span>
+            <span class="toc-item-arrow">→</span>
+          </li>
+
+          <li class="toc-group-label">月のガイド</li>
+          <li class="toc-item" data-toc-target="deep-ai-analysis-section" data-toc-hidden>
+            <span class="toc-item-title">新月からのメッセージ</span>
+            <span class="toc-item-lead"></span>
+            <span class="toc-item-arrow">→</span>
+          </li>
+          <li class="toc-item" data-toc-target="moon-cycle-section">
+            <span class="toc-item-title">月のサイクル</span>
+            <span class="toc-item-lead"></span>
+            <span class="toc-item-arrow">→</span>
+          </li>
+          <li class="toc-item" data-toc-target="sec-moon-journey1">
+            <span class="toc-item-title">新月から満月への旅</span>
+            <span class="toc-item-lead"></span>
+            <span class="toc-item-arrow">→</span>
+          </li>
+          <li class="toc-item" data-toc-target="sec-moon-journey2">
+            <span class="toc-item-title">満月から次の新月まで</span>
+            <span class="toc-item-lead"></span>
+            <span class="toc-item-arrow">→</span>
+          </li>
+        </ol>
+      </nav>
+
+      <!-- ④ 4つのしるし（プロローグ） -->
+      <section class="completion-panel deep-report-panel deep-report-opening" id="sec-opening" data-seal="四つのしるし">
+        <h2 data-seal="四つのしるし">4つのしるし</h2>
         <p class="deep-guidance-text">
           この鑑定書では、7日間の日記を「PHOTO 写メに残したもの」「WORDS 何度も出てきた言葉」「THANKS 感謝できたこと」「NEXT 次に進みたい一歩」の4つから読み解きます。
         </p>
@@ -70,46 +222,10 @@
           </div>
         </div>
       </section>
-      <header class="challenge-header deep-report-title-block">
-        <div>
-          <p class="day-label">SECOND READING</p>
-          <h1 class="challenge-title deep-report-title">
-            <span>月読み日記</span>
-            <small>第2の鑑定書</small>
-          </h1>
-          <span class="challenge-theme">7日間の記録に宿った、月のしるしと次章への導き</span>
-          <p class="catch-heading">天命に生きるための鑑定書です。</p>
-        </div>
-        <aside class="challenge-guide" aria-label="月の案内人 にゃんてん">
-          <img src="images/neko-tenshi.png" alt="月の案内人 にゃんてん" onerror="this.onerror=null;this.src='neko-tenshi.png';">
-          <p>ここまで歩いたあなたへ。日記に残した小さなしるしを、月の導きとして一緒に見つめます。</p>
-        </aside>
-      </header>
-
-      <section class="deep-report-intro-panel">
-        <p class="deep-report-intro-heading">この月読み日記でわかること</p>
-        <div class="deep-report-intro-list">
-          <div class="deep-report-intro-item">
-            <p class="deep-report-intro-label">ひとつは</p>
-            <h3 class="deep-report-intro-title">宿命への気づき</h3>
-            <p class="deep-report-intro-body">あなたの<strong>生まれ持つ宿の力</strong>と、今の日常との<strong>ギャップ</strong>が少しずつ見えてきました。そのギャップに気づくことが、<strong>本来の自分を取り戻す</strong>最初の一歩になります。</p>
-          </div>
-          <div class="deep-report-intro-item">
-            <p class="deep-report-intro-label">ふたつめは</p>
-            <h3 class="deep-report-intro-title">おかげさまに気づく感謝の芽</h3>
-            <p class="deep-report-intro-body">日々の小さな出来事の中に<strong>「ありがとう」を見つける視点</strong>が育つと、<strong>運気の流れ</strong>はやさしく整っていきます。</p>
-          </div>
-          <div class="deep-report-intro-item">
-            <p class="deep-report-intro-label">みっつめは</p>
-            <h3 class="deep-report-intro-title">客観視する力</h3>
-            <p class="deep-report-intro-body">自分の言葉を日記に置くことで、<strong>感情の流れを少し外から見られる</strong>ようになります。それが<strong>「ぶれない自分」への道</strong>です。</p>
-          </div>
-        </div>
-      </section>
 
       <section class="challenge-body" aria-labelledby="deep-title">
-        <section class="completion-panel deep-report-panel deep-first-concern" data-deep-first-concern style="display:none">
-          <h2 data-seal="旅の出発点">第一の鑑定書から<br>はじまった旅</h2>
+        <section class="completion-panel deep-report-panel deep-first-concern" id="sec-first-concern" data-deep-first-concern style="display:none">
+          <h2 data-seal="旅の出発点">はじまりの旅</h2>
           <p class="deep-guidance-text">7日間の日記を始める前、あなたはこんな想いを抱えていました。</p>
           <div class="deep-first-concern-box">
             <span class="deep-first-concern-label" data-concern-category></span>
@@ -120,42 +236,42 @@
         <div class="moon-question" id="deep-title">
           7日間で綴った言葉、写メ、感謝、次の一歩には、あなたを支えてきた「おかげさま」の流れが静かに映し出されています。
         </div>
-        <section class="completion-panel deep-report-panel deep-report-template" data-deep-template-section data-seal="4つのキーワード">
-          <h2 data-seal="4つのキーワード">日記から浮かびあがった<br>4つのキーワード</h2>
+        <section class="completion-panel deep-report-panel deep-report-template" id="sec-template" data-deep-template-section data-seal="4つのキーワード">
+          <h2 data-seal="4つのキーワード">4つのキーワード</h2>
           <div data-deep-template>
             <p class="deep-guidance-text">新月の願いと7日間の記録がそろうと、ここにキーワードが表示されます。</p>
           </div>
         </section>
-        <section class="completion-panel deep-report-panel deep-report-summary" data-deep-diary-summary data-seal="記録" style="display:none">
+        <section class="completion-panel deep-report-panel deep-report-summary" id="sec-diary-summary" data-deep-diary-summary data-seal="記録" style="display:none">
           <h2 data-seal="記録">7日間チャレンジテーマ<br><span style="font-size:0.85em;font-weight:normal;">あなたは、それぞれの質問に、こう書きました。</span></h2>
           <div data-deep-diary-days></div>
         </section>
-        <section class="completion-panel deep-report-panel deep-report-chapter" data-seal="第一章">
-          <h2 data-seal="第一章">月読み日記から<br>見えた、今のあなた</h2>
+        <section class="completion-panel deep-report-panel deep-report-chapter" id="sec-ch1" data-seal="第一章">
+          <h2 data-seal="第一章">今のあなたへ</h2>
           <p data-deep-current>記録を読み込み中です。</p>
         </section>
-        <section class="completion-panel deep-report-panel deep-report-chapter" data-seal="第二章">
-          <h2 data-seal="第二章">4つのしるしが告げる<br>育ち始めた願い</h2>
+        <section class="completion-panel deep-report-panel deep-report-chapter" id="sec-ch2" data-seal="第二章">
+          <h2 data-seal="第二章">育ち始めた願い</h2>
           <p data-deep-themes>記録を読み込み中です。</p>
         </section>
-        <section class="completion-panel deep-report-panel deep-report-chapter" data-seal="第三章">
-          <h2 data-seal="第三章">宿曜から授かった<br>あなたの土台資質</h2>
+        <section class="completion-panel deep-report-panel deep-report-chapter" id="sec-ch3" data-seal="第三章">
+          <h2 data-seal="第三章">あなたの土台資質</h2>
           <p data-deep-shuku>宿曜情報を読み込み中です。</p>
         </section>
-        <section class="completion-panel deep-report-panel deep-report-chapter" data-seal="第四章">
-          <h2 data-seal="第四章">おかげさまと<br>共に進む、次の一歩</h2>
+        <section class="completion-panel deep-report-panel deep-report-chapter" id="sec-ch4" data-seal="第四章">
+          <h2 data-seal="第四章">次の一歩へ</h2>
           <p data-deep-next>記録を読み込み中です。</p>
         </section>
-        <section class="completion-panel deep-report-panel" style="display:none">
+        <section class="completion-panel deep-report-panel" id="sec-kanon" style="display:none">
           <h2>💙 かのんより</h2>
           <p data-deep-kanon></p>
         </section>
-        <section class="completion-panel deep-report-panel deep-report-voices" data-deep-voices-section data-seal="本人の言葉" style="display:none">
+        <section class="completion-panel deep-report-panel deep-report-voices" id="sec-voices" data-deep-voices-section data-seal="本人の言葉" style="display:none">
           <h2 data-seal="本人の言葉">月読み日記に残された、あなた自身の言葉</h2>
           <div data-deep-voices></div>
         </section>
-        <section class="completion-panel deep-report-panel deep-report-closing" data-seal="育んだもの">
-          <h2 data-seal="育んだもの">この7日間で<br>育んだもの</h2>
+        <section class="completion-panel deep-report-panel deep-report-closing" id="sec-gained" data-seal="育んだもの">
+          <h2 data-seal="育んだもの">育んだもの</h2>
           <p class="deep-guidance-text">
             7日間、よく歩きました。月読み日記を続けることで、あなたの中には3つの恵みが静かに育っています。
           </p>
@@ -172,8 +288,8 @@
             みっつめは、客観視する力です。自分の言葉を日記に置くことで、感情の流れを少し外から見られるようになります。それが「ぶれない自分」への道です。
           </p>
         </section>
-        <section class="completion-panel deep-report-panel deep-report-closing" data-seal="月読みの願い">
-          <h2 data-seal="月読みの願い">月読みワンダーランドが届けたいもの</h2>
+        <section class="completion-panel deep-report-panel deep-report-closing" id="sec-wish" data-seal="月読みの願い">
+          <h2 data-seal="月読みの願い">届けたいもの</h2>
           <p class="deep-guidance-text">
             月読みワンダーランドが届けたいのは、宿命を知り、天命に近づきながら、感謝が自然に育つ毎日です。
           </p>
@@ -185,13 +301,13 @@
 
       <!-- AI深層分析セクション -->
       <section class="completion-panel deep-report-panel deep-report-chapter" id="deep-ai-analysis-section" style="display:none">
-        <h2 data-seal="AIによる分析">ふたご座新月から届くメッセージ<br><span style="font-size:0.8em;font-weight:normal;">＆ あなたの信念と観念</span></h2>
+        <h2 data-seal="AIによる分析">新月からのメッセージ</h2>
         <div id="deep-ai-analysis-content"></div>
       </section>
 
       <!-- 月の満ち欠け4フェーズ記録 -->
       <section class="completion-panel deep-report-panel deep-report-closing" data-seal="月のサイクル" id="moon-cycle-section">
-        <h2 data-seal="月のサイクル">月のサイクルで<br>育てていくこと</h2>
+        <h2 data-seal="月のサイクル">月のサイクル</h2>
         <p class="deep-guidance-text">新月から始まり、上弦・満月・下弦を経てまた新月へ。7日ずつ、月と一緒に願いを育てていきましょう。気づいたこと、行動したこと、受け取ったことを書き残してください。</p>
 
         <div style="display:grid;gap:16px;margin-top:20px;">
@@ -245,7 +361,7 @@
       </section>
 
       <!-- ふたご座新月から山羊座満月への旅（振り返り） -->
-      <section class="completion-panel deep-report-panel deep-report-closing" data-seal="新月から満月への旅">
+      <section class="completion-panel deep-report-panel deep-report-closing" id="sec-moon-journey1" data-seal="新月から満月への旅">
         <h2 data-seal="新月から満月への旅">ふたご座新月から<br>山羊座満月への旅</h2>
         <p class="deep-guidance-text" style="color:#3d3328;">ふたご座の新月に「言葉・好奇心・つながり」の種を蒔いて始まったこの7日間。昨日の山羊座の満月で、その旅は一つの頂きへとたどり着きました。何が芽生え、何が明らかになったかを、今ここで振り返りましょう。</p>
 
@@ -300,7 +416,7 @@
       </section>
 
       <!-- 山羊座満月から次の新月まで（行動アドバイス） -->
-      <section class="completion-panel deep-report-panel deep-report-closing" data-seal="満月から次の新月へ">
+      <section class="completion-panel deep-report-panel deep-report-closing" id="sec-moon-journey2" data-seal="満月から次の新月へ">
         <h2 data-seal="満月から次の新月へ">山羊座満月から<br>次の新月まで</h2>
         <p class="deep-guidance-text" style="color:#3d3328;">昨日の山羊座満月をピークに、月はこれから光を手放しながら下弦の月、そして次の新月へと向かいます。このフェーズは「整理・完結・準備」のとき。山羊座のエネルギーを借りて、着実に次のサイクルへの土台を築いていきましょう。</p>
 
@@ -349,42 +465,6 @@
         </div>
       </section>
 
-      <!-- データバックアップ・復元 -->
-      <section class="completion-panel deep-report-panel deep-report-closing" id="data-backup-section" style="border-top:1px solid rgba(90,62,40,0.06);margin-top:8px;padding-top:4px;">
-        <details style="cursor:pointer;">
-          <summary style="list-style:none;font-size:11px;color:rgba(90,62,40,0.35);letter-spacing:0.1em;text-align:center;padding:8px 0;user-select:none;">▸ 日記データのバックアップ・復元</summary>
-
-          <div style="padding-top:12px;">
-            <div style="background:rgba(168,121,50,0.05);border-radius:10px;padding:16px;margin-bottom:16px;font-size:13px;line-height:2;color:#5a3e28;">
-              <p style="margin:0 0 8px;"><strong style="color:#3d3328;">なぜバックアップが必要？</strong></p>
-              <p style="margin:0 0 4px;">月読み日記の記録はこのブラウザ（Chrome・Safariなど）の中に保存されています。</p>
-              <p style="margin:0 0 4px;">ブラウザの「履歴を消去」や「キャッシュ削除」を行うと、日記データが消えてしまう場合があります。</p>
-              <p style="margin:0;">また、別のパソコンやスマートフォンでは同じデータが見えません。</p>
-            </div>
-
-            <div style="background:rgba(168,121,50,0.06);border:1px solid rgba(168,121,50,0.15);border-radius:10px;padding:14px;margin-bottom:16px;font-size:12px;color:rgba(90,62,40,0.65);line-height:1.9;">
-              <p style="margin:0 0 4px;">📥 <strong style="color:#a5b4fc;">書き出し</strong>：日記データをJSONファイルでダウンロード。大切な場所に保存しておいてください。</p>
-              <p style="margin:0 0 4px;">📤 <strong style="color:#6ee7b7;">復元</strong>：以前ダウンロードしたJSONを読み込んでデータを元に戻します。</p>
-              <p style="margin:0;color:rgba(90,62,40,0.45);">↓ 画面下のナビゲーションバーから操作できます。</p>
-            </div>
-            <div id="restore-status" style="font-size:12px;min-height:18px;"></div>
-
-            <details style="font-size:12px;color:rgba(90,62,40,0.5);cursor:pointer;">
-              <summary style="margin-bottom:8px;color:rgba(90,62,40,0.6);">💡 運営の方へ：お客様からデータ復元の相談があったとき</summary>
-              <div style="background:rgba(168,121,50,0.05);border-radius:8px;padding:14px;line-height:2;margin-top:8px;">
-                <p style="margin:0 0 6px;color:rgba(90,62,40,0.8);">【お客様への案内手順】</p>
-                <ol style="margin:0;padding-left:20px;color:rgba(90,62,40,0.65);">
-                  <li>「以前のブラウザ・端末にバックアップファイル（.json）が残っていますか？」と確認する</li>
-                  <li>残っている場合 → 上の「バックアップファイルを選んで復元」から読み込んでもらう</li>
-                  <li>バックアップがない場合 → スプレッドシートのデータからCSVで復元可能（かのんへ連絡）</li>
-                  <li>スプレッドシートにもない場合 → 日記の再入力をご案内（申し訳ないですがご本人に再記入いただく）</li>
-                </ol>
-                <p style="margin:8px 0 0;color:rgba(90,62,40,0.5);">※ localStorageはブラウザごとに独立しているため、別ブラウザ・別端末への「移行」はJSONファイルの書き出し→読み込みで対応できます。</p>
-              </div>
-            </details>
-          </div>
-        </details>
-      </section>
 
       <div style="text-align:center;margin:8px 0 4px;">
         <button onclick="refreshDeepReport()" style="
@@ -394,13 +474,64 @@
         ">🔄 日記を追記したら — 鑑定書を今すぐ更新</button>
         <p id="refresh-status" style="font-size:11px;color:rgba(90,62,40,0.5);margin-top:4px;min-height:16px;"></p>
       </div>
+      <!-- 月相トラッカー（ページ最後：全部埋めたくなる仕掛け） -->
+      <section id="moon-phase-tracker-section" style="
+        position:relative;overflow:hidden;margin-top:24px;
+        padding:clamp(36px,6vw,56px) clamp(20px,5vw,48px);
+        border:1px solid rgba(241,217,155,.28);border-radius:20px;
+        background:
+          radial-gradient(ellipse at 20% 0%,rgba(80,55,20,.55),transparent 42%),
+          radial-gradient(ellipse at 80% 100%,rgba(60,40,15,.4),transparent 42%),
+          radial-gradient(circle at 55% 50%,rgba(241,217,155,.04),transparent 60%),
+          linear-gradient(160deg,#0e1838 0%,#1a1040 60%,#0a0c20 100%);
+        box-shadow:0 28px 72px rgba(2,6,29,.55);
+      ">
+        <div style="position:relative;z-index:1;text-align:center;margin-bottom:28px;">
+          <p style="margin:0 0 10px;font-size:11px;color:rgba(241,217,155,.55);letter-spacing:.26em;">MOON PHASE TRACKER</p>
+          <h2 style="margin:0;font-size:clamp(26px,5vw,36px);color:#fff7e3;line-height:1.45;letter-spacing:.06em;font-weight:500;">
+            月のフェーズ<br>
+            <small style="font-size:.6em;color:rgba(241,217,155,.75);letter-spacing:.12em;">48のしるし</small>
+          </h2>
+          <p style="margin:14px auto 0;max-width:500px;color:rgba(246,235,213,.7);font-size:14px;line-height:2;">
+            月と共に歩んだすべての記録。<br>ひとつひとつのしるしが、あなたの月の旅を証明します。
+          </p>
+          <div style="margin:22px auto 0;max-width:360px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+              <span style="font-size:11px;color:rgba(241,217,155,.5);letter-spacing:.12em;">PROGRESS</span>
+              <span id="tracker-progress-text" style="font-size:13px;color:#f1d99b;font-weight:600;letter-spacing:.05em;">0 / 48</span>
+            </div>
+            <div style="width:100%;height:5px;background:rgba(241,217,155,.1);border-radius:999px;overflow:hidden;">
+              <div id="tracker-progress-bar" style="height:5px;width:0%;background:linear-gradient(90deg,rgba(241,217,155,.45),#f1d99b);border-radius:999px;transition:width .45s ease;"></div>
+            </div>
+          </div>
+        </div>
+        <div style="position:relative;z-index:1;overflow-x:auto;">
+          <table id="phase-tracker-table" style="width:100%;border-collapse:collapse;min-width:260px;">
+            <thead>
+              <tr>
+                <th style="padding:8px 10px;font-size:11px;color:rgba(241,217,155,.45);letter-spacing:.08em;font-weight:500;text-align:left;border-bottom:1px solid rgba(241,217,155,.14);">月</th>
+                <th style="padding:8px 6px;font-size:18px;text-align:center;border-bottom:1px solid rgba(241,217,155,.14);">🌑</th>
+                <th style="padding:8px 6px;font-size:18px;text-align:center;border-bottom:1px solid rgba(241,217,155,.14);">🌓</th>
+                <th style="padding:8px 6px;font-size:18px;text-align:center;border-bottom:1px solid rgba(241,217,155,.14);">🌕</th>
+                <th style="padding:8px 6px;font-size:18px;text-align:center;border-bottom:1px solid rgba(241,217,155,.14);">🌗</th>
+              </tr>
+            </thead>
+            <tbody id="phase-tracker-tbody"></tbody>
+          </table>
+        </div>
+        <p id="tracker-complete-msg" style="display:none;text-align:center;margin:28px 0 0;color:#f1d99b;font-size:16px;line-height:2;letter-spacing:.04em;">
+          ✦ 48のしるし、すべて刻まれました ✦<br>
+          <span style="font-size:13px;color:rgba(241,217,155,.7);">月と共に歩んだ1年間の記録が、ここに完成しました。</span>
+        </p>
+      </section>
+
       <section class="deep-report-epilogue">
         <p class="deep-report-epilogue-text">あなたの物語は、ここで終わりではありません。</p>
         <p class="deep-report-epilogue-text">次の7日間には、今回見つけた<strong>「自分の歩幅」</strong>を現実へ育てる月の流れが待っています。</p>
         <p class="deep-report-epilogue-text">次のフェーズの扉をひらきましょう。</p>
       </section>
       <section data-no-diary-cta style="display:none;text-align:center;padding:8px 20px 20px;">
-        <p style="font-size:13px;color:#5a3e28;line-height:2;margin:0 0 16px;">日記を書けなかった日があっても大丈夫です。<br>月は、いつからでもあなたと歩き始めます。</p>
+        <p style="font-size:13px;color:#f1d99b;line-height:2;margin:0 0 16px;">日記を書けなかった日があっても大丈夫です。<br>月は、いつからでもあなたと歩き始めます。</p>
         <a class="moon-button" href="moon_diary_book.html" data-keep-query>今日から月読み日記を始める</a>
       </section>
       <nav class="challenge-nav" aria-label="移動">
@@ -461,8 +592,36 @@
     <div style="height:calc(64px + env(safe-area-inset-bottom,0))"></div>
 
     <footer class="gate-footer">
-      Shukuyo Astrology / 月読みワンダーランド<br>
-      みずきかのん　月読み師
+      <div class="footer-backup-section">
+        <details class="footer-backup-details">
+          <summary class="footer-backup-summary">📥 日記データのバックアップ・復元</summary>
+          <div class="footer-backup-body">
+            <div class="footer-backup-note">
+              <p><strong>なぜバックアップが必要？</strong></p>
+              <p>日記の記録はお使いのブラウザ（Chrome・Safariなど）の中に保存されています。「履歴を消去」や「キャッシュ削除」を行うとデータが消えることがあります。また、別の端末では同じデータは見えません。</p>
+            </div>
+            <div class="footer-backup-how">
+              <p>📥 <strong>バックアップ（書き出し）</strong>：画面下のナビ「書き出し」をタップ → JSONファイルをダウンロードして大切な場所に保存してください。</p>
+              <p>📤 <strong>復元</strong>：ナビ「復元」をタップ → 保存したJSONファイルを選んで読み込みます。</p>
+            </div>
+            <div id="restore-status" class="footer-restore-status"></div>
+            <details class="footer-backup-staff">
+              <summary>💡 運営の方へ：お客様からデータ復元の相談があったとき</summary>
+              <div class="footer-backup-staff-body">
+                <p>【お客様への案内手順】</p>
+                <ol>
+                  <li>「以前のブラウザ・端末にバックアップファイル（.json）が残っていますか？」と確認する</li>
+                  <li>残っている場合 → ナビの「復元」から読み込んでもらう</li>
+                  <li>バックアップがない場合 → スプレッドシートのデータからCSVで復元可能（かのんへ連絡）</li>
+                  <li>スプレッドシートにもない場合 → 日記の再入力をご案内</li>
+                </ol>
+                <p>※ localStorageはブラウザごとに独立しているため、別端末への移行はJSONの書き出し→読み込みで対応できます。</p>
+              </div>
+            </details>
+          </div>
+        </details>
+      </div>
+      <p class="footer-brand">Shukuyo Astrology / 月読みワンダーランド<br>みずきかのん　月読み師</p>
     </footer>
   </main>
 
@@ -511,7 +670,10 @@
         var saved = localStorage.getItem(PHASE_KEY_PREFIX + identity + ':' + phase);
         if(saved) el.value = saved;
       });
-      // 新月の願いごと：チャレンジイントロ入力をフォールバックとして反映
+      // 新月の願いごと：3段フォールバック
+      // ① localStorage moonPhase（上で復元済み）
+      // ② localStorage introReflection（チャレンジイントロ入力）
+      // ③ participants_data.js の newmoonWish
       var newMoonEl = document.getElementById('moon-phase-new');
       if(newMoonEl && !newMoonEl.value){
         try{
@@ -521,12 +683,202 @@
           if(introWish) newMoonEl.value = introWish;
         }catch(e){}
       }
+      if(newMoonEl && !newMoonEl.value){
+        try{
+          var pdEntry = (typeof PARTICIPANTS_DATA !== 'undefined') && PARTICIPANTS_DATA[identity];
+          var pdWish = pdEntry && String(pdEntry.newmoonWish || '').trim();
+          if(pdWish) newMoonEl.value = pdWish;
+        }catch(e){}
+      }
       // 双子座満月メモ復元
       var geminiEl = document.getElementById('moon-fullmoon-gemini');
       if(geminiEl){
         var geminiSaved = localStorage.getItem('moon-fullmoon-gemini');
         if(geminiSaved) geminiEl.value = geminiSaved;
       }
+
+      // ─── 月相トラッカー ───────────────────────────────────────────
+      (function(){
+        var TRACKER_KEY = 'tsukiyomi:phaseTracker:v1:' + identity;
+        var PHASE_KEY_PREFIX = 'tsukiyomi:moonPhase:v1:';
+        var PHASES = ['new','first','full','last'];
+        var PHASE_LABELS = ['新月','上弦','満月','下弦'];
+        var PHASE_EMOJIS = ['🌑','🌓','🌕','🌗'];
+
+        function updateProgress(){
+          var d = loadData();
+          var done = 0;
+          for(var j = 0; j < 12; j++){
+            var yr2 = 2026 + Math.floor((6+j)/12);
+            var mo2 = ((6+j)%12)+1;
+            var mk2 = yr2+'-'+('0'+mo2).slice(-2);
+            PHASES.forEach(function(p){ if((d[mk2]||{})[p] || getPhaseText(mk2,p)) done++; });
+          }
+          var bar = document.getElementById('tracker-progress-bar');
+          var txt = document.getElementById('tracker-progress-text');
+          var msg = document.getElementById('tracker-complete-msg');
+          if(bar) bar.style.width = Math.round(done/48*100)+'%';
+          if(txt) txt.textContent = done+' / 48';
+          if(msg) msg.style.display = done>=48 ? 'block' : 'none';
+        }
+
+        var now = new Date();
+        var CURRENT_MK = now.getFullYear() + '-' + ('0'+(now.getMonth()+1)).slice(-2);
+
+        function loadData(){ try{ return JSON.parse(localStorage.getItem(TRACKER_KEY)||'{}'); }catch(e){ return {}; } }
+        function saveData(d){ localStorage.setItem(TRACKER_KEY, JSON.stringify(d)); }
+
+        // 月+フェーズのテキストを取得（今月は既存テキストエリアも参照）
+        function getPhaseText(mk, phase){
+          var d = loadData();
+          var saved = (d[mk] || {})[phase + '_text'] || '';
+          if(saved) return saved;
+          if(mk === CURRENT_MK){
+            return localStorage.getItem(PHASE_KEY_PREFIX + identity + ':' + phase) || '';
+          }
+          return '';
+        }
+
+        function closePopup(){
+          var p = document.getElementById('tracker-popup');
+          if(p) p.remove();
+        }
+
+        function showPopup(btn, mk, phase, pi, text, isCurrent){
+          closePopup();
+          var popup = document.createElement('div');
+          popup.id = 'tracker-popup';
+          popup.style.cssText = [
+            'position:fixed;left:0;right:0;bottom:0;',
+            'background:#fffaf2;border-top:2px solid rgba(168,121,50,.55);',
+            'border-radius:18px 18px 0 0;',
+            'padding:20px 20px 32px;z-index:9999;',
+            'box-shadow:0 -8px 32px rgba(31,18,8,.18);',
+            'max-height:55vh;overflow-y:auto;',
+            'animation:slideUp .22s ease;'
+          ].join('');
+          // label
+          var lbl = document.createElement('div');
+          lbl.style.cssText = 'display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;';
+          lbl.innerHTML = '<span style="font-size:12px;color:#a87932;font-weight:700;letter-spacing:.12em;">' + mk + ' ' + PHASE_LABELS[pi] + '</span>'
+            + '<button type="button" onclick="document.getElementById(\'tracker-popup\').remove()" style="background:none;border:none;color:#a87932;font-size:20px;cursor:pointer;line-height:1;padding:0 2px;">×</button>';
+          popup.appendChild(lbl);
+          // text area
+          var content = document.createElement('p');
+          content.style.cssText = 'font-size:15px;color:#3d3328;line-height:2;margin:0;white-space:pre-wrap;';
+          content.textContent = text || '（まだ記録がありません）';
+          popup.appendChild(content);
+          // メモ入力（今月以外）
+          if(!isCurrent && !text){
+            var memo = document.createElement('textarea');
+            memo.placeholder = 'このフェーズのメモを書く…';
+            memo.style.cssText = 'width:100%;box-sizing:border-box;min-height:80px;margin-top:14px;background:rgba(168,121,50,.05);border:1px solid rgba(168,121,50,.3);border-radius:8px;color:#3d3328;font-size:14px;line-height:1.8;padding:10px 12px;resize:vertical;font-family:inherit;';
+            var saveBtn = document.createElement('button');
+            saveBtn.type = 'button';
+            saveBtn.textContent = '保存';
+            saveBtn.style.cssText = 'margin-top:10px;padding:8px 22px;border:1px solid rgba(168,121,50,.6);border-radius:8px;background:rgba(168,121,50,.12);color:#3d3328;font-size:14px;cursor:pointer;';
+            saveBtn.addEventListener('click', function(){
+              var txt = memo.value.trim();
+              var d = loadData();
+              if(!d[mk]) d[mk] = {};
+              d[mk][phase + '_text'] = txt;
+              if(txt) d[mk][phase] = true;
+              saveData(d);
+              btn.style.cssText = txt
+                ? 'width:44px;height:44px;border-radius:50%;cursor:pointer;border:1.5px solid rgba(241,217,155,.72);background:rgba(241,217,155,.13);font-size:22px;line-height:44px;color:rgba(241,217,155,1);box-shadow:0 0 14px rgba(241,217,155,.28);transition:all .2s;text-align:center;padding:0;'
+                : 'width:44px;height:44px;border-radius:50%;cursor:pointer;border:1.5px solid rgba(241,217,155,.18);background:rgba(255,255,255,.03);font-size:0px;line-height:44px;color:rgba(241,217,155,1);transition:all .2s;text-align:center;padding:0;';
+              btn.textContent = txt ? PHASE_EMOJIS[pi] : '';
+              updateProgress();
+              closePopup();
+            });
+            popup.appendChild(memo);
+            popup.appendChild(saveBtn);
+          }
+          document.body.appendChild(popup);
+          // 背景タップで閉じる
+          setTimeout(function(){
+            document.addEventListener('click', function onOutside(e){
+              if(!popup.contains(e.target) && e.target !== btn){
+                closePopup();
+                document.removeEventListener('click', onOutside);
+              }
+            });
+          }, 50);
+        }
+
+        var tbody = document.getElementById('phase-tracker-tbody');
+        if(!tbody) return;
+
+        // slideUp アニメーション
+        if(!document.getElementById('tracker-popup-style')){
+          var st = document.createElement('style');
+          st.id = 'tracker-popup-style';
+          st.textContent = '@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}';
+          document.head.appendChild(st);
+        }
+
+        // 2026-07 から 12か月分
+        for(var i = 0; i < 12; i++){
+          var year = 2026 + Math.floor((6 + i) / 12);
+          var month = ((6 + i) % 12) + 1;
+          var mk = year + '-' + ('0'+month).slice(-2);
+          var label = year + '/' + ('0'+month).slice(-2);
+          var isCurrent = (mk === CURRENT_MK);
+          var data = loadData();
+          var monthData = data[mk] || {};
+          var allDone = PHASES.every(function(p){ return !!(monthData[p] || getPhaseText(mk,p)); });
+
+          var tr = document.createElement('tr');
+          tr.style.cssText = 'border-bottom:1px solid rgba(241,217,155,.08);';
+
+          var tdM = document.createElement('td');
+          tdM.style.cssText = 'padding:10px 10px;font-size:13px;font-weight:600;white-space:nowrap;color:'+(isCurrent?'#f1d99b':allDone?'rgba(241,217,155,.95)':'rgba(246,235,213,.55)')+';';
+          tdM.textContent = (allDone ? '✦ ' : '') + label + (isCurrent ? ' ◀' : '');
+          tr.appendChild(tdM);
+
+          PHASES.forEach(function(phase, pi){
+            var td = document.createElement('td');
+            td.style.cssText = 'padding:10px 6px;text-align:center;';
+            var text = getPhaseText(mk, phase);
+            var filled = !!monthData[phase] || !!text;
+            var filledStyle = 'width:44px;height:44px;border-radius:50%;cursor:pointer;border:1.5px solid rgba(241,217,155,.72);background:rgba(241,217,155,.13);font-size:22px;line-height:44px;color:rgba(241,217,155,1);box-shadow:0 0 14px rgba(241,217,155,.28);transition:all .2s;text-align:center;padding:0;';
+            var emptyStyle  = 'width:44px;height:44px;border-radius:50%;cursor:pointer;border:1.5px solid rgba(241,217,155,.18);background:rgba(255,255,255,.03);font-size:0px;line-height:44px;color:rgba(241,217,155,1);transition:all .2s;text-align:center;padding:0;';
+            var btn = document.createElement('button');
+            btn.type = 'button';
+            btn.setAttribute('aria-label', label + ' ' + PHASE_LABELS[pi]);
+            btn.setAttribute('aria-pressed', filled ? 'true' : 'false');
+            btn.style.cssText = filled ? filledStyle : emptyStyle;
+            btn.textContent = filled ? PHASE_EMOJIS[pi] : '';
+            btn.addEventListener('click', function(mk, phase, pi, isCurrent, filledStyle, emptyStyle){
+              return function(e){
+                e.stopPropagation();
+                var txt = getPhaseText(mk, phase);
+                if(txt || isCurrent){
+                  showPopup(this, mk, phase, pi, txt, isCurrent);
+                } else {
+                  var d = loadData();
+                  if(!d[mk]) d[mk] = {};
+                  d[mk][phase] = !d[mk][phase];
+                  saveData(d);
+                  var f = d[mk][phase];
+                  this.style.cssText = f ? filledStyle : emptyStyle;
+                  this.textContent = f ? PHASE_EMOJIS[pi] : '';
+                  this.setAttribute('aria-pressed', f ? 'true' : 'false');
+                  this.style.transform = 'scale(1.22)';
+                  var self = this;
+                  setTimeout(function(){ self.style.transform = ''; }, 160);
+                  updateProgress();
+                }
+              };
+            }(mk, phase, pi, isCurrent, filledStyle, emptyStyle).bind(btn));
+            td.appendChild(btn);
+            tr.appendChild(td);
+          });
+          tbody.appendChild(tr);
+        }
+        updateProgress();
+      })();
+      // ──────────────────────────────────────────────────────────────
     });
   })();
   </script>
@@ -597,6 +949,133 @@
     };
     reader.readAsText(file, 'utf-8');
   }
+  </script>
+
+  <!-- ページ自動分割：コンテンツが1ページに収まらない場合、同じ大きさのパネルへ分割 -->
+  <script>
+  (function(){
+    var DONE = 'data-paged';
+
+    function splitPanel(panel) {
+      if (panel.hasAttribute(DONE)) return;
+      var pageH  = window.innerHeight;
+      var cs     = getComputedStyle(panel);
+      var pTop   = parseFloat(cs.paddingTop)    || 48;
+      var pBot   = parseFloat(cs.paddingBottom) || 48;
+      var availH = pageH - pTop - pBot;
+
+      var kids = Array.from(panel.children);
+      if (kids.length < 2) { panel.setAttribute(DONE,'1'); return; }
+
+      /* 一時的に高さを解放して子要素の自然な高さを計測 */
+      var sv = { mh: panel.style.minHeight, h: panel.style.height };
+      panel.style.minHeight = '0';
+      panel.style.height    = 'auto';
+
+      var acc = 0, splitAt = -1;
+      for (var i = 0; i < kids.length; i++) {
+        var kcs = getComputedStyle(kids[i]);
+        var kh  = kids[i].getBoundingClientRect().height
+                  + parseFloat(kcs.marginTop    || 0)
+                  + parseFloat(kcs.marginBottom || 0);
+        if (acc + kh > availH && i > 0) { splitAt = i; break; }
+        acc += kh;
+      }
+
+      panel.style.minHeight = sv.mh;
+      panel.style.height    = sv.h;
+
+      if (splitAt < 0) { panel.setAttribute(DONE,'1'); return; }
+
+      /* 続きページを生成（同クラス・同スタイルで複製） */
+      var cont = panel.cloneNode(false);
+      cont.removeAttribute('id');
+      cont.removeAttribute(DONE);
+      cont.setAttribute('data-continuation','1');
+      /* 続きページはコンテンツを上寄せ（本の本文ページ） */
+      cont.style.justifyContent = 'flex-start';
+
+      kids.slice(splitAt).forEach(function(c){ cont.appendChild(c); });
+      panel.setAttribute(DONE,'1');
+      panel.insertAdjacentElement('afterend', cont);
+
+      /* 再帰：続きページもさらに長い場合はまた分割 */
+      splitPanel(cont);
+    }
+
+    function paginateAll() {
+      if (!document.querySelector('[data-deep-report]')) return;
+      document.querySelectorAll('[data-deep-report] .deep-report-panel').forEach(function(p){
+        if (getComputedStyle(p).display === 'none') return;
+        splitPanel(p);
+      });
+    }
+
+    /* 初回：動的コンテンツ（AI生成テキスト）の挿入を待って実行 */
+    window.addEventListener('load', function(){ setTimeout(paginateAll, 1800); });
+
+    /* 鑑定書リフレッシュ後にも再実行 */
+    var _orig = window.refreshDeepReport;
+    window.refreshDeepReport = function(){
+      if (typeof _orig === 'function') _orig.apply(this, arguments);
+      /* 生成完了を待って再ページネーション */
+      setTimeout(function(){
+        document.querySelectorAll('[data-continuation]').forEach(function(el){ el.remove(); });
+        document.querySelectorAll('[' + DONE + ']').forEach(function(el){ el.removeAttribute(DONE); });
+        paginateAll();
+      }, 2500);
+    };
+
+    window.paginateDeepReport = paginateAll;
+  })();
+
+  // ── 目次：クリックでジャンプ ──────────────────────────────────────
+  (function(){
+    function bindToc() {
+      document.querySelectorAll('.toc-item[data-toc-target]').forEach(function(item) {
+        item.addEventListener('click', function() {
+          var targetId = item.getAttribute('data-toc-target');
+          var target = document.getElementById(targetId);
+          if (!target) return;
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      });
+    }
+
+    function syncTocVisibility() {
+      document.querySelectorAll('.toc-item[data-toc-target]').forEach(function(item) {
+        var targetId = item.getAttribute('data-toc-target');
+        var target = document.getElementById(targetId);
+        if (!target) return;
+        var hidden = target.style.display === 'none' || getComputedStyle(target).display === 'none';
+        item.classList.toggle('toc-hidden', hidden);
+      });
+      // グループラベルを hidden 判定：グループ内に表示中アイテムがひとつもなければ非表示
+      document.querySelectorAll('.toc-list .toc-group-label').forEach(function(label) {
+        var next = label.nextElementSibling;
+        var hasVisible = false;
+        while (next && !next.classList.contains('toc-group-label')) {
+          if (!next.classList.contains('toc-hidden') && next.classList.contains('toc-item')) {
+            hasVisible = true;
+            break;
+          }
+          next = next.nextElementSibling;
+        }
+        label.style.display = hasVisible ? '' : 'none';
+      });
+    }
+
+    window.addEventListener('load', function() {
+      bindToc();
+      setTimeout(syncTocVisibility, 2000);
+    });
+
+    var _origRefresh = window.refreshDeepReport;
+    window.refreshDeepReport = function() {
+      if (typeof _origRefresh === 'function') _origRefresh.apply(this, arguments);
+      setTimeout(syncTocVisibility, 2600);
+    };
+  })();
   </script>
 </body>
 </html>
