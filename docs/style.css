@@ -992,7 +992,7 @@ a {
   flex-direction: column;
   justify-content: center;
   background-color: #f8f1e3;
-  background-image: url('images/deep_report_frame.jpg');
+  background-image: url('images/frame_cover.jpg');
   background-size: 100% 100%;
   background-repeat: no-repeat;
   background-position: top center;
@@ -1161,11 +1161,11 @@ a {
   min-height: 92svh;
   scroll-snap-align: start;
   margin-top: clamp(32px, 5svh, 64px);
-  padding: max(calc(17.7svh + 24px), 148px) clamp(44px, 7vw, 68px) clamp(44px, 6svh, 64px);
+  padding: clamp(48px, 6svh, 72px) clamp(44px, 7vw, 68px) clamp(44px, 6svh, 64px);
   border: none;
   border-radius: 2px;
   background-color: #f8f1e3;
-  background-image: url('images/deep_report_frame.jpg');
+  background-image: url('images/frame_body.jpg');
   background-size: 100% 100%;
   background-repeat: no-repeat;
   background-position: top center;
@@ -2844,10 +2844,20 @@ a {
     border: none;
     box-shadow: none;
     background-color: #f8f1e3;
-    background-image: url('images/deep_report_frame.jpg');
     background-size: 100% calc(257mm - 32mm);
     background-repeat: no-repeat;
     background-position: top center;
+  }
+  [data-deep-report] .deep-report-title-block {
+    background-image: url('images/frame_cover.jpg');
+  }
+  [data-deep-report] .deep-report-intro-panel {
+    background-image: url('images/deep_report_frame.jpg');
+  }
+  [data-deep-report] .deep-report-toc,
+  [data-deep-report] .deep-report-panel {
+    background-image: url('images/frame_body.jpg');
+    padding: 20mm 18mm 14mm;
   }
 
   [data-deep-report] .deep-report-title-block {
