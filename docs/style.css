@@ -1161,7 +1161,7 @@ a {
   min-height: 92svh;
   scroll-snap-align: start;
   margin-top: clamp(32px, 5svh, 64px);
-  padding: clamp(80px, 10svh, 108px) clamp(96px, 12vw, 120px) clamp(72px, 9svh, 96px);
+  padding: clamp(104px, 13svh, 144px) clamp(112px, 14vw, 148px) clamp(96px, 11svh, 128px);
   border: none;
   border-radius: 2px;
   background-color: #f8f1e3;
@@ -2645,8 +2645,8 @@ a {
   [data-deep-report] .deep-report-title-block,
   [data-deep-report] .deep-report-intro-panel,
   [data-deep-report] .deep-report-panel {
-    padding-left: 52px;
-    padding-right: 52px;
+    padding-left: 56px;
+    padding-right: 56px;
   }
 
   [data-deep-report] .deep-report-title-block .challenge-title {
@@ -2857,7 +2857,7 @@ a {
   [data-deep-report] .deep-report-toc,
   [data-deep-report] .deep-report-panel {
     background-image: url('images/frame_body.jpg');
-    padding: 30mm 28mm 14mm;
+    padding: 34mm 30mm 16mm;
   }
 
   [data-deep-report] .deep-report-title-block {
