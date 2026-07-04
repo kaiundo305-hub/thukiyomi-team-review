@@ -2803,7 +2803,8 @@ a {
   .challenge-guide img,
   .deep-report-print-btn,
   .footer-backup-section,
-  #moon-phase-tracker-section {
+  #moon-phase-tracker-section,
+  [data-deep-report] .deep-report-header-img {
     display: none;
   }
 
@@ -2833,6 +2834,7 @@ a {
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
     min-height: calc(257mm - 32mm);
+    box-sizing: border-box;
     height: auto;
     overflow: visible;
     scroll-snap-align: none;
@@ -2840,31 +2842,18 @@ a {
     break-after: auto;
     break-inside: auto;
     margin: 0;
-    padding: 46mm 18mm 14mm;
-    border: none;
-    box-shadow: none;
-    background-color: #f8f1e3;
-    background-size: 100% calc(257mm - 32mm);
-    background-repeat: no-repeat;
-    background-position: top center;
-  }
-  [data-deep-report] .deep-report-title-block {
-    background-image: url('images/frame_cover.jpg');
-  }
-  [data-deep-report] .deep-report-intro-panel {
-    background-image: url('images/deep_report_frame.jpg');
-  }
-  [data-deep-report] .deep-report-toc,
-  [data-deep-report] .deep-report-panel {
-    background-image: url('images/frame_body.jpg');
-    padding: 34mm 30mm 16mm;
+    padding: 16mm 18mm 14mm;
+    border: 1.5pt solid #c9a84c;
+    box-shadow: inset 0 0 0 2pt rgba(201, 168, 76, 0.40);
+    background-image: none;
+    background-color: #faf7ef;
   }
 
   [data-deep-report] .deep-report-title-block {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding-top: 52mm;
+    padding: 20mm 18mm 16mm;
   }
 
   [data-deep-report] .deep-report-toc {
