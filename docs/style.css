@@ -2705,12 +2705,12 @@ a {
   }
 }
 
-@media print {
-  @page {
-    size: B5 portrait;
-    margin: 16mm 20mm;
-  }
+@page {
+  size: B5 portrait;
+  margin: 16mm 20mm;
+}
 
+@media print {
   body {
     color: #2a1810;
     background: #fffaf2;
