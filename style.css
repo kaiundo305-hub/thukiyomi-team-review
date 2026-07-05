@@ -2870,12 +2870,12 @@ a {
 }
 [data-deep-report] .deep-report-intro-body {
   font-size: 12.5px;
-  color: rgba(200, 180, 255, 0.8);
+  color: #e8e0ff;
   line-height: 1.9;
   margin: 0;
 }
 [data-deep-report] .deep-report-intro-body strong {
-  color: #e8d9a0;
+  color: #f1d99b;
   font-weight: 700;
 }
 
@@ -2887,7 +2887,7 @@ a {
 }
 [data-deep-report] .deep-report-epilogue-text {
   font-size: 14px;
-  color: rgba(200, 180, 255, 0.85);
+  color: #e8e0ff;
   line-height: 2.1;
   margin: 0 0 4px;
   letter-spacing: 0.03em;
