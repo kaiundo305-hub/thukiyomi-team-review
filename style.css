@@ -2597,6 +2597,11 @@ a {
   }
 }
 
+@page {
+  size: A4 portrait;
+  margin: 15mm 12mm;
+}
+
 @media print {
   body {
     color: #2a1810;
