@@ -11,47 +11,30 @@
        和紙テーマ ─ 全体を明るいクリーム・ゴールドに
        ══════════════════════════════════════════ */
 
-    /* 背景：羊皮紙色 */
-    html, body {
+    /* 背景：枠月透かし画像を固定表示 */
+    html {
       background: #faf5eb !important;
+    }
+    body {
+      background:
+        url('images/枠月透かし.png') center center / cover no-repeat fixed !important;
       color: #3d3328 !important;
+      min-height: 100vh;
     }
 
     /* 夜空の星パターンを非表示 */
     body::before { display: none !important; }
     body::after  { display: none !important; }
 
-    /* カードラッパーを透明に（枠線・影をなくす） */
+    /* カードラッパーを透明に */
     .challenge-card {
       background: transparent !important;
       border: none !important;
       box-shadow: none !important;
     }
 
-    /* ── 金の枠飾り（四隅＋ライン） ──────────────── */
-    body {
-      position: relative !important;
-    }
-    body > main::before {
-      content: "";
-      position: fixed;
-      inset: 14px;
-      border: 1.5px solid rgba(168,121,50,.45);
-      pointer-events: none;
-      z-index: 8000;
-    }
-    /* 四隅の装飾 */
-    body > main::after {
-      content:
-        "✦";
-      position: fixed;
-      top: 20px; left: 20px;
-      color: rgba(168,121,50,.55);
-      font-size: 18px;
-      line-height: 1;
-      pointer-events: none;
-      z-index: 8001;
-    }
+    /* 装飾枠・四隅マークは画像に含まれるので非表示 */
+    #corner-ornament { display: none; }
 
     /* ── テキストカラー（ダーク系に統一） ──── */
     [data-deep-report] .challenge-body p,
@@ -107,7 +90,8 @@
     #gnav-book { border-right-color: rgba(168,121,50,.15) !important; }
     #gnav-ai   { border-right-color: rgba(168,121,50,.15) !important; color: #8a6020 !important; }
     #gnav-export { border-right-color: rgba(168,121,50,.15) !important; color: #7a7020 !important; }
-    #gnav-import { color: #5a8040 !important; }
+    #gnav-import  { color: #5a8040 !important; }
+    #gnav-apikey  { color: rgba(168,121,50,.8) !important; }
 
     /* ── 下部nav（日記BOOKへ戻る） ─────────── */
     .challenge-nav {
@@ -149,9 +133,30 @@
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: #faf5eb; }
     ::-webkit-scrollbar-thumb { background: rgba(168,121,50,.4); border-radius: 3px; }
+
+    /* ── 印刷設定 ────────────────────────── */
+    @media print {
+      #global-nav, #apikey-panel, #corner-ornament,
+      body > main::before, body > main::after,
+      [data-no-diary-cta], .challenge-nav,
+      #data-backup-section { display: none !important; }
+
+      html, body { background: #fff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .challenge-shell { width: 100% !important; padding: 0 !important; }
+      .challenge-card { padding: 0 !important; }
+      [data-deep-report] .deep-report-panel {
+        break-inside: avoid;
+        border: 1px solid rgba(168,121,50,.4) !important;
+        box-shadow: none !important;
+        margin-bottom: 12px;
+      }
+      #moon-cycle-section textarea { border: 1px solid rgba(168,121,50,.4) !important; min-height: 60px; }
+      .deep-report-epilogue { display: none; }
+    }
   </style>
 </head>
 <body>
+  <div id="corner-ornament" aria-hidden="true"></div>
   <main class="challenge-shell" data-deep-report>
     <article class="challenge-card">
       <img src="images/deep_report_header.png" alt="第2の鑑定書" class="deep-report-header-img" onerror="this.style.display='none'">
@@ -572,12 +577,47 @@
         flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
         padding:10px 4px 9px;color:rgba(110,231,183,0.75);cursor:pointer;font-size:11px;
         gap:3px;letter-spacing:.03em;-webkit-tap-highlight-color:transparent;
+        border-right:1px solid rgba(200,180,255,0.08);
       ">
         <span style="font-size:20px;line-height:1;">📤</span>
         <span>復元</span>
         <input type="file" accept=".json" style="display:none" onchange="importDiaryData(this.files[0])">
       </label>
+      <button onclick="gnavApiKey()" id="gnav-apikey" style="
+        flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+        padding:10px 4px 9px;background:none;border:none;
+        color:rgba(241,217,155,0.7);cursor:pointer;font-size:11px;gap:3px;letter-spacing:.03em;
+        font-family:inherit;transition:color .2s;-webkit-tap-highlight-color:transparent;
+      ">
+        <span style="font-size:20px;line-height:1;">🔑</span>
+        <span>APIキー</span>
+      </button>
     </nav>
+
+    <!-- APIキー設定パネル（スライドイン） -->
+    <div id="apikey-panel" style="
+      display:none;position:fixed;bottom:calc(64px + env(safe-area-inset-bottom,0));
+      left:0;right:0;z-index:8900;
+      background:rgba(254,250,235,.98);border-top:1px solid rgba(168,121,50,.35);
+      padding:16px 20px;box-shadow:0 -4px 20px rgba(100,60,20,.15);
+    ">
+      <p style="font-size:12px;color:#6b3d0e;margin:0 0 10px;font-weight:bold;">🔑 Gemini APIキー設定</p>
+      <p style="font-size:11px;color:#8a6040;margin:0 0 10px;line-height:1.7;">
+        <a href="https://aistudio.google.com/apikey" target="_blank" style="color:#a87932;">Google AI Studio</a> で発行した新しいキーを貼り付けてください。
+      </p>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <input id="apikey-panel-input" type="password" placeholder="AIzaSy... または AQ..." style="
+          flex:1;background:#fefdf8;border:1px solid rgba(168,121,50,.4);border-radius:8px;
+          color:#3d3328;font-size:13px;padding:9px 12px;font-family:inherit;outline:none;
+        ">
+        <button onclick="apikeyPanelSave()" style="
+          background:rgba(168,121,50,.25);border:1px solid rgba(168,121,50,.6);
+          color:#8a6020;border-radius:8px;padding:9px 16px;font-size:13px;
+          cursor:pointer;font-family:inherit;white-space:nowrap;
+        ">保存</button>
+      </div>
+      <p id="apikey-panel-status" style="font-size:11px;margin:6px 0 0;min-height:16px;color:#6b8040;"></p>
+    </div>
 
     <!-- グローバルナビの高さ分だけ余白 -->
     <div style="height:calc(64px + env(safe-area-inset-bottom,0))"></div>
@@ -644,6 +684,35 @@
 
   <script>
   // ─── データバックアップ・復元 ───────────────────────────────────
+  // グローバルナビ：APIキーパネル
+  function gnavApiKey() {
+    var panel = document.getElementById('apikey-panel');
+    if (!panel) return;
+    var isOpen = panel.style.display !== 'none';
+    panel.style.display = isOpen ? 'none' : 'block';
+    if (!isOpen) {
+      var input = document.getElementById('apikey-panel-input');
+      if (input) { input.value = ''; input.focus(); }
+    }
+  }
+
+  function apikeyPanelSave() {
+    var input  = document.getElementById('apikey-panel-input');
+    var status = document.getElementById('apikey-panel-status');
+    if (!input || !input.value.trim()) return;
+    localStorage.setItem('tsukiyomi:geminiApiKey', input.value.trim());
+    if (status) status.textContent = '✅ 保存しました。AI分析ボタンから生成できます。';
+    input.value = '';
+    // AI分析セクションがあれば再レンダリング
+    if (window.TsukiyomiGemini && typeof window.TsukiyomiGemini.reload === 'function') {
+      window.TsukiyomiGemini.reload();
+    }
+    setTimeout(function() {
+      var panel = document.getElementById('apikey-panel');
+      if (panel) panel.style.display = 'none';
+    }, 1800);
+  }
+
   // グローバルナビ：AI分析ボタン
   function gnavAI() {
     var sec = document.getElementById('deep-ai-analysis-section');
