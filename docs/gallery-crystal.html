@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>27宿クリスタルオラクル — 月読みワンダーランド</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300;1,400&family=Shippori+Mincho:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: #06050f;
+  min-height: 100vh;
+  font-family: 'Shippori Mincho', serif;
+  color: #f5f0e8;
+  padding-bottom: 80px;
+}
+.hero {
+  text-align: center;
+  padding: 80px 24px 56px;
+}
+.hero-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 11px; letter-spacing: 0.5em;
+  color: rgba(180,160,220,0.4);
+  margin-bottom: 18px;
+}
+.hero-title {
+  font-size: clamp(20px, 5vw, 32px);
+  font-weight: 500; letter-spacing: 0.25em;
+  color: #f5f0e8; margin-bottom: 10px;
+}
+.hero-sub {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 13px; letter-spacing: 0.3em;
+  color: rgba(180,160,220,0.6);
+  margin-bottom: 28px;
+}
+.hero-line {
+  width: 100px; height: 1px; margin: 0 auto;
+  background: linear-gradient(to right, transparent, rgba(180,160,220,0.4), transparent);
+}
+
+/* パーソナルバナー */
+#my-banner {
+  display: none;
+  max-width: 480px;
+  margin: 0 auto 48px;
+  padding: 0 24px;
+  text-align: center;
+}
+.banner-inner {
+  border: 1px solid rgba(255,210,100,0.3);
+  border-radius: 16px;
+  padding: 28px 24px 24px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(40,30,10,0.9) 0%, rgba(6,5,15,0.95) 100%);
+  position: relative;
+}
+.banner-greeting {
+  font-size: 11px; letter-spacing: 0.4em;
+  color: rgba(255,210,100,0.5);
+  margin-bottom: 10px;
+}
+.banner-gem { font-size: 36px; margin: 4px 0 8px; }
+.banner-shuku-name {
+  font-size: 22px; font-weight: 500; letter-spacing: 0.2em;
+  color: #fff;
+  margin-bottom: 2px;
+}
+.banner-crystal-name {
+  font-size: 14px; letter-spacing: 0.2em;
+  color: rgba(255,210,100,0.85);
+  text-shadow: 0 0 12px rgba(255,210,100,0.4);
+  margin-bottom: 12px;
+}
+.banner-seiju {
+  display: inline-block;
+  font-size: 11px; letter-spacing: 0.2em;
+  color: rgba(180,160,220,0.7);
+  border: 1px solid rgba(180,160,220,0.2);
+  border-radius: 20px;
+  padding: 4px 14px;
+  margin-bottom: 14px;
+}
+.banner-affirm {
+  font-size: 11px; line-height: 2;
+  color: rgba(245,240,255,0.45);
+  letter-spacing: 0.05em;
+}
+.banner-hint {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 10px; letter-spacing: 0.3em;
+  color: rgba(255,210,100,0.3);
+  margin-top: 14px;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 20px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.card-wrap {
+  position: relative;
+  width: 100%;
+  padding-bottom: 173.4%;
+  cursor: pointer;
+  transition: opacity 0.5s;
+}
+/* 他のカードを少し暗くする（自分のカードがある時） */
+.has-my-card .card-wrap:not(.my-card) {
+  opacity: 0.55;
+}
+.has-my-card .card-wrap:not(.my-card):hover {
+  opacity: 1;
+}
+
+.card-inner {
+  position: absolute; inset: 0;
+  transform-style: preserve-3d;
+  transition: transform 0.75s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.card-wrap.flipped .card-inner { transform: rotateY(180deg); }
+
+.face {
+  position: absolute; inset: 0;
+  border-radius: 14px; overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  box-shadow: 0 0 0 1px rgba(180,160,220,0.25), 0 20px 60px rgba(0,0,0,0.65);
+  transition: box-shadow 0.4s;
+}
+.card-wrap:hover .face {
+  box-shadow: 0 0 0 1px rgba(180,160,220,0.5), 0 0 28px rgba(180,160,220,0.1), 0 28px 80px rgba(0,0,0,0.7);
+}
+/* 自分のカードのゴールドグロー */
+.my-card .face {
+  box-shadow:
+    0 0 0 2px rgba(255,210,100,0.7),
+    0 0 30px rgba(255,210,100,0.25),
+    0 0 60px rgba(255,210,100,0.1),
+    0 20px 60px rgba(0,0,0,0.65) !important;
+}
+.my-card-badge {
+  position: absolute; top: 10px; right: 10px; z-index: 10;
+  font-size: 8px; letter-spacing: 0.15em;
+  color: rgba(255,210,100,0.95);
+  background: rgba(0,0,0,0.65);
+  border: 1px solid rgba(255,210,100,0.4);
+  border-radius: 10px;
+  padding: 3px 8px;
+  backdrop-filter: blur(4px);
+}
+
+/* 聖獣バッジ */
+.seiju-badge {
+  position: absolute; top: 10px; left: 32px; z-index: 10;
+  font-size: 9px;
+  opacity: 0.7;
+}
+
+/* 表面 */
+.front { background-size: cover; background-position: center; }
+.front .grad-top {
+  position: absolute; top:0; left:0; right:0; height: 70px;
+  background: linear-gradient(to bottom, rgba(3,1,14,0.82) 0%, transparent 100%);
+}
+.front .grad-bot {
+  position: absolute; bottom:0; left:0; right:0; height: 155px;
+  background: linear-gradient(to top, rgba(3,1,14,0.97) 0%, rgba(3,1,14,0.7) 45%, transparent 100%);
+}
+.front .corner {
+  position: absolute; width: 14px; height: 14px;
+  border-color: rgba(180,160,220,0.6); border-style: solid;
+}
+.front .corner.tl { top:10px; left:10px; border-width:1px 0 0 1px; }
+.front .corner.tr { top:10px; right:10px; border-width:1px 1px 0 0; }
+.front .corner.bl { bottom:10px; left:10px; border-width:0 0 1px 1px; }
+.front .corner.br { bottom:10px; right:10px; border-width:0 1px 1px 0; }
+.front .num {
+  position: absolute; top:12px; left:14px;
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 9px; letter-spacing: 0.25em;
+  color: rgba(180,160,220,0.75);
+}
+.front .bottom-info {
+  position: absolute; bottom:0; left:0; right:0;
+  padding: 0 12px 12px; text-align: center;
+}
+.front .shuku {
+  font-size: 18px; font-weight: 500; letter-spacing: 0.18em;
+  color: #ffffff;
+  text-shadow: 0 0 20px rgba(180,160,220,0.5), 0 2px 6px rgba(0,0,0,0.9);
+  margin-bottom: 3px;
+}
+.front .shuku-en {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 7.5px; letter-spacing: 0.15em;
+  color: rgba(180,160,220,0.75); margin-bottom: 8px;
+}
+.front .divider {
+  width: 40px; height: 1px; margin: 0 auto 8px;
+  background: linear-gradient(to right, transparent, rgba(180,160,220,0.55), transparent);
+}
+.front .crystal {
+  font-size: 11px; letter-spacing: 0.15em;
+  color: rgba(245,240,255,0.9);
+  text-shadow: 0 0 10px rgba(180,160,220,0.5);
+}
+
+/* 裏面 */
+.back {
+  transform: rotateY(180deg);
+  background:
+    radial-gradient(ellipse 120% 60% at 50% 0%, rgba(30,12,60,1) 0%, transparent 60%),
+    linear-gradient(155deg, #130828 0%, #08051a 50%, #100a25 100%);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 16px; gap: 6px;
+}
+.back::before {
+  content: ''; position: absolute; inset: 0;
+  background-image:
+    radial-gradient(circle 1px at 22% 18%, rgba(180,160,220,0.18) 0%, transparent 100%),
+    radial-gradient(circle 1px at 76% 14%, rgba(180,160,220,0.14) 0%, transparent 100%),
+    radial-gradient(circle 1.5px at 55% 35%, rgba(180,160,220,0.2) 0%, transparent 100%),
+    radial-gradient(circle 1px at 18% 65%, rgba(180,160,220,0.12) 0%, transparent 100%),
+    radial-gradient(circle 1px at 80% 58%, rgba(180,160,220,0.15) 0%, transparent 100%),
+    radial-gradient(circle 1px at 40% 80%, rgba(180,160,220,0.12) 0%, transparent 100%);
+  pointer-events: none;
+}
+.back .bc { position: absolute; width:14px; height:14px; border-color: rgba(180,160,220,0.4); border-style:solid; }
+.back .bc.tl { top:10px; left:10px; border-width:1px 0 0 1px; }
+.back .bc.tr { top:10px; right:10px; border-width:1px 1px 0 0; }
+.back .bc.bl { bottom:10px; left:10px; border-width:0 0 1px 1px; }
+.back .bc.br { bottom:10px; right:10px; border-width:0 1px 1px 0; }
+.back .b-num {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 9px; letter-spacing: 0.35em;
+  color: rgba(180,160,220,0.4); position: relative; z-index:1;
+}
+.back .b-gem { font-size: 24px; position: relative; z-index:1; margin: 2px 0; }
+.back .b-line {
+  width: 36px; height: 1px; position: relative; z-index:1;
+  background: linear-gradient(to right, transparent, rgba(180,160,220,0.45), transparent);
+}
+.back .b-brand {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 7px; letter-spacing: 0.3em;
+  color: rgba(180,160,220,0.3); text-align: center;
+  position: relative; z-index:1;
+}
+.back .b-shuku {
+  font-size: 15px; font-weight: 500; letter-spacing: 0.2em;
+  color: rgba(245,240,255,0.88); position: relative; z-index:1; margin-top: 4px;
+}
+.back .b-crystal-label {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 7.5px; letter-spacing: 0.3em;
+  color: rgba(180,160,220,0.4); position: relative; z-index:1; margin-top: 2px;
+}
+.back .b-crystal {
+  font-size: 12px; letter-spacing: 0.18em;
+  color: rgba(180,160,220,0.85);
+  text-shadow: 0 0 12px rgba(180,160,220,0.4);
+  position: relative; z-index:1;
+}
+
+.footer {
+  text-align: center; padding: 56px 24px 0;
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 11px; letter-spacing: 0.4em;
+  color: rgba(180,160,220,0.2);
+}
+
+@media (max-width: 480px) {
+  .gallery { grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <p class="hero-label">Tsukiyomi Wonderland Crystal</p>
+  <h1 class="hero-title">27宿クリスタルオラクル</h1>
+  <p class="hero-sub">27 Crystal Lunar Mansions</p>
+  <div class="hero-line"></div>
+</div>
+
+<div id="my-banner"></div>
+
+<div class="gallery" id="gallery"></div>
+<p class="footer">© Tsukiyomi Wonderland &nbsp;—&nbsp; Crystal Oracle Series</p>
+
+<script src="participants_data.js"></script>
+<script>
+var BASE = '27宿クリスタルオラクル/';
+
+var SEIJU = {
+  '土': { name: '青龍グループ', emoji: '🐉', desc: '成長・創造・育む' },
+  '水': { name: '玄武グループ', emoji: '🐢', desc: '直感・深さ・流れ' },
+  '風': { name: '白虎グループ', emoji: '🐯', desc: '意志・清廉・決断' },
+  '火': { name: '朱雀グループ', emoji: '🦅', desc: '情熱・輝き・表現' }
+};
+
+function getDominantElement(attr) {
+  var max = 0, dominant = '火';
+  var pairs = attr.match(/[火土風水]\d/g) || [];
+  pairs.forEach(function(p) {
+    var n = parseInt(p[1]);
+    if (n > max) { max = n; dominant = p[0]; }
+  });
+  if (!pairs.length) {
+    var m = attr.match(/[火土風水]/);
+    if (m) dominant = m[0];
+  }
+  return dominant;
+}
+
+var cards = [
+  { num:'01', shuku:'昴宿', en:'The Pleiades',   crystal:'クリアクォーツ',      attr:'火1・土3', gem:'💎', img:'subaru.jpeg',
+    affirm:'私は未来の輝きを澄んだ心で映し、必要な人へ美しい波動を広げます。',
+    action:'朝、鏡を見る前にクリアクォーツを磨き「今日の私の光に感謝します」と唱える。' },
+  { num:'02', shuku:'畢宿', en:'The Hyades',      crystal:'ラピスラズリ',          attr:'土4',     gem:'💙', img:'hitu.jpeg',
+    affirm:'私は焦らず深く理解し、自分の軸を信頼して豊かな学びを引き寄せます。',
+    action:'学ぶ前に青いものを見つめ、今日ひとつ深く理解したことを手帳に書く。' },
+  { num:'03', shuku:'觜宿', en:"Orion's Head",    crystal:'アマゾナイト',          attr:'土2・風2', gem:'🩵', img:'shi.jpeg',
+    affirm:'私は言葉を整え、思いを現実の形へと美しく紡ぎます。',
+    action:'カーテンを開ける時、今日伝えたいことを一文で言語化する。' },
+  { num:'04', shuku:'参宿', en:'Orion',            crystal:'アパタイト',            attr:'風4',     gem:'💚', img:'sann.jpeg',
+    affirm:'私は迷いを風に乗せ、今できる一歩から未来を開きます。',
+    action:'靴を履く時に、今日の小さな挑戦をひとつ決めて声に出す。' },
+  { num:'05', shuku:'井宿', en:'The Well',         crystal:'アクアマリン',          attr:'風3・水1', gem:'🩵', img:'sei.jpeg',
+    affirm:'私は必要な知恵と潤いを受け取り、豊かな流れを生み出します。',
+    action:'水筒に水を入れる時、流れ込んでほしい豊かさをひとつ思い浮かべる。' },
+  { num:'06', shuku:'鬼宿', en:'The Ghost',        crystal:'セレナイト',            attr:'水4',     gem:'🤍', img:'oni.jpeg',
+    affirm:'私は不要なものを手放し、滑らかな感受性で本質を受け取ります。',
+    action:'白いハンカチを整え、心の中で「もう手放していいもの」をひとつ吐き出す。' },
+  { num:'07', shuku:'柳宿', en:'The Willow',       crystal:'ラリマー',              attr:'水4',     gem:'🌊', img:'yanagi.jpeg',
+    affirm:'私は感情の流れを整え、やさしい言葉で心をつなぎます。',
+    action:'髪をとかす時、頭の中の絡まりも一緒にほどけるとイメージする。' },
+  { num:'08', shuku:'星宿', en:'The Star',         crystal:'サンストーン',          attr:'火4',     gem:'🌟', img:'hosi.jpeg',
+    affirm:'私は自分の光を隠さず、必要な場所で堂々と輝きます。',
+    action:'ライトを点ける時「私の光もこの部屋に広がる」と意識して変奏を伸ばす。' },
+  { num:'09', shuku:'張宿', en:'The Net',          crystal:'シトリン',              attr:'火4',     gem:'💛', img:'chou.jpeg',
+    affirm:'私は温かなエネルギーで場を満たし、豊かさの循環を広げます。',
+    action:'エプロンに触れ、今日誰かに与えられる小さな親切を決める。' },
+  { num:'10', shuku:'翼宿', en:'The Wings',        crystal:'ラブラドライト',        attr:'火1・風3', gem:'🔵', img:'tubasa.jpeg',
+    affirm:'私は境界を守りながら、自由に可能性の空へ羽ばたきます。',
+    action:'ストールを身につける時、自分の境界を光で包むイメージを持つ。' },
+  { num:'11', shuku:'軫宿', en:'The Chariot',      crystal:'グリーンアベンチュリン', attr:'土4',    gem:'💚', img:'shin.jpeg',
+    affirm:'私はご縁を丁寧に整え、安心できる関係性を育てます。',
+    action:'カレンダーを確認しながら、今日大切にしたい人や予定に感謝を向ける。' },
+  { num:'12', shuku:'角宿', en:'The Horn',         crystal:'エメラルド',            attr:'土2・風2', gem:'💚', img:'kaku.jpeg',
+    affirm:'私は新しい始まりを信頼し、成長の扉を美しく開きます。',
+    action:'花瓶の水を替えながら、始めたいことをひとつ宣言する。' },
+  { num:'13', shuku:'亢宿', en:'The Neck',         crystal:'ソーダライト',          attr:'風4',     gem:'💙', img:'kou.jpeg',
+    affirm:'私は自分の基準を信頼し、澄んだ判断で道を示します。',
+    action:'アイロンをかける時、今日ぶれずに守る基準をひとつ決める。' },
+  { num:'14', shuku:'氐宿', en:'The Root',         crystal:'ガーネット',            attr:'風3・火1', gem:'🔴', img:'tei.jpeg',
+    affirm:'私は私の魅力を信頼し、自然に選ばれる流れを受け取ります。',
+    action:'玄関マットを整え「良いご縁だけを迎えます」と唱える。' },
+  { num:'15', shuku:'房宿', en:'The Chamber',      crystal:'ローズクォーツ',        attr:'水4',     gem:'🩷', img:'fusa.jpeg',
+    affirm:'私は愛と豊かさを安心して受け取り、美しく循環させます。',
+    action:'鍵を手に取る時、閉じていた受け取りの扉が開くとイメージする。' },
+  { num:'16', shuku:'心宿', en:'The Heart',        crystal:'ルビー',                attr:'水4',     gem:'❤️', img:'kokoro.jpeg',
+    affirm:'私は心の炎を大切にし、本音から生まれる力で前へ進みます。',
+    action:'キャンドルや灯りを眺め、今日の本音を一言だけノートに書く。' },
+  { num:'17', shuku:'尾宿', en:'The Tail',         crystal:'カーネリアン',          attr:'火4',     gem:'🧡', img:'o.jpeg',
+    affirm:'私は情熱を行動に変え、必要な役割を軽やかに果たします。',
+    action:'バッグの中を整理し、今日の目的地に必要なものだけを入れる。' },
+  { num:'18', shuku:'箕宿', en:'The Basket',       crystal:'パイライト',            attr:'火4',     gem:'✨', img:'mino.jpeg',
+    affirm:'私は必要なものを見極め、豊かな成果を喜んで受け取ります。',
+    action:'かごや収納を整え、残すもの・手放すものをひとつずつ選ぶ。' },
+  { num:'19', shuku:'斗宿', en:'The Dipper',       crystal:'タイガーアイ',          attr:'火1・土3', gem:'🟡', img:'to.jpeg',
+    affirm:'私は未来の方向を定め、誠実な選択で道を築きます。',
+    action:'おたまで食事をよそう時、今日は何をどこへ分け与えるかを意識する。' },
+  { num:'20', shuku:'女宿', en:'The Weaver',       crystal:'真珠',                  attr:'土4',     gem:'🤍', img:'jo.jpeg',
+    affirm:'私は繊細な女性性を大切にし、美しい日常をひと針ずつ丁寧に整えます。',
+    action:'裁縫箱や衣類に触れ、直したい関係・整えたい暮らしをひとつ選ぶ。' },
+  { num:'21', shuku:'虚宿', en:'The Void',         crystal:'アメジスト',            attr:'土2・風2', gem:'💜', img:'kyo.jpeg',
+    affirm:'私は静かな余白の中で、本当に必要なものを受け取ります。',
+    action:'空のノートを開き、何も書かない時間を一分だけ持つ。' },
+  { num:'22', shuku:'危宿', en:'The Rooftop',      crystal:'フローライト',          attr:'風4',     gem:'🟢', img:'ki.jpeg',
+    affirm:'私は細部まで見通し、変化の中でも安全な道を選びます。',
+    action:'傘やメガネを整え「備えがあるから進める」と心の中で唱える。' },
+  { num:'23', shuku:'室宿', en:'The Gateway',      crystal:'ブルーカルセドニー',    attr:'風3・水1', gem:'🩵', img:'shitu.jpeg',
+    affirm:'私は心地よい居場所を整え、安心の中で未来を育てます。',
+    action:'玄関のドアを丁寧に開閉し「ここが私の土台」と感謝する。' },
+  { num:'24', shuku:'壁宿', en:'The Library',      crystal:'ブラックトルマリン',    attr:'水4',     gem:'🖤', img:'kabe.jpeg',
+    affirm:'私は大切なものを守り、安心できる現実の中で知恵を育てます。',
+    action:'本棚を整え、自分を守るために今日は何を断るかを決める。' },
+  { num:'25', shuku:'奎宿', en:'The Stride',       crystal:'サファイア',            attr:'水4',     gem:'💙', img:'kei.jpeg',
+    affirm:'私は積んだ知性で学びを体系化し、必要な人へ美しく伝えます。',
+    action:'赤いリボンに触れながら、今日結びたいご縁・伝えたい知恵をひとつ決める。' },
+  { num:'26', shuku:'婁宿', en:'The Bond',         crystal:'ルビー',                attr:'火4',     gem:'❤️', img:'rou_婁宿_文字背景修正版.png',
+    affirm:'私は情熱を形にし、努力の成果を堂々と受け取ります。',
+    action:'ヘアゴムや花を整え、散らばったタスクをひとつにまとめて最初の一歩を実行する。' },
+  { num:'27', shuku:'胃宿', en:'The Treasure',     crystal:'イエロートパーズ',      attr:'火4',     gem:'💛', img:'i_胃宿_文字修正版_v4_黒部分調整.png',
+    affirm:'私は今ある豊かさを味わい、満足の力でさらに運を広げます。',
+    action:'小物入れを整理し、大切なものを一つ選んで「守ってくれてありがとう」と感謝する。' },
+];
+
+// URL パラメータ解析
+var params = new URLSearchParams(location.search);
+var pidParam = params.get('pid');
+var shukuParam = params.get('shuku');
+var myShuku = shukuParam;
+var myName = '';
+
+if (pidParam && window.PARTICIPANTS_DATA) {
+  var pidKey = String(pidParam).padStart(3, '0');
+  var participant = window.PARTICIPANTS_DATA[pidKey];
+  if (participant) {
+    myShuku = participant.shuku;
+    myName = participant.name;
+  }
+}
+
+// 自分のカードデータを探す
+var myCardData = null;
+if (myShuku) {
+  for (var ci = 0; ci < cards.length; ci++) {
+    if (cards[ci].shuku === myShuku) { myCardData = cards[ci]; break; }
+  }
+}
+
+// パーソナルバナーを描画
+if (myCardData) {
+  var el = getDominantElement(myCardData.attr);
+  var sj = SEIJU[el] || SEIJU['火'];
+  var greeting = myName ? myName + 'さんの守護クリスタル' : 'あなたの守護クリスタル';
+  document.getElementById('my-banner').style.display = 'block';
+  document.getElementById('my-banner').innerHTML =
+    '<div class="banner-inner">' +
+      '<p class="banner-greeting">' + greeting + '</p>' +
+      '<div class="banner-gem">' + myCardData.gem + '</div>' +
+      '<div class="banner-shuku-name">' + myCardData.shuku + '</div>' +
+      '<div class="banner-crystal-name">' + myCardData.crystal + '</div>' +
+      '<div class="banner-seiju">' + sj.emoji + '&nbsp;' + sj.name + '&nbsp;— ' + sj.desc + '</div>' +
+      '<div class="banner-affirm">' + myCardData.affirm + '</div>' +
+      '<p class="banner-hint">↓ カードをタップして詳しく見る</p>' +
+    '</div>';
+}
+
+// ギャラリー描画
+var gallery = document.getElementById('gallery');
+if (myCardData) gallery.classList.add('has-my-card');
+
+var myCardEl = null;
+cards.forEach(function(c, i) {
+  var el = getDominantElement(c.attr);
+  var sj = SEIJU[el] || SEIJU['火'];
+  var isMyCard = myShuku && c.shuku === myShuku;
+
+  var wrap = document.createElement('div');
+  wrap.className = 'card-wrap' + (isMyCard ? ' my-card' : '');
+  wrap.style.transitionDelay = (i % 9) * 50 + 'ms';
+  wrap.onclick = function() { wrap.classList.toggle('flipped'); };
+
+  var bgStyle = c.img
+    ? "background-image:url('" + BASE + c.img + "')"
+    : "background: radial-gradient(circle at 40% 35%, rgba(180,160,220,0.12), rgba(10,6,30,0.98))";
+
+  var myBadge = isMyCard ? '<div class="my-card-badge">✦ あなたの宿</div>' : '';
+
+  wrap.innerHTML =
+    '<div class="card-inner">' +
+      '<div class="face front" style="' + bgStyle + '">' +
+        '<div class="grad-top"></div>' +
+        '<div class="grad-bot"></div>' +
+        '<div class="corner tl"></div><div class="corner tr"></div>' +
+        '<div class="corner bl"></div><div class="corner br"></div>' +
+        '<div class="num">No. ' + c.num + '</div>' +
+        '<div class="seiju-badge">' + sj.emoji + '</div>' +
+        myBadge +
+        '<div class="bottom-info">' +
+          '<div class="shuku">' + c.shuku + '</div>' +
+          '<div class="shuku-en">' + c.en + '</div>' +
+          '<div class="divider"></div>' +
+          '<div class="crystal">' + c.crystal + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="face back">' +
+        '<div class="bc tl"></div><div class="bc tr"></div>' +
+        '<div class="bc bl"></div><div class="bc br"></div>' +
+        '<div class="b-num">No. ' + c.num + ' / 27</div>' +
+        '<div class="b-gem">' + c.gem + '</div>' +
+        '<div class="b-line"></div>' +
+        '<div class="b-brand">Crystal Oracle Series</div>' +
+        '<div class="b-shuku">' + c.shuku + '</div>' +
+        '<div class="b-crystal-label">クリスタル</div>' +
+        '<div class="b-crystal">' + c.crystal + '</div>' +
+        '<div class="b-crystal-label" style="margin-top:5px">属性元素</div>' +
+        '<div class="b-crystal" style="font-size:10px;color:rgba(180,160,220,0.65)">' + c.attr + '</div>' +
+        '<div style="width:36px;height:1px;background:linear-gradient(to right,transparent,rgba(180,160,220,0.3),transparent);margin:6px auto"></div>' +
+        '<div style="font-size:8.5px;letter-spacing:0.03em;line-height:1.75;color:rgba(245,240,255,0.38);text-align:center;padding:0 4px;position:relative;z-index:1">' + c.affirm + '</div>' +
+      '</div>' +
+    '</div>';
+
+  gallery.appendChild(wrap);
+  if (isMyCard) myCardEl = wrap;
+});
+
+// 自分のカードへスクロール＆自動フリップ
+if (myCardEl) {
+  setTimeout(function() {
+    myCardEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(function() { myCardEl.classList.add('flipped'); }, 600);
+  }, 500);
+}
+</script>
+</body>
+</html>

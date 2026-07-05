@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>月読み日記BOOK | 月読みワンダーランド</title>
+  <meta name="description" content="月読みワンダーランドの月読み日記BOOK。月とともに、今の自分を整えるための書き込みページです。">
+  <link rel="stylesheet" href="style.css?v=diary-paper-20260530">
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="月読み日記">
+  <meta name="theme-color" content="#c9a84c">
+  <link rel="apple-touch-icon" href="moon_diary_cover.png">
+
+  <style>
+    .diary-book-image{margin:28px auto 0;max-width:760px}
+    .diary-book-image img{display:block;width:100%;height:auto;border-radius:10px;box-shadow:0 18px 50px rgba(0,0,0,.28);border:1px solid rgba(201,168,76,.35)}
+    .diary-cover-page{padding:clamp(10px,2.8vw,22px);background:transparent;border:0;box-shadow:none;text-align:center;overflow:visible}
+    .diary-cover-page::before,.diary-cover-page::after{display:none!important}
+    .diary-cover-image{width:min(100%,640px);margin:0 auto}
+    .diary-cover-image img{display:block;width:100%;max-width:100%;height:auto;border-radius:12px;box-shadow:0 24px 70px rgba(0,0,0,.38);border:1px solid rgba(216,181,109,.45)}
+    .diary-cover-note{position:relative;width:min(100%,650px);margin:20px auto 0;padding:0 12px;color:#f5e8c5;font-size:15px;line-height:2;letter-spacing:.04em;text-shadow:0 1px 12px rgba(0,0,0,.35)}
+    .editorial-lead{max-width:700px;margin:0 auto;color:#463b30;font-size:18px;line-height:2.2;text-align:left}
+    .editorial-lead p{margin:0 0 18px}
+    .diary-book-divider{display:flex;align-items:center;justify-content:center;gap:14px;margin:30px auto 26px;color:#a8792d;font-size:15px;letter-spacing:.18em}
+    .diary-book-divider:before,.diary-book-divider:after{content:"";width:82px;height:1px;background:linear-gradient(90deg,transparent,rgba(168,121,45,.75),transparent)}
+    .editorial-promise{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:28px auto 0;max-width:760px}
+    .editorial-promise article{padding:18px 16px;border:1px solid rgba(168,121,45,.28);border-radius:12px;background:rgba(255,250,242,.7);box-shadow:0 10px 28px rgba(94,62,25,.08)}
+    .editorial-promise strong{display:block;margin-bottom:8px;color:#8a5e22;font-size:15px;letter-spacing:.08em}
+    .editorial-promise span{display:block;color:#5a4a3b;font-size:13px;line-height:1.8}
+    .editorial-note{max-width:720px;margin:28px auto 0;padding:18px 22px;border-left:3px solid #b9893b;background:rgba(255,247,230,.72);color:#4e4033;font-size:15px;line-height:2;text-align:left}
+    .reader-card{max-width:760px;margin:0 auto 26px;padding:22px 24px;border:1px solid rgba(184,139,61,.34);border-radius:16px;background:rgba(255,250,242,.82);box-shadow:0 14px 38px rgba(94,62,25,.09);text-align:center}
+    .reader-card .reader-kicker{margin:0 0 10px;color:#9a6d28;font-size:12px;letter-spacing:.24em}
+    .reader-card .reader-name{margin:0;color:#3f3228;font-size:24px;line-height:1.6;font-weight:700}
+    .reader-card .reader-text{margin:10px 0 0;color:#5a4a3b;font-size:14px;line-height:1.9}
+    .journey-board{max-width:880px;margin:34px auto;padding:30px 24px;border:1px solid rgba(241,217,155,.42);border-radius:22px;background:linear-gradient(145deg,rgba(255,250,242,.12),rgba(241,217,155,.08));box-shadow:0 20px 70px rgba(0,0,0,.24);text-align:center}
+    .journey-board .journey-kicker{margin:0 0 10px;color:var(--gold2);font-size:12px;letter-spacing:.28em}
+    .journey-board h2{margin:0;color:var(--white);font-size:clamp(24px,4.8vw,38px);line-height:1.45;letter-spacing:.05em}
+    .journey-board .journey-lead{max-width:640px;margin:16px auto 0;color:var(--muted);font-size:15px;line-height:2}
+    .journey-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:28px auto 0}
+    .journey-step{position:relative;padding:20px 14px;border:1px solid rgba(241,217,155,.32);border-radius:16px;background:rgba(255,255,255,.07);text-align:left}
+    .journey-step:after{content:"";position:absolute;top:50%;right:-11px;width:10px;height:1px;background:rgba(241,217,155,.55)}
+    .journey-step:last-child:after{display:none}
+    .journey-step span{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;margin-bottom:12px;border-radius:50%;background:rgba(241,217,155,.18);border:1px solid rgba(241,217,155,.5);color:var(--gold2);font-size:13px;font-weight:bold}
+    .journey-step strong{display:block;color:var(--white);font-size:15px;line-height:1.6}
+    .journey-step small{display:block;margin-top:6px;color:var(--muted);font-size:12px;line-height:1.7}
+    .journey-main-action{margin-top:26px}
+    .journey-main-action .moon-button{font-size:17px;padding:15px 28px;box-shadow:0 14px 34px rgba(216,181,109,.25)}
+    .newmoon-gate-notice{display:none;max-width:660px;margin:22px auto 0;padding:20px 22px;border:1px solid rgba(241,217,155,.45);border-radius:18px;background:linear-gradient(160deg,rgba(241,217,155,.18),rgba(255,250,242,.08));box-shadow:0 18px 44px rgba(0,0,0,.2);text-align:center}
+    .newmoon-gate-notice.is-visible{display:block}
+    .newmoon-gate-notice .notice-kicker{margin:0 0 8px;color:var(--gold2);font-size:11px;letter-spacing:.22em}
+    .newmoon-gate-notice strong{display:block;color:var(--white);font-size:20px;line-height:1.7}
+    .newmoon-gate-notice p{margin:10px auto 0;max-width:560px;color:var(--muted);font-size:14px;line-height:2}
+    .moon-diary-write{position:relative;overflow:hidden}
+    .moon-diary-write:before{content:"";position:absolute;inset:16px;border:1px solid rgba(184,139,61,.18);border-radius:18px;pointer-events:none}
+    .moon-diary-write label{letter-spacing:.12em}
+    @media(max-width:860px){.journey-steps{grid-template-columns:1fr 1fr}.journey-step:after{display:none}}
+    @media(max-width:720px){.editorial-promise{grid-template-columns:1fr}.editorial-lead{font-size:16px;line-height:2}.diary-book-divider:before,.diary-book-divider:after{width:42px}}
+    @media(max-width:560px){.journey-steps{grid-template-columns:1fr}.journey-board{padding:26px 18px}.journey-main-action .moon-button{width:100%;max-width:340px}}
+    @media(max-width:640px){.diary-cover-page{padding:8px 0 0}.diary-cover-image{width:100%;max-width:calc(100vw - 34px)}.diary-book-image{margin-top:20px}.diary-book-image img,.diary-cover-image img{border-radius:6px}.diary-cover-note{width:calc(100vw - 42px);padding:0;font-size:13px;line-height:2.05;letter-spacing:.02em}}
+  </style>
+</head>
+<body>
+  <main class="manual-shell">
+    <section class="diary-book-page diary-cover-page" aria-label="月読み日記 書き込みワークBOOK 表紙">
+      <figure class="diary-cover-image">
+        <a href="challenge_day1_sync.html" data-keep-query data-fresh-start>
+          <img src="images/moon_diary_cover.png" alt="月読み日記 書き込みワークBOOK 感謝の習慣が、未来の光を呼び覚ます">
+        </a>
+      </figure>
+      <p class="diary-cover-note">
+        月の流れと日常アイテムに向き合い、<strong>心の本音をひらき</strong>ながら、
+        あなたの中の<strong>月の種</strong>を育てていく<strong>7日間</strong>の書き込みワークBOOKです。
+      </p>
+      <div style="margin-top:16px;text-align:center">
+        <a href="challenge_day1_sync.html" data-keep-query data-fresh-start style="display:inline-block;padding:12px 28px;background:linear-gradient(135deg,#c9a84c,#a87932);color:#fffaf0;text-decoration:none;border-radius:999px;font-size:14px;letter-spacing:.1em;font-family:inherit;box-shadow:0 4px 14px rgba(168,121,50,.35)">📖 Day1から書き始める</a>
+      </div>
+    </section>
+
+    <section class="diary-book-page diary-intro-image-page" aria-label="月読み日記 はじめに">
+      <figure class="diary-book-image" aria-label="月読み日記 はじめに">
+        <a href="challenge_day1_sync.html" data-keep-query data-fresh-start>
+          <img src="images/moon_diary_hajimeni.png" alt="月読み日記 はじめに 月を読み、私をひらく。">
+        </a>
+      </figure>
+    </section>
+
+    <section class="journey-board" aria-labelledby="journey-title">
+      <p class="journey-kicker">MOON WONDERLAND GUIDE</p>
+      <h2 id="journey-title">ここから、あなたの月読み日記が始まります</h2>
+      <p class="journey-lead">
+        鑑定書で受け取った<strong>月の種</strong>を、<strong>7日間の小さな記録</strong>で育てていく流れです。
+        まずはDay1から、<strong>今日の心に残ったこと</strong>を一文だけ残していきます。
+      </p>
+      <div class="journey-steps" aria-label="月読み日記の流れ">
+        <article class="journey-step">
+          <span>1</span>
+          <strong>鑑定書を受け取る</strong>
+          <small>あなたの月の種と、今の現在地を知る</small>
+        </article>
+        <article class="journey-step">
+          <span>2</span>
+          <strong>Day1から書き始める</strong>
+          <small>今の私の声を、短い言葉で残す</small>
+        </article>
+        <article class="journey-step">
+          <span>3</span>
+          <strong>7日間の日記へ進む</strong>
+          <small>月と日用品に向き合い、運の流れを整える</small>
+        </article>
+        <article class="journey-step">
+          <span>4</span>
+          <strong>第2の鑑定書が開く</strong>
+          <small>書いた言葉から、次のメッセージを受け取る</small>
+        </article>
+      </div>
+      <div class="journey-main-action">
+        <a class="moon-button" href="challenge_day1_sync.html" data-keep-query data-fresh-start data-newmoon-lock>Day1 月読み日記を始める</a>
+      </div>
+      <div class="newmoon-gate-notice" data-newmoon-notice aria-live="polite">
+        <p class="notice-kicker">MOON GATE NOTICE</p>
+        <strong>6月15日（月）双子座新月から、扉が開きます。</strong>
+        <p>
+          新月は、願いを始めるタイミングです。
+          双子座新月に願いをかけることで、コミュニケーション、学び、友情、夫婦関係の流れを整え、願いが叶いやすい流れを育てていきます。
+          6月15日から、月読み日記を一緒に始めましょう。
+        </p>
+      </div>
+    </section>
+
+    <section class="diary-book-page" aria-labelledby="moon-diary-howto-title">
+      <div class="diary-book-kicker">—＊—　月読み日記　—＊—</div>
+      <div class="diary-book-moon" aria-hidden="true">☾</div>
+      <h2 id="moon-diary-howto-title">この日記の使い方</h2>
+      <p class="diary-book-sub">1日3分、月の種を育てる</p>
+      <div class="diary-book-steps">
+        <div><span>1</span><strong>今日の月のテーマを読む</strong><small>今の月が照らしている<strong>テーマ</strong>を、やさしく受け取ります。</small></div>
+        <div><span>2</span><strong>今日の整えアイテムを見つめる</strong><small>身近なモノに宿る働きや、<strong>支えてくれている力</strong>に気づきます。</small></div>
+        <div><span>3</span><strong>心の本音を一文で書く</strong><small>うまくまとめなくて大丈夫です。<strong>今の自分の声</strong>をそのまま残します。</small></div>
+        <div><span>4</span><strong>明日の私へ小さな一歩を渡す</strong><small>今日の<strong>気づき</strong>を、明日の行動へ静かにつなげます。</small></div>
+      </div>
+      <p class="editorial-note">
+        リアルタイム参加が一番楽しいですが、1日遅れても、2日遅れても大丈夫です。
+        <strong>完璧に続けること</strong>より、<strong>戻ってこられる場所があること</strong>を大切にしてください。
+      </p>
+    </section>
+
+    <section class="next-moon-panel" aria-labelledby="moon-diary-next-title">
+      <p class="next-moon-kicker">NEXT PAGE</p>
+      <h2 id="moon-diary-next-title">書くほど、月の種が開花していく</h2>
+      <p>
+        <strong>月読み日記に残した言葉</strong>は、ただのメモではなく、
+        あなたの<strong>本音と願いを育てる小さな記録</strong>です。
+        7日間の記録は、<strong>第2の鑑定書の材料</strong>となり、
+        あなたが大切にしたい<strong>扱われ方、働き方、関わり方</strong>を照らしていきます。
+      </p>
+      <div class="manual-actions">
+        <a class="moon-button" href="challenge_day1_sync.html" data-keep-query data-fresh-start data-newmoon-lock>Day1 月読み日記を始める</a>
+      </div>
+    </section>
+
+    <footer class="gate-footer">
+      Shukuyo Astrology / 月読みワンダーランド<br>
+      みずきかのん　月読み師
+    </footer>
+  </main>
+
+  <script src="app.js"></script>
+  <script src="diary_data_sync.js?v=20260616a"></script>
+  <script>
+    (function(){
+      var params = new URLSearchParams(window.location.search);
+      var name = params.get('name') || 'あなた';
+      var birth = params.get('birth') || '';
+      var participantId = params.get('participantId') || '';
+      var shuku = params.get('shuku') || '';
+      var identity = participantId || birth || name;
+      var key = 'tsukiyomi:introReflection:v1:' + identity;
+      var textarea = document.querySelector('[data-intro-reflection]');
+      var saveButton = document.querySelector('[data-save-intro-reflection]');
+      var status = document.querySelector('[data-intro-reflection-status]');
+      var savedAt = document.querySelector('[data-intro-reflection-saved-at]');
+      document.querySelectorAll('[data-reader-name]').forEach(function(el){
+        el.textContent = name;
+      });
+      document.querySelectorAll('[data-keep-query]').forEach(function(link){
+        var href = link.getAttribute('href') || '';
+        if(window.location.search && href.indexOf('?') === -1) link.setAttribute('href', href + window.location.search);
+      });
+      document.querySelectorAll('[data-fresh-start]').forEach(function(link){
+        var href = link.getAttribute('href') || '';
+        var joiner = href.indexOf('?') === -1 ? '?' : '&';
+        if(href.indexOf('fresh=1') === -1) link.setAttribute('href', href + joiner + 'fresh=1');
+      });
+      var openDate = new Date('2026-06-15T00:00:00+09:00');
+      var notice = document.querySelector('[data-newmoon-notice]');
+      document.querySelectorAll('[data-newmoon-lock]').forEach(function(link){
+        link.addEventListener('click', function(event){
+          if(new Date() >= openDate) return;
+          event.preventDefault();
+          if(notice){
+            notice.classList.add('is-visible');
+            notice.scrollIntoView({behavior:'smooth',block:'center'});
+          }
+        });
+      });
+      function showSaved(timeText){
+        if(savedAt && timeText) savedAt.textContent = '保存日時：' + timeText;
+        if(status) status.textContent = '保存しました';
+      }
+      try {
+        var saved = JSON.parse(localStorage.getItem(key) || '{}');
+        if(textarea && saved.text) textarea.value = saved.text;
+        if(savedAt && saved.savedAtJst) savedAt.textContent = '保存日時：' + saved.savedAtJst;
+      } catch(error) {}
+      if(saveButton && textarea){
+        saveButton.addEventListener('click', function(){
+          var now = new Date();
+          var timeText = now.toLocaleString('ja-JP', {
+            timeZone: 'Asia/Tokyo',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit'
+          });
+          var payload = {
+            name: name,
+            birth: birth,
+            shuku: shuku,
+            participantId: participantId,
+            text: textarea.value,
+            savedAt: now.toISOString(),
+            savedAtJst: timeText
+          };
+          localStorage.setItem(key, JSON.stringify(payload));
+          showSaved(timeText);
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
