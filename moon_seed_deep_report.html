@@ -29,8 +29,8 @@
       box-shadow: none !important;
     }
 
-    /* 四隅マーク非表示 */
-    #corner-ornament { display: none; }
+    /* 四隅マーク非表示・印刷枠要素は画面では非表示 */
+    #corner-ornament, #print-page-frame { display: none; }
 
     /* イントロパネルの暗い背景・枠を除去 */
     [data-deep-report] .deep-report-intro-panel,
@@ -150,23 +150,32 @@
 
     /* ── 印刷設定 ────────────────────────── */
     @media print {
+      /* 印刷不要要素を非表示 */
       #global-nav, #apikey-panel, #corner-ornament,
       body > main::before, body > main::after,
       [data-no-diary-cta], .challenge-nav,
-      #data-backup-section { display: none !important; }
+      #data-backup-section, .gate-footer,
+      [style*="safe-area-inset-bottom"] { display: none !important; }
 
-      /* ヘッダー画像は印刷時非表示（暗い背景のため） */
       .deep-report-header-img, .moon-mark { display: none !important; }
 
-      /* 印刷の各ページに鑑定書枠を背景として表示 */
-      html {
-        background:
-          url('images/枠月透かし.png') center center / contain no-repeat fixed !important;
+      /* ★ 全印刷ページに枠を表示 (position:fixedは印刷時に全ページ繰り返される) */
+      #print-page-frame {
+        display: block !important;
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: url('images/枠月透かし.png') center center / contain no-repeat !important;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
+        pointer-events: none;
+        z-index: -1;
       }
-      body {
+
+      html, body {
         background: transparent !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
         font-size: 11pt;
         line-height: 1.85;
         color: #2a1810 !important;
@@ -175,7 +184,7 @@
       /* コンテンツ全幅・余白・シャドウなし・背景透明 */
       main.challenge-shell {
         width: 100% !important;
-        padding: 4% 10% !important;
+        padding: 5% 12% !important;
         margin: 0 !important;
         background: transparent !important;
         box-shadow: none !important;
@@ -222,6 +231,7 @@
 </head>
 <body>
   <div id="corner-ornament" aria-hidden="true"></div>
+  <div id="print-page-frame" aria-hidden="true"></div>
   <main class="challenge-shell" data-deep-report>
     <article class="challenge-card">
       <img src="images/deep_report_header.png" alt="第2の鑑定書" class="deep-report-header-img" onerror="this.style.display='none'">
