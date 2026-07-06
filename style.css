@@ -2599,8 +2599,8 @@ a {
 
 @page {
   size: A4 portrait;
-  /* 上下28mm・左右24mm: 枠の装飾部分の内側にコンテンツを収める */
-  margin: 28mm 24mm 28mm 24mm;
+  /* 上下38mm・左右26mm: 枠の花/ツタ装飾（~35mm）の内側にコンテンツを収める */
+  margin: 38mm 26mm 36mm 26mm;
 }
 
 @media print {
