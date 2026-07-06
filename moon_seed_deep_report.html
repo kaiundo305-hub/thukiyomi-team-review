@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>月読み日記｜第2の鑑定書 | 月読みワンダーランド</title>
   <meta name="description" content="7日間の月読み日記に残した言葉、写メ、感謝、次の一歩をもとに、おかげさまの流れを読み解く第2の鑑定書です。">
-  <link rel="stylesheet" href="style.css?v=20260701b">
+  <link rel="stylesheet" href="style.css?v=20260707a">
   <style>
     /* ══════════════════════════════════════════
        和紙テーマ ─ 全体を明るいクリーム・ゴールドに
@@ -143,6 +143,38 @@
     #deep-ai-analysis-section { color: #3d3328 !important; }
     #deep-ai-analysis-content { color: #3d3328 !important; }
 
+    /* ── カード・アイテムを和紙クリームに統一（ダークテーマ上書き） ── */
+    .deep-template-card,
+    .deep-report-intro-item,
+    [class*="deep-intro-item"],
+    [class*="deep-template-card"],
+    [class*="deep-diary-card"],
+    [class*="deep-guidance-block"],
+    [class*="moon-cycle"],
+    [class*="next-moon-item"],
+    .deep-guidance-block,
+    .completion-panel,
+    .moon-cycle-card,
+    .next-moon-section {
+      background: rgba(254,249,235,.9) !important;
+      border: 1px solid rgba(168,121,50,.22) !important;
+      color: #3d3328 !important;
+      box-shadow: 0 1px 8px rgba(100,60,20,.07) !important;
+    }
+    .deep-template-label { color: #a87932 !important; }
+    .deep-template-card h3,
+    .deep-template-card .deep-template-title { color: #7a5520 !important; }
+    .deep-template-text { color: #4a3728 !important; }
+    /* テキストエリアも和紙色に */
+    [class*="moon-cycle"] textarea,
+    .moon-cycle-input {
+      background: rgba(255,252,242,.8) !important;
+      border-color: rgba(168,121,50,.3) !important;
+      color: #3d3328 !important;
+    }
+    /* 月アイコン類は元の色を維持 */
+    .moon-phase-icon { filter: none !important; }
+
     /* フッター */
     .gate-footer { color: rgba(100,70,30,.55) !important; }
 
@@ -207,6 +239,21 @@
       /* 見出しのあとは改ページしない（孤立防止） */
       h2, h3 { break-after: avoid; orphans: 3; widows: 3; }
       p, li { orphans: 2; widows: 2; }
+
+      /* グリッド・カードは分割しない */
+      .deep-template-grid { break-inside: avoid; }
+      .deep-template-card { break-inside: avoid; }
+
+      /* カード背景を印刷用クリームに（ダークテーマ上書き） */
+      .deep-template-card,
+      .deep-report-intro-item {
+        background: rgba(254,249,235,.9) !important;
+        border: 1px solid rgba(168,121,50,.2) !important;
+        color: #2a1810 !important;
+        box-shadow: none !important;
+      }
+      .deep-template-label { color: #a87932 !important; }
+      .deep-template-card h3 { color: #7a5520 !important; }
 
       /* 暗いカード背景をすべてクリーム色に */
       [class*="deep-report-intro-item"],
