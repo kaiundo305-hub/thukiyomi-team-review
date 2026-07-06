@@ -11,13 +11,9 @@
        和紙テーマ ─ 全体を明るいクリーム・ゴールドに
        ══════════════════════════════════════════ */
 
-    /* 背景：枠月透かし画像を固定表示 */
-    html {
-      background: #faf5eb !important;
-    }
-    body {
-      background:
-        url('images/枠月透かし.png') center center / cover no-repeat fixed !important;
+    /* 背景：ページ間はグレー（Wordのような見た目） */
+    html, body {
+      background: #d0cec8 !important;
       color: #3d3328 !important;
       min-height: 100vh;
     }
@@ -33,8 +29,17 @@
       box-shadow: none !important;
     }
 
-    /* 装飾枠・四隅マークは画像に含まれるので非表示 */
+    /* 四隅マーク非表示 */
     #corner-ornament { display: none; }
+
+    /* イントロパネルの暗い背景・枠を除去 */
+    [data-deep-report] .deep-report-intro-panel,
+    [data-deep-report] .deep-report-intro-panel > *,
+    [class*="deep-report-intro-item"] {
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+    }
 
     /* ── テキストカラー（ダーク系に統一） ──── */
     [data-deep-report] .challenge-body p,
@@ -55,15 +60,24 @@
     .deep-report-epilogue-text strong { color: #a87932 !important; }
     .deep-report-intro-label { color: #b8903a !important; }
 
-    /* ── パネル：白地に金枠 ──────────────────── */
+    /* ── メインコンテンツ：A4幅・鑑定書背景をページとして縦タイル ── */
+    main.challenge-shell {
+      width: 794px !important;
+      max-width: 100% !important;
+      margin: 20px auto 100px !important;
+      padding: 64px 72px !important;
+      box-sizing: border-box !important;
+      background: url('images/枠月透かし.png') center top / 100% auto repeat-y !important;
+      box-shadow: 0 4px 32px rgba(60,40,10,.22) !important;
+    }
+
+    /* ── パネル：背景透明・枠なし（用紙に乗せる） ── */
     [data-deep-report] .deep-report-panel {
-      background:
-        radial-gradient(ellipse at 0% 0%, rgba(168,121,50,.12), transparent 40%),
-        radial-gradient(ellipse at 100% 100%, rgba(168,121,50,.10), transparent 38%),
-        linear-gradient(168deg, #fefcf5 0%, #fdf8ec 60%, #fbf3e0 100%) !important;
-      border: 1px solid rgba(168,121,50,.55) !important;
-      box-shadow: 0 8px 32px rgba(100,60,20,.10) !important;
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
       color: #3d3328 !important;
+      padding: 0 0 48px !important;
     }
     [data-deep-report] .deep-report-panel h2[data-seal]::before {
       color: rgba(168,121,50,.35) !important;
@@ -141,16 +155,67 @@
       [data-no-diary-cta], .challenge-nav,
       #data-backup-section { display: none !important; }
 
-      html, body { background: #fff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-      .challenge-shell { width: 100% !important; padding: 0 !important; }
-      .challenge-card { padding: 0 !important; }
-      [data-deep-report] .deep-report-panel {
-        break-inside: avoid;
-        border: 1px solid rgba(168,121,50,.4) !important;
-        box-shadow: none !important;
-        margin-bottom: 12px;
+      /* ヘッダー画像は印刷時非表示（暗い背景のため） */
+      .deep-report-header-img, .moon-mark { display: none !important; }
+
+      /* 印刷の各ページに鑑定書枠を背景として表示 */
+      html {
+        background:
+          url('images/枠月透かし.png') center center / contain no-repeat fixed !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
       }
-      #moon-cycle-section textarea { border: 1px solid rgba(168,121,50,.4) !important; min-height: 60px; }
+      body {
+        background: transparent !important;
+        font-size: 11pt;
+        line-height: 1.85;
+        color: #2a1810 !important;
+      }
+
+      /* コンテンツ全幅・余白・シャドウなし・背景透明 */
+      main.challenge-shell {
+        width: 100% !important;
+        padding: 4% 10% !important;
+        margin: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+      }
+      .challenge-card { padding: 0 !important; }
+
+      /* パネルは自然に流れる（強制改ページなし） */
+      [data-deep-report] .deep-report-panel {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 0 20px !important;
+        break-inside: auto;
+      }
+
+      /* 見出しのあとは改ページしない（孤立防止） */
+      h2, h3 { break-after: avoid; orphans: 3; widows: 3; }
+      p, li { orphans: 2; widows: 2; }
+
+      /* 暗いカード背景をすべてクリーム色に */
+      [class*="deep-report-intro-item"],
+      [class*="deep-template-card"],
+      [class*="deep-diary-card"],
+      [class*="moon-cycle"],
+      [class*="next-moon-item"],
+      .deep-guidance-block,
+      .completion-panel {
+        background: rgba(168,121,50,.06) !important;
+        border: 1px solid rgba(168,121,50,.25) !important;
+        color: #2a1810 !important;
+        box-shadow: none !important;
+      }
+
+      /* テキストエリア */
+      #moon-cycle-section textarea {
+        border: 1px solid rgba(168,121,50,.4) !important;
+        min-height: 40px;
+        background: #faf5eb !important;
+      }
+
       .deep-report-epilogue { display: none; }
     }
   </style>
@@ -538,7 +603,7 @@
 
     <!-- グローバルナビ（固定フッター） -->
     <nav id="global-nav" aria-label="メインメニュー" style="
-      position:fixed;bottom:0;left:0;right:0;z-index:9000;
+      position:fixed;bottom:0;left:0;right:0;z-index:10000;
       background:rgba(8,6,26,0.92);
       backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
       border-top:1px solid rgba(200,180,255,0.15);
@@ -585,12 +650,21 @@
       </label>
       <button onclick="gnavApiKey()" id="gnav-apikey" style="
         flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-        padding:10px 4px 9px;background:none;border:none;
+        padding:10px 4px 9px;background:none;border:none;border-right:1px solid rgba(200,180,255,0.08);
         color:rgba(241,217,155,0.7);cursor:pointer;font-size:11px;gap:3px;letter-spacing:.03em;
         font-family:inherit;transition:color .2s;-webkit-tap-highlight-color:transparent;
       ">
         <span style="font-size:20px;line-height:1;">🔑</span>
         <span>APIキー</span>
+      </button>
+      <button onclick="window.print()" id="gnav-print" style="
+        flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+        padding:10px 4px 9px;background:none;border:none;
+        color:rgba(200,180,255,0.7);cursor:pointer;font-size:11px;gap:3px;letter-spacing:.03em;
+        font-family:inherit;transition:color .2s;-webkit-tap-highlight-color:transparent;
+      ">
+        <span style="font-size:20px;line-height:1;">🖨️</span>
+        <span>印刷</span>
       </button>
     </nav>
 
