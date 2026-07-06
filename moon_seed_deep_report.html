@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>月読み日記｜第2の鑑定書 | 月読みワンダーランド</title>
   <meta name="description" content="7日間の月読み日記に残した言葉、写メ、感謝、次の一歩をもとに、おかげさまの流れを読み解く第2の鑑定書です。">
-  <link rel="stylesheet" href="style.css?v=20260707e">
+  <link rel="stylesheet" href="style.css?v=20260707f">
   <style>
     /* ══════════════════════════════════════════
        和紙テーマ ─ 全体を明るいクリーム・ゴールドに
@@ -219,29 +219,35 @@
       /* コンテンツ全幅・余白・シャドウなし・背景透明 */
       main.challenge-shell {
         width: 100% !important;
-        /* @page margin: 30mm上下 18mm左右 — コンテンツ側は最小パディング */
+        /* @page margin: 34mm上下 22mm左右 — 枠装飾ゾーン外にコンテンツを配置 */
         padding: 2mm 6mm !important;
         margin: 0 !important;
         background: transparent !important;
         box-shadow: none !important;
       }
 
-      /* 孤立行防止（ページ頭に1〜2行だけ残さない） */
-      p, li { orphans: 3; widows: 3; }
       .challenge-card { padding: 0 !important; }
 
-      /* パネルは自然に流れる（強制改ページなし） */
+      /* パネルはページ分割しない（パネル途中での改ページを防止） */
       [data-deep-report] .deep-report-panel {
         background: transparent !important;
         border: none !important;
         box-shadow: none !important;
-        padding: 0 0 20px !important;
-        break-inside: auto;
+        padding: 0 0 16px !important;
+        break-inside: avoid;
       }
 
-      /* 見出しのあとは改ページしない（孤立防止） */
-      h2, h3 { break-after: avoid; orphans: 3; widows: 3; }
-      p, li { orphans: 2; widows: 2; }
+      /* パネル末尾の装飾を印刷時非表示 */
+      [data-deep-report] .deep-report-panel::after { display: none !important; }
+
+      /* 4枚カードグリッドを印刷用2×2に変換（カード幅 37mm→78mm で読みやすく） */
+      .deep-report-opening .deep-template-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      }
+
+      /* 見出しのあとは改ページしない、孤立行を3行以上に設定 */
+      h2, h3 { break-after: avoid; }
+      p, li { orphans: 3; widows: 3; }
 
       /* カード1枚ずつ分割しない（グリッド全体はOK → 1ページ目の空白を防ぐ） */
       .deep-template-card,

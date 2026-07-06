@@ -2599,8 +2599,8 @@ a {
 
 @page {
   size: A4 portrait;
-  /* 上下30mm・左右22mm: 枠の内側ボーダー（約20mm）の内側に収める */
-  margin: 30mm 22mm 28mm 22mm;
+  /* 上下34mm・左右22mm: 枠の内側ボーダー（約28mm）より外に6mmの余白を確保 */
+  margin: 34mm 22mm 32mm 22mm;
 }
 
 @media print {
