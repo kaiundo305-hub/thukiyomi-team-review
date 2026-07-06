@@ -69,7 +69,8 @@
       margin: 20px auto 100px !important;
       padding: 64px 72px !important;
       box-sizing: border-box !important;
-      background: url('images/枠月透かし.png') center center / 100% 100% no-repeat !important;
+      /* A4サイズ(794×1122px)で縦タイル → 1ページごとに枠が表示される */
+      background: url('images/枠月透かし.png') center top / 100% 1122px repeat-y !important;
       box-shadow: 0 4px 32px rgba(60,40,10,.22) !important;
     }
 
@@ -186,7 +187,8 @@
       /* コンテンツ全幅・余白・シャドウなし・背景透明 */
       main.challenge-shell {
         width: 100% !important;
-        padding: 5% 12% !important;
+        /* @page margin 26mm上 + 4mm = 30mm → 枠内側ボーダー（~25mm）の内に収まる */
+        padding: 4mm 6mm !important;
         margin: 0 !important;
         background: transparent !important;
         box-shadow: none !important;

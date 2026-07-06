@@ -2599,7 +2599,8 @@ a {
 
 @page {
   size: A4 portrait;
-  margin: 15mm 12mm;
+  /* 上下を多めに取り枠の装飾部分（~25mm）にコンテンツが被らないようにする */
+  margin: 26mm 16mm 22mm 16mm;
 }
 
 @media print {
