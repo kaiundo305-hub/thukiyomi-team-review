@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>月読み日記｜第2の鑑定書 | 月読みワンダーランド</title>
   <meta name="description" content="7日間の月読み日記に残した言葉、写メ、感謝、次の一歩をもとに、おかげさまの流れを読み解く第2の鑑定書です。">
-  <link rel="stylesheet" href="style.css?v=20260707a">
+  <link rel="stylesheet" href="style.css?v=20260707b">
   <style>
     /* ══════════════════════════════════════════
        和紙テーマ ─ 全体を明るいクリーム・ゴールドに
@@ -219,8 +219,8 @@
       /* コンテンツ全幅・余白・シャドウなし・背景透明 */
       main.challenge-shell {
         width: 100% !important;
-        /* @page margin 26mm上 + 4mm = 30mm → 枠内側ボーダー（~25mm）の内に収まる */
-        padding: 4mm 6mm !important;
+        /* @page margin: 28mm上下 24mm左右 + これで枠飾りの内側に収まる */
+        padding: 2mm 4mm !important;
         margin: 0 !important;
         background: transparent !important;
         box-shadow: none !important;
@@ -240,9 +240,12 @@
       h2, h3 { break-after: avoid; orphans: 3; widows: 3; }
       p, li { orphans: 2; widows: 2; }
 
-      /* グリッド・カードは分割しない */
-      .deep-template-grid { break-inside: avoid; }
-      .deep-template-card { break-inside: avoid; }
+      /* カード1枚ずつ分割しない（グリッド全体はOK → 1ページ目の空白を防ぐ） */
+      .deep-template-card,
+      .deep-report-intro-item,
+      .deep-guidance-block,
+      .next-moon-section > *,
+      .completion-panel { break-inside: avoid; }
 
       /* カード背景を印刷用クリームに（ダークテーマ上書き） */
       .deep-template-card,
