@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>月読み日記｜第2の鑑定書 | 月読みワンダーランド</title>
   <meta name="description" content="7日間の月読み日記に残した言葉、写メ、感謝、次の一歩をもとに、おかげさまの流れを読み解く第2の鑑定書です。">
-  <link rel="stylesheet" href="style.css?v=20260707i">
+  <link rel="stylesheet" href="style.css?v=20260707j">
   <style>
     /* ══════════════════════════════════════════
        和紙テーマ ─ 全体を明るいクリーム・ゴールドに
@@ -219,8 +219,10 @@
       /* コンテンツ全幅・余白・シャドウなし・背景透明 */
       main.challenge-shell {
         width: 100% !important;
-        /* @page margin: 34mm上下 22mm左右 — 枠装飾ゾーン外にコンテンツを配置 */
-        padding: 2mm 6mm !important;
+        /* @page margin: 5mm（最小余白印刷と一致）+ padding で36字/行を実現 */
+        /* top: 5+33=38mm → 角装飾(~35mm)より3mm内側 */
+        /* sides: 5+27=32mm → 枠内側ボーダー(~18mm)から14mm余白、146mm=36字 */
+        padding: 33mm 27mm 31mm !important;
         margin: 0 !important;
         background: transparent !important;
         box-shadow: none !important;
@@ -295,6 +297,11 @@
       }
 
       .deep-report-epilogue { display: none; }
+
+      /* ── 四つのしるしパネルの後に改ページ → 第2の鑑定書が扉表紙になる ── */
+      .deep-report-opening {
+        break-after: page;
+      }
 
       /* ── moon-question (div#deep-title) はページをまたがない ── */
       /* p, li の orphans/widows は div に効かないため個別に指定 */

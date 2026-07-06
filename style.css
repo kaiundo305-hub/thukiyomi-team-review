@@ -2599,8 +2599,8 @@ a {
 
 @page {
   size: A4 portrait;
-  /* 上下36/34mm・左右27mm: 枠内側ボーダー（約18mm）から16mm内側にテキスト配置 */
-  margin: 36mm 27mm 34mm 27mm;
+  /* 5mm: 最小余白印刷と一致させる。余白制御はmain.challenge-shellのpaddingで行う */
+  margin: 5mm;
 }
 
 @media print {
