@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>月読み日記｜第2の鑑定書 | 月読みワンダーランド</title>
   <meta name="description" content="7日間の月読み日記に残した言葉、写メ、感謝、次の一歩をもとに、おかげさまの流れを読み解く第2の鑑定書です。">
-  <link rel="stylesheet" href="style.css?v=20260707g">
+  <link rel="stylesheet" href="style.css?v=20260707h">
   <style>
     /* ══════════════════════════════════════════
        和紙テーマ ─ 全体を明るいクリーム・ゴールドに
@@ -295,6 +295,36 @@
       }
 
       .deep-report-epilogue { display: none; }
+
+      /* ── 第2の鑑定書タイトルブロックは常に新ページから開始 ── */
+      .deep-report-title-block {
+        break-before: page;
+      }
+
+      /* ── moon-question (div#deep-title) はページをまたがない ── */
+      /* p, li の orphans/widows は div に効かないため個別に指定 */
+      #deep-title {
+        break-inside: avoid;
+        break-before: avoid;
+        color: #3d3328 !important;
+        background: transparent !important;
+        border-left-color: rgba(168,121,50,.65) !important;
+        padding: 8px 0 8px 14px !important;
+        font-size: 11pt !important;
+        margin: 12px 0 !important;
+      }
+
+      /* ── 4列カード印刷最適化（h3縮小・ギャップ削減） ── */
+      [data-deep-report] .deep-report-opening .deep-template-grid {
+        gap: 8px !important;
+      }
+      [data-deep-report] .deep-report-opening .deep-template-card {
+        padding: 10px 10px 8px !important;
+      }
+      [data-deep-report] .deep-report-opening .deep-template-card h3 {
+        font-size: 12px !important;
+        line-height: 1.5 !important;
+      }
     }
   </style>
 </head>
