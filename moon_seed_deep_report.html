@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>月読み日記｜第2の鑑定書 | 月読みワンダーランド</title>
   <meta name="description" content="7日間の月読み日記に残した言葉、写メ、感謝、次の一歩をもとに、おかげさまの流れを読み解く第2の鑑定書です。">
-  <link rel="stylesheet" href="style.css?v=20260707f">
+  <link rel="stylesheet" href="style.css?v=20260707g">
   <style>
     /* ══════════════════════════════════════════
        和紙テーマ ─ 全体を明るいクリーム・ゴールドに
@@ -240,11 +240,6 @@
       /* パネル末尾の装飾を印刷時非表示 */
       [data-deep-report] .deep-report-panel::after { display: none !important; }
 
-      /* 4枚カードグリッドを印刷用2×2に変換（カード幅 37mm→78mm で読みやすく） */
-      .deep-report-opening .deep-template-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-      }
-
       /* 見出しのあとは改ページしない、孤立行を3行以上に設定 */
       h2, h3 { break-after: avoid; }
       p, li { orphans: 3; widows: 3; }
@@ -286,6 +281,17 @@
         border: 1px solid rgba(168,121,50,.4) !important;
         min-height: 40px;
         background: #faf5eb !important;
+      }
+
+      /* ガイダンスブロック・月フェーズを左ボーダーアクセントに（角装飾との重複を解消） */
+      .deep-guidance-block,
+      .next-moon-section > * {
+        background: transparent !important;
+        border: none !important;
+        border-left: 3px solid rgba(168,121,50,.65) !important;
+        border-radius: 0 !important;
+        padding: 2px 0 10px 14px !important;
+        box-shadow: none !important;
       }
 
       .deep-report-epilogue { display: none; }
