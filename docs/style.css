@@ -2706,8 +2706,9 @@ a {
 }
 
 @page {
-  size: B5 portrait;
-  margin: 16mm 20mm;
+  size: A4 portrait;
+  /* 5mm: 最小余白印刷と一致させる。余白制御はmain.challenge-shellのpaddingで行う */
+  margin: 5mm;
 }
 
 @media print {
