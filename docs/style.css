@@ -2707,8 +2707,8 @@ a {
 
 @page {
   size: A4 portrait;
-  /* 5mm: 最小余白印刷と一致させる。余白制御はmain.challenge-shellのpaddingで行う */
-  margin: 5mm;
+  /* margin:0 で position:fixed 枠がページ端から始まる。余白制御はpaddingで行う */
+  margin: 0;
 }
 
 @media print {

@@ -14,8 +14,8 @@
 
     /* 背景：ページ外はstyle.cssの宇宙ディープブルーをそのまま使用 */
     /* body::before（星空 z-index:-2）・body::after（環境光 z-index:-1）はstyle.cssで維持 */
-    .deep-report-header-img { display: none !important; }
     .moon-mark { display: none !important; }
+    /* deep-report-header-imgは画面で表示（印刷では@media printで非表示） */
 
     /* カードラッパーを透明に */
     .challenge-card {
@@ -216,15 +216,27 @@
       /* コンテンツ全幅・余白・シャドウなし・背景透明 */
       main.challenge-shell {
         width: 100% !important;
-        /* @page margin: 5mm（最小余白印刷と一致）+ padding で36字/行を実現 */
-        /* top: 5+33=38mm → 角装飾(~35mm)より3mm内側 */
-        /* sides: 5+27=32mm → 枠内側ボーダー(~18mm)から14mm余白、146mm=36字 */
-        padding: 33mm 27mm 31mm !important;
+        /* @page margin:0 なので padding が紙端からの距離そのもの */
+        /* top: 38mm → 角装飾(~35mm)より3mm内側 */
+        /* sides: 32mm → 146mm=36字/行 */
+        padding: 38mm 32mm 36mm !important;
         margin: 0 !important;
         background: transparent !important;
         box-shadow: none !important;
         position: relative;
         z-index: 1;
+      }
+
+      /* 扉ページ（第2の鑑定書）のタイトルブロック：印刷時は枠画像に任せ透明化 */
+      .deep-report-title-block {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        min-height: auto !important;
+        padding: 28mm 0 20mm !important;
+      }
+      .deep-report-title-block::before {
+        border-color: rgba(168, 121, 50, .14) !important;
       }
 
       .challenge-card { padding: 0 !important; }
