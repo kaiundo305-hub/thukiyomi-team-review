@@ -24,16 +24,8 @@
       box-shadow: none !important;
     }
 
-    /* 四隅マーク非表示 */
-    #corner-ornament { display: none; }
-    /* 印刷枠：visibility:hiddenで不可視（display:noneはimgロードを妨げるため使わない） */
-    #print-page-frame {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      pointer-events: none;
-      visibility: hidden;
-    }
+    /* 四隅マーク・印刷枠は画面では非表示（preloadでimg読み込みを保証済み） */
+    #corner-ornament, #print-page-frame { display: none; }
 
     /* イントロパネルの暗い背景・枠を除去 */
     [data-deep-report] .deep-report-intro-panel,
@@ -195,9 +187,13 @@
 
       .deep-report-header-img, .moon-mark { display: none !important; }
 
-      /* ★ 全印刷ページに枠を表示（visibility切替でimgを確実に印刷） */
+      /* ★ 全印刷ページに枠を表示（imgタグ＋preloadで確実に印刷） */
       #print-page-frame {
-        visibility: visible !important;
+        display: block !important;
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        pointer-events: none;
         z-index: 0;
       }
       #print-page-frame img {
