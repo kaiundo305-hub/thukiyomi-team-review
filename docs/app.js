@@ -1664,7 +1664,7 @@
       // ローカルに日記データがない場合はサーバーから補完する（overrideパス）
       if (!ovHasDiary) {
         var ovSyncConfig = (function(){
-          var u = localStorage.getItem("tsukiyomi:sheetSync:url") || "https://script.google.com/macros/s/AKfycbw0crAKQgBOoZhUhBVQT8cClNIoelCsg3tZSog_EaLalfKoRg2qFgR-Ptga_k180pu_/exec";
+          var u = localStorage.getItem("tsukiyomi:sheetSync:url") || "https://script.google.com/macros/s/AKfycbxWpo3QzBNxemQNtYqYZfuMhjyrr2prjY6lsZPUZP5soKjimHzMts_Phz8D73DUYvbs/exec";
           var s = localStorage.getItem("tsukiyomi:sheetSync:secretKey") || "tsukiyomi-2026-key";
           return { url: u, secretKey: s };
         })();
@@ -1753,7 +1753,7 @@
         // ローカルにデータがない場合はサーバーから補完する
         if (Object.keys(autoDiaryMap).length === 0) {
           var autoSyncConfig = (function(){
-            var u = localStorage.getItem("tsukiyomi:sheetSync:url") || "https://script.google.com/macros/s/AKfycbw0crAKQgBOoZhUhBVQT8cClNIoelCsg3tZSog_EaLalfKoRg2qFgR-Ptga_k180pu_/exec";
+            var u = localStorage.getItem("tsukiyomi:sheetSync:url") || "https://script.google.com/macros/s/AKfycbxWpo3QzBNxemQNtYqYZfuMhjyrr2prjY6lsZPUZP5soKjimHzMts_Phz8D73DUYvbs/exec";
             var s = localStorage.getItem("tsukiyomi:sheetSync:secretKey") || "tsukiyomi-2026-key";
             return { url: u, secretKey: s };
           })();
@@ -1901,7 +1901,7 @@
     if (structuredIdentity && structuredIdentity !== "guest") {
       if (current) current.textContent = "日記データを読み込んでいます…";
       var syncConfig = (function(){
-        var u = localStorage.getItem("tsukiyomi:sheetSync:url") || "https://script.google.com/macros/s/AKfycbw0crAKQgBOoZhUhBVQT8cClNIoelCsg3tZSog_EaLalfKoRg2qFgR-Ptga_k180pu_/exec";
+        var u = localStorage.getItem("tsukiyomi:sheetSync:url") || "https://script.google.com/macros/s/AKfycbxWpo3QzBNxemQNtYqYZfuMhjyrr2prjY6lsZPUZP5soKjimHzMts_Phz8D73DUYvbs/exec";
         var s = localStorage.getItem("tsukiyomi:sheetSync:secretKey") || "tsukiyomi-2026-key";
         return { url: u, secretKey: s };
       })();
