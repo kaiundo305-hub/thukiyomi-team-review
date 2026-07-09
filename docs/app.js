@@ -1628,6 +1628,31 @@
       if (voicesSectionCont) voicesSectionCont.style.display = hasData ? "" : "none";
     }
 
+    // GASから取得した日記データの中の月フェーズ行をlocalStorage + DOM に復元
+    function restoreMoonPhaseFromGas(days, identity) {
+      var MOON_PREFIX = "tsukiyomi:moonPhase:v1:";
+      var phMap = { "moon-phase-new": "new", "moon-phase-first": "first", "moon-phase-full": "full", "moon-phase-last": "last" };
+      for (var dayNum in days) {
+        var lines = (days[dayNum] && days[dayNum].lines) || [];
+        lines.forEach(function(line) {
+          var ph = line.placeholder || "";
+          var text = (line.text || "").trim();
+          if (!text) return;
+          if (phMap[ph]) {
+            var lsKey = MOON_PREFIX + identity + ":" + phMap[ph];
+            if (!localStorage.getItem(lsKey)) localStorage.setItem(lsKey, text);
+            var el = document.getElementById("moon-phase-" + phMap[ph]);
+            if (el && !el.value) el.value = text;
+          }
+          if (ph === "moon-fullmoon-gemini") {
+            if (!localStorage.getItem("moon-fullmoon-gemini")) localStorage.setItem("moon-fullmoon-gemini", text);
+            var gEl = document.getElementById("moon-fullmoon-gemini");
+            if (gEl && !gEl.value) gEl.value = text;
+          }
+        });
+      }
+    }
+
     // チェック・編集ツール（kanon_deep_report_editor.html）で保存した内容があれば優先表示
     var pid = params.get("participantId") || params.get("pid") || "";
     var override = getDeepReportOverride(pid);
@@ -1690,6 +1715,7 @@
                     if (filled.length) fetchedOvDiary[dayNum] = filled;
                   }
                 }
+                restoreMoonPhaseFromGas(result.days, ovFetchPid);
                 if (Object.keys(fetchedOvDiary).length > 0) {
                   if (ovSummaryDays) ovSummaryDays.innerHTML = buildDiarySummaryHtml(fetchedOvDiary, 1, 7);
                   if (ovSummarySection) ovSummarySection.style.display = "";
@@ -1924,6 +1950,7 @@
                 if (filled.length) restored[dayNum] = filled;
               }
             }
+            restoreMoonPhaseFromGas(result.days, structuredIdentity);
             renderDeepReport(restored);
             if (window.TsukiyomiReportGen) {
               var fetchedReport = TsukiyomiReportGen.generate(profile);
