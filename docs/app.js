@@ -1664,13 +1664,13 @@
       // ローカルに日記データがない場合はサーバーから補完する（overrideパス）
       if (!ovHasDiary) {
         var ovSyncConfig = (function(){
-          var u = localStorage.getItem("tsukiyomi:sheetSync:url") || "https://script.google.com/macros/s/AKfycbxIffIfAOptA-WR6jjT9dg8Fc0yb9HpwsLTR-ZG43Nw12_KR_Yi0Xj9IT_FAyXGV_Ic/exec";
+          var u = localStorage.getItem("tsukiyomi:sheetSync:url") || "https://script.google.com/macros/s/AKfycbw0crAKQgBOoZhUhBVQT8cClNIoelCsg3tZSog_EaLalfKoRg2qFgR-Ptga_k180pu_/exec";
           var s = localStorage.getItem("tsukiyomi:sheetSync:secretKey") || "tsukiyomi-2026-key";
           return { url: u, secretKey: s };
         })();
         var ovSyncCached = {};
         try { ovSyncCached = JSON.parse(localStorage.getItem("tsukiyomi:diarySync:cachedProfile") || "{}"); } catch(e) {}
-        var ovFetchPid   = (ovIdentity && ovIdentity !== "guest") ? ovIdentity : (pid || profile.participantId || ovSyncCached.participantId || "");
+        var ovFetchPid   = pid || profile.participantId || (ovIdentity && ovIdentity !== "guest" ? ovIdentity : "") || ovSyncCached.participantId || "";
         var ovFetchEmail = profile.email || ovSyncCached.email || "";
         var ovFetchParts = [];
         if (ovFetchPid)   ovFetchParts.push("pid="   + encodeURIComponent(ovFetchPid));
@@ -1753,7 +1753,7 @@
         // ローカルにデータがない場合はサーバーから補完する
         if (Object.keys(autoDiaryMap).length === 0) {
           var autoSyncConfig = (function(){
-            var u = localStorage.getItem("tsukiyomi:sheetSync:url") || "https://script.google.com/macros/s/AKfycbxIffIfAOptA-WR6jjT9dg8Fc0yb9HpwsLTR-ZG43Nw12_KR_Yi0Xj9IT_FAyXGV_Ic/exec";
+            var u = localStorage.getItem("tsukiyomi:sheetSync:url") || "https://script.google.com/macros/s/AKfycbw0crAKQgBOoZhUhBVQT8cClNIoelCsg3tZSog_EaLalfKoRg2qFgR-Ptga_k180pu_/exec";
             var s = localStorage.getItem("tsukiyomi:sheetSync:secretKey") || "tsukiyomi-2026-key";
             return { url: u, secretKey: s };
           })();
@@ -1901,7 +1901,7 @@
     if (structuredIdentity && structuredIdentity !== "guest") {
       if (current) current.textContent = "日記データを読み込んでいます…";
       var syncConfig = (function(){
-        var u = localStorage.getItem("tsukiyomi:sheetSync:url") || "https://script.google.com/macros/s/AKfycbxIffIfAOptA-WR6jjT9dg8Fc0yb9HpwsLTR-ZG43Nw12_KR_Yi0Xj9IT_FAyXGV_Ic/exec";
+        var u = localStorage.getItem("tsukiyomi:sheetSync:url") || "https://script.google.com/macros/s/AKfycbw0crAKQgBOoZhUhBVQT8cClNIoelCsg3tZSog_EaLalfKoRg2qFgR-Ptga_k180pu_/exec";
         var s = localStorage.getItem("tsukiyomi:sheetSync:secretKey") || "tsukiyomi-2026-key";
         return { url: u, secretKey: s };
       })();
