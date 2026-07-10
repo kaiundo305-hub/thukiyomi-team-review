@@ -2004,10 +2004,15 @@
               }
             }
           } else {
-            renderDeepReport({});
+            // GASが空のとき、localStorageに日記があればそちらを使う
+            var fallbackMap = readStructuredDiary(profile.participantId || pid || structuredIdentity);
+            renderDeepReport(Object.keys(fallbackMap).length > 0 ? fallbackMap : {});
           }
         })
-        .catch(function(){ renderDeepReport({}); });
+        .catch(function(){
+          var fallbackMap = readStructuredDiary(profile.participantId || pid || structuredIdentity);
+          renderDeepReport(Object.keys(fallbackMap).length > 0 ? fallbackMap : {});
+        });
       return;
     }
 
