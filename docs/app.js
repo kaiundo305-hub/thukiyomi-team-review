@@ -1807,8 +1807,16 @@
                       if (filled.length) fetchedDiary[dayNum] = filled;
                     }
                   }
+                  restoreMoonPhaseFromGas(result.days, fetchIdentity);
                   if (autoSummaryDays) autoSummaryDays.innerHTML = buildDiarySummaryHtml(fetchedDiary, 1, 7);
                   if (autoSummarySection) autoSummarySection.style.display = "";
+                  if (Object.keys(fetchedDiary).length > 0) {
+                    var fetchedAutoReport = window.TsukiyomiReportGen ? window.TsukiyomiReportGen.generate(profile) : null;
+                    if (fetchedAutoReport) {
+                      renderVoicesPanels(fetchedAutoReport, true);
+                      applyDiaryMessages(true);
+                    }
+                  }
                 }
               })
               .catch(function(){});
