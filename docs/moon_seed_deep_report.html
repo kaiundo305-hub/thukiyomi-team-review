@@ -94,7 +94,10 @@
       padding: 64px 72px !important;
       box-sizing: border-box !important;
       /* A4サイズ(794×1122px)で縦タイル → 1ページごとに枠が表示される */
-      background: url('images/枠月透かし.png') center top / 100% 1122px repeat-y !important;
+      /* 枠画像の上に紙色を50%重ねて枠を薄く見せる */
+      background:
+        linear-gradient(rgba(248,241,227,.55), rgba(248,241,227,.55)),
+        url('images/枠月透かし.png') center top / 100% 1122px repeat-y !important;
       box-shadow: 0 4px 32px rgba(60,40,10,.22) !important;
     }
 
