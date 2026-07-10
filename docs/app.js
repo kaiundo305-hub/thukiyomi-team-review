@@ -1933,6 +1933,17 @@
 
     // localStorageにデータがあればそのまま描画
     if (hasStructured) {
+      // generate(profile) は profile.participantId(pid) キーで読むため、
+      // structuredIdentity が pid と異なる場合(birth日付等)はpidキーにコピー
+      var pidKey = profile.participantId || pid;
+      if (pidKey && pidKey !== structuredIdentity) {
+        for (var _d = 1; _d <= 7; _d++) {
+          var _src = "tsukiyomi:structuredDiary:v1:" + structuredIdentity + ":day:" + _d;
+          var _dst = "tsukiyomi:structuredDiary:v1:" + pidKey + ":day:" + _d;
+          var _raw = localStorage.getItem(_src);
+          if (_raw && !localStorage.getItem(_dst)) localStorage.setItem(_dst, _raw);
+        }
+      }
       renderDeepReport(diaryMap);
       applyDiaryMessages(true);
       return;
