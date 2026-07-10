@@ -1640,9 +1640,13 @@
           if (!text) return;
           if (phMap[ph]) {
             var lsKey = MOON_PREFIX + identity + ":" + phMap[ph];
-            if (!localStorage.getItem(lsKey)) localStorage.setItem(lsKey, text);
-            var el = document.getElementById("moon-phase-" + phMap[ph]);
-            if (el && !el.value) el.value = text;
+            var lsVal = localStorage.getItem(lsKey);
+            if (!lsVal) {
+              // localStorageにデータなし → GASデータを保存＆profile fallbackを上書き
+              localStorage.setItem(lsKey, text);
+              var el = document.getElementById("moon-phase-" + phMap[ph]);
+              if (el) el.value = text;
+            }
           }
           if (ph === "moon-fullmoon-gemini") {
             if (!localStorage.getItem("moon-fullmoon-gemini")) localStorage.setItem("moon-fullmoon-gemini", text);

@@ -2073,7 +2073,7 @@
                  || (new URLSearchParams(window.location.search||'')).get('pid') || '';
           var d = (window.PARTICIPANTS_DATA && pid && window.PARTICIPANTS_DATA[pid]) || {};
           if(!d.name){ try{ d = JSON.parse(localStorage.getItem('tsukiyomi:participantProfile:v1:'+pid)||'{}'); }catch(e){} }
-          var wish = d["新月の願い"] || d.q || d.q2 || d.newmoon || d.newMoon || d.wish || '';
+          var wish = d["新月の願い"] || d.newmoonWish || d.newmoon || d.newMoon || d.wish || d.q || d.q2 || '';
           if(wish) el.value = wish;
         }
       });
