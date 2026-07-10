@@ -1,7 +1,8 @@
 // participants_loader.js
 // 参加者ごとの個別JSONファイルから取得してキャッシュする（GAS不要版）
+// participants_data.js が先に読まれている場合はそのデータを優先する
 
-var PARTICIPANTS_DATA = {};
+var PARTICIPANTS_DATA = PARTICIPANTS_DATA || {};
 
 (function () {
   var CACHE_PREFIX = "tsukiyomi:participantProfile:v1:";
@@ -9,6 +10,9 @@ var PARTICIPANTS_DATA = {};
   var params = new URLSearchParams(window.location.search);
   var pid = params.get("participantId") || params.get("pid") || "";
   if (!pid) return;
+
+  // participants_data.js にデータがあればそれを使う
+  if (PARTICIPANTS_DATA[pid]) return;
 
   // --- localStorageキャッシュ確認 ---
   var CACHE_KEY = CACHE_PREFIX + pid;
