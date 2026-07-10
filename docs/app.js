@@ -1615,6 +1615,8 @@
           voicesContainer.innerHTML = report.voicesHtml;
         } else if (hasData) {
           voicesContainer.innerHTML = '<p class="deep-guidance-text">月読み日記に残された本人の言葉を読み込んでいます。</p>';
+        } else {
+          voicesContainer.innerHTML = '<p class="deep-guidance-text">まだ日記の記録がありません。7日間の日記が書かれると、ここに本人の言葉が表示されます。</p>';
         }
       }
       if (voicesContainerCont) {
@@ -1624,8 +1626,8 @@
           voicesContainerCont.innerHTML = '<p class="deep-guidance-text">続きの本人の言葉を読み込んでいます。</p>';
         }
       }
-      if (voicesSection) voicesSection.style.display = hasData ? "" : "none";
-      if (voicesSectionCont) voicesSectionCont.style.display = hasData ? "" : "none";
+      if (voicesSection) voicesSection.style.display = "";
+      if (voicesSectionCont) voicesSectionCont.style.display = (report && report.voicesHtmlCont) ? "" : "none";
     }
 
     // GASから取得した日記データの中の月フェーズ行をlocalStorage + DOM に復元
@@ -1684,10 +1686,6 @@
       }
       if (ovSummarySection) ovSummarySection.style.display = "";
       if (ovSummarySectionCont) ovSummarySectionCont.style.display = "none";
-      var ovVoicesSection = root.querySelector("[data-deep-voices-section]");
-      var ovVoicesSectionCont = root.querySelector("[data-deep-voices-section-cont]");
-      var ovVoicesContainer = root.querySelector("[data-deep-voices]");
-      var ovVoicesContainerCont = root.querySelector("[data-deep-voices-cont]");
       renderVoicesPanels(ov, ovHasDiary);
       applyDiaryMessages(ovHasDiary);
       // ローカルに日記データがない場合はサーバーから補完する（overrideパス）
@@ -1768,10 +1766,6 @@
           autoTemplateContainer.innerHTML = autoReport.templateHtml;
           if (autoTemplateSection) autoTemplateSection.style.display = "";
         }
-        var voicesSection = root.querySelector("[data-deep-voices-section]");
-        var voicesSectionCont = root.querySelector("[data-deep-voices-section-cont]");
-        var voicesContainer = root.querySelector("[data-deep-voices]");
-        var voicesContainerCont = root.querySelector("[data-deep-voices-cont]");
         renderVoicesPanels(autoReport, true);
         // 日記サマリーをautoReportパスでも必ず表示する
         var autoDiaryMap = readStructuredDiary(autoIdentity);
@@ -1874,10 +1868,7 @@
         if (templateSection) templateSection.style.display = "";
       }
 
-      var voicesSection = root.querySelector("[data-deep-voices-section]");
-      var voicesSectionCont = root.querySelector("[data-deep-voices-section-cont]");
       var voicesContainer = root.querySelector("[data-deep-voices]");
-      var voicesContainerCont = root.querySelector("[data-deep-voices-cont]");
       if (window.TsukiyomiReportGen && voicesContainer) {
         var generatedReport = TsukiyomiReportGen.generate(profile);
         renderVoicesPanels(generatedReport, hasData);
