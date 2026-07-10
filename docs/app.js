@@ -1855,7 +1855,7 @@
     var hasStructured = Object.keys(diaryMap).length > 0;
 
     function renderDeepReport(diaryMapToUse) {
-      var hasData = Object.keys(diaryMapToUse).length > 0;
+      var hasData = Object.keys(diaryMapToUse).some(function(k){ return /^[1-7]$/.test(k); });
       var templateSection = root.querySelector("[data-deep-template-section]");
       var templateContainer = root.querySelector("[data-deep-template]");
 
@@ -1958,40 +1958,42 @@
         .then(function(result){
           if (result && result.ok && result.days && Object.keys(result.days).length > 0) {
             var restored = {};
+            var oldSaveId = profile.participantId || pid || structuredIdentity;
             for (var dayNum in result.days) {
               var dayData = result.days[dayNum];
-              var key = "tsukiyomi:structuredDiary:v1:" + structuredIdentity + ":day:" + dayNum;
+              var key = "tsukiyomi:structuredDiary:v1:" + oldSaveId + ":day:" + dayNum;
               localStorage.setItem(key, JSON.stringify(dayData));
               if (dayData.lines) {
                 var filled = dayData.lines.filter(function(l){ return (l.text || "").trim().length > 0; });
                 if (filled.length) restored[dayNum] = filled;
               }
             }
-            restoreMoonPhaseFromGas(result.days, structuredIdentity);
+            restoreMoonPhaseFromGas(result.days, oldSaveId);
             renderDeepReport(restored);
+            applyDiaryMessages(true);
             if (window.TsukiyomiReportGen) {
-              var fetchedReport = TsukiyomiReportGen.generate(profile);
-              if (fetchedReport && fetchedReport.s1) {
-                if (current) renderDeepSection(current, fetchedReport.s1);
-                if (themes) renderDeepSection(themes, fetchedReport.s2);
-                if (shukuView) renderDeepSection(shukuView, fetchedReport.s3);
-                if (next) renderDeepSection(next, fetchedReport.s4);
-                var fetchedTemplateSection = root.querySelector("[data-deep-template-section]");
-                var fetchedTemplateContainer = root.querySelector("[data-deep-template]");
-                if (fetchedTemplateContainer && fetchedReport.templateHtml) {
-                  fetchedTemplateContainer.innerHTML = fetchedReport.templateHtml;
-                  if (fetchedTemplateSection) fetchedTemplateSection.style.display = "";
+              var hasDiaryDaysOld = false;
+              for (var dKeyOld in restored) { if (/^[1-7]$/.test(dKeyOld)) { hasDiaryDaysOld = true; break; } }
+              if (hasDiaryDaysOld) {
+                var fetchedReport = TsukiyomiReportGen.generate(profile);
+                if (fetchedReport && fetchedReport.s1) {
+                  if (current) renderDeepSection(current, fetchedReport.s1);
+                  if (themes) renderDeepSection(themes, fetchedReport.s2);
+                  if (shukuView) renderDeepSection(shukuView, fetchedReport.s3);
+                  if (next) renderDeepSection(next, fetchedReport.s4);
+                  var fetchedTemplateSection = root.querySelector("[data-deep-template-section]");
+                  var fetchedTemplateContainer = root.querySelector("[data-deep-template]");
+                  if (fetchedTemplateContainer && fetchedReport.templateHtml) {
+                    fetchedTemplateContainer.innerHTML = fetchedReport.templateHtml;
+                    if (fetchedTemplateSection) fetchedTemplateSection.style.display = "";
+                  }
+                  renderVoicesPanels(fetchedReport, true);
                 }
-                var fetchedVoicesSection = root.querySelector("[data-deep-voices-section]");
-                var fetchedVoicesSectionCont = root.querySelector("[data-deep-voices-section-cont]");
-                var fetchedVoicesContainer = root.querySelector("[data-deep-voices]");
-                var fetchedVoicesContainerCont = root.querySelector("[data-deep-voices-cont]");
-                renderVoicesPanels(fetchedReport, true);
               }
             }
           } else {
             renderDeepReport({});
-            }
+          }
         })
         .catch(function(){ renderDeepReport({}); });
       return;
