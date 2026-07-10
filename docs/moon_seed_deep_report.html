@@ -2000,20 +2000,65 @@
   <script src="app.js?v=20260709-tab-nav"></script>
   <script src="gemini_deep_analysis.js?v=20260705"></script>
   <script>
-  // 月の4フェーズ記録 — 自動保存・復元
+  // 月の4フェーズ記録 — 自動保存・復元・GAS同期
   (function(){
     var PHASE_KEY_PREFIX = 'tsukiyomi:moonPhase:v1:';
+    var _syncTimer = null;
     function getIdentity(){
       var p = new URLSearchParams(window.location.search||'');
       var c = {};
       try{ c = JSON.parse(localStorage.getItem('tsukiyomi:diarySync:cachedProfile')||'{}'); }catch(e){}
       return p.get('participantId')||p.get('pid')||p.get('email')||p.get('name')||c.participantId||c.email||c.name||'guest';
     }
+    function syncMoonPhaseToGas(identity) {
+      var gasUrl = localStorage.getItem('tsukiyomi:sheetSync:url') || '';
+      var secretKey = localStorage.getItem('tsukiyomi:sheetSync:secretKey') || 'tsukiyomi-2026-key';
+      if (!gasUrl) return;
+      var phases = { 'new':'moon-phase-new', 'first':'moon-phase-first', 'full':'moon-phase-full', 'last':'moon-phase-last' };
+      var lines = [];
+      Object.keys(phases).forEach(function(ph) {
+        var v = (localStorage.getItem(PHASE_KEY_PREFIX + identity + ':' + ph) || '').trim();
+        if (v) lines.push({ number: String(lines.length + 1), text: v, placeholder: phases[ph] });
+      });
+      var geminiVal = (localStorage.getItem('moon-fullmoon-gemini') || '').trim();
+      if (geminiVal) lines.push({ number: String(lines.length + 1), text: geminiVal, placeholder: 'moon-fullmoon-gemini' });
+      if (!lines.length) return;
+      var p = new URLSearchParams(window.location.search || '');
+      var pid = p.get('participantId') || p.get('pid') || identity;
+      var record = {
+        secretKey: secretKey,
+        savedAt: new Date().toISOString(),
+        savedAtJst: (function(){ try{ return new Date().toLocaleString('ja-JP',{timeZone:'Asia/Tokyo'}).replace(/\//g,'-'); }catch(e){ return ''; } })(),
+        recordType: 'moon_phase',
+        page: 'moon_seed_deep_report.html',
+        profile: { participantId: pid },
+        payload: { day: 'moon', lines: lines }
+      };
+      var iframeId = 'moon-phase-sync-iframe';
+      if (!document.getElementById(iframeId)) {
+        var iframe = document.createElement('iframe');
+        iframe.name = iframeId; iframe.id = iframeId; iframe.style.display = 'none';
+        document.body.appendChild(iframe);
+      }
+      var form = document.createElement('form');
+      form.method = 'GET'; form.action = gasUrl; form.target = iframeId; form.style.display = 'none';
+      [['secretKey', secretKey], ['data', JSON.stringify(record)]].forEach(function(pair) {
+        var inp = document.createElement('input'); inp.type = 'hidden'; inp.name = pair[0]; inp.value = pair[1];
+        form.appendChild(inp);
+      });
+      document.body.appendChild(form);
+      form.submit();
+      setTimeout(function(){ if(form.parentNode) form.parentNode.removeChild(form); }, 3000);
+    }
     window.saveMoonPhase = function(phase, value){
-      localStorage.setItem(PHASE_KEY_PREFIX + getIdentity() + ':' + phase, value);
+      var identity = getIdentity();
+      localStorage.setItem(PHASE_KEY_PREFIX + identity + ':' + phase, value);
       var el = document.getElementById('moon-phase-save-status');
       if(el){ el.textContent = '✓ 自動保存しました'; setTimeout(function(){ el.textContent=''; }, 2000); }
+      if(_syncTimer) clearTimeout(_syncTimer);
+      _syncTimer = setTimeout(function(){ syncMoonPhaseToGas(identity); }, 2500);
     };
+    window.syncMoonPhaseToGas = syncMoonPhaseToGas;
     document.addEventListener('DOMContentLoaded', function(){
       var identity = getIdentity();
       ['new','first','full','last'].forEach(function(phase){
