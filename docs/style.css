@@ -1165,15 +1165,25 @@ a {
   border: none;
   border-radius: 2px;
   background-color: #f8f1e3;
-  background-image: url('images/frame_body.jpg');
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
-  background-position: top center;
+  background-image: none;
   color: rgba(55, 30, 6, .88);
   box-shadow: 0 24px 60px rgba(55, 30, 6, .20), 0 2px 8px rgba(55,30,6,.08);
 }
 
-[data-deep-report] .deep-report-panel::before,
+/* フレーム画像を50%不透明の疑似要素で描画（全ページ共通） */
+[data-deep-report] .deep-report-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('images/frame_body.jpg');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: top center;
+  opacity: 0.5;
+  z-index: 0;
+  pointer-events: none;
+}
+
 [data-deep-report] .deep-report-panel::after {
   content: none;
 }
@@ -1403,21 +1413,6 @@ a {
 
 [data-deep-report] .deep-report-voices {
   max-height: none;
-  background-image: none;
-}
-
-/* 声セクション: フレーム画像を50%不透明の疑似要素で描画（縦伸び問題を緩和） */
-[data-deep-report] .deep-report-voices::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: url('images/frame_body.jpg');
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
-  background-position: top center;
-  opacity: 0.5;
-  z-index: 0;
-  pointer-events: none;
 }
 
 [data-deep-report] .deep-report-voices [data-deep-voices],
