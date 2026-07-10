@@ -1401,6 +1401,20 @@ a {
   color: rgba(61, 51, 40, .78);
 }
 
+[data-deep-report] .deep-report-voices {
+  max-height: 94svh;
+}
+
+[data-deep-report] .deep-report-voices [data-deep-voices],
+[data-deep-report] .deep-report-voices [data-deep-voices-cont] {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 4px;
+  scrollbar-color: rgba(168, 121, 50, .4) transparent;
+  scrollbar-width: thin;
+}
+
 [data-deep-report] .deep-report-template {
   background:
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='0.055'/%3E%3C/svg%3E"),
