@@ -1720,10 +1720,12 @@
                   }
                 }
                 restoreMoonPhaseFromGas(result.days, ovFetchPid);
-                if (Object.keys(fetchedOvDiary).length > 0) {
+                // "moon"キーは月フェーズ用なので除外して日記日数(1-7)のみ確認
+                var hasDiaryDaysOv = false;
+                for (var dKeyOv in fetchedOvDiary) { if (/^[1-7]$/.test(dKeyOv)) { hasDiaryDaysOv = true; break; } }
+                if (hasDiaryDaysOv) {
                   if (ovSummaryDays) ovSummaryDays.innerHTML = buildDiarySummaryHtml(fetchedOvDiary, 1, 7);
                   if (ovSummarySection) ovSummarySection.style.display = "";
-                  // 日記データから声のセクションを生成（日記引用の表示）
                   var genRep = window.TsukiyomiReportGen ? window.TsukiyomiReportGen.generate(profile) : null;
                   renderVoicesPanels(genRep || ov, true);
                   applyDiaryMessages(true);
@@ -1814,7 +1816,10 @@
                   restoreMoonPhaseFromGas(result.days, fetchIdentity);
                   if (autoSummaryDays) autoSummaryDays.innerHTML = buildDiarySummaryHtml(fetchedDiary, 1, 7);
                   if (autoSummarySection) autoSummarySection.style.display = "";
-                  if (Object.keys(fetchedDiary).length > 0) {
+                  // "moon"キーは月フェーズ用なので除外して日記日数(1-7)のみ確認
+                  var hasDiaryDays = false;
+                  for (var dKey in fetchedDiary) { if (/^[1-7]$/.test(dKey)) { hasDiaryDays = true; break; } }
+                  if (hasDiaryDays) {
                     var fetchedAutoReport = window.TsukiyomiReportGen ? window.TsukiyomiReportGen.generate(profile) : null;
                     if (fetchedAutoReport) {
                       renderVoicesPanels(fetchedAutoReport, true);
