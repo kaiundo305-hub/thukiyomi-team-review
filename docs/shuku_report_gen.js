@@ -235,19 +235,34 @@
     return a ? a.gapAdvice : 'この言葉に込めた気持ちを大切に。日常の中で、その感覚を少しずつ育てていきましょう。';
   }
 
+  function findAnyDiaryIdentity() {
+    try {
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i);
+        if (!k) continue;
+        var m = k.match(/^tsukiyomi:structuredDiary:v1:(.+):day:([1-7])$/);
+        if (m) return m[1];
+      }
+    } catch (e) {}
+    return null;
+  }
+
   function collectDiaryVoices(identity, shuku) {
     var candidates = [];
-    console.log('[Voices] identity=', identity);
+    // 指定identityにデータがなければ全スキャンでフォールバック
+    var hasAny = false;
+    for (var d = 1; d <= 7; d++) {
+      if (localStorage.getItem(STRUCTURED_DIARY_PREFIX + identity + ':day:' + d)) { hasAny = true; break; }
+    }
+    var useIdentity = hasAny ? identity : (findAnyDiaryIdentity() || identity);
     for (var day = 1; day <= 7; day++) {
-      var key = STRUCTURED_DIARY_PREFIX + identity + ':day:' + day;
+      var key = STRUCTURED_DIARY_PREFIX + useIdentity + ':day:' + day;
       try {
         var rec = JSON.parse(localStorage.getItem(key) || '{}');
-        console.log('[Voices] day=' + day, 'rec.day=', rec.day, 'lines=', rec.lines ? rec.lines.length : 'none');
         if (!rec || !rec.day) continue;
         if (Array.isArray(rec.lines)) {
           rec.lines.forEach(function(line) {
             var text = (line.text || '').trim();
-            console.log('[Voices]  line text=' + JSON.stringify(text) + ' len=' + text.length);
             if (text.length < 6) return;
             var hasRule = VOICE_ADVICE_RULES.some(function(r){ return r.p.test(text); });
             candidates.push({
