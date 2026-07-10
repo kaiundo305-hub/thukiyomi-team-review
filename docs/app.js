@@ -1363,7 +1363,7 @@
       var concern = params.get("concern") || participantData.concern || "";
       var q = params.get("q") || participantData.q || "";
       var q2 = params.get("q2") || participantData.q2 || "";
-      var newmoon = params.get("newmoon") || participantData.newmoon || participantData.wish || "";
+      var newmoon = params.get("newmoon") || participantData.newmoonWish || participantData.newmoon || participantData.wish || "";
       if (!zodiac && birth) zodiac = zodiacFromBirth(birth);
       try {
         var snap = JSON.parse(localStorage.getItem(day2SnapshotKey) || "{}");
@@ -1739,7 +1739,17 @@
     // 自動生成レポートがあれば表示（Day7保存時に生成済みのものを含む）
     if (window.TsukiyomiReportGen) {
       var autoIdentity = detectedStructuredIdentity || explicitStructuredIdentity || pid || profile.participantId || profile.name || "guest";
-      var autoReport = TsukiyomiReportGen.load(autoIdentity) || TsukiyomiReportGen.triggerIfReady(profile);
+      // 日記が birth date 等の別キーに保存されている場合、pid キーにも複製してから generate する
+      var autoPidKey = profile.participantId || pid;
+      if (autoIdentity && autoPidKey && autoIdentity !== autoPidKey) {
+        for (var _aday = 1; _aday <= 7; _aday++) {
+          var _asrcKey = "tsukiyomi:structuredDiary:v1:" + autoIdentity + ":day:" + _aday;
+          var _adstKey = "tsukiyomi:structuredDiary:v1:" + autoPidKey + ":day:" + _aday;
+          var _araw = localStorage.getItem(_asrcKey);
+          if (_araw && !localStorage.getItem(_adstKey)) localStorage.setItem(_adstKey, _araw);
+        }
+      }
+      var autoReport = TsukiyomiReportGen.load(autoIdentity) || TsukiyomiReportGen.load(autoPidKey) || TsukiyomiReportGen.triggerIfReady(profile);
       // 宿データなしで生成されたキャッシュを無効化して再生成
       if (autoReport && profile.shuku && autoReport.s3 && autoReport.s3.indexOf('宿曜情報がありません') >= 0) {
         autoReport = TsukiyomiReportGen.generate(profile);
