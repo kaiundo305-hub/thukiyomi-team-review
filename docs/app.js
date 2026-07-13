@@ -224,19 +224,7 @@
     function renderItemPhoto() {
       if (!itemPreview) return;
       var image = localStorage.getItem(itemPhotoKey) || "";
-      if (image) {
-        var photoSource = localStorage.getItem(itemPhotoKey + "_source") || "";
-        var saveNoteHtml = photoSource === "camera"
-          ? '<div class="photo-local-note">' +
-              '<p class="photo-local-note__text">📸 カメラロールには自動で保存されていません。</p>' +
-              '<a class="photo-dl-btn" href="' + image + '" download="月読み日記-Day' + day + '.jpg">📥 写真を保存する</a>' +
-              '<p class="photo-local-note__text" style="margin-top:8px;">① 上のボタンで写真を保存したら<br>② 「今日の私の写メ」ボタンから保存した写真を選んでください</p>' +
-            '</div>'
-          : '';
-        itemPreview.innerHTML = '<img src="' + image + '" alt="Day' + day + 'の整えアイテム写真">' + saveNoteHtml;
-      } else {
-        itemPreview.innerHTML = '<span>写真を選ぶと、ここに表示されます。</span>';
-      }
+      itemPreview.innerHTML = image ? '<img src="' + image + '" alt="Day' + day + 'の整えアイテム写真">' : '<span>写真を選ぶと、ここに表示されます。</span>';
     }
 
     function saveItemPhoto(file) {
@@ -253,7 +241,6 @@
           var ctx = canvas.getContext("2d");
           ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
           localStorage.setItem(itemPhotoKey, canvas.toDataURL("image/jpeg", .78));
-          localStorage.setItem(itemPhotoKey + "_source", "file");
           renderItemPhoto();
         };
         image.src = reader.result;
@@ -1363,7 +1350,7 @@
       var concern = params.get("concern") || participantData.concern || "";
       var q = params.get("q") || participantData.q || "";
       var q2 = params.get("q2") || participantData.q2 || "";
-      var newmoon = params.get("newmoon") || participantData.newmoonWish || participantData.newmoon || participantData.wish || "";
+      var newmoon = params.get("newmoon") || participantData.newmoon || participantData.wish || "";
       if (!zodiac && birth) zodiac = zodiacFromBirth(birth);
       try {
         var snap = JSON.parse(localStorage.getItem(day2SnapshotKey) || "{}");
@@ -1436,6 +1423,25 @@
       return result;
     }
 
+    function readDiaryWithBackup(pid, identity) {
+      var localMap = readStructuredDiary(identity);
+      if (!window.DIARY_BACKUP_DATA || !pid) return localMap;
+      var n = parseInt(pid, 10);
+      var paddedPid = n ? ("000" + n).slice(-3) : pid;
+      var backupEntry = DIARY_BACKUP_DATA[pid] || DIARY_BACKUP_DATA[paddedPid] || null;
+      if (!backupEntry || !backupEntry.days) return localMap;
+      var merged = {};
+      for (var k in localMap) merged[k] = localMap[k];
+      for (var day in backupEntry.days) {
+        if (!merged[day]) {
+          var bLines = backupEntry.days[day].lines || [];
+          var converted = bLines.map(function(l) { return {text: l.a, placeholder: l.q}; });
+          if (converted.length) merged[day] = converted;
+        }
+      }
+      return merged;
+    }
+
     function findStructuredDiaryIdentity() {
       var prefix = "tsukiyomi:structuredDiary:v1:";
       var scores = {};
@@ -1473,11 +1479,9 @@
       return {};
     }
 
-    function buildDiarySummaryHtml(diaryMap, startDay, endDay) {
-      startDay = startDay || 1;
-      endDay = endDay || 7;
+    function buildDiarySummaryHtml(diaryMap) {
       var html = "";
-      for (var d = startDay; d <= endDay; d++) {
+      for (var d = 1; d <= 7; d++) {
         var ds = String(d);
         var theme = DAY_THEMES[ds] || "";
         var lines = diaryMap[ds];
@@ -1546,10 +1550,26 @@
     }
 
     var profile = resolveBaseProfile();
-    var explicitStructuredIdentity = profile.birth || profile.email || profile.participantId || (profile.name && profile.name !== "あなた" ? profile.name : "");
-    var detectedStructuredIdentity = "";
-    if (!explicitStructuredIdentity || !readStructuredDiary(explicitStructuredIdentity).length) {
-      detectedStructuredIdentity = findStructuredDiaryIdentity();
+    var explicitStructuredIdentity = params.get("participantId") || params.get("pid") || profile.participantId || profile.email || profile.birth || (profile.name && profile.name !== "あなた" ? profile.name : "");
+    var detectedStructuredIdentity = explicitStructuredIdentity ? "" : findStructuredDiaryIdentity();
+    var _urlPid = params.get("participantId") || params.get("pid") || "";
+    if (_urlPid) {
+      var _cleanDiaryPrefix = "tsukiyomi:structuredDiary:v1:" + _urlPid + ":day:";
+      for (var _ci = 1; _ci <= 7; _ci++) {
+        var _ckey = _cleanDiaryPrefix + _ci;
+        if (localStorage.getItem(_ckey)) {
+          try {
+            var _crec = JSON.parse(localStorage.getItem(_ckey));
+            var _storedPid = _crec && _crec.profile && _crec.profile.participantId;
+            if (!_storedPid || _storedPid !== _urlPid) {
+              localStorage.removeItem(_ckey);
+            }
+          } catch (e) {
+            localStorage.removeItem(_ckey);
+          }
+        }
+      }
+      localStorage.removeItem("tsukiyomi:autoReport:v3:" + _urlPid);
     }
     if (detectedStructuredIdentity) {
       var detectedProfile = readStructuredProfile(detectedStructuredIdentity);
@@ -1567,33 +1587,15 @@
 
     renderFirstConcern(root, profile);
 
+    var recipientEl = root.querySelector("[data-deep-recipient]");
+    if (recipientEl && profile.name && profile.name !== "あなた") {
+      recipientEl.textContent = profile.name + " さんへ";
+    }
+
     // @@Q@@...@@/Q@@ マーカーを日記引用ブロックに変換してinnerHTML描画
     function renderDeepSection(el, rawText) {
       if (!el || !rawText) return;
-      var sourceText = String(rawText);
-
-      // 第一章の長文は段落単位で2ページへ分け、本文サイズを維持する
-      if (el.hasAttribute('data-deep-current')) {
-        var continuationSection = root.querySelector('[data-deep-current-continuation]');
-        var continuationText = root.querySelector('[data-deep-current-cont]');
-        var paragraphs = sourceText.split(/\n\s*\n/).filter(function(part) { return part.trim(); });
-        if (paragraphs.length > 1 && sourceText.length > 430 && continuationSection && continuationText) {
-          var runningLength = 0;
-          var splitIndex = 1;
-          for (var pi = 0; pi < paragraphs.length - 1; pi++) {
-            runningLength += paragraphs[pi].length;
-            splitIndex = pi + 1;
-            if (runningLength >= sourceText.length * 0.52) break;
-          }
-          sourceText = paragraphs.slice(0, splitIndex).join('\n\n');
-          continuationSection.style.display = '';
-          renderDeepSection(continuationText, paragraphs.slice(splitIndex).join('\n\n'));
-        } else if (continuationSection) {
-          continuationSection.style.display = 'none';
-        }
-      }
-
-      var html = sourceText
+      var html = String(rawText)
         .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
         .replace(/@@KW@@([\s\S]*?)@@\/KW@@/g, function(_, inner) {
           return '<span class="deep-kw-block"><span class="deep-kw-label">✦ 7日間のキーワード</span><span class="deep-kw-words">' + inner + '</span></span>';
@@ -1605,64 +1607,10 @@
       el.innerHTML = html;
     }
 
-    function renderVoicesPanels(report, hasData) {
-      var voicesSection = root.querySelector("[data-deep-voices-section]");
-      var voicesSectionCont = root.querySelector("[data-deep-voices-section-cont]");
-      var voicesContainer = root.querySelector("[data-deep-voices]");
-      var voicesContainerCont = root.querySelector("[data-deep-voices-cont]");
-      if (voicesContainer) {
-        if (report && report.voicesHtml) {
-          voicesContainer.innerHTML = report.voicesHtml;
-        } else if (hasData) {
-          voicesContainer.innerHTML = '<p class="deep-guidance-text">月読み日記に残された本人の言葉を読み込んでいます。</p>';
-        } else {
-          voicesContainer.innerHTML = '<p class="deep-guidance-text">まだ日記の記録がありません。7日間の日記が書かれると、ここに本人の言葉が表示されます。</p>';
-        }
-      }
-      if (voicesContainerCont) {
-        if (report && report.voicesHtmlCont) {
-          voicesContainerCont.innerHTML = report.voicesHtmlCont;
-        } else if (hasData) {
-          voicesContainerCont.innerHTML = '<p class="deep-guidance-text">続きの本人の言葉を読み込んでいます。</p>';
-        }
-      }
-      if (voicesSection) voicesSection.style.display = "";
-      if (voicesSectionCont) voicesSectionCont.style.display = (report && report.voicesHtmlCont) ? "" : "none";
-    }
-
-    // GASから取得した日記データの中の月フェーズ行をlocalStorage + DOM に復元
-    function restoreMoonPhaseFromGas(days, identity) {
-      var MOON_PREFIX = "tsukiyomi:moonPhase:v1:";
-      var phMap = { "moon-phase-new": "new", "moon-phase-first": "first", "moon-phase-full": "full", "moon-phase-last": "last" };
-      for (var dayNum in days) {
-        var lines = (days[dayNum] && days[dayNum].lines) || [];
-        lines.forEach(function(line) {
-          var ph = line.placeholder || "";
-          var text = (line.text || "").trim();
-          if (!text) return;
-          if (phMap[ph]) {
-            var lsKey = MOON_PREFIX + identity + ":" + phMap[ph];
-            var lsVal = localStorage.getItem(lsKey);
-            if (!lsVal) {
-              // localStorageにデータなし → GASデータを保存＆profile fallbackを上書き
-              localStorage.setItem(lsKey, text);
-              var el = document.getElementById("moon-phase-" + phMap[ph]);
-              if (el) el.value = text;
-            }
-          }
-          if (ph === "moon-fullmoon-gemini") {
-            if (!localStorage.getItem("moon-fullmoon-gemini")) localStorage.setItem("moon-fullmoon-gemini", text);
-            var gEl = document.getElementById("moon-fullmoon-gemini");
-            if (gEl && !gEl.value) gEl.value = text;
-          }
-        });
-      }
-    }
-
     // チェック・編集ツール（kanon_deep_report_editor.html）で保存した内容があれば優先表示
     var pid = params.get("participantId") || params.get("pid") || "";
     var override = getDeepReportOverride(pid);
-      if (override) {
+    if (override) {
       var ov = override;
       if (current && ov.s1) renderDeepSection(current, ov.s1);
       if (themes && ov.s2) renderDeepSection(themes, ov.s2);
@@ -1675,91 +1623,32 @@
         if (kanonPanel) kanonPanel.style.display = "";
       }
       // オーバーライドモードでも日記サマリーを表示する
-      var ovIdentity = detectedStructuredIdentity || explicitStructuredIdentity || params.get("participantId") || params.get("pid") || profile.participantId || profile.name || "guest";
-      var ovDiaryMap = readStructuredDiary(ovIdentity);
+      var ovIdentity = params.get("participantId") || params.get("pid") || profile.participantId || profile.email || profile.birth || profile.name || "guest";
+      var ovPid = params.get("participantId") || params.get("pid") || profile.participantId || "";
+      var ovDiaryMap = readDiaryWithBackup(ovPid, ovIdentity);
       var ovHasDiary = Object.keys(ovDiaryMap).length > 0;
-      var ovSummarySection = root.querySelector("[data-deep-diary-summary]");
-      var ovSummarySectionCont = root.querySelector("[data-deep-diary-summary-cont]");
-      var ovSummaryDays = root.querySelector("[data-deep-diary-days]");
-      if (ovSummaryDays) {
-        ovSummaryDays.innerHTML = buildDiarySummaryHtml(ovDiaryMap, 1, 7);
-      }
-      if (ovSummarySection) ovSummarySection.style.display = "";
-      if (ovSummarySectionCont) ovSummarySectionCont.style.display = "none";
-      renderVoicesPanels(ov, ovHasDiary);
-      applyDiaryMessages(ovHasDiary);
-      // ローカルに日記データがない場合はサーバーから補完する（overrideパス）
-      if (!ovHasDiary) {
-        var ovSyncConfig = (function(){
-          var u = localStorage.getItem("tsukiyomi:sheetSync:url") || "https://script.google.com/macros/s/AKfycbxWpo3QzBNxemQNtYqYZfuMhjyrr2prjY6lsZPUZP5soKjimHzMts_Phz8D73DUYvbs/exec";
-          var s = localStorage.getItem("tsukiyomi:sheetSync:secretKey") || "tsukiyomi-2026-key";
-          return { url: u, secretKey: s };
-        })();
-        var ovSyncCached = {};
-        try { ovSyncCached = JSON.parse(localStorage.getItem("tsukiyomi:diarySync:cachedProfile") || "{}"); } catch(e) {}
-        var ovFetchPid   = pid || profile.participantId || (ovIdentity && ovIdentity !== "guest" ? ovIdentity : "") || ovSyncCached.participantId || "";
-        var ovFetchEmail = profile.email || ovSyncCached.email || "";
-        var ovFetchParts = [];
-        if (ovFetchPid)   ovFetchParts.push("pid="   + encodeURIComponent(ovFetchPid));
-        if (ovFetchEmail) ovFetchParts.push("email=" + encodeURIComponent(ovFetchEmail));
-        if (ovFetchParts.length > 0) {
-          var ovFetchUrl = ovSyncConfig.url + "?" + ovFetchParts.join("&") + "&secretKey=" + encodeURIComponent(ovSyncConfig.secretKey) + "&t=" + Date.now();
-          fetch(ovFetchUrl, { redirect: "follow" })
-            .then(function(r){ return r.json(); })
-            .then(function(result){
-              if (result && result.ok && result.days && Object.keys(result.days).length > 0) {
-                var fetchedOvDiary = {};
-                for (var dayNum in result.days) {
-                  var dayData = result.days[dayNum];
-                  localStorage.setItem("tsukiyomi:structuredDiary:v1:" + ovFetchPid + ":day:" + dayNum, JSON.stringify(dayData));
-                  if (dayData.lines) {
-                    var filled = dayData.lines.filter(function(l){ return (l.text || "").trim().length > 0; });
-                    if (filled.length) fetchedOvDiary[dayNum] = filled;
-                  }
-                }
-                restoreMoonPhaseFromGas(result.days, ovFetchPid);
-                // "moon"キーは月フェーズ用なので除外して日記日数(1-7)のみ確認
-                var hasDiaryDaysOv = false;
-                for (var dKeyOv in fetchedOvDiary) { if (/^[1-7]$/.test(dKeyOv)) { hasDiaryDaysOv = true; break; } }
-                if (hasDiaryDaysOv) {
-                  if (ovSummaryDays) ovSummaryDays.innerHTML = buildDiarySummaryHtml(fetchedOvDiary, 1, 7);
-                  if (ovSummarySection) ovSummarySection.style.display = "";
-                  var genRep = window.TsukiyomiReportGen ? window.TsukiyomiReportGen.generate(profile) : null;
-                  renderVoicesPanels(genRep || ov, true);
-                  applyDiaryMessages(true);
-                }
-              }
-            })
-            .catch(function(){});
+      if (ovHasDiary) {
+        var ovSummarySection = root.querySelector("[data-deep-diary-summary]");
+        var ovSummaryDays = root.querySelector("[data-deep-diary-days]");
+        if (ovSummaryDays) {
+          ovSummaryDays.innerHTML = buildDiarySummaryHtml(ovDiaryMap);
+          if (ovSummarySection) ovSummarySection.style.display = "";
         }
       }
+      applyDiaryMessages(ovHasDiary);
       return;
     }
 
     // 自動生成レポートがあれば表示（Day7保存時に生成済みのものを含む）
     if (window.TsukiyomiReportGen) {
-      var autoIdentity = detectedStructuredIdentity || explicitStructuredIdentity || pid || profile.participantId || profile.name || "guest";
-      // 日記が birth date 等の別キーに保存されている場合、pid キーにも複製してから generate する
-      var autoPidKey = profile.participantId || pid;
-      if (autoIdentity && autoPidKey && autoIdentity !== autoPidKey) {
-        for (var _aday = 1; _aday <= 7; _aday++) {
-          var _asrcKey = "tsukiyomi:structuredDiary:v1:" + autoIdentity + ":day:" + _aday;
-          var _adstKey = "tsukiyomi:structuredDiary:v1:" + autoPidKey + ":day:" + _aday;
-          var _araw = localStorage.getItem(_asrcKey);
-          if (_araw && !localStorage.getItem(_adstKey)) localStorage.setItem(_adstKey, _araw);
-        }
-      }
-      var autoReport = TsukiyomiReportGen.load(autoIdentity) || TsukiyomiReportGen.load(autoPidKey) || TsukiyomiReportGen.triggerIfReady(profile);
+      var autoIdentity = detectedStructuredIdentity || pid || profile.participantId || profile.email || profile.birth || profile.name || "guest";
+      var autoReport = TsukiyomiReportGen.load(autoIdentity) || TsukiyomiReportGen.triggerIfReady(profile);
       // 宿データなしで生成されたキャッシュを無効化して再生成
       if (autoReport && profile.shuku && autoReport.s3 && autoReport.s3.indexOf('宿曜情報がありません') >= 0) {
         autoReport = TsukiyomiReportGen.generate(profile);
       }
       // 名前なしで生成されたキャッシュも再生成（「あなた」で始まる場合）
       if (autoReport && profile.name && profile.name !== 'あなた' && autoReport.s3 && autoReport.s3.indexOf('あなた') === 0) {
-        autoReport = TsukiyomiReportGen.generate(profile);
-      }
-      // 旧キャッシュで日記の続きが空のままなら、最新ロジックで再生成する
-      if (autoReport && (!autoReport.voicesHtml || !autoReport.voicesHtmlCont)) {
         autoReport = TsukiyomiReportGen.generate(profile);
       }
       if (autoReport && !autoReport.templateHtml) {
@@ -1776,64 +1665,11 @@
           autoTemplateContainer.innerHTML = autoReport.templateHtml;
           if (autoTemplateSection) autoTemplateSection.style.display = "";
         }
-        renderVoicesPanels(autoReport, true);
-        // 日記サマリーをautoReportパスでも必ず表示する
-        var autoDiaryMap = readStructuredDiary(autoIdentity);
-        var autoSummarySection = root.querySelector("[data-deep-diary-summary]");
-        var autoSummaryDays = root.querySelector("[data-deep-diary-days]");
-        if (autoSummaryDays) {
-          autoSummaryDays.innerHTML = buildDiarySummaryHtml(autoDiaryMap, 1, 7);
-        }
-        if (autoSummarySection) autoSummarySection.style.display = "";
-        applyDiaryMessages(Object.keys(autoDiaryMap).length > 0);
-        // ローカルにデータがない場合はサーバーから補完する
-        if (Object.keys(autoDiaryMap).length === 0) {
-          var autoSyncConfig = (function(){
-            var u = localStorage.getItem("tsukiyomi:sheetSync:url") || "https://script.google.com/macros/s/AKfycbxWpo3QzBNxemQNtYqYZfuMhjyrr2prjY6lsZPUZP5soKjimHzMts_Phz8D73DUYvbs/exec";
-            var s = localStorage.getItem("tsukiyomi:sheetSync:secretKey") || "tsukiyomi-2026-key";
-            return { url: u, secretKey: s };
-          })();
-          // diary_data_sync.js が保存するキャッシュからも補完（URLパラメータなしでも email が取れる）
-          var syncCached = {};
-          try { syncCached = JSON.parse(localStorage.getItem("tsukiyomi:diarySync:cachedProfile") || "{}"); } catch(e) {}
-          var fetchPid   = profile.participantId || pid || syncCached.participantId || "";
-          var fetchEmail = profile.email || syncCached.email || "";
-          var autoFetchParts = [];
-          if (fetchPid)   autoFetchParts.push("pid="   + encodeURIComponent(fetchPid));
-          if (fetchEmail) autoFetchParts.push("email=" + encodeURIComponent(fetchEmail));
-          if (autoFetchParts.length > 0) {
-            var fetchIdentity = fetchPid || fetchEmail || autoIdentity;
-            var autoFetchUrl = autoSyncConfig.url + "?" + autoFetchParts.join("&") + "&secretKey=" + encodeURIComponent(autoSyncConfig.secretKey) + "&t=" + Date.now();
-            fetch(autoFetchUrl, { redirect: "follow" })
-              .then(function(r){ return r.json(); })
-              .then(function(result){
-                if (result && result.ok && result.days && Object.keys(result.days).length > 0) {
-                  var fetchedDiary = {};
-                  for (var dayNum in result.days) {
-                    var dayData = result.days[dayNum];
-                    localStorage.setItem("tsukiyomi:structuredDiary:v1:" + fetchIdentity + ":day:" + dayNum, JSON.stringify(dayData));
-                    if (dayData.lines) {
-                      var filled = dayData.lines.filter(function(l){ return (l.text || "").trim().length > 0; });
-                      if (filled.length) fetchedDiary[dayNum] = filled;
-                    }
-                  }
-                  restoreMoonPhaseFromGas(result.days, fetchIdentity);
-                  if (autoSummaryDays) autoSummaryDays.innerHTML = buildDiarySummaryHtml(fetchedDiary, 1, 7);
-                  if (autoSummarySection) autoSummarySection.style.display = "";
-                  // "moon"キーは月フェーズ用なので除外して日記日数(1-7)のみ確認
-                  var hasDiaryDays = false;
-                  for (var dKey in fetchedDiary) { if (/^[1-7]$/.test(dKey)) { hasDiaryDays = true; break; } }
-                  if (hasDiaryDays) {
-                    var fetchedAutoReport = window.TsukiyomiReportGen ? window.TsukiyomiReportGen.generate(profile) : null;
-                    if (fetchedAutoReport) {
-                      renderVoicesPanels(fetchedAutoReport, true);
-                      applyDiaryMessages(true);
-                    }
-                  }
-                }
-              })
-              .catch(function(){});
-          }
+        var voicesSection = root.querySelector("[data-deep-voices-section]");
+        var voicesContainer = root.querySelector("[data-deep-voices]");
+        if (voicesContainer && autoReport.voicesHtml) {
+          voicesContainer.innerHTML = autoReport.voicesHtml;
+          if (voicesSection) voicesSection.style.display = "";
         }
         return;
       }
@@ -1853,35 +1689,27 @@
       }
     }
 
-    // 構造化日記データを優先的に読み込む
-    var structuredIdentity = detectedStructuredIdentity || explicitStructuredIdentity || pid || profile.participantId || profile.name || "guest";
-    var diaryMap = readStructuredDiary(structuredIdentity);
+    // 構造化日記データを優先的に読み込む（スプレッドシートバックアップを含む）
+    var structuredIdentity = detectedStructuredIdentity || pid || profile.participantId || profile.email || profile.birth || profile.name || "guest";
+    var diaryMap = readDiaryWithBackup(pid, structuredIdentity);
     var hasStructured = Object.keys(diaryMap).length > 0;
 
     function renderDeepReport(diaryMapToUse) {
-      var hasData = Object.keys(diaryMapToUse).some(function(k){ return /^[1-7]$/.test(k); });
+      var hasData = Object.keys(diaryMapToUse).length > 0;
       var templateSection = root.querySelector("[data-deep-template-section]");
       var templateContainer = root.querySelector("[data-deep-template]");
 
-      // Day-by-day サマリー表示（Day1-7を1パネルに統合）
+      // Day-by-day サマリー表示
       var summarySection = root.querySelector("[data-deep-diary-summary]");
-      var summarySectionCont = root.querySelector("[data-deep-diary-summary-cont]");
       var summaryDays = root.querySelector("[data-deep-diary-days]");
       if (summaryDays) {
-        summaryDays.innerHTML = buildDiarySummaryHtml(diaryMapToUse, 1, 7);
-        if (summarySection) summarySection.style.display = "";
+        summaryDays.innerHTML = buildDiarySummaryHtml(diaryMapToUse);
+        if (summarySection) summarySection.style.display = hasData ? "" : "none";
       }
-      if (summarySectionCont) summarySectionCont.style.display = "none";
 
       if (templateContainer) {
         templateContainer.innerHTML = '<p class="deep-guidance-text">新月の願いと7日間の記録がそろうと、ここに分析テンプレートが表示されます。</p>';
         if (templateSection) templateSection.style.display = "";
-      }
-
-      var voicesContainer = root.querySelector("[data-deep-voices]");
-      if (window.TsukiyomiReportGen && voicesContainer) {
-        var generatedReport = TsukiyomiReportGen.generate(profile);
-        renderVoicesPanels(generatedReport, hasData);
       }
 
       // 旧フォーマットとのフォールバック
@@ -1934,17 +1762,6 @@
 
     // localStorageにデータがあればそのまま描画
     if (hasStructured) {
-      // generate(profile) は profile.participantId(pid) キーで読むため、
-      // structuredIdentity が pid と異なる場合(birth日付等)はpidキーにコピー
-      var pidKey = profile.participantId || pid;
-      if (pidKey && pidKey !== structuredIdentity) {
-        for (var _d = 1; _d <= 7; _d++) {
-          var _src = "tsukiyomi:structuredDiary:v1:" + structuredIdentity + ":day:" + _d;
-          var _dst = "tsukiyomi:structuredDiary:v1:" + pidKey + ":day:" + _d;
-          var _raw = localStorage.getItem(_src);
-          if (_raw && !localStorage.getItem(_dst)) localStorage.setItem(_dst, _raw);
-        }
-      }
       renderDeepReport(diaryMap);
       applyDiaryMessages(true);
       return;
@@ -1956,7 +1773,7 @@
     if (structuredIdentity && structuredIdentity !== "guest") {
       if (current) current.textContent = "日記データを読み込んでいます…";
       var syncConfig = (function(){
-        var u = localStorage.getItem("tsukiyomi:sheetSync:url") || "https://script.google.com/macros/s/AKfycbxWpo3QzBNxemQNtYqYZfuMhjyrr2prjY6lsZPUZP5soKjimHzMts_Phz8D73DUYvbs/exec";
+        var u = localStorage.getItem("tsukiyomi:sheetSync:url") || "https://script.google.com/macros/s/AKfycbxIffIfAOptA-WR6jjT9dg8Fc0yb9HpwsLTR-ZG43Nw12_KR_Yi0Xj9IT_FAyXGV_Ic/exec";
         var s = localStorage.getItem("tsukiyomi:sheetSync:secretKey") || "tsukiyomi-2026-key";
         return { url: u, secretKey: s };
       })();
@@ -1970,49 +1787,42 @@
         .then(function(result){
           if (result && result.ok && result.days && Object.keys(result.days).length > 0) {
             var restored = {};
-            var oldSaveId = profile.participantId || pid || structuredIdentity;
             for (var dayNum in result.days) {
               var dayData = result.days[dayNum];
-              var key = "tsukiyomi:structuredDiary:v1:" + oldSaveId + ":day:" + dayNum;
+              var key = "tsukiyomi:structuredDiary:v1:" + structuredIdentity + ":day:" + dayNum;
               localStorage.setItem(key, JSON.stringify(dayData));
               if (dayData.lines) {
                 var filled = dayData.lines.filter(function(l){ return (l.text || "").trim().length > 0; });
                 if (filled.length) restored[dayNum] = filled;
               }
             }
-            restoreMoonPhaseFromGas(result.days, oldSaveId);
             renderDeepReport(restored);
-            applyDiaryMessages(true);
             if (window.TsukiyomiReportGen) {
-              var hasDiaryDaysOld = false;
-              for (var dKeyOld in restored) { if (/^[1-7]$/.test(dKeyOld)) { hasDiaryDaysOld = true; break; } }
-              if (hasDiaryDaysOld) {
-                var fetchedReport = TsukiyomiReportGen.generate(profile);
-                if (fetchedReport && fetchedReport.s1) {
-                  if (current) renderDeepSection(current, fetchedReport.s1);
-                  if (themes) renderDeepSection(themes, fetchedReport.s2);
-                  if (shukuView) renderDeepSection(shukuView, fetchedReport.s3);
-                  if (next) renderDeepSection(next, fetchedReport.s4);
-                  var fetchedTemplateSection = root.querySelector("[data-deep-template-section]");
-                  var fetchedTemplateContainer = root.querySelector("[data-deep-template]");
-                  if (fetchedTemplateContainer && fetchedReport.templateHtml) {
-                    fetchedTemplateContainer.innerHTML = fetchedReport.templateHtml;
-                    if (fetchedTemplateSection) fetchedTemplateSection.style.display = "";
-                  }
-                  renderVoicesPanels(fetchedReport, true);
+              var fetchedReport = TsukiyomiReportGen.generate(profile);
+              if (fetchedReport && fetchedReport.s1) {
+              if (current) renderDeepSection(current, fetchedReport.s1);
+              if (themes) renderDeepSection(themes, fetchedReport.s2);
+              if (shukuView) renderDeepSection(shukuView, fetchedReport.s3);
+              if (next) renderDeepSection(next, fetchedReport.s4);
+              var fetchedTemplateSection = root.querySelector("[data-deep-template-section]");
+              var fetchedTemplateContainer = root.querySelector("[data-deep-template]");
+              if (fetchedTemplateContainer && fetchedReport.templateHtml) {
+                fetchedTemplateContainer.innerHTML = fetchedReport.templateHtml;
+                if (fetchedTemplateSection) fetchedTemplateSection.style.display = "";
+              }
+              var fetchedVoicesSection = root.querySelector("[data-deep-voices-section]");
+              var fetchedVoicesContainer = root.querySelector("[data-deep-voices]");
+              if (fetchedVoicesContainer && fetchedReport.voicesHtml) {
+                fetchedVoicesContainer.innerHTML = fetchedReport.voicesHtml;
+                if (fetchedVoicesSection) fetchedVoicesSection.style.display = "";
                 }
               }
             }
           } else {
-            // GASが空のとき、localStorageに日記があればそちらを使う
-            var fallbackMap = readStructuredDiary(profile.participantId || pid || structuredIdentity);
-            renderDeepReport(Object.keys(fallbackMap).length > 0 ? fallbackMap : {});
+            renderDeepReport({});
           }
         })
-        .catch(function(){
-          var fallbackMap = readStructuredDiary(profile.participantId || pid || structuredIdentity);
-          renderDeepReport(Object.keys(fallbackMap).length > 0 ? fallbackMap : {});
-        });
+        .catch(function(){ renderDeepReport({}); });
       return;
     }
 
