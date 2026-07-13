@@ -1641,8 +1641,10 @@
 
     // 自動生成レポートがあれば表示（Day7保存時に生成済みのものを含む）
     if (window.TsukiyomiReportGen) {
-      var autoIdentity = detectedStructuredIdentity || pid || profile.participantId || profile.email || profile.birth || profile.name || "guest";
-      var autoReport = TsukiyomiReportGen.load(autoIdentity) || TsukiyomiReportGen.triggerIfReady(profile);
+      var autoIdentity = _urlPid || detectedStructuredIdentity || pid || profile.participantId || profile.email || profile.birth || profile.name || "guest";
+      // _urlPidがある場合（管理者が参加者レポートを確認中）:
+      // triggerIfReady はスキップ（カノン自身の日記でレポートが生成・表示されるのを防ぐ）
+      var autoReport = TsukiyomiReportGen.load(autoIdentity) || (_urlPid ? null : TsukiyomiReportGen.triggerIfReady(profile));
       // 宿データなしで生成されたキャッシュを無効化して再生成
       if (autoReport && profile.shuku && autoReport.s3 && autoReport.s3.indexOf('宿曜情報がありません') >= 0) {
         autoReport = TsukiyomiReportGen.generate(profile);
