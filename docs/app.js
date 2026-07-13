@@ -1634,6 +1634,11 @@
           ovSummaryDays.innerHTML = buildDiarySummaryHtml(ovDiaryMap);
           if (ovSummarySection) ovSummarySection.style.display = "";
         }
+      } else {
+        // 管理者プレビュー時: 参加者の日記はご本人のデバイスに保存されるため表示できない
+        // ローディングプレースホルダーを非表示にする
+        var noDataSummarySection = root.querySelector("[data-deep-diary-summary]");
+        if (noDataSummarySection) noDataSummarySection.style.display = "none";
       }
       applyDiaryMessages(ovHasDiary);
       return;

@@ -304,6 +304,16 @@
       [style*="safe-area-inset-bottom"],
       button[onclick*="refreshDeepReport"] { display: none !important; }
 
+      /* AI分析・Geminiエラーは印刷不要 */
+      #deep-ai-analysis-section,
+      #apikey-panel,
+      #gnav-ai,
+      #gnav-apikey { display: none !important; }
+
+      /* ローディングプレースホルダーを非表示 */
+      [data-deep-diary-days] p[style*="b0957a"],
+      [data-deep-diary-days] > p:only-child:not([data-diary-day]) { display: none !important; }
+
       .deep-report-header-img, .moon-mark { display: none !important; }
 
       /* ★ 全印刷ページに枠を表示（imgタグ＋preloadで確実に印刷） */
@@ -2000,7 +2010,7 @@
   <script src="participants_loader.js?v=20260711" onerror="void 0"></script>
   <script src="shuku_report_gen.js?v=20260711-voices" onerror="void 0"></script>
   <script src="deep_report_overrides.js?v=20260630b" onerror="void 0"></script>
-  <script src="app.js?v=20260711-voices-fix"></script>
+  <script src="app.js?v=20260714-pdf-fix"></script>
   <script src="gemini_deep_analysis.js?v=20260705"></script>
   <script>
   // 月の4フェーズ記録 — 自動保存・復元・GAS同期
