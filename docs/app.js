@@ -1782,8 +1782,10 @@
       if (profile.email) fetchParts.push("email=" + encodeURIComponent(profile.email));
       if (!fetchParts.length) fetchParts.push("pid=" + encodeURIComponent(structuredIdentity));
       var fetchUrl = syncConfig.url + "?" + fetchParts.join("&") + "&secretKey=" + encodeURIComponent(syncConfig.secretKey) + "&t=" + Date.now();
-      fetch(fetchUrl, { redirect: "follow" })
-        .then(function(r){ return r.json(); })
+      var _fetchAbort = new AbortController();
+      var _fetchTimer = setTimeout(function(){ _fetchAbort.abort(); }, 10000);
+      fetch(fetchUrl, { redirect: "follow", signal: _fetchAbort.signal })
+        .then(function(r){ clearTimeout(_fetchTimer); return r.json(); })
         .then(function(result){
           if (result && result.ok && result.days && Object.keys(result.days).length > 0) {
             var restored = {};
@@ -1822,7 +1824,7 @@
             renderDeepReport({});
           }
         })
-        .catch(function(){ renderDeepReport({}); });
+        .catch(function(){ clearTimeout(_fetchTimer); renderDeepReport({}); });
       return;
     }
 
