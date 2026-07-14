@@ -343,18 +343,16 @@
         background: transparent !important;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
-        font-size: 11pt;
-        line-height: 1.85;
+        font-size: 10.5pt;
+        line-height: 1.9;
         color: #2a1810 !important;
+        font-feature-settings: "palt" 1;
       }
 
-      /* コンテンツ全幅・余白・シャドウなし・背景透明 */
+      /* ── コンテンツ領域：A4内側の余白 ── */
       main.challenge-shell {
         width: 100% !important;
-        /* @page margin:0 なので padding が紙端からの距離そのもの */
-        /* top: 38mm → 角装飾(~35mm)より3mm内側 */
-        /* sides: 32mm → 146mm=36字/行 */
-        padding: 38mm 32mm 36mm !important;
+        padding: 36mm 30mm 34mm !important;
         margin: 0 !important;
         background: transparent !important;
         box-shadow: none !important;
@@ -362,13 +360,13 @@
         z-index: 1;
       }
 
-      /* 扉ページ（第2の鑑定書）のタイトルブロック：印刷時は枠画像に任せ透明化 */
+      /* 扉ページタイトルブロック */
       .deep-report-title-block {
         background: transparent !important;
         border: none !important;
         box-shadow: none !important;
         min-height: auto !important;
-        padding: 28mm 0 20mm !important;
+        padding: 26mm 0 18mm !important;
       }
       .deep-report-title-block::before {
         border-color: rgba(168, 121, 50, .14) !important;
@@ -376,107 +374,146 @@
 
       .challenge-card { padding: 0 !important; }
 
-      /* パネルはページ分割しない（パネル途中での改ページを防止） */
+      /* ── パネル共通 ── */
       [data-deep-report] .deep-report-panel {
         background: transparent !important;
         border: none !important;
         box-shadow: none !important;
-        padding: 0 0 16px !important;
+        padding: 0 0 10px !important;
         break-inside: avoid;
       }
-
-      /* パネル末尾の装飾を印刷時非表示 */
       [data-deep-report] .deep-report-panel::after { display: none !important; }
 
-      /* 見出しのあとは改ページしない、孤立行を3行以上に設定 */
-      h2, h3 { break-after: avoid; }
+      /* ── 出版レベル見出しスタイル ── */
+      [data-deep-report] .deep-report-panel h2,
+      [data-deep-report] .completion-panel h2 {
+        font-size: 16pt !important;
+        font-weight: bold !important;
+        letter-spacing: 0.12em !important;
+        color: #5a3010 !important;
+        line-height: 1.4 !important;
+        margin: 0 0 14px !important;
+        padding-bottom: 8px !important;
+        border-bottom: 1.5px solid rgba(168,121,50,.4) !important;
+        break-after: avoid !important;
+      }
+      [data-deep-report] .deep-report-panel h3 {
+        font-size: 12pt !important;
+        font-weight: bold !important;
+        letter-spacing: 0.06em !important;
+        color: #7a4a18 !important;
+        margin: 14px 0 6px !important;
+        break-after: avoid !important;
+      }
+
+      /* ── 本文テキスト ── */
+      [data-deep-report] .deep-report-panel p,
+      [data-deep-report] .completion-panel p {
+        font-size: 10.5pt !important;
+        line-height: 1.95 !important;
+        text-align: justify !important;
+        text-justify: inter-ideograph !important;
+        margin: 0 0 10px !important;
+        color: #2a1810 !important;
+      }
+
+      /* 孤立行・孤立ワード防止 */
+      h2, h3, h4 { break-after: avoid; }
       p, li { orphans: 3; widows: 3; }
 
-      /* カード1枚ずつ分割しない（グリッド全体はOK → 1ページ目の空白を防ぐ） */
+      /* ── カード類：分割しない ── */
       .deep-template-card,
       .deep-report-intro-item,
       .deep-guidance-block,
       .next-moon-section > *,
       .completion-panel { break-inside: avoid; }
 
-      /* カード背景を印刷用クリームに（ダークテーマ上書き） */
+      /* ── 4つのしるしカード ── */
       .deep-template-card,
       .deep-report-intro-item {
-        background: rgba(254,249,235,.9) !important;
-        border: 1px solid rgba(168,121,50,.2) !important;
+        background: rgba(254,249,235,.95) !important;
+        border: 1px solid rgba(168,121,50,.25) !important;
         color: #2a1810 !important;
         box-shadow: none !important;
       }
       .deep-template-label { color: #a87932 !important; }
       .deep-template-card h3 { color: #7a5520 !important; }
 
-      /* 暗いカード背景をすべてクリーム色に */
-      [class*="deep-report-intro-item"],
-      [class*="deep-template-card"],
+      /* ── 章パネルの背景（薄クリーム） ── */
       [class*="deep-diary-card"],
       [class*="moon-cycle"],
       [class*="next-moon-item"],
-      .deep-guidance-block,
-      .completion-panel {
-        background: rgba(168,121,50,.06) !important;
-        border: 1px solid rgba(168,121,50,.25) !important;
+      .deep-guidance-block {
+        background: rgba(168,121,50,.05) !important;
+        border: 1px solid rgba(168,121,50,.2) !important;
         color: #2a1810 !important;
         box-shadow: none !important;
       }
 
-      /* テキストエリア */
+      /* completionパネルは背景なし（本文ページとして） */
+      .completion-panel {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+      }
+
+      /* ── テキストエリア（月のサイクル） ── */
       #moon-cycle-section textarea {
-        border: 1px solid rgba(168,121,50,.4) !important;
-        min-height: 40px;
-        background: #faf5eb !important;
+        border: 1px solid rgba(168,121,50,.35) !important;
+        background: rgba(254,250,240,.8) !important;
+        color: #2a1810 !important;
+        font-size: 10pt !important;
+        line-height: 1.7 !important;
       }
       [data-deep-report] #moon-cycle-section > div {
         grid-template-columns: repeat(2,minmax(0,1fr)) !important;
-        gap: 10px !important;
+        gap: 12px !important;
         margin-top: 14px !important;
       }
       [data-deep-report] #moon-cycle-section {
-        padding-bottom: 22px !important;
+        padding-bottom: 18px !important;
       }
       [data-deep-report] #moon-cycle-section > div > div {
-        padding: 12px 14px !important;
+        padding: 14px 16px !important;
       }
       [data-deep-report] #moon-cycle-section textarea {
-        min-height: 36px !important;
-        font-size: 12px !important;
-        line-height: 1.55 !important;
-        padding: 8px 10px !important;
+        min-height: 40px !important;
+        font-size: 10pt !important;
+        line-height: 1.6 !important;
+        padding: 8px 12px !important;
       }
 
-      /* ガイダンスブロック・月フェーズを左ボーダーアクセントに（角装飾との重複を解消） */
+      /* ── ガイダンス・月フェーズ：左ボーダーアクセント ── */
       .deep-guidance-block,
       .next-moon-section > * {
         background: transparent !important;
         border: none !important;
-        border-left: 3px solid rgba(168,121,50,.65) !important;
+        border-left: 2.5px solid rgba(168,121,50,.6) !important;
         border-radius: 0 !important;
-        padding: 2px 0 10px 14px !important;
+        padding: 4px 0 10px 16px !important;
         box-shadow: none !important;
+        margin-bottom: 10px !important;
       }
 
       .deep-report-epilogue { display: none; }
 
-      /* ── 四つのしるしパネルの後に改ページ → 第2の鑑定書が扉表紙になる ── */
-      .deep-report-opening {
-        break-after: page;
-      }
+      /* ── 章の区切り：主要セクションは新ページ開始 ── */
+      .deep-report-opening { break-after: page; }
+      .deep-report-chapter { break-before: page; }
+      .deep-report-chapter:first-of-type { break-before: avoid; }
 
-      /* ── moon-question (div#deep-title) はページをまたがない ── */
-      /* p, li の orphans/widows は div に効かないため個別に指定 */
+      /* ── 新月願いブロック ── */
       #deep-title {
         break-inside: avoid;
         break-before: avoid;
         color: #3d3328 !important;
-        background: transparent !important;
-        border-left-color: rgba(168,121,50,.65) !important;
-        padding: 8px 0 8px 14px !important;
-        font-size: 11pt !important;
-        margin: 12px 0 !important;
+        background: rgba(168,121,50,.04) !important;
+        border-left: 2.5px solid rgba(168,121,50,.6) !important;
+        border-radius: 0 !important;
+        padding: 10px 0 10px 16px !important;
+        font-size: 10.5pt !important;
+        line-height: 1.85 !important;
+        margin: 14px 0 !important;
       }
 
       /* ── 四つのしるし 2×2グリッド（印刷最適化） ── */
@@ -492,35 +529,43 @@
         margin-top: 14px !important;
       }
       [data-deep-report] .deep-report-opening .deep-template-card {
-        padding: 20px 18px !important;
-        border-radius: 8px !important;
+        padding: 18px 16px !important;
+        border-radius: 6px !important;
+        border: 1px solid rgba(168,121,50,.28) !important;
+        background: rgba(254,249,235,.95) !important;
       }
       [data-deep-report] .deep-report-opening .deep-template-label {
-        font-size: 9px !important;
-        letter-spacing: 0.4em !important;
-        color: rgba(168,121,50,.65) !important;
-        margin-bottom: 8px !important;
+        font-size: 8pt !important;
+        letter-spacing: 0.45em !important;
+        color: rgba(168,121,50,.7) !important;
+        margin-bottom: 7px !important;
         display: block !important;
+        text-transform: uppercase;
       }
       [data-deep-report] .deep-report-opening .deep-template-card h3 {
-        font-size: 14px !important;
-        line-height: 1.4 !important;
-        color: #7a4a18 !important;
+        font-size: 13pt !important;
+        font-weight: bold !important;
+        line-height: 1.35 !important;
+        color: #6a3a10 !important;
         margin-bottom: 8px !important;
+        letter-spacing: 0.05em !important;
       }
       [data-deep-report] .deep-report-opening .deep-template-card p:first-of-type {
-        font-size: 10px !important;
+        font-size: 9pt !important;
         font-style: italic;
-        color: rgba(100,60,20,.55) !important;
-        border-bottom: 1px solid rgba(168,121,50,.18) !important;
+        color: rgba(100,60,20,.6) !important;
+        border-bottom: 1px solid rgba(168,121,50,.2) !important;
         padding-bottom: 8px !important;
         margin-bottom: 10px !important;
+        line-height: 1.7 !important;
       }
       [data-deep-report] .deep-report-opening .deep-template-card p:last-of-type {
-        font-size: 12px !important;
-        line-height: 1.8 !important;
-        color: #3d2810 !important;
+        font-size: 11pt !important;
+        line-height: 1.85 !important;
+        color: #2a1810 !important;
         margin: 0 !important;
+        text-align: justify !important;
+        text-justify: inter-ideograph !important;
       }
     }
 
