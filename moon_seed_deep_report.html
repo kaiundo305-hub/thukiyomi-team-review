@@ -171,6 +171,62 @@
     /* フッター */
     .gate-footer { color: rgba(100,70,30,.55) !important; }
 
+    /* ══ 四つのしるし ─ 2ページ目として特別演出 ══ */
+    .deep-report-opening {
+      padding-bottom: 80px !important;
+    }
+    .deep-report-opening h2[data-seal] {
+      text-align: center !important;
+    }
+    .deep-report-opening .deep-guidance-text {
+      text-align: center !important;
+      max-width: 520px;
+      margin-left: auto !important;
+      margin-right: auto !important;
+    }
+    [data-deep-report] .deep-report-opening .deep-template-grid {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      gap: 22px !important;
+      margin-top: 40px !important;
+    }
+    [data-deep-report] .deep-report-opening .deep-template-card {
+      background: linear-gradient(150deg, rgba(255,252,244,.99) 0%, rgba(250,244,220,.96) 100%) !important;
+      border: 1px solid rgba(168,121,50,.32) !important;
+      border-radius: 10px !important;
+      padding: 28px 24px 24px !important;
+      box-shadow: 0 2px 16px rgba(100,60,20,.09), inset 0 0 0 1px rgba(255,250,230,.8) !important;
+    }
+    [data-deep-report] .deep-report-opening .deep-template-label {
+      font-size: 10px !important;
+      letter-spacing: 0.45em !important;
+      color: rgba(168,121,50,.6) !important;
+      font-family: 'Georgia', serif;
+      display: block !important;
+      margin-bottom: 10px !important;
+    }
+    [data-deep-report] .deep-report-opening .deep-template-card h3 {
+      font-size: 17px !important;
+      color: #7a4a18 !important;
+      margin: 0 0 10px !important;
+      line-height: 1.4 !important;
+      font-weight: 600 !important;
+    }
+    [data-deep-report] .deep-report-opening .deep-template-card p:first-of-type {
+      font-size: 12px !important;
+      color: rgba(120,80,30,.55) !important;
+      font-style: italic;
+      margin-bottom: 14px !important;
+      padding-bottom: 12px !important;
+      border-bottom: 1px solid rgba(168,121,50,.2) !important;
+    }
+    [data-deep-report] .deep-report-opening .deep-template-card p:last-of-type {
+      font-size: 14.5px !important;
+      color: #4a3728 !important;
+      line-height: 1.9 !important;
+      margin: 0 !important;
+    }
+
     /* ── スクロールバー（細め・金系） ─────── */
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: #faf5eb; }
@@ -182,8 +238,9 @@
       #global-nav, #apikey-panel, #corner-ornament,
       body > main::before, body > main::after,
       [data-no-diary-cta], .challenge-nav,
-      #data-backup-section, .gate-footer,
-      [style*="safe-area-inset-bottom"] { display: none !important; }
+      #data-backup-section, .gate-footer, #refresh-status,
+      [style*="safe-area-inset-bottom"],
+      button[onclick*="refreshDeepReport"] { display: none !important; }
 
       .deep-report-header-img, .moon-mark { display: none !important; }
 
@@ -327,16 +384,228 @@
         margin: 12px 0 !important;
       }
 
-      /* ── 4列カード印刷最適化（h3縮小・ギャップ削減） ── */
+      /* ── 四つのしるし 2×2グリッド（印刷最適化） ── */
       [data-deep-report] .deep-report-opening .deep-template-grid {
-        gap: 8px !important;
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 14px !important;
+        margin-top: 28px !important;
       }
       [data-deep-report] .deep-report-opening .deep-template-card {
-        padding: 10px 10px 8px !important;
+        padding: 20px 18px !important;
+        border-radius: 8px !important;
+      }
+      [data-deep-report] .deep-report-opening .deep-template-label {
+        font-size: 9px !important;
+        letter-spacing: 0.4em !important;
+        color: rgba(168,121,50,.65) !important;
+        margin-bottom: 8px !important;
+        display: block !important;
       }
       [data-deep-report] .deep-report-opening .deep-template-card h3 {
+        font-size: 14px !important;
+        line-height: 1.4 !important;
+        color: #7a4a18 !important;
+        margin-bottom: 8px !important;
+      }
+      [data-deep-report] .deep-report-opening .deep-template-card p:first-of-type {
+        font-size: 10px !important;
+        font-style: italic;
+        color: rgba(100,60,20,.55) !important;
+        border-bottom: 1px solid rgba(168,121,50,.18) !important;
+        padding-bottom: 8px !important;
+        margin-bottom: 10px !important;
+      }
+      [data-deep-report] .deep-report-opening .deep-template-card p:last-of-type {
         font-size: 12px !important;
+        line-height: 1.8 !important;
+        color: #3d2810 !important;
+        margin: 0 !important;
+      }
+    }
+
+    /* ══ 画面専用：A4ページスナップ・出版品質レイアウト ══ */
+    @media screen {
+      /* シェル：上部余白・縦パディングをリセット */
+      main.challenge-shell {
+        padding-top: 40px !important;
+        padding-bottom: 0 !important;
+      }
+      .challenge-card {
+        padding: 0 !important;
+      }
+
+      /* ヘッダー画像：200px・中央揃え */
+      .deep-report-header-img {
+        display: block !important;
+        height: 200px !important;
+        width: auto !important;
+        max-width: 100% !important;
+        margin: 0 auto !important;
+        object-fit: contain !important;
+        object-position: center center !important;
+      }
+
+      /* 内側の細い枠線を非表示（opening以外の全パネル・タイトルブロック） */
+      [data-deep-report] .deep-report-panel:not(.deep-report-opening)::before,
+      [data-deep-report] .deep-report-title-block::before {
+        border: none !important;
+      }
+
+      /* 各セクション最低1A4ページ（1122px）・ボーダーボックス */
+      [data-deep-report] .completion-panel.deep-report-panel,
+      .deep-report-intro-panel,
+      .deep-report-title-block {
+        min-height: 1122px !important;
+        box-sizing: border-box !important;
+        padding-top: 64px !important;
+        padding-bottom: 64px !important;
+      }
+
+      /* ── 1ページ目：四つのしるし ──
+         shell padding(40px) + header(200px) + このsection(882px) = 1122px */
+      [data-deep-report] .completion-panel.deep-report-opening {
+        min-height: 882px !important;
+        margin-top: 0 !important;
+        padding-top: 32px !important;
+        padding-bottom: 32px !important;
+      }
+      [data-deep-report] .deep-report-opening h2[data-seal] {
+        font-size: 18px !important;
+        margin-bottom: 12px !important;
+      }
+      [data-deep-report] .deep-report-opening .deep-guidance-text {
+        font-size: 12.5px !important;
+        line-height: 1.8 !important;
+        margin-bottom: 8px !important;
+      }
+      [data-deep-report] .deep-report-opening .deep-template-grid {
+        gap: 14px !important;
+        margin-top: 16px !important;
+      }
+      [data-deep-report] .deep-report-opening .deep-template-card {
+        padding: 12px 16px 10px !important;
+      }
+      [data-deep-report] .deep-report-opening .deep-template-card h3 {
+        font-size: 15px !important;
+        margin: 0 0 7px !important;
+      }
+      [data-deep-report] .deep-report-opening .deep-template-card p:first-of-type {
+        margin-bottom: 10px !important;
+        padding-bottom: 8px !important;
+      }
+      [data-deep-report] .deep-report-opening .deep-template-card p:last-of-type {
+        font-size: 13px !important;
+        line-height: 1.75 !important;
+      }
+
+      /* ── 2ページ目：第2の鑑定書タイトル（出版品質・コンテンツに合わせた枠） ── */
+      [data-deep-report] .deep-report-title-block {
+        align-content: center !important;
+        padding: 280px 80px !important;
+      }
+      [data-deep-report] .deep-report-title-block::before {
+        border: 1px solid rgba(168,121,50,.28) !important;
+        border-radius: 16px !important;
+        inset: 340px 24px !important;
+        z-index: 0 !important;
+      }
+
+      /* ── 3ページ目：この月読み日記でわかること（垂直中央揃え） ── */
+      [data-deep-report] .deep-report-intro-panel {
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        padding: 80px 64px !important;
+      }
+
+      /* バックアップセクションは自然な高さのまま */
+      #data-backup-section {
+        min-height: auto !important;
+        padding-top: 16px !important;
+        padding-bottom: 16px !important;
+      }
+
+      /* ── 見出しと本文の間隔（出版品質：少し広め） ── */
+      /* ── 第1〜4章：プレミアム出版品質・大きくて読みやすい文字組み ── */
+      [data-deep-report] .deep-report-chapter h2 {
+        margin-bottom: 40px !important;
+        font-size: 30px !important;
         line-height: 1.5 !important;
+        letter-spacing: .1em !important;
+      }
+      [data-deep-report] .deep-report-chapter h2::after {
+        margin-top: 24px !important;
+      }
+      [data-deep-report] .deep-report-chapter p[data-deep-current],
+      [data-deep-report] .deep-report-chapter p[data-deep-themes],
+      [data-deep-report] .deep-report-chapter p[data-deep-shuku],
+      [data-deep-report] .deep-report-chapter p[data-deep-next] {
+        max-width: 560px !important;
+        margin: 0 auto !important;
+        padding: 24px 28px !important;
+        box-sizing: border-box !important;
+        font-size: 16px !important;
+        line-height: 2.1 !important;
+        letter-spacing: .05em !important;
+        overflow-wrap: anywhere !important;
+        background: rgba(255,250,242,.72) !important;
+        border-left: 3px solid rgba(168,121,50,.65) !important;
+        box-shadow: 0 3px 16px rgba(90,55,18,.07), inset 0 0 0 1px rgba(168,121,50,.10) !important;
+        border-radius: 0 10px 10px 0 !important;
+      }
+      [data-deep-report] .deep-report-chapter p[data-deep-current-cont] {
+        max-width: 560px !important;
+        margin: 12px auto 0 !important;
+        padding: 22px 28px !important;
+        box-sizing: border-box !important;
+        border-left: 3px solid rgba(168,121,50,.38) !important;
+        background: rgba(255,252,246,.5) !important;
+        box-shadow: 0 2px 10px rgba(90,55,18,.04), inset 0 0 0 1px rgba(168,121,50,.07) !important;
+        border-radius: 0 8px 8px 0 !important;
+        font-size: 15.5px !important;
+        line-height: 2.05 !important;
+        letter-spacing: .05em !important;
+        overflow-wrap: anywhere !important;
+      }
+      [data-deep-report] .deep-report-template h2 {
+        margin-bottom: 20px !important;
+      }
+      [data-deep-report] .deep-report-template h2::after {
+        margin-top: 14px !important;
+      }
+      [data-deep-report] .deep-report-template h3 {
+        margin-bottom: 10px !important;
+      }
+      [data-deep-report] .deep-report-summary {
+        height: auto !important;
+        max-height: none !important;
+        padding-bottom: 80px !important;
+      }
+      [data-deep-report] .deep-report-summary h2 {
+        margin-bottom: 28px !important;
+      }
+      [data-deep-report] .deep-report-summary h2::after {
+        margin-top: 16px !important;
+      }
+      [data-deep-report] .deep-report-closing h2 {
+        margin-bottom: 22px !important;
+      }
+      /* ── 「育んだもの」「月読みの願い」：横マージン+中央揃え+見出し１行分 ── */
+      [data-deep-report] .deep-report-closing[data-seal="育んだもの"],
+      [data-deep-report] .deep-report-closing[data-seal="月読みの願い"] {
+        padding-left: 34px !important;
+        padding-right: 34px !important;
+      }
+      [data-deep-report] .deep-report-closing[data-seal="育んだもの"] h2,
+      [data-deep-report] .deep-report-closing[data-seal="月読みの願い"] h2 {
+        margin-bottom: 40px !important;
+      }
+      [data-deep-report] .deep-report-closing[data-seal="育んだもの"] .deep-guidance-text,
+      [data-deep-report] .deep-report-closing[data-seal="月読みの願い"] .deep-guidance-text {
+        max-width: 520px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
       }
     }
   </style>
@@ -361,8 +630,8 @@
           <div class="deep-template-card">
             <span class="deep-template-label">PHOTO</span>
             <h3>写メに残したもの</h3>
-            <p class="deep-template-text">日常アイテムに映る、今の心の向き</p>
-            <p class="deep-template-text" data-diary-card="photo">写メの記録はまだありません</p>
+            <p class="deep-template-text">あなたの写した景色</p>
+            <p class="deep-template-text" data-diary-card="photo">7日間の月読みBOOKを参照</p>
           </div>
           <div class="deep-template-card">
             <span class="deep-template-label">WORDS</span>
@@ -465,7 +734,7 @@
           <p data-deep-kanon></p>
         </section>
         <section class="completion-panel deep-report-panel deep-report-voices" data-deep-voices-section data-seal="本人の言葉" style="display:none">
-          <h2 data-seal="本人の言葉">月読み日記に残された、あなた自身の言葉</h2>
+          <h2 data-seal="本人の言葉">月読み日記に残された、<br>あなた自身の言葉</h2>
           <div data-deep-voices></div>
         </section>
         <section class="completion-panel deep-report-panel deep-report-closing" data-seal="育んだもの">
@@ -487,7 +756,7 @@
           </p>
         </section>
         <section class="completion-panel deep-report-panel deep-report-closing" data-seal="月読みの願い">
-          <h2 data-seal="月読みの願い">月読みワンダーランドが届けたいもの</h2>
+          <h2 data-seal="月読みの願い">月読みワンダーランドが<br>届けたいもの</h2>
           <p class="deep-guidance-text">
             月読みワンダーランドが届けたいのは、宿命を知り、天命に近づきながら、感謝が自然に育つ毎日です。
           </p>
@@ -607,15 +876,11 @@
 
         </div>
 
-        <div style="margin-top:24px;">
-          <p style="font-size:12px;letter-spacing:0.15em;color:#6b3d0e;margin:0 0 10px;">🌕 満月の気づきを書き留める</p>
-          <textarea id="moon-fullmoon-gemini" placeholder="双子座満月のタイミングに気づいたこと、手放したこと、感謝できることを自由に書いてください。" style="width:100%;box-sizing:border-box;min-height:100px;background:rgba(254,250,235,0.7);border:1px solid rgba(184,145,58,0.4);border-radius:8px;color:#3d3328;font-size:13px;line-height:1.8;padding:12px 14px;resize:vertical;font-family:inherit;" oninput="localStorage.setItem('moon-fullmoon-gemini', this.value)"></textarea>
-        </div>
       </section>
 
       <!-- 双子座の新月からのアドバイス -->
       <section class="completion-panel deep-report-panel deep-report-closing" data-seal="双子座新月">
-        <h2 data-seal="双子座新月">双子座の新月から<br>始めること</h2>
+        <h2 data-seal="双子座新月">双子座の新月から<br>始めたこと</h2>
         <p class="deep-guidance-text">満月の振り返りが終わったら、次の新月へ向かう準備を始めましょう。双子座のエネルギーは「言葉・好奇心・つながり」。小さな一歩を言葉にするところから、新しいサイクルがひらきます。</p>
 
         <div style="display:flex;flex-direction:column;gap:14px;margin-top:24px;">

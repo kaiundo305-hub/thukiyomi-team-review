@@ -126,6 +126,36 @@
 2. **觜宿の読み**: しさく → ししゅく（3箇所修正済み）
 3. **月のサイクルセクション**: ふたご座 → 山羊座に全面書き換え
 4. **満月からのアドバイス2セクション**: 正しい月の流れ（ふたご座新月→山羊座満月→次の新月）に修正
+7. **双子座新月診断の拡張 + 蟹座予告 + 12ヶ月テーマ一覧追加**（2026-07-09）
+   - `runShingetsuDiagnosis()` に⑤⑥カード追加:
+     - ⑤ 日記とのギャップ診断: localStorage から日記スニペットを最大4行取得し表示。「日記の言葉」と「今回の願い」の距離を「宿命の扉」として言語化
+     - ⑥ 鑑定書の締め: 「— 第2の鑑定書、ここに閉じます —」クロージングメッセージ
+   - `data-seal="次の新月へ"` セクション追加: 蟹座（6月新月）チャレンジ予告。テーマ・ギャップ診断の問い・感情日記のアクション
+   - `data-seal="12ヶ月の旅"` セクション追加: 12星座 × 新月テーマ一覧グリッド（2列）。双子座に「← 今ここ」、蟹座に「次の月」バッジ
+5. **チャプタータブナビゲーション追加**（2026-07-09）
+   - `moon_seed_deep_report.html` に7タブのナビバーを追加（表紙 / 7日間の記録 / 第一章〜第四章 / あなたの言葉）
+   - タブごとに1〜3パネルのみ表示することでレイアウトのズレを根本解消
+   - 実装: `.deep-chapter-tab-btn` + `data-chapter-tab="N"` + `.tab-hidden` CSS
+   - `sessionStorage` でページ間でも選択タブを記憶
+   - 印刷時は全タブを展開表示（`@media print` で `.tab-hidden` を上書き）
+6. **日記サーバーフェッチのID解決バグ修正**（`app.js`、2026-07-09）
+   - 問題: URLパラメータなしでページを開くと `pid=あなた` でGASにクエリされ、スプレッドシートの日記データが取得できなかった
+   - 原因: `resolveBaseProfile()` は `tsukiyomi:diarySync:cachedProfile` を読まない。一方 `diary_data_sync.js` はDay1〜7ページでメールをここに保存する
+   - 修正: autoReportパスのサーバーフェッチ前に `tsukiyomi:diarySync:cachedProfile` を読み、`email` / `participantId` を補完してからGASへクエリ
+
+---
+
+## チャプタータブ — セクション対応表
+
+| タブ | 内容 | `data-chapter-tab` |
+|---|---|---|
+| 表紙 (1) | `.deep-report-opening`, `.challenge-header`, `.deep-report-intro-panel`, ヘッダー画像 | `"1"` |
+| 7日間の記録 (2) | `[data-deep-first-concern]`, `.moon-question`, `[data-deep-template-section]`, `[data-deep-diary-summary]` | `"2"` |
+| 第一章 (3) | `data-seal="第一章"`, `[data-deep-current-continuation]` | `"3"` |
+| 第二章 (4) | `data-seal="第二章"` | `"4"` |
+| 第三章 (5) | `data-seal="第三章"` | `"5"` |
+| 第四章 (6) | `data-seal="第四章"` | `"6"` |
+| あなたの言葉 (7) | voices / kanon / closing / moon-cycle / sg-section / backup / epilogue | `"7"` |
 
 ---
 

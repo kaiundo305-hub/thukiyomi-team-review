@@ -314,6 +314,12 @@
       [data-deep-diary-days] p[style*="b0957a"],
       [data-deep-diary-days] > p:only-child:not([data-diary-day]) { display: none !important; }
 
+      /* 空セクション（コンテンツ未設定）を印刷から除外 */
+      /* tab-hidden の !important 強制表示を上書きするため同等以上の特異度で指定 */
+      [data-kanon-panel]:not([data-has-content]),
+      [data-deep-voices-section]:not([data-has-content]),
+      [data-deep-voices-section-cont]:not([data-has-content]) { display: none !important; }
+
       .deep-report-header-img, .moon-mark { display: none !important; }
 
       /* ★ 全印刷ページに枠を表示（imgタグ＋preloadで確実に印刷） */
@@ -1390,7 +1396,7 @@
           <h2 data-seal="第四章">おかげさまと<br>共に進む、次の一歩</h2>
           <p data-deep-next>記録を読み込み中です。</p>
         </section>
-        <section class="completion-panel deep-report-panel" data-chapter-tab="7" style="display:none">
+        <section class="completion-panel deep-report-panel" data-kanon-panel data-chapter-tab="7" style="display:none">
           <h2>💙 かのんより</h2>
           <p data-deep-kanon></p>
         </section>
@@ -2090,9 +2096,11 @@
           if(wish) el.value = wish;
         }
       });
-      // 双子座満月メモ復元
+      // 双子座満月メモ復元（管理者プレビュー時はスキップ：かのんの記録が参加者PDFに混入しないよう）
+      var _moonUrlPid = (new URLSearchParams(window.location.search||'')).get('participantId')
+                      || (new URLSearchParams(window.location.search||'')).get('pid') || '';
       var geminiEl = document.getElementById('moon-fullmoon-gemini');
-      if(geminiEl){
+      if(geminiEl && !_moonUrlPid){
         var geminiSaved = localStorage.getItem('moon-fullmoon-gemini');
         if(geminiSaved) geminiEl.value = geminiSaved;
       }

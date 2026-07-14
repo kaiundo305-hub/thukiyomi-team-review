@@ -4,7 +4,7 @@
   var OUTBOX_KEY = 'tsukiyomi:diarySync:outbox';
   var CACHED_PROFILE_KEY = 'tsukiyomi:diarySync:cachedProfile';
   var STRUCTURED_DIARY_PREFIX = 'tsukiyomi:structuredDiary:v1:';
-  var DEFAULT_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxWpo3QzBNxemQNtYqYZfuMhjyrr2prjY6lsZPUZP5soKjimHzMts_Phz8D73DUYvbs/exec';
+  var DEFAULT_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxIffIfAOptA-WR6jjT9dg8Fc0yb9HpwsLTR-ZG43Nw12_KR_Yi0Xj9IT_FAyXGV_Ic/exec';
   var DEFAULT_SECRET_KEY = 'tsukiyomi-2026-key';
 
   function getParams(){
@@ -14,16 +14,6 @@
   function loadCachedProfile(){
     try { return JSON.parse(localStorage.getItem(CACHED_PROFILE_KEY) || '{}'); }
     catch(e) { return {}; }
-  }
-
-  function loadIntroWish(identity){
-    if(!identity) return '';
-    try {
-      var saved = JSON.parse(localStorage.getItem('tsukiyomi:introReflection:v1:' + identity) || '{}');
-      return String((saved && (saved.text || saved.wish)) || '').trim();
-    } catch(e) {
-      return '';
-    }
   }
 
   function saveCachedProfile(p){
@@ -43,8 +33,7 @@
       participantId: params.get('participantId') || params.get('pid') || '',
       concern: params.get('concern') || '',
       q: params.get('q') || '',
-      q2: params.get('q2') || '',
-      newmoon: params.get('newmoon') || ''
+      q2: params.get('q2') || ''
     };
     // URLパラメータにプロフィール情報がある場合はキャッシュを更新
     if(fromUrl.participantId || fromUrl.email || fromUrl.name || fromUrl.birth){
@@ -53,7 +42,6 @@
       for(var i = 0; i < keys.length; i++){
         merged[keys[i]] = fromUrl[keys[i]] || cached[keys[i]] || '';
       }
-      if(!merged.newmoon) merged.newmoon = loadIntroWish(merged.participantId || merged.email || merged.birth || merged.name);
       saveCachedProfile(merged);
       return merged;
     }
@@ -67,8 +55,7 @@
       participantId: cached.participantId || '',
       concern: cached.concern || '',
       q: cached.q || '',
-      q2: cached.q2 || '',
-      newmoon: cached.newmoon || loadIntroWish(cached.participantId || cached.email || cached.birth || cached.name)
+      q2: cached.q2 || ''
     };
   }
 
@@ -168,7 +155,6 @@
     var config = getConfig();
     var profile = record.profile || {};
     var who = profile.participantId ? '参加者ID: ' + profile.participantId : '参加者IDなし';
-    if(profile.email) who += ' / ' + profile.email;
     if(profile.name) who += ' / ' + profile.name;
     if(!config.url){
       addOutbox(record);
@@ -319,9 +305,7 @@
 
     var profile = getProfile();
     var day = (pageName().match(/challenge_day(\d+)/) || [])[1];
-    var restoreIdentity = profile.participantId || profile.email || '';
-    if(!restoreIdentity) return;
-    var attemptKey = 'tsukiyomi:restoreAttempted:' + restoreIdentity + ':day:' + day;
+    var attemptKey = 'tsukiyomi:restoreAttempted:' + profile.participantId + ':day:' + day;
     try{
       if(sessionStorage.getItem(attemptKey)) return;
       sessionStorage.setItem(attemptKey, '1');
@@ -330,10 +314,10 @@
     var config = getConfig();
     var gasUrl = config.url || DEFAULT_WEBHOOK_URL;
     var secretKey = config.secretKey || DEFAULT_SECRET_KEY;
-    var idParams = [];
-    if(profile.participantId) idParams.push('pid=' + encodeURIComponent(profile.participantId));
-    if(profile.email) idParams.push('email=' + encodeURIComponent(profile.email));
-    var requestUrl = gasUrl + '?' + idParams.join('&') + '&secretKey=' + encodeURIComponent(secretKey) + '&t=' + Date.now();
+    var idParam = profile.email
+      ? 'email=' + encodeURIComponent(profile.email)
+      : 'pid=' + encodeURIComponent(profile.participantId);
+    var requestUrl = gasUrl + '?' + idParam + '&secretKey=' + encodeURIComponent(secretKey) + '&t=' + Date.now();
 
     fetch(requestUrl, { redirect: 'follow' })
       .then(function(r){ return r.json(); })
@@ -353,7 +337,7 @@
 
   function showNamePromptIfNeeded(){
     var cached = loadCachedProfile();
-    if(cached.participantId || cached.email) return;
+    if(cached.participantId) return;
     var params = getParams();
     if(params.get('participantId') || params.get('pid') || params.get('email')) return;
 

@@ -1165,25 +1165,15 @@ a {
   border: none;
   border-radius: 2px;
   background-color: #f8f1e3;
-  background-image: none;
-  color: rgba(55, 30, 6, .88);
-  box-shadow: 0 24px 60px rgba(55, 30, 6, .20), 0 2px 8px rgba(55,30,6,.08);
-}
-
-/* フレーム画像を50%不透明の疑似要素で描画（全ページ共通） */
-[data-deep-report] .deep-report-panel::before {
-  content: '';
-  position: absolute;
-  inset: 0;
   background-image: url('images/frame_body.jpg');
   background-size: 100% 100%;
   background-repeat: no-repeat;
   background-position: top center;
-  opacity: 0.5;
-  z-index: 0;
-  pointer-events: none;
+  color: rgba(55, 30, 6, .88);
+  box-shadow: 0 24px 60px rgba(55, 30, 6, .20), 0 2px 8px rgba(55,30,6,.08);
 }
 
+[data-deep-report] .deep-report-panel::before,
 [data-deep-report] .deep-report-panel::after {
   content: none;
 }
@@ -1409,20 +1399,6 @@ a {
 
 [data-deep-report] .deep-report-voices .diary-voice-advice {
   color: rgba(61, 51, 40, .78);
-}
-
-[data-deep-report] .deep-report-voices {
-  max-height: none;
-}
-
-[data-deep-report] .deep-report-voices [data-deep-voices],
-[data-deep-report] .deep-report-voices [data-deep-voices-cont] {
-  flex: 1 1 0;
-  min-height: 0;
-  overflow-y: auto;
-  padding-right: 4px;
-  scrollbar-color: rgba(168, 121, 50, .4) transparent;
-  scrollbar-width: thin;
 }
 
 [data-deep-report] .deep-report-template {

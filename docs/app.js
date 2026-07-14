@@ -1619,8 +1619,11 @@
       var kanonView = root.querySelector("[data-deep-kanon]");
       if (kanonView && ov.kanon) {
         kanonView.textContent = ov.kanon;
-        var kanonPanel = kanonView.closest(".completion-panel");
-        if (kanonPanel) kanonPanel.style.display = "";
+        var kanonPanel = kanonView.closest("[data-kanon-panel]");
+        if (kanonPanel) {
+          kanonPanel.setAttribute("data-has-content", "");
+          kanonPanel.style.display = "";
+        }
       }
       // オーバーライドモードでも日記サマリーを表示する
       var ovIdentity = params.get("participantId") || params.get("pid") || profile.participantId || profile.email || profile.birth || profile.name || "guest";
@@ -1676,7 +1679,10 @@
         var voicesContainer = root.querySelector("[data-deep-voices]");
         if (voicesContainer && autoReport.voicesHtml) {
           voicesContainer.innerHTML = autoReport.voicesHtml;
-          if (voicesSection) voicesSection.style.display = "";
+          if (voicesSection) {
+            voicesSection.setAttribute("data-has-content", "");
+            voicesSection.style.display = "";
+          }
         }
         return;
       }
@@ -1823,8 +1829,11 @@
               var fetchedVoicesContainer = root.querySelector("[data-deep-voices]");
               if (fetchedVoicesContainer && fetchedReport.voicesHtml) {
                 fetchedVoicesContainer.innerHTML = fetchedReport.voicesHtml;
-                if (fetchedVoicesSection) fetchedVoicesSection.style.display = "";
+                if (fetchedVoicesSection) {
+                  fetchedVoicesSection.setAttribute("data-has-content", "");
+                  fetchedVoicesSection.style.display = "";
                 }
+              }
               }
             }
           } else {
