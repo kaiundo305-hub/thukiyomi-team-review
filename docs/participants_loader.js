@@ -1,7 +1,10 @@
 // participants_loader.js
-// 参加者ごとの個別JSONファイルから取得してキャッシュする（GAS不要版）
+// participants_data.js に既にデータがある場合はそれを使用し、
+// ない場合のみ個別JSONファイルからの取得を試みる
 
-var PARTICIPANTS_DATA = {};
+if (typeof PARTICIPANTS_DATA === 'undefined') {
+  var PARTICIPANTS_DATA = {};
+}
 
 (function () {
   var CACHE_PREFIX = "tsukiyomi:participantProfile:v1:";
@@ -9,6 +12,9 @@ var PARTICIPANTS_DATA = {};
   var params = new URLSearchParams(window.location.search);
   var pid = params.get("participantId") || params.get("pid") || "";
   if (!pid) return;
+
+  // participants_data.js で既に読み込み済みならスキップ
+  if (PARTICIPANTS_DATA[pid]) return;
 
   // --- localStorageキャッシュ確認 ---
   var CACHE_KEY = CACHE_PREFIX + pid;
@@ -20,13 +26,10 @@ var PARTICIPANTS_DATA = {};
     }
   } catch (e) {}
 
-  // --- 個別JSONファイルから取得 ---
+  // --- 個別JSONファイルから取得（サイレントフォールバック） ---
   var url = "participants/" + encodeURIComponent(pid) + ".json";
 
   document.addEventListener("DOMContentLoaded", function () {
-    var statusEl = document.querySelector("[data-deep-current]");
-    if (statusEl) statusEl.textContent = "情報を読み込んでいます…";
-
     fetch(url)
       .then(function (r) {
         if (!r.ok) throw new Error("not_found");
@@ -37,12 +40,10 @@ var PARTICIPANTS_DATA = {};
           PARTICIPANTS_DATA[data.pid] = data;
           localStorage.setItem(CACHE_KEY, JSON.stringify(data));
           location.reload();
-        } else if (statusEl) {
-          statusEl.textContent = "参加者情報が見つかりませんでした。URLをご確認ください。";
         }
       })
       .catch(function () {
-        if (statusEl) statusEl.textContent = "データ取得に失敗しました。URLをご確認ください。";
+        // JSONファイルが存在しない場合はサイレントに無視
       });
   });
 })();

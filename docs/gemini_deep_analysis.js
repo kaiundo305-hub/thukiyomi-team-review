@@ -154,8 +154,8 @@
       '<div style="text-align:center;padding:4px 0 20px;">' +
         '<p style="font-size:13px;color:rgba(90,62,40,0.75);margin:0 0 18px;line-height:1.9;">' +
           (hasDiary
-            ? '7日間の日記の言葉をもとに、AIが' + name + 'さんだけのフィードバックを生成します。'
-            : '日記の記録をもとに、AIが温かいフィードバックを生成します。') +
+            ? '7日間の日記の言葉をもとに、kanonAIが' + name + 'さんだけのフィードバックを生成します。'
+            : '日記の記録をもとに、kanonAIが温かいフィードバックを生成します。') +
         '</p>' +
         '<button id="deep-ai-gen-btn" onclick="TsukiyomiGemini.generate()" ' +
           'style="background:linear-gradient(135deg,rgba(168,121,50,0.45),rgba(100,60,10,0.45));' +
