@@ -1644,6 +1644,16 @@
         if (noDataSummarySection) noDataSummarySection.style.display = "none";
       }
       applyDiaryMessages(ovHasDiary);
+      // 4つのキーワードセクション：日記があれば自動生成、なければ印刷時非表示
+      var ovTemplateSection = root.querySelector("[data-deep-template-section]");
+      var ovTemplateContainer = root.querySelector("[data-deep-template]");
+      if (ovHasDiary && window.TsukiyomiReportGen && ovTemplateSection && ovTemplateContainer) {
+        var ovTplReport = TsukiyomiReportGen.generate(profile);
+        if (ovTplReport && ovTplReport.templateHtml) {
+          ovTemplateContainer.innerHTML = ovTplReport.templateHtml;
+          ovTemplateSection.setAttribute("data-has-content", "");
+        }
+      }
       return;
     }
 
@@ -1673,7 +1683,10 @@
         var autoTemplateContainer = root.querySelector("[data-deep-template]");
         if (autoTemplateContainer && autoReport.templateHtml) {
           autoTemplateContainer.innerHTML = autoReport.templateHtml;
-          if (autoTemplateSection) autoTemplateSection.style.display = "";
+          if (autoTemplateSection) {
+            autoTemplateSection.style.display = "";
+            autoTemplateSection.setAttribute("data-has-content", "");
+          }
         }
         var voicesSection = root.querySelector("[data-deep-voices-section]");
         var voicesContainer = root.querySelector("[data-deep-voices]");
@@ -1823,7 +1836,10 @@
               var fetchedTemplateContainer = root.querySelector("[data-deep-template]");
               if (fetchedTemplateContainer && fetchedReport.templateHtml) {
                 fetchedTemplateContainer.innerHTML = fetchedReport.templateHtml;
-                if (fetchedTemplateSection) fetchedTemplateSection.style.display = "";
+                if (fetchedTemplateSection) {
+                  fetchedTemplateSection.style.display = "";
+                  fetchedTemplateSection.setAttribute("data-has-content", "");
+                }
               }
               var fetchedVoicesSection = root.querySelector("[data-deep-voices-section]");
               var fetchedVoicesContainer = root.querySelector("[data-deep-voices]");

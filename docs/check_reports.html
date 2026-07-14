@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>鑑定書チェックリスト</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Hiragino Kaku Gothic Pro', sans-serif; background: #f5f0e8; padding: 16px; }
+  h1 { text-align: center; color: #5c4a3a; padding: 20px 0 6px; font-size: 20px; }
+  .subtitle { text-align: center; color: #888; font-size: 12px; margin-bottom: 16px; }
+
+  /* 統計 */
+  .stats { display: flex; gap: 12px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap; }
+  .stat { background: white; border-radius: 8px; padding: 10px 18px; text-align: center; box-shadow: 0 1px 4px rgba(0,0,0,.1); }
+  .stat-num { font-size: 26px; font-weight: bold; color: #8b6f4e; }
+  .stat-label { font-size: 11px; color: #888; }
+  .progress { text-align: center; padding: 6px; font-size: 13px; color: #666; margin-bottom: 12px; }
+  .progress span { font-weight: bold; color: #8b6f4e; }
+
+  /* フィルター */
+  .filters { display: flex; gap: 8px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap; }
+  .filter-btn { padding: 8px 16px; border: 1px solid #ccc; border-radius: 20px; background: white; cursor: pointer; font-size: 13px; font-family: inherit; }
+  .filter-btn.active { background: #8b6f4e; color: white; border-color: #8b6f4e; }
+
+  /* バッジ */
+  .badge { display: inline-block; font-size: 10px; padding: 2px 6px; border-radius: 10px; margin-left: 4px; vertical-align: middle; }
+  .badge-override { background: #e8f4e8; color: #3a7a3a; }
+  .badge-auto { background: #f0e8f8; color: #6a3a8a; }
+  .no-email { font-size: 11px; color: #e08080; margin-left: 4px; }
+
+  /* ── デスクトップ：テーブル ── */
+  .table-wrap { display: block; }
+  .card-list { display: none; }
+
+  table { width: 100%; max-width: 860px; margin: 0 auto; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.1); }
+  th { background: #5c4a3a; color: white; padding: 12px 10px; text-align: left; font-size: 13px; }
+  td { padding: 10px; border-bottom: 1px solid #f0ebe2; font-size: 13px; vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #faf7f2; }
+  .col-pid { color: #aaa; font-size: 12px; width: 44px; }
+  .col-name { font-weight: bold; color: #3a2e24; min-width: 100px; }
+  .col-shuku { color: #8b6f4e; font-size: 12px; }
+  .col-check { text-align: center; width: 72px; }
+  .col-check input[type=checkbox] { width: 20px; height: 20px; cursor: pointer; accent-color: #8b6f4e; }
+  .checked-row td { opacity: 0.5; }
+  .checked-row .col-name { text-decoration: line-through; }
+
+  .btn { display: inline-block; padding: 7px 14px; background: #8b6f4e; color: white; border-radius: 6px; text-decoration: none; font-size: 12px; white-space: nowrap; }
+  .btn:hover { background: #6b5240; }
+
+  /* ── モバイル（640px以下）：カード ── */
+  @media (max-width: 640px) {
+    body { padding: 12px; }
+    .table-wrap { display: none; }
+    .card-list { display: flex; flex-direction: column; gap: 10px; max-width: 540px; margin: 0 auto; }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 14px 16px;
+      box-shadow: 0 1px 6px rgba(0,0,0,.1);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: opacity .2s;
+    }
+    .card.checked-card { opacity: 0.45; }
+    .card.checked-card .card-name { text-decoration: line-through; }
+
+    .card-check { flex-shrink: 0; }
+    .card-check input[type=checkbox] { width: 26px; height: 26px; cursor: pointer; accent-color: #8b6f4e; }
+
+    .card-body { flex: 1; min-width: 0; }
+    .card-pid { font-size: 11px; color: #aaa; margin-bottom: 2px; }
+    .card-name { font-weight: bold; color: #3a2e24; font-size: 15px; }
+    .card-shuku { font-size: 12px; color: #8b6f4e; margin-top: 2px; }
+
+    .card-action { flex-shrink: 0; }
+    .btn { padding: 10px 16px; font-size: 13px; border-radius: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<h1>☽ 鑑定書チェックリスト</h1>
+<p class="subtitle">一人ひとりの鑑定書を確認してチェックを入れてください</p>
+
+<div class="stats">
+  <div class="stat"><div class="stat-num" id="total-count">0</div><div class="stat-label">合計</div></div>
+  <div class="stat"><div class="stat-num" id="checked-count">0</div><div class="stat-label">確認済み</div></div>
+  <div class="stat"><div class="stat-num" id="remain-count">0</div><div class="stat-label">残り</div></div>
+</div>
+<div class="progress">進捗: <span id="progress-text">0 / 0</span></div>
+
+<div class="filters">
+  <button class="filter-btn active" onclick="filterRows('all', this)">全員</button>
+  <button class="filter-btn" onclick="filterRows('unchecked', this)">未確認のみ</button>
+  <button class="filter-btn" onclick="filterRows('checked', this)">確認済みのみ</button>
+</div>
+
+<!-- デスクトップ：テーブル -->
+<div class="table-wrap">
+  <table id="report-table">
+    <thead>
+      <tr>
+        <th class="col-pid">No.</th>
+        <th>名前</th>
+        <th>本命宿</th>
+        <th>鑑定書</th>
+        <th class="col-check">確認✓</th>
+      </tr>
+    </thead>
+    <tbody id="table-body"></tbody>
+  </table>
+</div>
+
+<!-- モバイル：カードリスト -->
+<div class="card-list" id="card-list"></div>
+
+<script>
+var MEMBERS = [
+  {pid:"001", name:"ちえ",              shuku:"柳宿",  hasOverride:true,  hasEmail:true},
+  {pid:"002", name:"RENA CHEN",         shuku:"井宿",  hasOverride:true,  hasEmail:true},
+  {pid:"003", name:"福田真弓",          shuku:"軫宿",  hasOverride:true,  hasEmail:true},
+  {pid:"004", name:"宮城あい",          shuku:"觜宿",  hasOverride:true,  hasEmail:true},
+  {pid:"005", name:"青山智美",          shuku:"箕宿",  hasOverride:true,  hasEmail:true},
+  {pid:"006", name:"堀佳子",            shuku:"軫宿",  hasOverride:true,  hasEmail:false},
+  {pid:"007", name:"Takada Emiko",     shuku:"参宿",  hasOverride:true,  hasEmail:true},
+  {pid:"008", name:"栗田知佳",          shuku:"亢宿",  hasOverride:true,  hasEmail:true},
+  {pid:"009", name:"（名前不明）",      shuku:"房宿",  hasOverride:true,  hasEmail:true},
+  {pid:"010", name:"高田慎一",          shuku:"井宿",  hasOverride:true,  hasEmail:true},
+  {pid:"011", name:"yoko",             shuku:"角宿",  hasOverride:true,  hasEmail:true},
+  {pid:"012", name:"M.UME",            shuku:"女宿",  hasOverride:true,  hasEmail:true},
+  {pid:"013", name:"惠子",              shuku:"房宿",  hasOverride:true,  hasEmail:true},
+  {pid:"014", name:"（名前不明）",      shuku:"觜宿",  hasOverride:true,  hasEmail:true},
+  {pid:"015", name:"田中茂治",          shuku:"危宿",  hasOverride:true,  hasEmail:true},
+  {pid:"016", name:"美波晶子",          shuku:"翼宿",  hasOverride:true,  hasEmail:true},
+  {pid:"017", name:"天野美穂",          shuku:"張宿",  hasOverride:true,  hasEmail:true},
+  {pid:"018", name:"kishunaあっこ",     shuku:"尾宿",  hasOverride:true,  hasEmail:true},
+  {pid:"019", name:"須黒あゆ子",        shuku:"亢宿",  hasOverride:true,  hasEmail:true},
+  {pid:"020", name:"丸山早百合",        shuku:"心宿",  hasOverride:true,  hasEmail:true},
+  {pid:"021", name:"新田道子",          shuku:"亢宿",  hasOverride:true,  hasEmail:true},
+  {pid:"022", name:"古澤真希",          shuku:"軫宿",  hasOverride:true,  hasEmail:true},
+  {pid:"023", name:"Ooyama Miyoko",    shuku:"井宿",  hasOverride:true,  hasEmail:true},
+  {pid:"024", name:"AKEMI",            shuku:"軫宿",  hasOverride:true,  hasEmail:true},
+  {pid:"025", name:"池原詩乃",          shuku:"壁宿",  hasOverride:true,  hasEmail:true},
+  {pid:"026", name:"chisako",          shuku:"胃宿",  hasOverride:true,  hasEmail:true},
+  {pid:"027", name:"ひらやままり",      shuku:"箕宿",  hasOverride:true,  hasEmail:true},
+  {pid:"028", name:"Noriyuki Okamoto", shuku:"虚宿",  hasOverride:true,  hasEmail:true},
+  {pid:"029", name:"tomomi",           shuku:"壁宿",  hasOverride:true,  hasEmail:true},
+  {pid:"030", name:"SachikoO",        shuku:"柳宿",  hasOverride:true,  hasEmail:true},
+  {pid:"031", name:"（名前不明）",      shuku:"氐宿",  hasOverride:true,  hasEmail:true},
+  {pid:"032", name:"hides",            shuku:"翼宿",  hasOverride:true,  hasEmail:true},
+  {pid:"033", name:"古屋七重",          shuku:"女宿",  hasOverride:true,  hasEmail:true},
+  {pid:"034", name:"大貫一恵",          shuku:"張宿",  hasOverride:true,  hasEmail:true},
+  {pid:"035", name:"朱里",              shuku:"婁宿",  hasOverride:true,  hasEmail:true},
+  {pid:"036", name:"佐藤ひろこ",        shuku:"参宿",  hasOverride:true,  hasEmail:true},
+  {pid:"037", name:"齊藤美紀",          shuku:"女宿",  hasOverride:true,  hasEmail:true},
+  {pid:"038", name:"fumie",            shuku:"胃宿",  hasOverride:true,  hasEmail:true},
+  {pid:"039", name:"渡辺ゆかり",        shuku:"畢宿",  hasOverride:true,  hasEmail:true},
+  {pid:"040", name:"川﨑智貴",          shuku:"昴宿",  hasOverride:true,  hasEmail:true},
+  {pid:"041", name:"徳田英弘",          shuku:"翼宿",  hasOverride:true,  hasEmail:true},
+  {pid:"042", name:"谷口貴朗",          shuku:"房宿",  hasOverride:true,  hasEmail:true},
+  {pid:"044", name:"かのん",            shuku:"觜宿",  hasOverride:true,  hasEmail:true},
+  {pid:"045", name:"熊川",              shuku:"軫宿",  hasOverride:false, hasEmail:true}
+];
+
+var CHECKED_KEY = 'deepReportChecked';
+var checked = {};
+try { checked = JSON.parse(localStorage.getItem(CHECKED_KEY) || '{}'); } catch(e) {}
+var currentFilter = 'all';
+
+function saveChecked() {
+  localStorage.setItem(CHECKED_KEY, JSON.stringify(checked));
+}
+
+function updateStats() {
+  var total = MEMBERS.length;
+  var done = Object.keys(checked).filter(function(k){ return checked[k]; }).length;
+  document.getElementById('total-count').textContent = total;
+  document.getElementById('checked-count').textContent = done;
+  document.getElementById('remain-count').textContent = total - done;
+  document.getElementById('progress-text').textContent = done + ' / ' + total;
+}
+
+function reportUrl(pid) {
+  return 'moon_seed_deep_report.html?pid=' + pid;
+}
+
+function badgeHtml(m) {
+  return m.hasOverride
+    ? '<span class="badge badge-override">手動鑑定</span>'
+    : '<span class="badge badge-auto">自動生成</span>';
+}
+
+/* ── テーブル（デスクトップ） ── */
+function buildTable() {
+  var tbody = document.getElementById('table-body');
+  tbody.innerHTML = '';
+  MEMBERS.forEach(function(m) {
+    var tr = document.createElement('tr');
+    tr.id = 'row-' + m.pid;
+    if (checked[m.pid]) tr.classList.add('checked-row');
+    var emailNote = m.hasEmail ? '' : '<span class="no-email">⚠メールなし</span>';
+    tr.innerHTML =
+      '<td class="col-pid">' + m.pid + '</td>' +
+      '<td class="col-name">' + m.name + badgeHtml(m) + emailNote + '</td>' +
+      '<td class="col-shuku">' + m.shuku + '</td>' +
+      '<td><a class="btn" href="' + reportUrl(m.pid) + '" target="_blank">開く →</a></td>' +
+      '<td class="col-check"><input type="checkbox" data-pid="' + m.pid + '"' + (checked[m.pid] ? ' checked' : '') + '></td>';
+    tbody.appendChild(tr);
+  });
+  tbody.querySelectorAll('input[type=checkbox]').forEach(function(cb) {
+    cb.addEventListener('change', function() {
+      var pid = this.getAttribute('data-pid');
+      checked[pid] = this.checked;
+      saveChecked();
+      document.getElementById('row-' + pid).classList.toggle('checked-row', this.checked);
+      syncCard(pid);
+      updateStats();
+      applyFilter();
+    });
+  });
+}
+
+/* ── カード（モバイル） ── */
+function buildCards() {
+  var list = document.getElementById('card-list');
+  list.innerHTML = '';
+  MEMBERS.forEach(function(m) {
+    var card = document.createElement('div');
+    card.className = 'card' + (checked[m.pid] ? ' checked-card' : '');
+    card.id = 'card-' + m.pid;
+    var emailNote = m.hasEmail ? '' : '<span class="no-email">⚠メールなし</span>';
+    card.innerHTML =
+      '<div class="card-check"><input type="checkbox" data-pid="' + m.pid + '"' + (checked[m.pid] ? ' checked' : '') + '></div>' +
+      '<div class="card-body">' +
+        '<div class="card-pid">' + m.pid + badgeHtml(m) + emailNote + '</div>' +
+        '<div class="card-name">' + m.name + '</div>' +
+        '<div class="card-shuku">' + m.shuku + '</div>' +
+      '</div>' +
+      '<div class="card-action"><a class="btn" href="' + reportUrl(m.pid) + '" target="_blank">開く →</a></div>';
+    list.appendChild(card);
+  });
+  list.querySelectorAll('input[type=checkbox]').forEach(function(cb) {
+    cb.addEventListener('change', function() {
+      var pid = this.getAttribute('data-pid');
+      checked[pid] = this.checked;
+      saveChecked();
+      document.getElementById('card-' + pid).classList.toggle('checked-card', this.checked);
+      syncRow(pid);
+      updateStats();
+      applyFilter();
+    });
+  });
+}
+
+/* テーブル↔カードの状態同期 */
+function syncCard(pid) {
+  var card = document.getElementById('card-' + pid);
+  if (!card) return;
+  card.classList.toggle('checked-card', !!checked[pid]);
+  var cb = card.querySelector('input[type=checkbox]');
+  if (cb) cb.checked = !!checked[pid];
+}
+function syncRow(pid) {
+  var row = document.getElementById('row-' + pid);
+  if (!row) return;
+  row.classList.toggle('checked-row', !!checked[pid]);
+  var cb = row.querySelector('input[type=checkbox]');
+  if (cb) cb.checked = !!checked[pid];
+}
+
+/* フィルター */
+function filterRows(type, btn) {
+  currentFilter = type;
+  document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+  applyFilter();
+}
+function applyFilter() {
+  MEMBERS.forEach(function(m) {
+    var show = currentFilter === 'all'
+      || (currentFilter === 'checked' && !!checked[m.pid])
+      || (currentFilter === 'unchecked' && !checked[m.pid]);
+    var row = document.getElementById('row-' + m.pid);
+    var card = document.getElementById('card-' + m.pid);
+    if (row) row.style.display = show ? '' : 'none';
+    if (card) card.style.display = show ? '' : 'none';
+  });
+}
+
+buildTable();
+buildCards();
+updateStats();
+</script>
+</body>
+</html>
