@@ -118,7 +118,7 @@
     var name = params.get("name") || "";
     var birth = params.get("birth") || "";
     var email = params.get("email") || "";
-    var participantId = params.get("participantId") || "";
+    var participantId = params.get("participantId") || params.get("pid") || "";
     var concern = params.get("concern") || "";
     var q = params.get("q") || "";
     var q2 = params.get("q2") || "";
