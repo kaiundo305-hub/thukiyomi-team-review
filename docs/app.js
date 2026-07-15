@@ -62,8 +62,11 @@
     return STORAGE_PREFIX + "day_" + day;
   }
 
+  var DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbxWpo3QzBNxemQNtYqYZfuMhjyrr2prjY6lsZPUZP5soKjimHzMts_Phz8D73DUYvbs/exec";
+  var DEFAULT_SECRET_KEY = "tsukiyomi-2026-key";
+
   function getSheetWebhookUrl() {
-    return (localStorage.getItem(SHEET_WEBHOOK_STORAGE_KEY) || "").trim();
+    return (localStorage.getItem(SHEET_WEBHOOK_STORAGE_KEY) || DEFAULT_GAS_URL).trim();
   }
 
   function setSheetWebhookUrl(url) {
@@ -71,7 +74,7 @@
   }
 
   function getSheetSecretKey() {
-    return (localStorage.getItem(SHEET_SECRET_STORAGE_KEY) || "").trim();
+    return (localStorage.getItem(SHEET_SECRET_STORAGE_KEY) || DEFAULT_SECRET_KEY).trim();
   }
 
   function setSheetSecretKey(secret) {
@@ -1719,6 +1722,19 @@
     var structuredIdentity = detectedStructuredIdentity || pid || profile.participantId || profile.email || profile.birth || profile.name || "guest";
     var diaryMap = readDiaryWithBackup(pid, structuredIdentity);
     var hasStructured = Object.keys(diaryMap).length > 0;
+
+    // 参加者の既存日記データをGASに自動バックアップ（セッション1回のみ・管理者閲覧時はスキップ）
+    if (!_urlPid && hasStructured) {
+      var _resyncKey = "tsukiyomi:diarySync:resync:" + structuredIdentity;
+      if (!sessionStorage.getItem(_resyncKey)) {
+        sessionStorage.setItem(_resyncKey, "1");
+        for (var _rd = 1; _rd <= 7; _rd++) {
+          var _rdLines = diaryMap[String(_rd)];
+          if (!_rdLines || !_rdLines.length) continue;
+          syncToSheet("day_diary_resync", { day: String(_rd), lines: _rdLines });
+        }
+      }
+    }
 
     function renderDeepReport(diaryMapToUse) {
       var hasData = Object.keys(diaryMapToUse).length > 0;
