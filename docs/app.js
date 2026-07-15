@@ -1721,13 +1721,6 @@
                   var filledOv = dayDataOv.lines.filter(function(l){ return (l.text || "").trim().length > 0; });
                   if (filledOv.length) {
                     fetchedOvDiary[dayNumOv] = filledOv;
-                    // localStorageに参加者pidタグ付きで保存（generate時に正しいidentityで読めるよう）
-                    try {
-                      localStorage.setItem(
-                        "tsukiyomi:structuredDiary:v1:" + ovFetchPid2 + ":day:" + dayNumOv,
-                        JSON.stringify({ day: dayNumOv, lines: filledOv, profile: { participantId: ovFetchPid2 } })
-                      );
-                    } catch(e) {}
                   }
                 }
               }
