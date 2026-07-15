@@ -1673,8 +1673,6 @@
           if (ovSummarySection) ovSummarySection.style.display = "";
         }
       } else {
-        // 管理者プレビュー時: 参加者の日記はご本人のデバイスに保存されるため表示できない
-        // ローディングプレースホルダーを非表示にする
         var noDataSummarySection = root.querySelector("[data-deep-diary-summary]");
         if (noDataSummarySection) noDataSummarySection.style.display = "none";
       }
@@ -1687,6 +1685,63 @@
         if (ovTplReport && ovTplReport.templateHtml) {
           ovTemplateContainer.innerHTML = ovTplReport.templateHtml;
           ovTemplateSection.setAttribute("data-has-content", "");
+        }
+      }
+      // ローカルに日記データがない場合はGASから取得（overrideパス）
+      if (!ovHasDiary) {
+        var ovSyncConfig = (function(){
+          var u = localStorage.getItem("tsukiyomi:sheetSync:url") || DEFAULT_GAS_URL;
+          var s = localStorage.getItem("tsukiyomi:sheetSync:secretKey") || DEFAULT_SECRET_KEY;
+          return { url: u, secretKey: s };
+        })();
+        var ovSyncCached = {};
+        try { ovSyncCached = JSON.parse(localStorage.getItem("tsukiyomi:diarySync:cachedProfile") || "{}"); } catch(e2) {}
+        var ovFetchPid2 = ovPid || ovSyncCached.participantId || "";
+        var ovFetchEmail2 = profile.email || ovSyncCached.email || "";
+        var ovFetchParts2 = [];
+        if (ovFetchPid2) ovFetchParts2.push("pid=" + encodeURIComponent(ovFetchPid2));
+        if (ovFetchEmail2) ovFetchParts2.push("email=" + encodeURIComponent(ovFetchEmail2));
+        if (ovFetchParts2.length > 0) {
+          var ovGasSummarySection = root.querySelector("[data-deep-diary-summary]");
+          var ovGasSummaryDays = root.querySelector("[data-deep-diary-days]");
+          var ovGasTemplateSection = root.querySelector("[data-deep-template-section]");
+          var ovGasTemplateContainer = root.querySelector("[data-deep-template]");
+          var ovFetchUrl2 = ovSyncConfig.url + "?" + ovFetchParts2.join("&") + "&secretKey=" + encodeURIComponent(ovSyncConfig.secretKey) + "&t=" + Date.now();
+          fetchGas(ovFetchUrl2, function(result) {
+            if (result && result.ok && result.days && Object.keys(result.days).length > 0) {
+              var fetchedOvDiary = {};
+              for (var dayNumOv in result.days) {
+                var dayDataOv = result.days[dayNumOv];
+                if (dayDataOv.lines) {
+                  var filledOv = dayDataOv.lines.filter(function(l){ return (l.text || "").trim().length > 0; });
+                  if (filledOv.length) fetchedOvDiary[dayNumOv] = filledOv;
+                }
+              }
+              var hasDiaryDaysOv = false;
+              for (var dKeyOv in fetchedOvDiary) { if (/^[1-7]$/.test(dKeyOv)) { hasDiaryDaysOv = true; break; } }
+              if (hasDiaryDaysOv) {
+                if (ovGasSummaryDays) ovGasSummaryDays.innerHTML = buildDiarySummaryHtml(fetchedOvDiary);
+                if (ovGasSummarySection) ovGasSummarySection.style.display = "";
+                applyDiaryMessages(true);
+                var genRepOv = window.TsukiyomiReportGen ? window.TsukiyomiReportGen.generate(profile) : null;
+                if (genRepOv) {
+                  if (genRepOv.templateHtml && ovGasTemplateSection && ovGasTemplateContainer) {
+                    ovGasTemplateContainer.innerHTML = genRepOv.templateHtml;
+                    ovGasTemplateSection.setAttribute("data-has-content", "");
+                  }
+                  var ovGasVoicesSection = root.querySelector("[data-deep-voices-section]");
+                  var ovGasVoicesContainer = root.querySelector("[data-deep-voices]");
+                  if (ovGasVoicesContainer && genRepOv.voicesHtml) {
+                    ovGasVoicesContainer.innerHTML = genRepOv.voicesHtml;
+                    if (ovGasVoicesSection) {
+                      ovGasVoicesSection.setAttribute("data-has-content", "");
+                      ovGasVoicesSection.style.display = "";
+                    }
+                  }
+                }
+              }
+            }
+          }, function(){});
         }
       }
       return;
