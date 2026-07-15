@@ -1700,10 +1700,9 @@
         var ovSyncCached = {};
         try { ovSyncCached = JSON.parse(localStorage.getItem("tsukiyomi:diarySync:cachedProfile") || "{}"); } catch(e2) {}
         var ovFetchPid2 = ovPid || ovSyncCached.participantId || "";
-        var ovFetchEmail2 = profile.email || ovSyncCached.email || "";
+        // 管理者ブラウザのメールを送らない（GASのOR検索で管理者レコードが全件混入するため）
         var ovFetchParts2 = [];
         if (ovFetchPid2) ovFetchParts2.push("pid=" + encodeURIComponent(ovFetchPid2));
-        if (ovFetchEmail2) ovFetchParts2.push("email=" + encodeURIComponent(ovFetchEmail2));
         if (ovFetchParts2.length > 0) {
           var ovGasSummarySection = root.querySelector("[data-deep-diary-summary]");
           var ovGasSummaryDays = root.querySelector("[data-deep-diary-days]");
