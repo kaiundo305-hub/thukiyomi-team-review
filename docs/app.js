@@ -1681,7 +1681,10 @@
       var ovTemplateSection = root.querySelector("[data-deep-template-section]");
       var ovTemplateContainer = root.querySelector("[data-deep-template]");
       if (ovHasDiary && window.TsukiyomiReportGen && ovTemplateSection && ovTemplateContainer) {
-        var ovTplReport = TsukiyomiReportGen.generate(profile);
+        // 管理者が参加者ページを閲覧中は、参加者のpidをidentityとして強制使用
+        // （カノン自身のlocalStorage日記が混入するのを防ぐ）
+        var ovTplProfile = Object.assign({}, profile, { participantId: ovPid || ovIdentity });
+        var ovTplReport = TsukiyomiReportGen.generate(ovTplProfile);
         if (ovTplReport && ovTplReport.templateHtml) {
           ovTemplateContainer.innerHTML = ovTplReport.templateHtml;
           ovTemplateSection.setAttribute("data-has-content", "");
@@ -1713,8 +1716,19 @@
               for (var dayNumOv in result.days) {
                 var dayDataOv = result.days[dayNumOv];
                 if (dayDataOv.lines) {
+                  // 参加者のlinesのみ抽出（placeholder が管理者固有のもの=moon-fullmoon-*系は除外不可だが
+                  // 少なくとも空行は除く）
                   var filledOv = dayDataOv.lines.filter(function(l){ return (l.text || "").trim().length > 0; });
-                  if (filledOv.length) fetchedOvDiary[dayNumOv] = filledOv;
+                  if (filledOv.length) {
+                    fetchedOvDiary[dayNumOv] = filledOv;
+                    // localStorageに参加者pidタグ付きで保存（generate時に正しいidentityで読めるよう）
+                    try {
+                      localStorage.setItem(
+                        "tsukiyomi:structuredDiary:v1:" + ovFetchPid2 + ":day:" + dayNumOv,
+                        JSON.stringify({ day: dayNumOv, lines: filledOv, profile: { participantId: ovFetchPid2 } })
+                      );
+                    } catch(e) {}
+                  }
                 }
               }
               var hasDiaryDaysOv = false;
@@ -1723,7 +1737,10 @@
                 if (ovGasSummaryDays) ovGasSummaryDays.innerHTML = buildDiarySummaryHtml(fetchedOvDiary);
                 if (ovGasSummarySection) ovGasSummarySection.style.display = "";
                 applyDiaryMessages(true);
-                var genRepOv = window.TsukiyomiReportGen ? window.TsukiyomiReportGen.generate(profile) : null;
+                // 管理者のprofileではなく参加者pidをidentityとして強制使用
+                // （カノン自身のlocalStorage日記が「あなた自身の言葉」に混入するのを防ぐ）
+                var ovGasGenProfile = Object.assign({}, profile, { participantId: ovFetchPid2 });
+                var genRepOv = window.TsukiyomiReportGen ? window.TsukiyomiReportGen.generate(ovGasGenProfile) : null;
                 if (genRepOv) {
                   if (genRepOv.templateHtml && ovGasTemplateSection && ovGasTemplateContainer) {
                     ovGasTemplateContainer.innerHTML = genRepOv.templateHtml;
@@ -1810,18 +1827,8 @@
     var diaryMap = readDiaryWithBackup(pid, structuredIdentity);
     var hasStructured = Object.keys(diaryMap).length > 0;
 
-    // 参加者の既存日記データをGASに自動バックアップ（セッション1回のみ・管理者閲覧時はスキップ）
-    if (!_urlPid && hasStructured) {
-      var _resyncKey = "tsukiyomi:diarySync:resync:" + structuredIdentity;
-      if (!sessionStorage.getItem(_resyncKey)) {
-        sessionStorage.setItem(_resyncKey, "1");
-        for (var _rd = 1; _rd <= 7; _rd++) {
-          var _rdLines = diaryMap[String(_rd)];
-          if (!_rdLines || !_rdLines.length) continue;
-          syncToSheet("day_diary_resync", { day: String(_rd), lines: _rdLines });
-        }
-      }
-    }
+    // 注: auto-resync は意図せずカノン管理者の日記が参加者のGASレコードに混入するため削除済み
+    // 参加者は日記を書いた際に既に同期されるため、ここでの再同期は不要
 
     function renderDeepReport(diaryMapToUse) {
       var hasData = Object.keys(diaryMapToUse).length > 0;
