@@ -3,7 +3,7 @@
 (function () {
   'use strict';
 
-  var MODEL        = 'gemini-1.5-flash';   // 無料枠対応モデル
+  var MODEL        = 'gemini-2.0-flash';   // 無料枠対応モデル
   var API_KEY_STORE = 'tsukiyomi:geminiApiKey';
 
   // ── ユーティリティ ──────────────────────────────────────────────────

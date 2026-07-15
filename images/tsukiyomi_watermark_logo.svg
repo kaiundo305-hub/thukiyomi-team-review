@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" role="img" aria-labelledby="title desc">
+  <title id="title">月読みワンダーランド 透かし紋章</title>
+  <desc id="desc">三日月に抱かれた芽吹く種と、月読みワンダーランドの文字を組み合わせた円形紋章</desc>
+  <defs>
+    <path id="nameArc" d="M 176 565 A 300 300 0 0 0 624 565"/>
+  </defs>
+
+  <g fill="none" stroke="#9a6a2f" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="400" cy="400" r="334" stroke-width="8"/>
+    <circle cx="400" cy="400" r="318" stroke-width="2.5"/>
+
+    <!-- 三日月 -->
+    <path d="M 482 193
+             C 340 222 272 345 305 469
+             C 332 572 435 630 535 590
+             C 446 590 376 521 370 430
+             C 364 334 408 252 482 193 Z"
+          stroke-width="9"/>
+    <path d="M 459 225 C 345 271 310 386 342 481 C 369 560 440 597 508 578"
+          stroke-width="2.5" opacity=".8"/>
+
+    <!-- 種と芽 -->
+    <ellipse cx="410" cy="525" rx="29" ry="22" transform="rotate(-12 410 525)" stroke-width="7"/>
+    <path d="M 407 505 C 410 460 408 421 412 381" stroke-width="7"/>
+    <path d="M 412 420 C 367 414 342 386 341 354 C 383 354 409 374 412 420 Z" stroke-width="7"/>
+    <path d="M 412 420 C 451 409 475 382 476 350 C 437 352 413 375 412 420 Z" stroke-width="7"/>
+
+    <!-- 星 -->
+    <path d="M400 130 L407 153 L430 160 L407 167 L400 190 L393 167 L370 160 L393 153 Z" stroke-width="4"/>
+    <path d="M238 244 L243 258 L257 263 L243 268 L238 282 L233 268 L219 263 L233 258 Z" stroke-width="3"/>
+    <path d="M562 244 L567 258 L581 263 L567 268 L562 282 L557 268 L543 263 L557 258 Z" stroke-width="3"/>
+    <circle cx="292" cy="192" r="4" fill="#9a6a2f" stroke="none"/>
+    <circle cx="508" cy="192" r="4" fill="#9a6a2f" stroke="none"/>
+
+    <!-- 左右の植物 -->
+    <path d="M182 505 C130 455 132 365 182 303" stroke-width="5"/>
+    <path d="M618 505 C670 455 668 365 618 303" stroke-width="5"/>
+    <path d="M169 451 C142 441 128 418 130 395 C156 398 173 420 169 451 Z" stroke-width="4"/>
+    <path d="M177 401 C151 383 145 357 153 337 C177 347 189 374 177 401 Z" stroke-width="4"/>
+    <path d="M631 451 C658 441 672 418 670 395 C644 398 627 420 631 451 Z" stroke-width="4"/>
+    <path d="M623 401 C649 383 655 357 647 337 C623 347 611 374 623 401 Z" stroke-width="4"/>
+
+    <!-- 下部の小さな印章飾り -->
+    <path d="M400 585 L406 602 L423 608 L406 614 L400 631 L394 614 L377 608 L394 602 Z" stroke-width="3"/>
+    <path d="M300 585 C329 572 355 576 377 600 M500 585 C471 572 445 576 423 600" stroke-width="3"/>
+  </g>
+
+  <text fill="#9a6a2f"
+        font-family="Hiragino Mincho ProN, Yu Mincho, YuMincho, serif"
+        font-size="38"
+        font-weight="600"
+        letter-spacing="8">
+    <textPath href="#nameArc" startOffset="50%" text-anchor="middle">月読みワンダーランド</textPath>
+  </text>
+</svg>

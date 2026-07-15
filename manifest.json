@@ -1,0 +1,25 @@
+{
+  "name": "月読みワンダーランド 月読み日記",
+  "short_name": "月読み日記",
+  "description": "月とともに、今を整えていく7日間の月読み日記",
+  "start_url": "./challenge_day1_sync.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#1a1030",
+  "theme_color": "#c9a84c",
+  "lang": "ja",
+  "icons": [
+    {
+      "src": "moon_diary_cover.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "images/moon_diary_cover.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
