@@ -152,6 +152,38 @@
     };
   }
 
+  // GAS GETフェッチ（file://からも動くようにJSONPを使用）
+  function fetchGas(url, onSuccess, onError) {
+    var cbName = "_tsukiyomiGas" + Date.now() + Math.floor(Math.random() * 99999);
+    var script = document.createElement("script");
+    var done = false;
+    var timer = setTimeout(function() {
+      if (done) return;
+      done = true;
+      delete window[cbName];
+      if (script.parentNode) script.parentNode.removeChild(script);
+      if (onError) onError(new Error("timeout"));
+    }, 15000);
+    window[cbName] = function(data) {
+      if (done) return;
+      done = true;
+      clearTimeout(timer);
+      delete window[cbName];
+      if (script.parentNode) script.parentNode.removeChild(script);
+      if (onSuccess) onSuccess(data);
+    };
+    script.onerror = function() {
+      if (done) return;
+      done = true;
+      clearTimeout(timer);
+      delete window[cbName];
+      if (script.parentNode) script.parentNode.removeChild(script);
+      if (onError) onError(new Error("script error"));
+    };
+    script.src = url + "&callback=" + cbName;
+    (document.head || document.body).appendChild(script);
+  }
+
   function syncToSheet(recordType, payload) {
     var webhookUrl = getSheetWebhookUrl();
     var secretKey = getSheetSecretKey();
@@ -1824,11 +1856,7 @@
       if (profile.email) fetchParts.push("email=" + encodeURIComponent(profile.email));
       if (!fetchParts.length) fetchParts.push("pid=" + encodeURIComponent(structuredIdentity));
       var fetchUrl = syncConfig.url + "?" + fetchParts.join("&") + "&secretKey=" + encodeURIComponent(syncConfig.secretKey) + "&t=" + Date.now();
-      var _fetchAbort = new AbortController();
-      var _fetchTimer = setTimeout(function(){ _fetchAbort.abort(); }, 10000);
-      fetch(fetchUrl, { redirect: "follow", signal: _fetchAbort.signal })
-        .then(function(r){ clearTimeout(_fetchTimer); return r.json(); })
-        .then(function(result){
+      fetchGas(fetchUrl, function(result){
           if (result && result.ok && result.days && Object.keys(result.days).length > 0) {
             var restored = {};
             for (var dayNum in result.days) {
@@ -1871,8 +1899,7 @@
           } else {
             renderDeepReport({});
           }
-        })
-        .catch(function(){ clearTimeout(_fetchTimer); renderDeepReport({}); });
+        }, function(){ renderDeepReport({}); });
       return;
     }
 
