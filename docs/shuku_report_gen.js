@@ -258,6 +258,29 @@
         }
       } catch (e) {}
     }
+    // DIARY_BACKUP_DATA にフォールバック（localStorageに何も見つからなかった場合）
+    if (!candidates.length) {
+      var backup = getBackupEntry(identity);
+      if (backup && backup.days) {
+        Object.keys(backup.days).forEach(function(dayNum) {
+          var dayData = backup.days[dayNum];
+          if (Array.isArray(dayData.lines)) {
+            dayData.lines.forEach(function(line) {
+              var text = (line.a || '').trim();
+              if (text.length < 10) return;
+              var hasRule = VOICE_ADVICE_RULES.some(function(r){ return r.p.test(text); });
+              candidates.push({
+                day: parseInt(dayNum, 10),
+                question: (line.q || '').replace(/[\s\d\.\:。、]+$/, '').trim(),
+                quote: text,
+                advice: genLineAdvice(text, shuku),
+                priority: hasRule ? text.length + 200 : text.length
+              });
+            });
+          }
+        });
+      }
+    }
     // ルールにヒットしたもの優先・同率は長い順・最大5件
     candidates.sort(function(a, b){ return b.priority - a.priority; });
     // 同じ日が連続しないよう分散させる
@@ -290,6 +313,12 @@
   }
 
   // ===== 日記テキスト収集（新キー形式 = diary_structured_save.js と同じ） =====
+  function getBackupEntry(identity) {
+    if (typeof window === 'undefined' || !window.DIARY_BACKUP_DATA) return null;
+    var pid = String(identity);
+    return window.DIARY_BACKUP_DATA[pid] || window.DIARY_BACKUP_DATA[String(Number(pid))] || null;
+  }
+
   function collectDiaryText(identity) {
     var parts = [];
     for (var day = 1; day <= 7; day++) {
@@ -303,6 +332,18 @@
           rec.extras.forEach(function(ex){ if (ex.text) parts.push(ex.text); });
         }
       } catch (e) {}
+    }
+    // DIARY_BACKUP_DATA にフォールバック
+    if (!parts.length) {
+      var backup = getBackupEntry(identity);
+      if (backup && backup.days) {
+        Object.keys(backup.days).forEach(function(dayNum) {
+          var dayData = backup.days[dayNum];
+          if (Array.isArray(dayData.lines)) {
+            dayData.lines.forEach(function(line) { if (line.a) parts.push(line.a); });
+          }
+        });
+      }
     }
     return parts.join('\n');
   }
@@ -336,6 +377,31 @@
     }
   }
 
+  // ===== 4つのキーワードカード HTML =====
+  function buildKeywordHtml(shuku, diary) {
+    var a = SHUKU_ANALYSIS[shuku];
+    if (!a || !a.keywords || !a.keywords.length) return '';
+    var nums = ['①', '②', '③', '④'];
+    var allKws = a.keywords;
+    var hit = allKws.filter(function(kw) { return diary && diary.indexOf(kw) !== -1; });
+    var rest = allKws.filter(function(kw) { return hit.indexOf(kw) === -1; });
+    var selected = hit.concat(rest).slice(0, 4);
+    var html = '<div class="deep-template-grid">';
+    selected.forEach(function(kw, i) {
+      var inDiary = hit.indexOf(kw) !== -1;
+      var desc = inDiary
+        ? '7日間の日記の中に、この言葉のエネルギーが自然に現れていました。すでにあなたの中で動き始めている力です。'
+        : 'あなたの宿「' + shuku + '」が持つ本質的な力のキーワードです。意識することで、この力が日常の中で開花していきます。';
+      html += '<div class="deep-template-card">' +
+        '<span class="deep-template-label">キーワード' + nums[i] + '</span>' +
+        '<h3>' + escHtml(kw) + '</h3>' +
+        '<p class="deep-template-text">' + escHtml(desc) + '</p>' +
+        '</div>';
+    });
+    html += '</div>';
+    return html;
+  }
+
   // ===== レポート生成 =====
   function generateReport(profile) {
     var identity = profile.participantId || profile.birth || profile.name || 'guest';
@@ -355,6 +421,7 @@
         : '宿曜情報がありません。',
       s4: genSection4(shuku, profile.q || '', diary),
       voicesHtml: buildVoicesHtml(voices),
+      templateHtml: buildKeywordHtml(shuku, diary),
       generatedAt: new Date().toISOString(),
       identity: identity
     };
