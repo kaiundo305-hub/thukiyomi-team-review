@@ -422,3 +422,58 @@ APIキー（`AQ.Ab8RN6...` 形式）は**絶対にコードにハードコード
    - **ページ22付近が空白でない**（エピローグが前ページと続いている）
    - **枠が全ページでA4フル表示**（下が切れていない）
    - **双子座セクション後に余分な空白ページが出ない**
+
+---
+
+## ⚠️ 互換性保護ルール（作業前に必ず読む）
+
+### 作業ブランチを必ず使う
+
+```bash
+# mainに直接コミットしない。必ずこのブランチで作業する
+git checkout -b codex/print-css-fix
+```
+
+作業後、差分を確認してからマージすること：
+
+```bash
+git diff main..codex/print-css-fix -- docs/moon_seed_deep_report.html
+```
+
+### 触っていい場所（ここだけ）
+
+`docs/moon_seed_deep_report.html` の中で：
+- **`@media print { ... }` ブロックの内側のみ**（印刷専用CSS）
+- スクリーンCSS（`@media print` 外）の `break-after` ルールは、`@media print` 内で上書きするだけ。直接変更しない
+
+### 絶対に触らない場所
+
+| 場所 | 理由 |
+|---|---|
+| `beforeprint` / `afterprint` JSイベント（`</body>` 直前） | textareaの高さ展開に必要。壊れると月のサイクルページが印刷で切れる |
+| `runShingetsuDiagnosis()` 関数 | 宿命診断のAI呼び出し。壊れると診断機能が動かなくなる |
+| `data-chapter-tab` 属性を操作するJS | タブ切り替えロジック。壊れると全セクションが表示されなくなる |
+| `tab-hidden` クラスの制御JS | 同上 |
+| `participants_data.js` | 参加者データ本体 |
+| `deep_report_overrides.js` | 44名分の鑑定書テキスト |
+| `app.js` / `shuku_report_gen.js` | 日記・鑑定書レンダリングエンジン |
+| HTMLの構造（セクションの追加・削除・移動） | タブとデータ属性が壊れる |
+
+### 変更後のテスト順序（必須）
+
+| 順番 | 確認すること | 確認方法 |
+|---|---|---|
+| 1 | 日記ページが開く | `moon_diary_book.html` をブラウザで開く |
+| 2 | 第2の鑑定書が画面で正常表示される | `?pid=001` などでページを開く |
+| 3 | タブ切り替えが動く | 画面上部のタブをクリックしてセクションが切り替わるか |
+| 4 | 印刷プレビューを確認 | Cmd+P で空白ページ・枠・文字色を確認 |
+| 5 | 参加者データが読み込まれる | `?pid=001` で参加者名と鑑定文が表示されるか |
+
+### 何か壊れた場合
+
+```bash
+# 即座にロールバック（1コマンド）
+git checkout backup/print-css-stable -- docs/moon_seed_deep_report.html
+git commit -m "revert: restore from backup"
+git push origin main
+```
