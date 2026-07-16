@@ -1896,6 +1896,32 @@
       applyDiaryMessages(true);
       var cta = root.querySelector("[data-no-diary-cta]");
       if (cta) cta.style.display = "";
+      // 4つのキーワード・鑑定テキストを生成
+      if (window.TsukiyomiReportGen) {
+        var bkReport = TsukiyomiReportGen.generate(profile);
+        if (bkReport && bkReport.s1) {
+          if (current) renderDeepSection(current, bkReport.s1);
+          if (themes)  renderDeepSection(themes,  bkReport.s2);
+          if (shukuView) renderDeepSection(shukuView, bkReport.s3);
+          if (next)    renderDeepSection(next,    bkReport.s4);
+        }
+        if (bkReport && bkReport.templateHtml) {
+          var bkTplSection = root.querySelector("[data-deep-template-section]");
+          var bkTplContainer = root.querySelector("[data-deep-template]");
+          if (bkTplContainer) {
+            bkTplContainer.innerHTML = bkReport.templateHtml;
+            if (bkTplSection) { bkTplSection.style.display = ""; bkTplSection.setAttribute("data-has-content", ""); }
+          }
+        }
+        if (bkReport && bkReport.voicesHtml) {
+          var bkVoicesSection = root.querySelector("[data-deep-voices-section]");
+          var bkVoicesContainer = root.querySelector("[data-deep-voices]");
+          if (bkVoicesContainer) {
+            bkVoicesContainer.innerHTML = bkReport.voicesHtml;
+            if (bkVoicesSection) { bkVoicesSection.style.display = ""; bkVoicesSection.setAttribute("data-has-content", ""); }
+          }
+        }
+      }
       return;
     }
     // 日記データなし
