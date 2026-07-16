@@ -583,16 +583,21 @@
         break-inside: avoid !important;
         page-break-inside: avoid !important;
         break-after: page;
+        position: relative !important;
+        z-index: 1 !important;
       }
       /* openingバナー画像の高さを制限して見出し＋説明文も同ページに収める */
+      /* ページ枠ウォーターマークがバナー上に重ならないよう z-index を上位に */
       .deep-opening-banner {
         max-width: 100% !important;
-        max-height: 150mm !important;
+        max-height: 110mm !important;
         width: auto !important;
         height: auto !important;
         object-fit: contain !important;
         display: block !important;
         margin: 0 auto 16px !important;
+        position: relative !important;
+        z-index: 2 !important;
       }
       /* タイトルブロック・チャプターは自然に流す */
       .deep-report-chapter { break-before: auto; }
