@@ -315,11 +315,11 @@
       [data-deep-diary-days] > p:only-child:not([data-diary-day]) { display: none !important; }
 
       /* 空セクション（コンテンツ未設定）を印刷から除外 */
-      /* tab-hidden の !important 強制表示を上書きするため同等以上の特異度で指定 */
-      [data-kanon-panel]:not([data-has-content]),
-      [data-deep-voices-section]:not([data-has-content]),
-      [data-deep-voices-section-cont]:not([data-has-content]),
-      [data-deep-template-section]:not([data-has-content]) { display: none !important; }
+      /* tab-hidden show rule (0,3,0) を上書きするため特異度 0,4,0 で指定 */
+      [data-deep-report] [data-chapter-tab][data-kanon-panel]:not([data-has-content]),
+      [data-deep-report] [data-chapter-tab][data-deep-voices-section]:not([data-has-content]),
+      [data-deep-report] [data-chapter-tab][data-deep-voices-section-cont]:not([data-has-content]),
+      [data-deep-report] [data-chapter-tab][data-deep-template-section]:not([data-has-content]) { display: none !important; }
 
       .deep-report-header-img, .moon-mark { display: none !important; }
 
@@ -516,11 +516,27 @@
         padding: 14px 16px !important;
       }
       [data-deep-report] #moon-cycle-section textarea {
-        min-height: 40px !important;
+        min-height: 0 !important;
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
         font-size: 10pt !important;
         line-height: 1.6 !important;
         padding: 8px 12px !important;
+        resize: none !important;
       }
+      /* すべてのtextareaを印刷時に高さ自動展開 */
+      [data-deep-report] textarea {
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
+        resize: none !important;
+      }
+      /* 双子座セクション箇条書きアイテムとtextareaブロックを分割しない */
+      [data-seal="双子座新月"] > div > div,
+      [data-seal="双子座満月"] > div > div { break-inside: avoid; }
+      [data-seal="双子座満月"] > div:last-child { break-inside: avoid; }
 
       /* ── ガイダンス・月フェーズ：左ボーダーアクセント ── */
       .deep-guidance-block,
@@ -1695,7 +1711,7 @@
 
         </div>
 
-        <div style="margin-top:24px;">
+        <div style="margin-top:24px;break-inside:avoid;page-break-inside:avoid;">
           <p style="font-size:12px;letter-spacing:0.15em;color:#6b3d0e;margin:0 0 10px;">🌕 満月の気づきを書き留める</p>
           <textarea id="moon-fullmoon-gemini" placeholder="双子座満月のタイミングに気づいたこと、手放したこと、感謝できることを自由に書いてください。" style="width:100%;box-sizing:border-box;min-height:100px;background:rgba(254,250,235,0.7);border:1px solid rgba(184,145,58,0.4);border-radius:8px;color:#3d3328;font-size:13px;line-height:1.8;padding:12px 14px;resize:vertical;font-family:inherit;" oninput="localStorage.setItem('moon-fullmoon-gemini', this.value)"></textarea>
         </div>
@@ -2793,6 +2809,22 @@
     setTimeout(apply, 500);
     setTimeout(apply, 1500);
   })();
+  </script>
+  <script>
+  // 印刷前にtextareaをコンテンツ高さに自動展開（印刷でコンテンツが切れる防止）
+  window.addEventListener('beforeprint', function() {
+    document.querySelectorAll('[data-deep-report] textarea').forEach(function(ta) {
+      ta.style.height = 'auto';
+      ta.style.height = ta.scrollHeight + 'px';
+      ta.style.overflow = 'visible';
+    });
+  });
+  window.addEventListener('afterprint', function() {
+    document.querySelectorAll('[data-deep-report] textarea').forEach(function(ta) {
+      ta.style.height = '';
+      ta.style.overflow = '';
+    });
+  });
   </script>
 </body>
 </html>
