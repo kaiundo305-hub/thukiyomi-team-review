@@ -303,7 +303,8 @@
       #data-backup-section, .gate-footer, #refresh-status,
       [style*="safe-area-inset-bottom"],
       button[onclick*="refreshDeepReport"],
-      #chapter-bottom-nav { display: none !important; }
+      #chapter-bottom-nav,
+      #sg-btn, #sg-fetch-status, #sg-diary-preview { display: none !important; }
 
       /* AI分析・Geminiエラーは印刷不要 */
       #deep-ai-analysis-section,
@@ -339,20 +340,21 @@
         margin: 0 auto !important;
       }
 
-      /* ★ 全印刷ページに枠を表示（imgタグ＋preloadで確実に印刷） */
+      /* ★ 全印刷ページに枠を表示：A4サイズ固定で下切れを防ぐ */
       #print-page-frame {
         display: block !important;
         position: fixed;
         top: 0; left: 0;
-        width: 100%; height: 100%;
+        width: 210mm;
+        height: 297mm;
         pointer-events: none;
         z-index: 0;
       }
       #print-page-frame img {
         display: block !important;
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
+        width: 210mm;
+        height: 297mm;
+        object-fit: fill;
       }
 
       html { background: white !important; }
@@ -583,30 +585,50 @@
       #moon-cycle-section textarea { color: #2a1810 !important; }
 
       /* ── 章の区切り ── */
+      /* スクリーンCSS の break-after:page（双子座新月・満月）を印刷では無効化 */
+      [data-deep-report] .deep-report-closing[data-seal="双子座新月"],
+      [data-deep-report] .deep-report-closing[data-seal="双子座満月"],
+      [data-deep-report] .deep-report-closing:is([data-seal="双子座満月"], [data-seal="双子座新月"]) {
+        break-after: auto !important;
+        page-break-after: auto !important;
+        padding-top: 24px !important;
+        padding-bottom: 24px !important;
+      }
+
       /* opening セクションは1ページ内に収める（バナー画像＋見出し＋説明文を分割しない） */
       .deep-report-opening {
         break-inside: avoid !important;
         page-break-inside: avoid !important;
-        position: relative !important;
-        z-index: 1 !important;
+        padding-bottom: 0 !important;
       }
-      /* openingバナー画像の高さを制限して見出し＋説明文も同ページに収める */
-      /* ページ枠ウォーターマークがバナー上に重ならないよう z-index を上位に */
+      /* openingバナー画像の高さを制限して1ページに収める */
       .deep-opening-banner {
         max-width: 100% !important;
-        max-height: 110mm !important;
+        max-height: 100mm !important;
         width: auto !important;
         height: auto !important;
         object-fit: contain !important;
         display: block !important;
-        margin: 0 auto 16px !important;
-        position: relative !important;
-        z-index: 2 !important;
+        margin: 0 auto 14px !important;
       }
       /* タイトルブロック・チャプターは自然に流す */
       .deep-report-chapter { break-before: auto; }
       /* 見出しの直後で改ページしない */
       [data-deep-report] .deep-report-panel h2 { break-after: avoid !important; }
+
+      /* ── タイトルブロック：文字色を確実に可視化 ── */
+      .deep-report-title-block {
+        padding: 14mm 0 12mm !important;
+      }
+      .deep-report-title-block .day-label,
+      .deep-report-title-block .challenge-theme,
+      .deep-report-title-block .catch-heading {
+        color: #5a3010 !important;
+      }
+      .deep-report-title-block h1,
+      .deep-report-title-block h1 span { color: #3d2808 !important; font-size: 26pt !important; }
+      .deep-report-title-block h1 small { color: #7a5020 !important; font-size: 14pt !important; display: block !important; margin-top: 4px !important; }
+      .deep-report-title-block .challenge-guide p { color: #4a3728 !important; }
 
       /* ── 新月願いブロック ── */
       #deep-title {
