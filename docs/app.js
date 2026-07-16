@@ -1840,11 +1840,13 @@
         if (templateSection) templateSection.style.display = "";
       }
 
-      // 旧フォーマットとのフォールバック
+      // 旧フォーマットとのフォールバック（pidが指定されている場合は他ユーザーのデータを混入させない）
       var legacyTexts = [];
-      for (var d = 1; d <= 7; d++) {
-        var t = (localStorage.getItem(storageKey(String(d))) || "").trim();
-        if (t) legacyTexts.push(t);
+      if (!pid) {
+        for (var d = 1; d <= 7; d++) {
+          var t = (localStorage.getItem(storageKey(String(d))) || "").trim();
+          if (t) legacyTexts.push(t);
+        }
       }
 
       if (!hasData && !legacyTexts.length) {
