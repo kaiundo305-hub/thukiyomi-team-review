@@ -335,6 +335,61 @@
       .catch(function(){});
   }
 
+  // レポート/サマリーページ用: 全7日分を一括復元
+  function autoRestoreAllDaysIfNeeded(){
+    // challenge_dayページは autoRestoreIfNeeded が担当
+    if(pageName().match(/challenge_day\d+/)) return;
+
+    var profile = getProfile();
+    var id = profile.email || profile.participantId;
+    if(!id) return;
+
+    // 1日分でも欠けていれば復元を試みる
+    var anyMissing = false;
+    for(var d = 1; d <= 7; d++){
+      if(!localStorage.getItem(STRUCTURED_DIARY_PREFIX + id + ':day:' + d)){
+        anyMissing = true;
+        break;
+      }
+    }
+    if(!anyMissing) return;
+
+    var attemptKey = 'tsukiyomi:restoreAllAttempted:' + id;
+    try{
+      if(sessionStorage.getItem(attemptKey)) return;
+      sessionStorage.setItem(attemptKey, '1');
+    }catch(e){ return; }
+
+    var config = getConfig();
+    var gasUrl = config.url || DEFAULT_WEBHOOK_URL;
+    var secretKey = config.secretKey || DEFAULT_SECRET_KEY;
+    var idParam = profile.email
+      ? 'email=' + encodeURIComponent(profile.email)
+      : 'pid=' + encodeURIComponent(profile.participantId);
+    var requestUrl = gasUrl + '?' + idParam + '&secretKey=' + encodeURIComponent(secretKey) + '&t=' + Date.now();
+
+    fetch(requestUrl, { redirect: 'follow' })
+      .then(function(r){ return r.json(); })
+      .then(function(result){
+        if(!result || !result.ok || !result.days) return;
+        var restored = 0;
+        Object.keys(result.days).forEach(function(dayNum){
+          var key = STRUCTURED_DIARY_PREFIX + id + ':day:' + dayNum;
+          if(!localStorage.getItem(key) && result.days[dayNum]){
+            localStorage.setItem(key, JSON.stringify(result.days[dayNum]));
+            restored++;
+          }
+        });
+        if(restored === 0) return;
+        var banner = document.createElement('div');
+        banner.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#3a2a1a;color:#fff;padding:14px 24px;border-radius:12px;z-index:9999;font-size:14px;text-align:center;box-shadow:0 4px 16px rgba(0,0,0,0.3);line-height:1.6;max-width:80%;';
+        banner.textContent = '✨ ' + restored + '日分の日記をバックアップから復元しました。画面を更新します…';
+        document.body.appendChild(banner);
+        setTimeout(function(){ window.location.reload(); }, 2000);
+      })
+      .catch(function(){});
+  }
+
   function showNamePromptIfNeeded(){
     var cached = loadCachedProfile();
     if(cached.participantId) return;
@@ -407,7 +462,8 @@
     },
     collectFields: collectFields,
     readOutbox: readOutbox,
-    writeOutbox: writeOutbox
+    writeOutbox: writeOutbox,
+    restoreAllDays: autoRestoreAllDaysIfNeeded
   };
 
   attachAutoSync();
@@ -415,11 +471,13 @@
     document.addEventListener('DOMContentLoaded', function(){
       showNamePromptIfNeeded();
       autoRestoreIfNeeded();
+      autoRestoreAllDaysIfNeeded();
       autoBackupOnLoad();
     });
   } else {
     showNamePromptIfNeeded();
     autoRestoreIfNeeded();
+    autoRestoreAllDaysIfNeeded();
     autoBackupOnLoad();
   }
 })();
