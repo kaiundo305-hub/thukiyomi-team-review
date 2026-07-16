@@ -578,9 +578,22 @@
       #moon-cycle-section textarea { color: #2a1810 !important; }
 
       /* ── 章の区切り ── */
-      /* opening の後だけ改ページ。章ごとの break-before: page は
-         display:none の章が連続すると空白ページを生むため廃止 */
-      .deep-report-opening { break-after: page; }
+      /* opening セクションは1ページ内に収める（バナー画像＋見出し＋説明文を分割しない） */
+      .deep-report-opening {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+        break-after: page;
+      }
+      /* openingバナー画像の高さを制限して見出し＋説明文も同ページに収める */
+      .deep-opening-banner {
+        max-width: 100% !important;
+        max-height: 150mm !important;
+        width: auto !important;
+        height: auto !important;
+        object-fit: contain !important;
+        display: block !important;
+        margin: 0 auto 16px !important;
+      }
       /* タイトルブロック・チャプターは自然に流す */
       .deep-report-chapter { break-before: auto; }
       /* 見出しの直後で改ページしない */
