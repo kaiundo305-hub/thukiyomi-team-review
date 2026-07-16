@@ -302,7 +302,8 @@
       [data-no-diary-cta], .challenge-nav,
       #data-backup-section, .gate-footer, #refresh-status,
       [style*="safe-area-inset-bottom"],
-      button[onclick*="refreshDeepReport"] { display: none !important; }
+      button[onclick*="refreshDeepReport"],
+      #chapter-bottom-nav { display: none !important; }
 
       /* AI分析・Geminiエラーは印刷不要 */
       #deep-ai-analysis-section,
@@ -565,7 +566,11 @@
         margin-bottom: 10px !important;
       }
 
-      /* エピローグは印刷で表示（tab-hiddenルールが優先するためここはno-op） */
+      /* エピローグ：直前セクションと同ページに収める */
+      .deep-report-epilogue {
+        break-before: avoid !important;
+        page-break-before: avoid !important;
+      }
       /* CTAボタンセクションは印刷不要（0,4,0 で tab-hidden 0,3,0 を上書き）→ 最後ページを1枚に */
       [data-deep-report] [data-chapter-tab][data-no-diary-cta] { display: none !important; }
 
@@ -582,7 +587,6 @@
       .deep-report-opening {
         break-inside: avoid !important;
         page-break-inside: avoid !important;
-        break-after: page;
         position: relative !important;
         z-index: 1 !important;
       }
