@@ -367,10 +367,41 @@
         border: none !important;
         box-shadow: none !important;
         min-height: auto !important;
-        padding: 26mm 0 18mm !important;
+        padding: 16mm 0 14mm !important;
+        display: block !important;
       }
       .deep-report-title-block::before {
         border-color: rgba(168, 121, 50, .14) !important;
+      }
+      /* タイトル内コンテナ：縦並びに */
+      .deep-report-title-block .deep-report-title-surface {
+        display: block !important;
+        max-width: 100% !important;
+        padding: 0 !important;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+      }
+      /* ガイドボックス：猫画像を非表示・横幅を確保 */
+      .deep-report-title-block .challenge-guide {
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-top: 18px !important;
+        padding: 12px 16px !important;
+        box-sizing: border-box !important;
+        background: rgba(254,249,235,.8) !important;
+        border: 1px solid rgba(168,121,50,.25) !important;
+        border-radius: 6px !important;
+        box-shadow: none !important;
+      }
+      .deep-report-title-block .challenge-guide img { display: none !important; }
+      .deep-report-title-block .challenge-guide p {
+        margin: 0 !important;
+        text-align: left !important;
+        font-size: 10.5pt !important;
+        line-height: 1.9 !important;
+        color: #3d3328 !important;
       }
 
       .challenge-card { padding: 0 !important; }
@@ -381,7 +412,14 @@
         border: none !important;
         box-shadow: none !important;
         padding: 0 0 10px !important;
-        break-inside: avoid;
+        break-inside: auto;
+      }
+      /* 日記サマリーの inline min-height を印刷時に無効化（空白ページ防止） */
+      [data-deep-diary-summary] {
+        min-height: auto !important;
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
       }
       [data-deep-report] .deep-report-panel::after { display: none !important; }
 
@@ -422,12 +460,12 @@
       h2, h3, h4 { break-after: avoid; }
       p, li { orphans: 3; widows: 3; }
 
-      /* ── カード類：分割しない ── */
+      /* ── カード類：分割しない（小さい要素のみ） ── */
       .deep-template-card,
       .deep-report-intro-item,
-      .deep-guidance-block,
-      .next-moon-section > *,
-      .completion-panel { break-inside: avoid; }
+      .diary-voice-item { break-inside: avoid; }
+      /* 大きいパネルは分割許可（break-inside:avoidは空白ページの原因になる） */
+      .completion-panel { break-inside: auto !important; }
 
       /* ── 4つのしるしカード ── */
       .deep-template-card,
@@ -498,10 +536,14 @@
 
       .deep-report-epilogue { display: none; }
 
-      /* ── 章の区切り：主要セクションは新ページ開始 ── */
+      /* ── 章の区切り ── */
+      /* opening の後だけ改ページ。章ごとの break-before: page は
+         display:none の章が連続すると空白ページを生むため廃止 */
       .deep-report-opening { break-after: page; }
-      .deep-report-chapter { break-before: page; }
-      .deep-report-chapter:first-of-type { break-before: avoid; }
+      /* タイトルブロック・チャプターは自然に流す */
+      .deep-report-chapter { break-before: auto; }
+      /* 見出しの直後で改ページしない */
+      [data-deep-report] .deep-report-panel h2 { break-after: avoid !important; }
 
       /* ── 新月願いブロック ── */
       #deep-title {

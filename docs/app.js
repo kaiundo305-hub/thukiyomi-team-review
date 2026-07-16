@@ -1520,7 +1520,7 @@
         var ds = String(d);
         var theme = DAY_THEMES[ds] || "";
         var lines = diaryMap[ds];
-        html += '<div style="margin-bottom:20px;">';
+        html += '<div style="margin-bottom:20px;break-inside:avoid;page-break-inside:avoid;">';
         html += '<p style="font-size:13px;color:#9a8070;margin:0 0 4px;font-weight:bold;">Day' + d + '　' + theme + '</p>';
         if (lines && lines.length) {
           lines.forEach(function(l) {
