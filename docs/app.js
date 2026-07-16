@@ -1894,6 +1894,8 @@
     if (hasStructured) {
       renderDeepReport(diaryMap);
       applyDiaryMessages(true);
+      var cta = root.querySelector("[data-no-diary-cta]");
+      if (cta) cta.style.display = "";
       return;
     }
     // 日記データなし
