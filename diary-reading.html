@@ -380,12 +380,12 @@
         <div class="api-settings-body" id="apiSettingsBody">
             <div id="apiKeyCurrent" style="font-size:12px;color:#a5b4fc;margin-bottom:10px;padding:8px 12px;background:rgba(0,0,0,0.25);border-radius:6px;display:none;"></div>
             <div class="api-key-row">
-                <input type="text" class="api-key-input" id="apiKeyInput" placeholder="AIzaSy…（Google AI Studio APIキー）" autocomplete="off" spellcheck="false">
+                <input type="text" class="api-key-input" id="apiKeyInput" placeholder="Google AI Studio APIキー" autocomplete="off" spellcheck="false">
                 <button class="btn-save-key" onclick="saveApiKey()">保存</button>
                 <button class="btn-save-key" onclick="testApiKey()" style="background:rgba(74,108,247,0.3);border-color:#4a6cf7;color:#a5b4fc;">テスト</button>
                 <button class="btn-save-key" onclick="clearApiKey()" style="background:rgba(239,68,68,0.2);border-color:#ef4444;color:#fca5a5;">削除</button>
             </div>
-            <div class="api-key-note">🆓 Google AI Studio（aistudio.google.com）で無料APIキーを発行。<br>キーは <strong style="color:#e0d0ff;">AIzaSy</strong> で始まる文字列です。</div>
+            <div class="api-key-note">🆓 Google AI Studio（aistudio.google.com）で無料APIキーを発行。</div>
             <div id="apiKeyStatus" style="font-size:11px;margin-top:6px;min-height:16px;"></div>
         </div>
     </div>
@@ -636,7 +636,6 @@ function setApiKeyStatus(msg, color) {
 function saveApiKey() {
     const raw = document.getElementById('apiKeyInput').value.replace(/\s/g,'').trim();
     if (!raw) { setApiKeyStatus('⚠ キーを入力してください','#fbbf24'); return; }
-    if (!raw.startsWith('AIzaSy')) { setApiKeyStatus('⚠ AIzaSy で始まるキーを入力してください','#f87171'); return; }
     localStorage.setItem('gemini_api_key', raw);
     document.getElementById('apiKeyInput').value = '';
     setApiKeyStatus('✓ 保存しました（'+raw.length+'文字）','#4ade80');
@@ -659,9 +658,13 @@ async function testApiKey() {
             method:'POST', headers:{'content-type':'application/json'},
             body: JSON.stringify({contents:[{parts:[{text:'こんにちは'}]}], generationConfig:{maxOutputTokens:10}})
         });
-        if (!res.ok) throw new Error('HTTP '+res.status);
-        setApiKeyStatus('✓ 接続成功！','#4ade80');
-    } catch(e) { setApiKeyStatus('❌ エラー: '+e.message,'#f87171'); }
+        if (!res.ok) {
+            const err = await res.json().catch(()=>({}));
+            const msg = err.error?.message || ('HTTP '+res.status);
+            throw new Error(msg);
+        }
+        setApiKeyStatus('✓ 接続成功！APIキーは有効です','#4ade80');
+    } catch(e) { setApiKeyStatus('❌ '+e.message,'#f87171'); }
 }
 
 function refreshApiKeyDisplay() {
@@ -1157,7 +1160,7 @@ ${diaryText}
 8. 「${MOON_THEME.theme}」という今月のテーマに照らして、日記の中に表れた具体的な場面・言葉・行動を3つ以上見つける
 
 【出力形式】
-以下の2つのセクションを必ず順番通りに出力してください。
+以下の3つのセクションを必ず順番通りに出力してください。
 
 セクション1（7日間の振り返り・650〜800文字）：
 ${p.name}さんの7日間の日記から見えてきた変容を、Day1からDay7への流れが伝わるように書いてください。
@@ -1193,7 +1196,7 @@ ${p.name}さんの7日間の日記から見えてきた変容を、Day1からDay
 
 【共通ルール】
 - マークダウン（**、##など）や装飾記号は使わず、自然な文章のみ
-- 「---SECTION2---」の区切り文字はそのまま出力すること（前後に余分な文字を入れない）
+- 「---SECTION2---」「---SECTION3---」の区切り文字はそのまま出力すること（前後に余分な文字を入れない）
 - 本人の日記の言葉を2〜3個、そのまま「　」で引用すること
 - 日記に書かれていない具体的事実を勝手に作らないこと
 - 宿曜データだけで文章を埋めず、必ず日記内容を中心に書くこと
@@ -1209,7 +1212,7 @@ ${p.name}さんの7日間の日記から見えてきた変容を、Day1からDay
                 headers: { 'content-type': 'application/json' },
                 body: JSON.stringify({
                     contents: [{ parts: [{ text: prompt }] }],
-                    generationConfig: { maxOutputTokens: 2048, temperature: 0.85 }
+                    generationConfig: { maxOutputTokens: 4096, temperature: 0.85 }
                 }),
                 signal: controller.signal
             });
