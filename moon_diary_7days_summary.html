@@ -119,7 +119,7 @@
       var profile = {
         name: params.get('name') || 'あなた',
         birth: params.get('birth') || '',
-        participantId: params.get('participantId') || '',
+        participantId: params.get('participantId') || params.get('pid') || '',
         shuku: params.get('shuku') || ''
       };
       var identity = profile.participantId || profile.birth || profile.name || 'guest';
