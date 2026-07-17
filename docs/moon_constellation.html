@@ -229,6 +229,31 @@ function loadAllEntries(cycleId) {
   return entries;
 }
 
+// 7日間チャレンジデータ読み込み
+var CHALLENGE_DAY_TO_PHASE = {1:'shingetu',2:'shingetu',3:'jougen',4:'jougen',5:'mangetsu',6:'mangetsu',7:'kagen'};
+var CHALLENGE_PHASE_LABEL = {shingetu:'Day 1-2',jougen:'Day 3-4',mangetsu:'Day 5-6',kagen:'Day 7'};
+
+function loadChallengeEntries() {
+  var entries = [];
+  if (!USER_ID) return entries;
+  for (var d = 1; d <= 7; d++) {
+    var k = 'tsukiyomi:structuredDiary:v1:' + USER_ID + ':day:' + d;
+    try {
+      var record = JSON.parse(localStorage.getItem(k) || 'null');
+      if (!record) continue;
+      var phase = CHALLENGE_DAY_TO_PHASE[d] || 'shingetu';
+      if (Array.isArray(record.lines)) {
+        record.lines.forEach(function(line) {
+          if (line.text && line.text.trim()) {
+            entries.push({ phase: phase, day: d, text: line.text, question: line.placeholder || '' });
+          }
+        });
+      }
+    } catch(e){}
+  }
+  return entries;
+}
+
 // ─────────────────────────────────────────
 // 2. グラフ構築
 // ─────────────────────────────────────────
@@ -314,6 +339,62 @@ function buildGraph(cycleId) {
   });
 
   // 重複エッジ除去
+  var edgeSet = new Set();
+  edges = edges.filter(function(e){
+    var key = [e.source, e.target].sort().join('|');
+    if (edgeSet.has(key)) return false;
+    edgeSet.add(key); return true;
+  });
+
+  return { nodes: Object.values(nodeMap), edges: edges };
+}
+
+// 7日間チャレンジ用グラフ
+function buildChallengeGraph() {
+  var entries = loadChallengeEntries();
+  var nodeMap = {};
+  var edges = [];
+
+  // フェーズアンカーノード（チャレンジ日グループ）
+  ['shingetu','jougen','mangetsu','kagen'].forEach(function(phase){
+    var meta = PHASE_META[phase];
+    nodeMap[phase + ':PHASE'] = {
+      id: phase + ':PHASE', word: meta.icon + ' ' + CHALLENGE_PHASE_LABEL[phase],
+      phase: phase, count: 6, isPhase: true, excerpt: ''
+    };
+  });
+
+  entries.forEach(function(entry){
+    var kws = extractKeywords(entry.text, 8);
+    var prevId = null;
+    kws.forEach(function(kw){
+      var nid = entry.phase + ':' + kw.word;
+      if (!nodeMap[nid]) nodeMap[nid] = { id: nid, word: kw.word, phase: entry.phase, count: 0, excerpts: [] };
+      nodeMap[nid].count += kw.count;
+      if (nodeMap[nid].excerpts.length < 3) {
+        nodeMap[nid].excerpts.push({
+          text: entry.text.slice(0,60) + (entry.text.length > 60 ? '…' : ''),
+          phase: entry.phase, day: 'Day' + entry.day
+        });
+      }
+      edges.push({ source: entry.phase + ':PHASE', target: nid });
+      if (prevId && prevId !== nid) edges.push({ source: prevId, target: nid });
+      prevId = nid;
+    });
+  });
+
+  var wordsByWord = {};
+  Object.values(nodeMap).forEach(function(n){
+    if (n.isPhase) return;
+    if (!wordsByWord[n.word]) wordsByWord[n.word] = [];
+    wordsByWord[n.word].push(n.id);
+  });
+  Object.values(wordsByWord).forEach(function(ids){
+    if (ids.length > 1) {
+      for (var i = 0; i < ids.length - 1; i++) edges.push({ source: ids[i], target: ids[i+1], isCross: true });
+    }
+  });
+
   var edgeSet = new Set();
   edges = edges.filter(function(e){
     var key = [e.source, e.target].sort().join('|');
@@ -644,6 +725,21 @@ function selectCycle(cycleId) {
   document.getElementById('emptyMsg').style.display = hasData ? 'none' : 'flex';
 }
 
+function selectChallenge() {
+  ACTIVE_CYCLE = 'challenge';
+  document.querySelectorAll('.cyc-btn').forEach(function(b){
+    b.classList.toggle('active', b.dataset.cycle === 'challenge');
+  });
+  var canvas = document.getElementById('starCanvas');
+  var W = canvas.width, H = canvas.height;
+  var graph = buildChallengeGraph();
+  initPositions(graph.nodes, W, H);
+  simulate(graph.nodes, graph.edges, 200);
+  GRAPH = graph;
+  var hasData = graph.nodes.some(function(n){ return !n.isPhase; });
+  document.getElementById('emptyMsg').style.display = hasData ? 'none' : 'flex';
+}
+
 // ─────────────────────────────────────────
 // 7. Obsidianエクスポート
 // ─────────────────────────────────────────
@@ -686,6 +782,23 @@ function generatePhaseIndex(cycleId, phase, intentionText) {
     '#月読み日記 #' + phase + ' #' + cycleId + '\n';
 }
 
+function generateChallengeMarkdown(entry) {
+  var phase = entry.phase;
+  var meta = PHASE_META[phase];
+  var kws = extractKeywords(entry.text, 6).map(function(k){ return '[[' + k.word + ']]'; }).join(' · ');
+  return '---\n' +
+    'tags: [月読み日記, 7日間チャレンジ, Day' + entry.day + ']\n' +
+    'date: ' + new Date().toISOString().split('T')[0] + '\n' +
+    'day: Day' + entry.day + '\n' +
+    '---\n\n' +
+    '# 🌙 7日間チャレンジ Day' + entry.day + '\n\n' +
+    (entry.question ? '**Q: ' + entry.question + '**\n\n' : '') +
+    entry.text + '\n\n' +
+    '---\n\n## ✦ つながりのことば\n\n' +
+    '[[7日間チャレンジ]] · ' + kws + '\n\n' +
+    '#月読み日記 #7日間チャレンジ #Day' + entry.day + '\n';
+}
+
 async function exportToObsidian() {
   if (!window.showDirectoryPicker) {
     alert('このブラウザはフォルダ選択に対応していません。\nChromeまたはEdgeをお使いください。\n\n代わりに「.mdファイルをダウンロード」をお試しください。');
@@ -697,6 +810,24 @@ async function exportToObsidian() {
     var rootDir = await window.showDirectoryPicker();
     var diaryDir = await rootDir.getDirectoryHandle('月読み日記', { create: true });
     status.textContent = 'エクスポート中…';
+
+    // 7日間チャレンジのエクスポート
+    if (ACTIVE_CYCLE === 'challenge') {
+      var chalEntries = loadChallengeEntries();
+      var written = 0;
+      for (var ci = 0; ci < chalEntries.length; ci++) {
+        var entry = chalEntries[ci];
+        var fname = 'チャレンジ-Day' + entry.day + '-' + ci + '.md';
+        var md = generateChallengeMarkdown(entry);
+        var fh = await diaryDir.getFileHandle(fname, { create: true });
+        var fw = await fh.createWritable();
+        await fw.write(md); await fw.close();
+        written++;
+      }
+      status.style.color = '#a8e0a8';
+      status.textContent = '✓ ' + written + '件のファイルを書き出しました。\nObsidianのグラフビューを開いてください。';
+      return;
+    }
 
     var written = 0;
     for (var ci = 0; ci < MOON_CYCLE_DATA.cycles.length; ci++) {
@@ -759,8 +890,18 @@ async function exportToObsidian() {
 }
 
 function downloadMarkdownZip() {
-  // ZIPなしでも、1ファイルずつダウンロードさせる（最大10件）
   var files = [];
+
+  // 7日間チャレンジモード
+  if (ACTIVE_CYCLE === 'challenge') {
+    var chalEntries = loadChallengeEntries();
+    chalEntries.forEach(function(entry, i){
+      files.push({
+        name: 'チャレンジ-Day' + entry.day + '-' + i + '.md',
+        content: generateChallengeMarkdown(entry)
+      });
+    });
+  } else {
   MOON_CYCLE_DATA.cycles.forEach(function(cycle){
     var cycleId = cycle.id;
     var intentionKey = 'tsukiyomi:moonCycle:intention:' + USER_ID + ':' + cycleId;
@@ -779,6 +920,7 @@ function downloadMarkdownZip() {
       }
     });
   });
+  } // end else
 
   if (files.length === 0) {
     document.getElementById('exportStatus').style.display = 'block';
@@ -830,6 +972,14 @@ window.addEventListener('DOMContentLoaded', function(){
 
   // サイクルタブ生成
   var bar = document.getElementById('cycleBar');
+  // 7日間チャレンジタブ
+  var chalBtn = document.createElement('button');
+  chalBtn.className = 'cyc-btn';
+  chalBtn.dataset.cycle = 'challenge';
+  chalBtn.textContent = '🌙 7日間チャレンジ';
+  chalBtn.addEventListener('click', selectChallenge);
+  bar.appendChild(chalBtn);
+
   MOON_CYCLE_DATA.cycles.forEach(function(cycle){
     var btn = document.createElement('button');
     btn.className = 'cyc-btn';
