@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>月サイクル日記</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1a1025">
+  <link rel="apple-touch-icon" href="images/icon-192.png">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0e0a1a; --surface: #1a1430; --border: rgba(241,217,155,.22);
+      --gold: #f1d99b; --gold2: #c8a84b; --white: #f5f0e8; --muted: rgba(245,240,232,.55);
+      --radius: 18px;
+    }
+    body { background: var(--bg); color: var(--white); font-family: 'Hiragino Mincho ProN', 'Georgia', serif; min-height: 100vh; }
+    .shell { width: min(680px, calc(100% - 32px)); margin: 0 auto; padding: 40px 0 100px; }
+
+    /* フェーズヘッダー */
+    .phase-hero {
+      text-align: center; margin-bottom: 32px; padding: 32px 20px;
+      border: 1px solid var(--border); border-radius: var(--radius);
+      background: linear-gradient(160deg, rgba(241,217,155,.1), rgba(155,142,196,.07));
+    }
+    .ph-kicker { font-size: 11px; color: var(--gold2); letter-spacing: .28em; margin-bottom: 10px; }
+    .ph-icon { font-size: 52px; display: block; margin-bottom: 10px; }
+    .ph-name { font-size: clamp(22px, 5vw, 30px); color: var(--gold); letter-spacing: .08em; }
+    .ph-zodiac { font-size: 14px; color: var(--gold2); margin-top: 5px; letter-spacing: .1em; }
+    .ph-theme { margin-top: 10px; color: var(--muted); font-size: 14px; line-height: 1.8; }
+    .ph-date { margin-top: 8px; font-size: 12px; color: var(--muted); letter-spacing: .08em; }
+    .ph-pdca-badge {
+      display: inline-block; margin-top: 14px; padding: 5px 18px;
+      border: 1px solid var(--gold2); border-radius: 999px;
+      font-size: 12px; color: var(--gold); letter-spacing: .1em;
+    }
+
+    /* セクションタイトル */
+    .sec-title {
+      font-size: 13px; color: var(--gold2); letter-spacing: .22em;
+      margin-bottom: 14px; padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* 開運アイテム */
+    .kaiun-section { margin-bottom: 32px; }
+    .kaiun-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .kaiun-card {
+      padding: 14px 14px; border: 1px solid var(--border); border-radius: 14px;
+      background: rgba(241,217,155,.04);
+    }
+    .kc-emoji { font-size: 22px; display: block; margin-bottom: 6px; }
+    .kc-item { font-size: 14px; color: var(--gold); line-height: 1.5; }
+    .kc-reason { font-size: 11px; color: var(--muted); margin-top: 4px; line-height: 1.6; }
+
+    @media (max-width: 420px) { .kaiun-grid { grid-template-columns: 1fr; } }
+
+    /* 占的 */
+    .intention-section { margin-bottom: 32px; }
+    .intention-box {
+      padding: 18px 16px; border: 1px solid rgba(241,217,155,.3); border-radius: 14px;
+      background: rgba(241,217,155,.06);
+    }
+    .intention-label { font-size: 11px; color: var(--gold2); letter-spacing: .2em; margin-bottom: 8px; }
+    .intention-display { font-size: 16px; color: var(--gold); line-height: 1.8; }
+    .intention-hint { font-size: 12px; color: var(--muted); margin-top: 6px; line-height: 1.7; }
+    textarea.intention-input {
+      width: 100%; padding: 12px; background: rgba(255,255,255,.05);
+      border: 1px solid var(--border); border-radius: 10px;
+      color: var(--white); font-family: inherit; font-size: 15px; line-height: 1.8;
+      resize: vertical; min-height: 80px; outline: none;
+    }
+    textarea.intention-input:focus { border-color: var(--gold2); }
+
+    /* 日記質問 */
+    .diary-section { margin-bottom: 32px; }
+    .diary-question {
+      margin-bottom: 22px;
+    }
+    .dq-num { font-size: 11px; color: var(--gold2); letter-spacing: .2em; margin-bottom: 6px; }
+    .dq-text { font-size: 15px; color: var(--gold); line-height: 1.7; margin-bottom: 10px; }
+    textarea.dq-input {
+      width: 100%; padding: 14px; background: rgba(255,255,255,.04);
+      border: 1px solid var(--border); border-radius: 12px;
+      color: var(--white); font-family: inherit; font-size: 14px; line-height: 1.9;
+      resize: vertical; min-height: 110px; outline: none; transition: border-color .2s;
+    }
+    textarea.dq-input:focus { border-color: var(--gold2); background: rgba(241,217,155,.04); }
+    textarea.dq-input::placeholder { color: rgba(245,240,232,.3); }
+
+    /* 保存ボタン */
+    .save-area { text-align: center; margin-bottom: 24px; }
+    .btn-save {
+      padding: 15px 48px; background: var(--gold2); color: #1a1025;
+      border: none; border-radius: 999px; font-size: 16px; font-family: inherit;
+      font-weight: bold; cursor: pointer; letter-spacing: .06em; transition: background .2s;
+    }
+    .btn-save:hover { background: var(--gold); }
+    .btn-save:disabled { background: rgba(200,168,75,.4); cursor: not-allowed; }
+    .save-notice { margin-top: 10px; font-size: 12px; color: var(--muted); }
+
+    /* 保存完了メッセージ */
+    .toast {
+      position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+      background: #2d4a2d; color: #a8e0a8; padding: 12px 28px; border-radius: 999px;
+      font-size: 14px; display: none; z-index: 100; white-space: nowrap;
+    }
+    .toast.show { display: block; animation: fadeInOut 3s ease forwards; }
+    @keyframes fadeInOut {
+      0%   { opacity: 0; transform: translateX(-50%) translateY(8px); }
+      15%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+      75%  { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    /* 振り返りボタン */
+    .review-area { text-align: center; margin-bottom: 32px; display: none; }
+    .btn-review {
+      padding: 12px 32px; border: 1px solid var(--gold2); background: none;
+      color: var(--gold); border-radius: 999px; font-size: 14px; font-family: inherit;
+      cursor: pointer; letter-spacing: .06em; transition: all .2s;
+    }
+    .btn-review:hover { background: rgba(241,217,155,.1); }
+
+    /* 保存済みバナー */
+    .saved-banner {
+      display: none; margin-bottom: 22px; padding: 14px 16px;
+      border: 1px solid rgba(125,187,138,.4); border-radius: 12px;
+      background: rgba(125,187,138,.07); text-align: center;
+      font-size: 13px; color: #a8e0a8;
+    }
+
+    /* ナビ */
+    .nav-links { display: flex; justify-content: space-between; margin-top: 40px; }
+    .nav-links a { color: var(--muted); font-size: 13px; text-decoration: none; }
+    .nav-links a:hover { color: var(--gold); }
+  </style>
+</head>
+<body>
+<div class="shell">
+  <div id="phaseHero" class="phase-hero">
+    <p class="ph-kicker" id="phKicker">MOON CYCLE DIARY</p>
+    <span class="ph-icon" id="phIcon">🌑</span>
+    <h1 class="ph-name" id="phName">—</h1>
+    <p class="ph-zodiac" id="phZodiac"></p>
+    <p class="ph-theme" id="phTheme"></p>
+    <p class="ph-date" id="phDate"></p>
+    <span class="ph-pdca-badge" id="phPdca"></span>
+  </div>
+
+  <!-- 保存済みバナー -->
+  <div class="saved-banner" id="savedBanner">✓ この日記は保存済みです。内容を編集して上書き保存できます。</div>
+
+  <!-- 開運アイテム -->
+  <section class="kaiun-section">
+    <p class="sec-title">✦ 今フェーズの開運アイテム</p>
+    <div class="kaiun-grid" id="kaiun-grid-items"></div>
+  </section>
+
+  <!-- 占的 -->
+  <section class="intention-section" id="intentionSection"></section>
+
+  <!-- 日記質問 -->
+  <section class="diary-section">
+    <p class="sec-title">✦ 今日の日記</p>
+    <div id="diaryQuestions"></div>
+  </section>
+
+  <div class="save-area">
+    <button class="btn-save" id="btnSave" onclick="saveDiary()">日記を保存する</button>
+    <p class="save-notice">書いた内容はこのデバイスに安全に保存されます</p>
+  </div>
+
+  <div class="review-area" id="reviewArea">
+    <p style="font-size:13px; color:var(--muted); margin-bottom:12px;">日記が保存されました。振り返り鑑定書を見ることができます。</p>
+    <button class="btn-review" onclick="goToReport()">🌙 振り返り鑑定書を見る</button>
+  </div>
+
+  <div class="nav-links">
+    <a href="moon_cycle_dashboard.html">← 月サイクル一覧へ</a>
+    <a href="wonderland_gate.html">トップへ</a>
+  </div>
+</div>
+
+<div class="toast" id="toast">✓ 日記を保存しました</div>
+
+<script src="moon_cycle_data.js"></script>
+<script src="diary_data_sync.js"></script>
+<script>
+var CYCLE_ID, PHASE, CYCLE, PHASE_DATA, META, USER_ID;
+
+function init() {
+  var params = new URLSearchParams(location.search);
+  CYCLE_ID = params.get('cycle') || '';
+  PHASE    = params.get('phase') || '';
+
+  CYCLE = MOON_CYCLE_DATA.cycles.find(function(c){ return c.id === CYCLE_ID; });
+  if (!CYCLE || !CYCLE[PHASE]) {
+    var info = getCurrentPhaseInfo();
+    CYCLE_ID = info.cycleId; PHASE = info.phase; CYCLE = info.cycle;
+  }
+  PHASE_DATA = CYCLE[PHASE];
+  META = PHASE_META[PHASE];
+
+  var profile = (function(){
+    try { return JSON.parse(localStorage.getItem('tsukiyomi:diarySync:cachedProfile')||'{}'); }
+    catch(e){ return {}; }
+  })();
+  USER_ID = profile.email || profile.participantId || '';
+
+  renderHero(profile);
+  renderKaiun();
+  renderIntention(profile);
+  renderQuestions();
+  loadSaved();
+}
+
+function renderHero(profile) {
+  document.getElementById('phKicker').textContent =
+    CYCLE_ID.replace('-','年') + '月 — ' + META.pdca;
+  document.getElementById('phIcon').textContent = META.icon;
+  document.getElementById('phName').textContent = META.ja + (PHASE_DATA.zodiac ? '（' + PHASE_DATA.zodiac + '）' : '');
+  document.getElementById('phZodiac').textContent = PHASE_DATA.zodiac
+    ? PHASE_DATA.zodiac + ' ' + (PHASE_DATA.zodiacEn || '') + ' ✦ 月星座'
+    : '';
+  document.getElementById('phTheme').textContent = PHASE_DATA.theme;
+  document.getElementById('phDate').textContent = '🗓 ' + PHASE_DATA.date.replace('-','年').replace('-','月') + '日〜';
+  document.getElementById('phPdca').textContent = META.pdca;
+
+  // 宿曜パーソナライズ
+  if (profile.shuku) {
+    var badge = document.createElement('p');
+    badge.style.cssText = 'margin-top:10px; font-size:12px; color:var(--gold2); letter-spacing:.1em;';
+    badge.textContent = '✦ あなたの宿曜: ' + profile.shuku;
+    document.getElementById('phaseHero').appendChild(badge);
+  }
+}
+
+function renderKaiun() {
+  var grid = document.getElementById('kaiun-grid-items');
+  var items = PHASE_DATA.kaiun || [];
+  if (!items.length) {
+    grid.parentElement.style.display = 'none'; return;
+  }
+  items.forEach(function(k) {
+    var card = document.createElement('div');
+    card.className = 'kaiun-card';
+    card.innerHTML =
+      '<span class="kc-emoji">' + k.emoji + '</span>' +
+      '<div class="kc-item">' + k.item + '</div>' +
+      '<div class="kc-reason">' + k.reason + '</div>';
+    grid.appendChild(card);
+  });
+}
+
+function renderIntention(profile) {
+  var sec = document.getElementById('intentionSection');
+  // 占的（月サイクル通しのテーマ）は新月フェーズで入力、他フェーズで表示
+  var intentionKey = 'tsukiyomi:moonCycle:intention:' + USER_ID + ':' + CYCLE_ID;
+
+  if (PHASE === 'shingetu') {
+    var savedIntention = '';
+    try { savedIntention = localStorage.getItem(intentionKey) || ''; } catch(e){}
+    sec.innerHTML =
+      '<p class="sec-title">✦ 今月の占的（願いのテーマ）</p>' +
+      '<div class="intention-box">' +
+        '<p class="intention-label">今月、あなたが月のサイクルで叶えたい願い・テーマを書いてください</p>' +
+        '<textarea class="intention-input" id="intentionInput" placeholder="例：自分らしく表現できるようになりたい。仕事で次のステップへ進む。">' +
+        escapeHtml(savedIntention) + '</textarea>' +
+        '<p class="intention-hint">ここで書いた内容が、上弦・満月・下弦の日記の「軸」になります。</p>' +
+      '</div>';
+  } else {
+    var intention = '';
+    try { intention = localStorage.getItem(intentionKey) || ''; } catch(e){}
+    if (intention) {
+      sec.innerHTML =
+        '<p class="sec-title">✦ 今月の占的（願いのテーマ）</p>' +
+        '<div class="intention-box">' +
+          '<p class="intention-label">新月に立てた願い</p>' +
+          '<div class="intention-display">' + escapeHtml(intention) + '</div>' +
+        '</div>';
+    }
+  }
+}
+
+function renderQuestions() {
+  var container = document.getElementById('diaryQuestions');
+  PHASE_DATA.questions.forEach(function(q, i) {
+    var div = document.createElement('div');
+    div.className = 'diary-question';
+    div.innerHTML =
+      '<p class="dq-num">Q' + (i+1) + ' / ' + PHASE_DATA.questions.length + '</p>' +
+      '<p class="dq-text">' + escapeHtml(q) + '</p>' +
+      '<textarea class="dq-input" id="dq' + i + '" placeholder="思ったことを、そのまま書いてみてください…" rows="4"></textarea>';
+    container.appendChild(div);
+  });
+}
+
+function loadSaved() {
+  if (!USER_ID) return;
+  var key = getMoonCycleKey(USER_ID, CYCLE_ID, PHASE);
+  try {
+    var saved = JSON.parse(localStorage.getItem(key) || 'null');
+    if (!saved) return;
+    document.getElementById('savedBanner').style.display = 'block';
+    document.getElementById('reviewArea').style.display = 'block';
+    if (saved.lines) {
+      saved.lines.forEach(function(line, i) {
+        var ta = document.getElementById('dq' + i);
+        if (ta) ta.value = line.text || '';
+      });
+    }
+  } catch(e) {}
+}
+
+function saveDiary() {
+  var lines = [];
+  PHASE_DATA.questions.forEach(function(q, i) {
+    var ta = document.getElementById('dq' + i);
+    lines.push({ question: q, text: ta ? ta.value : '' });
+  });
+
+  var data = {
+    cycleId: CYCLE_ID, phase: PHASE,
+    savedAt: new Date().toISOString(),
+    lines: lines
+  };
+
+  // 占的を保存（新月フェーズのみ）
+  if (PHASE === 'shingetu') {
+    var intentionInput = document.getElementById('intentionInput');
+    if (intentionInput && USER_ID) {
+      var intentionKey = 'tsukiyomi:moonCycle:intention:' + USER_ID + ':' + CYCLE_ID;
+      try { localStorage.setItem(intentionKey, intentionInput.value); } catch(e){}
+      data.intention = intentionInput.value;
+    }
+  }
+
+  if (USER_ID) {
+    var key = getMoonCycleKey(USER_ID, CYCLE_ID, PHASE);
+    try { localStorage.setItem(key, JSON.stringify(data)); } catch(e){}
+  }
+
+  showToast('✓ 日記を保存しました');
+  document.getElementById('savedBanner').style.display = 'block';
+  document.getElementById('reviewArea').style.display = 'block';
+}
+
+function goToReport() {
+  location.href = 'moon_cycle_report.html?cycle=' + CYCLE_ID + '&phase=' + PHASE;
+}
+
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.remove('show');
+  void t.offsetWidth;
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 3100);
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function() { navigator.serviceWorker.register("sw.js"); });
+}
+</script>
+</body>
+</html>

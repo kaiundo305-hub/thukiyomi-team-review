@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>月サイクル 振り返り鑑定書</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1a1025">
+  <link rel="apple-touch-icon" href="images/icon-192.png">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0d0918; --border: rgba(241,217,155,.2);
+      --gold: #f1d99b; --gold2: #c8a84b; --white: #f5f0e8; --muted: rgba(245,240,232,.55);
+      --radius: 18px;
+    }
+    body { background: var(--bg); color: var(--white); font-family: 'Hiragino Mincho ProN', 'Georgia', serif; min-height: 100vh; }
+    .shell { width: min(680px, calc(100% - 32px)); margin: 0 auto; padding: 40px 0 100px; }
+
+    /* タイトル */
+    .report-header { text-align: center; margin-bottom: 40px; }
+    .rh-kicker { font-size: 11px; color: var(--gold2); letter-spacing: .3em; margin-bottom: 14px; }
+    .rh-moon { font-size: 60px; display: block; margin-bottom: 12px; }
+    .rh-title { font-size: clamp(20px, 4.5vw, 28px); color: var(--gold); letter-spacing: .1em; line-height: 1.5; }
+    .rh-sub { margin-top: 10px; color: var(--muted); font-size: 14px; line-height: 1.8; }
+    .rh-line { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+
+    /* フェーズバッジ */
+    .phase-tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 20px; border: 1px solid var(--border); border-radius: 999px;
+      margin-bottom: 32px; font-size: 14px; color: var(--gold);
+    }
+
+    /* セクション */
+    .sec { margin-bottom: 36px; }
+    .sec-title {
+      font-size: 11px; color: var(--gold2); letter-spacing: .25em;
+      margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border);
+    }
+
+    /* 日記リプレイ */
+    .diary-replay-card {
+      padding: 20px 18px; border: 1px solid var(--border); border-radius: var(--radius);
+      background: rgba(255,255,255,.025); margin-bottom: 14px;
+    }
+    .drc-q { font-size: 13px; color: var(--gold2); margin-bottom: 8px; line-height: 1.6; }
+    .drc-a { font-size: 15px; color: var(--white); line-height: 1.9; white-space: pre-wrap; }
+    .drc-empty { font-size: 14px; color: var(--muted); font-style: italic; }
+
+    /* AI月読みコーチング */
+    .coaching-box {
+      padding: 24px 20px; border: 1px solid rgba(241,217,155,.3); border-radius: var(--radius);
+      background: linear-gradient(160deg, rgba(241,217,155,.08), rgba(155,142,196,.06));
+    }
+    .coaching-loading { text-align: center; padding: 20px; color: var(--muted); font-size: 14px; }
+    .coaching-text { font-size: 15px; line-height: 2; color: var(--white); white-space: pre-wrap; }
+    .coaching-error { color: #e8a08a; font-size: 14px; line-height: 1.8; }
+
+    /* Gemini設定 */
+    .api-hint {
+      margin-top: 16px; padding: 14px 16px; background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.1); border-radius: 12px;
+      font-size: 12px; color: var(--muted); line-height: 1.8;
+    }
+    .api-input-row { display: flex; gap: 8px; margin-top: 8px; }
+    .api-input {
+      flex: 1; padding: 9px 12px; background: rgba(255,255,255,.05);
+      border: 1px solid var(--border); border-radius: 8px; color: var(--white);
+      font-size: 13px; outline: none;
+    }
+    .api-input:focus { border-color: var(--gold2); }
+    .api-save-btn {
+      padding: 9px 16px; background: rgba(200,168,75,.3); border: 1px solid var(--gold2);
+      color: var(--gold); border-radius: 8px; font-size: 12px; cursor: pointer;
+      font-family: inherit; white-space: nowrap;
+    }
+    .api-save-btn:hover { background: rgba(200,168,75,.5); }
+
+    /* プレミアムプレースホルダー */
+    .premium-box {
+      padding: 24px 20px; border: 1px solid rgba(200,168,75,.35); border-radius: var(--radius);
+      background: rgba(200,168,75,.05); text-align: center;
+    }
+    .pb-icon { font-size: 36px; display: block; margin-bottom: 10px; }
+    .pb-title { font-size: 17px; color: var(--gold); margin-bottom: 8px; }
+    .pb-desc { font-size: 13px; color: var(--muted); line-height: 1.9; }
+    .pb-badge {
+      display: inline-block; margin-top: 14px; padding: 5px 18px;
+      border: 1px solid var(--gold2); border-radius: 999px; font-size: 11px; color: var(--gold2);
+    }
+
+    /* ナビ */
+    .nav-links { display: flex; justify-content: space-between; margin-top: 40px; }
+    .nav-links a { color: var(--muted); font-size: 13px; text-decoration: none; }
+    .nav-links a:hover { color: var(--gold); }
+  </style>
+</head>
+<body>
+<div class="shell">
+
+  <header class="report-header">
+    <p class="rh-kicker">MOON CYCLE READING</p>
+    <span class="rh-moon" id="rhMoon">🌑</span>
+    <h1 class="rh-title" id="rhTitle">月サイクル 振り返り鑑定書</h1>
+    <p class="rh-sub" id="rhSub"></p>
+    <hr class="rh-line">
+    <div class="phase-tag">
+      <span id="phaseTagIcon">🌑</span>
+      <span id="phaseTagText">—</span>
+    </div>
+  </header>
+
+  <!-- 日記の振り返り -->
+  <section class="sec">
+    <p class="sec-title">✦ あなたが書いた言葉たち</p>
+    <div id="diaryReplay"></div>
+  </section>
+
+  <!-- AI月読みコーチング -->
+  <section class="sec">
+    <p class="sec-title">✦ AI月読みコーチング</p>
+    <div class="coaching-box">
+      <div id="coachingContent">
+        <div class="coaching-loading" id="coachingLoading">🌙 あなたの言葉を読み解いています…</div>
+      </div>
+    </div>
+    <div class="api-hint" id="apiHint" style="display:none;">
+      <p>AI月読みコーチングにはGemini APIキーが必要です（<a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--gold2);">こちらで取得</a>）</p>
+      <div class="api-input-row">
+        <input type="password" class="api-input" id="apiKeyInput" placeholder="Gemini APIキーを入力">
+        <button class="api-save-btn" onclick="saveApiKey()">保存して再試行</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- かのん社長の個別鑑定（プレミアム） -->
+  <section class="sec">
+    <p class="sec-title">✦ かのん社長の個別月読み鑑定</p>
+    <div class="premium-box">
+      <span class="pb-icon">🌙</span>
+      <p class="pb-title">あなたの宿曜から読み解く<br>今月のパーソナル鑑定</p>
+      <p class="pb-desc">
+        27宿天命鑑定 × 今月の月のサイクルから、<br>
+        あなただけの「今ここ」を読み解きます。<br>
+        バックエンドプランでかのん社長が直接メッセージをお届けします。
+      </p>
+      <span class="pb-badge">プレミアムプラン特典</span>
+    </div>
+  </section>
+
+  <div class="nav-links">
+    <a id="backToDiary" href="moon_cycle_diary.html">← 日記へ戻る</a>
+    <a href="moon_cycle_dashboard.html">月サイクル一覧</a>
+  </div>
+</div>
+
+<script src="moon_cycle_data.js"></script>
+<script src="diary_data_sync.js"></script>
+<script>
+var CYCLE_ID, PHASE_KEY, CYCLE, PHASE_DATA, META, USER_ID, DIARY_DATA;
+
+function init() {
+  var params = new URLSearchParams(location.search);
+  CYCLE_ID  = params.get('cycle') || '';
+  PHASE_KEY = params.get('phase') || '';
+
+  CYCLE = MOON_CYCLE_DATA.cycles.find(function(c){ return c.id === CYCLE_ID; });
+  if (!CYCLE || !CYCLE[PHASE_KEY]) {
+    var info = getCurrentPhaseInfo();
+    CYCLE_ID = info.cycleId; PHASE_KEY = info.phase; CYCLE = info.cycle;
+  }
+  PHASE_DATA = CYCLE[PHASE_KEY];
+  META = PHASE_META[PHASE_KEY];
+
+  // back link
+  document.getElementById('backToDiary').href =
+    'moon_cycle_diary.html?cycle=' + CYCLE_ID + '&phase=' + PHASE_KEY;
+
+  var profile = (function(){
+    try { return JSON.parse(localStorage.getItem('tsukiyomi:diarySync:cachedProfile')||'{}'); }
+    catch(e){ return {}; }
+  })();
+  USER_ID = profile.email || profile.participantId || '';
+
+  renderHeader(profile);
+  loadDiary();
+  runCoaching(profile);
+}
+
+function renderHeader(profile) {
+  document.getElementById('rhMoon').textContent = META.icon;
+  document.getElementById('rhTitle').textContent =
+    CYCLE_ID.replace('-','年') + '月 ' + META.ja + ' 振り返り鑑定書';
+  document.getElementById('rhSub').textContent =
+    PHASE_DATA.theme + (PHASE_DATA.zodiac ? '（' + PHASE_DATA.zodiac + '）' : '');
+  document.getElementById('phaseTagIcon').textContent = META.icon;
+  document.getElementById('phaseTagText').textContent =
+    META.ja + ' — ' + META.pdca + (profile.shuku ? '　|　あなたの宿曜: ' + profile.shuku : '');
+}
+
+function loadDiary() {
+  var container = document.getElementById('diaryReplay');
+  if (!USER_ID) {
+    container.innerHTML = '<p style="color:var(--muted);font-size:14px;">ログイン情報が見つかりません。日記ページから保存してください。</p>';
+    return;
+  }
+  var key = getMoonCycleKey(USER_ID, CYCLE_ID, PHASE_KEY);
+  try {
+    DIARY_DATA = JSON.parse(localStorage.getItem(key) || 'null');
+  } catch(e){ DIARY_DATA = null; }
+
+  if (!DIARY_DATA || !DIARY_DATA.lines) {
+    container.innerHTML = '<p style="color:var(--muted);font-size:14px;">まだ日記が書かれていません。<a href="moon_cycle_diary.html?cycle=' + CYCLE_ID + '&phase=' + PHASE_KEY + '" style="color:var(--gold2);">日記を書く →</a></p>';
+    return;
+  }
+
+  DIARY_DATA.lines.forEach(function(line) {
+    var card = document.createElement('div');
+    card.className = 'diary-replay-card';
+    var answerHtml = (line.text && line.text.trim())
+      ? '<p class="drc-a">' + escapeHtml(line.text) + '</p>'
+      : '<p class="drc-empty">（この質問はスキップされました）</p>';
+    card.innerHTML = '<p class="drc-q">Q: ' + escapeHtml(line.question) + '</p>' + answerHtml;
+    container.appendChild(card);
+  });
+}
+
+function runCoaching(profile) {
+  var loading = document.getElementById('coachingLoading');
+  var content = document.getElementById('coachingContent');
+  var apiHint = document.getElementById('apiHint');
+
+  if (!DIARY_DATA || !DIARY_DATA.lines) {
+    content.innerHTML = '<p class="coaching-error">日記データが見つかりません。先に日記を書いて保存してください。</p>';
+    return;
+  }
+
+  var apiKey = '';
+  try { apiKey = localStorage.getItem('tsukiyomi:geminiApiKey') || ''; } catch(e){}
+
+  if (!apiKey) {
+    content.innerHTML = '';
+    apiHint.style.display = 'block';
+    return;
+  }
+
+  var intentionKey = 'tsukiyomi:moonCycle:intention:' + USER_ID + ':' + CYCLE_ID;
+  var intention = '';
+  try { intention = localStorage.getItem(intentionKey) || ''; } catch(e){}
+
+  var diaryText = DIARY_DATA.lines.map(function(l, i){
+    return 'Q' + (i+1) + ': ' + l.question + '\nA: ' + (l.text || '（未記入）');
+  }).join('\n\n');
+
+  var shukuLine = profile.shuku ? ('宿曜: ' + profile.shuku + '\n') : '';
+  var intentionLine = intention ? ('今月の占的（願い）: ' + intention + '\n') : '';
+
+  var prompt = '月サイクル日記の振り返りコーチングをお願いします。\n\n' +
+    '【フェーズ】' + META.ja + (PHASE_DATA.zodiac ? '（' + PHASE_DATA.zodiac + '）' : '') + '\n' +
+    '【テーマ】' + PHASE_DATA.theme + '\n' +
+    shukuLine + intentionLine + '\n' +
+    '【日記の内容】\n' + diaryText + '\n\n' +
+    '以下の観点で、温かく寄り添う月読みコーチングメッセージを書いてください（400〜600文字）:\n' +
+    '1. 書いてくれた言葉への共感・承認\n' +
+    '2. このフェーズ（' + META.pdca + '）の観点からの気づき\n' +
+    '3. 次のフェーズに向けた一言の問いかけ\n' +
+    '難しい占術用語は使わず、日常の言葉で書いてください。';
+
+  fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + apiKey, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+  })
+  .then(function(res){ return res.json(); })
+  .then(function(data){
+    var text = (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0])
+      ? data.candidates[0].content.parts[0].text : '';
+    if (text) {
+      content.innerHTML = '<p class="coaching-text">' + escapeHtml(text) + '</p>';
+    } else {
+      throw new Error('empty');
+    }
+  })
+  .catch(function(err){
+    content.innerHTML = '<p class="coaching-error">AI月読みコーチングを取得できませんでした。APIキーをご確認ください。</p>';
+    apiHint.style.display = 'block';
+  });
+}
+
+function saveApiKey() {
+  var input = document.getElementById('apiKeyInput');
+  if (!input || !input.value.trim()) return;
+  try { localStorage.setItem('tsukiyomi:geminiApiKey', input.value.trim()); } catch(e){}
+  var profile = (function(){
+    try { return JSON.parse(localStorage.getItem('tsukiyomi:diarySync:cachedProfile')||'{}'); }
+    catch(e){ return {}; }
+  })();
+  document.getElementById('apiHint').style.display = 'none';
+  document.getElementById('coachingContent').innerHTML =
+    '<div class="coaching-loading">🌙 あなたの言葉を読み解いています…</div>';
+  runCoaching(profile);
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/\n/g,'<br>');
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function() { navigator.serviceWorker.register("sw.js"); });
+}
+</script>
+</body>
+</html>

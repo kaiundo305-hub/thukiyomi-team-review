@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>月サイクル日記 | 月読みワンダーランド</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1a1025">
+  <link rel="apple-touch-icon" href="images/icon-192.png">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0e0a1a; --surface: #1a1430; --border: rgba(241,217,155,.22);
+      --gold: #f1d99b; --gold2: #c8a84b; --white: #f5f0e8; --muted: rgba(245,240,232,.55);
+      --radius: 18px;
+    }
+    body { background: var(--bg); color: var(--white); font-family: 'Hiragino Mincho ProN', serif; min-height: 100vh; }
+    .shell { width: min(760px, calc(100% - 32px)); margin: 0 auto; padding: 40px 0 80px; }
+
+    /* ヘッダー */
+    .dash-header { text-align: center; margin-bottom: 36px; }
+    .dash-kicker { color: var(--gold2); font-size: 11px; letter-spacing: .28em; margin-bottom: 10px; }
+    .dash-title { font-size: clamp(22px, 5vw, 34px); color: var(--gold); letter-spacing: .08em; line-height: 1.5; }
+    .dash-sub { margin-top: 10px; color: var(--muted); font-size: 14px; line-height: 1.9; }
+
+    /* 現在フェーズ バナー */
+    .current-phase-banner {
+      margin-bottom: 28px; padding: 24px 22px;
+      border: 1px solid var(--border); border-radius: var(--radius);
+      background: linear-gradient(135deg, rgba(241,217,155,.12), rgba(155,142,196,.08));
+      text-align: center;
+    }
+    .cpb-label { font-size: 11px; color: var(--gold2); letter-spacing: .22em; margin-bottom: 8px; }
+    .cpb-phase { font-size: 28px; color: var(--gold); letter-spacing: .06em; }
+    .cpb-theme { margin-top: 6px; color: var(--muted); font-size: 13px; }
+    .cpb-btn {
+      display: inline-block; margin-top: 16px; padding: 12px 32px;
+      background: var(--gold2); color: #1a1025; border-radius: 999px;
+      font-size: 14px; font-family: inherit; text-decoration: none; cursor: pointer;
+      border: none; letter-spacing: .06em; font-weight: bold;
+    }
+    .cpb-btn:hover { background: var(--gold); }
+
+    /* PDCAサイクル図 */
+    .pdca-track { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 28px; }
+    .pdca-step {
+      padding: 16px 10px; border: 1px solid var(--border); border-radius: 14px;
+      text-align: center; cursor: pointer; transition: border-color .2s, background .2s;
+      text-decoration: none; color: inherit;
+    }
+    .pdca-step:hover { border-color: var(--gold2); background: rgba(241,217,155,.07); }
+    .pdca-step.is-current { border-color: var(--gold2); background: rgba(241,217,155,.12); }
+    .pdca-step.is-done { border-color: rgba(241,217,155,.4); }
+    .pdca-icon { font-size: 26px; display: block; margin-bottom: 6px; }
+    .pdca-name { font-size: 12px; color: var(--gold); letter-spacing: .06em; }
+    .pdca-date { font-size: 11px; color: var(--muted); margin-top: 3px; }
+    .pdca-badge {
+      display: inline-block; margin-top: 6px; padding: 2px 8px;
+      border-radius: 999px; font-size: 10px; letter-spacing: .1em;
+    }
+    .badge-current { background: var(--gold2); color: #1a1025; }
+    .badge-done { background: rgba(241,217,155,.2); color: var(--gold); }
+    .badge-upcoming { background: rgba(255,255,255,.06); color: var(--muted); }
+
+    /* サイクル切り替え */
+    .cycle-tabs { display: flex; gap: 8px; margin-bottom: 22px; flex-wrap: wrap; }
+    .cycle-tab {
+      padding: 7px 16px; border: 1px solid var(--border); border-radius: 999px;
+      font-size: 12px; cursor: pointer; background: none; color: var(--muted);
+      font-family: inherit; transition: all .2s;
+    }
+    .cycle-tab.is-active { border-color: var(--gold2); color: var(--gold); background: rgba(241,217,155,.08); }
+
+    /* 日記カード */
+    .diary-cards { display: grid; gap: 14px; }
+    .diary-card {
+      padding: 20px 18px; border: 1px solid var(--border); border-radius: var(--radius);
+      background: rgba(255,255,255,.03); display: flex; align-items: center; gap: 16px;
+      text-decoration: none; color: inherit; transition: border-color .2s, background .2s;
+    }
+    .diary-card:hover { border-color: rgba(241,217,155,.45); background: rgba(241,217,155,.05); }
+    .diary-card.is-current { border-color: var(--gold2); background: rgba(241,217,155,.08); }
+    .dc-icon { font-size: 32px; flex-shrink: 0; width: 48px; text-align: center; }
+    .dc-body { flex: 1; min-width: 0; }
+    .dc-phase { font-size: 16px; color: var(--gold); letter-spacing: .04em; }
+    .dc-date { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .dc-theme { font-size: 13px; color: var(--white); margin-top: 5px; line-height: 1.6; }
+    .dc-status { flex-shrink: 0; font-size: 12px; }
+    .status-done { color: #7dbb8a; }
+    .status-current { color: var(--gold2); }
+    .status-upcoming { color: var(--muted); }
+
+    /* フッター */
+    .back-link { text-align: center; margin-top: 40px; }
+    .back-link a { color: var(--muted); font-size: 13px; text-decoration: none; }
+    .back-link a:hover { color: var(--gold); }
+
+    @media (max-width: 520px) {
+      .pdca-track { grid-template-columns: repeat(2, 1fr); }
+      .pdca-step { padding: 14px 8px; }
+    }
+  </style>
+</head>
+<body>
+<div class="shell">
+
+  <header class="dash-header">
+    <p class="dash-kicker">MOON CYCLE DIARY</p>
+    <h1 class="dash-title">月サイクル日記</h1>
+    <p class="dash-sub">新月・上弦・満月・下弦のリズムで<br>月のPDCAを回し、あなたの願いを育てます。</p>
+  </header>
+
+  <!-- 現在フェーズ -->
+  <section class="current-phase-banner" id="currentBanner"></section>
+
+  <!-- PDCAトラック -->
+  <section class="pdca-track" id="pdcaTrack"></section>
+
+  <!-- サイクルタブ -->
+  <div class="cycle-tabs" id="cycleTabs"></div>
+
+  <!-- 日記カード一覧 -->
+  <div class="diary-cards" id="diaryCards"></div>
+
+  <div class="back-link"><a href="wonderland_gate.html">← 月読みワンダーランドへ戻る</a></div>
+</div>
+
+<script src="moon_cycle_data.js"></script>
+<script src="diary_data_sync.js"></script>
+<script>
+(function(){
+  var profile = (function(){
+    try { return JSON.parse(localStorage.getItem('tsukiyomi:diarySync:cachedProfile')||'{}'); }
+    catch(e){ return {}; }
+  })();
+  var userId = profile.email || profile.participantId || '';
+  var todayStr = new Date().toISOString().split('T')[0];
+
+  function hasDiary(cycleId, phase){
+    if(!userId) return false;
+    var key = getMoonCycleKey(userId, cycleId, phase);
+    try {
+      var d = JSON.parse(localStorage.getItem(key)||'null');
+      return d && d.lines && d.lines.some(function(l){ return (l.text||'').trim().length > 0; });
+    } catch(e){ return false; }
+  }
+
+  function phaseStatus(cycleId, phase, phaseDate){
+    if(hasDiary(cycleId, phase)) return 'done';
+    if(todayStr >= phaseDate) return 'current';
+    return 'upcoming';
+  }
+
+  var currentInfo = getCurrentPhaseInfo();
+  var activeCycleId = currentInfo.cycleId;
+
+  // 現在フェーズバナー
+  var banner = document.getElementById('currentBanner');
+  var cp = currentInfo.phaseData;
+  var pm = PHASE_META[currentInfo.phase];
+  banner.innerHTML =
+    '<p class="cpb-label">現在のフェーズ — ' + activeCycleId.replace('-','年') + '月</p>' +
+    '<div class="cpb-phase">' + pm.icon + ' ' + pm.ja + (cp.zodiac ? '（' + cp.zodiac + '）' : '') + '</div>' +
+    '<div class="cpb-theme">' + cp.theme + '</div>' +
+    '<a class="cpb-btn" href="moon_cycle_diary.html?cycle=' + currentInfo.cycleId + '&phase=' + currentInfo.phase + '">日記を書く →</a>';
+
+  // PDCAトラック（現在サイクル）
+  var track = document.getElementById('pdcaTrack');
+  var curCycle = MOON_CYCLE_DATA.cycles.find(function(c){ return c.id === activeCycleId; });
+  if(curCycle){
+    PHASE_ORDER.forEach(function(phase){
+      var pd = curCycle[phase];
+      var meta = PHASE_META[phase];
+      var st = phaseStatus(activeCycleId, phase, pd.date);
+      var isCur = (phase === currentInfo.phase && activeCycleId === currentInfo.cycleId);
+      var badgeClass = isCur ? 'badge-current' : (st === 'done' ? 'badge-done' : 'badge-upcoming');
+      var badgeText = isCur ? '▶ 今ここ' : (st === 'done' ? '✓ 完了' : '準備中');
+      var el = document.createElement('a');
+      el.className = 'pdca-step' + (isCur ? ' is-current' : '') + (st === 'done' ? ' is-done' : '');
+      el.href = 'moon_cycle_diary.html?cycle=' + activeCycleId + '&phase=' + phase;
+      el.innerHTML =
+        '<span class="pdca-icon">' + meta.icon + '</span>' +
+        '<div class="pdca-name">' + meta.ja + '</div>' +
+        '<div class="pdca-date">' + pd.date.replace(/\d{4}-/,'').replace('-','/') + '</div>' +
+        '<span class="pdca-badge ' + badgeClass + '">' + badgeText + '</span>';
+      track.appendChild(el);
+    });
+  }
+
+  // サイクルタブ
+  var tabs = document.getElementById('cycleTabs');
+  MOON_CYCLE_DATA.cycles.forEach(function(cycle){
+    var btn = document.createElement('button');
+    btn.className = 'cycle-tab' + (cycle.id === activeCycleId ? ' is-active' : '');
+    btn.textContent = cycle.id.replace('-','年') + '月';
+    btn.addEventListener('click', function(){
+      activeCycleId = cycle.id;
+      document.querySelectorAll('.cycle-tab').forEach(function(t){ t.classList.remove('is-active'); });
+      btn.classList.add('is-active');
+      renderCards();
+    });
+    tabs.appendChild(btn);
+  });
+
+  // 日記カード
+  function renderCards(){
+    var cards = document.getElementById('diaryCards');
+    cards.innerHTML = '';
+    var cycle = MOON_CYCLE_DATA.cycles.find(function(c){ return c.id === activeCycleId; });
+    if(!cycle) return;
+    PHASE_ORDER.forEach(function(phase){
+      var pd = cycle[phase];
+      var meta = PHASE_META[phase];
+      var st = phaseStatus(activeCycleId, phase, pd.date);
+      var isCur = (phase === currentInfo.phase && activeCycleId === currentInfo.cycleId);
+      var card = document.createElement('a');
+      card.className = 'diary-card' + (isCur ? ' is-current' : '');
+      card.href = 'moon_cycle_diary.html?cycle=' + activeCycleId + '&phase=' + phase;
+      var statusHTML = st === 'done'
+        ? '<span class="dc-status status-done">✓ 書いた</span>'
+        : isCur
+          ? '<span class="dc-status status-current">▶ 今ここ</span>'
+          : '<span class="dc-status status-upcoming">準備中</span>';
+      card.innerHTML =
+        '<div class="dc-icon">' + meta.icon + '</div>' +
+        '<div class="dc-body">' +
+          '<div class="dc-phase">' + meta.ja + (pd.zodiac ? '（' + pd.zodiac + '）' : '') + '</div>' +
+          '<div class="dc-date">' + pd.date.replace('-','年').replace('-','月') + '日〜　' + meta.pdca + '</div>' +
+          '<div class="dc-theme">' + pd.theme + '</div>' +
+        '</div>' + statusHTML;
+      cards.appendChild(card);
+    });
+  }
+  renderCards();
+})();
+</script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function() { navigator.serviceWorker.register("sw.js"); });
+}
+</script>
+</body>
+</html>
