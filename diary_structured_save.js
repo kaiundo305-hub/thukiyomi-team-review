@@ -41,6 +41,72 @@
     localStorage.setItem(storageKey(day), JSON.stringify(record || {}));
   }
 
+  var GAS_URL_KEY = 'tsukiyomi:sheetSync:url';
+  var GAS_SECRET_KEY = 'tsukiyomi:sheetSync:secretKey';
+  var GAS_DEFAULT_URL = 'https://script.google.com/macros/s/AKfycbxIffIfAOptA-WR6jjT9dg8Fc0yb9HpwsLTR-ZG43Nw12_KR_Yi0Xj9IT_FAyXGV_Ic/exec';
+  var GAS_DEFAULT_SECRET = 'tsukiyomi-2026-key';
+
+  function gasUrl(){ return (localStorage.getItem(GAS_URL_KEY) || GAS_DEFAULT_URL).trim(); }
+  function gasSecret(){ return (localStorage.getItem(GAS_SECRET_KEY) || GAS_DEFAULT_SECRET).trim(); }
+
+  function backupDayToGas(day, record){
+    try {
+      var hasContent = (record.lines || []).some(function(l){ return (l.text || '').trim().length > 0; });
+      if(!hasContent) return;
+      var url = gasUrl();
+      if(!url) return;
+      var secret = gasSecret();
+      var prof = record.profile || profile();
+      var pid = prof.participantId || identity();
+      if(!pid || pid === 'guest') return;
+      var envelope = {
+        secretKey: secret,
+        savedAt: new Date().toISOString(),
+        savedAtJst: jstNow(),
+        recordType: 'auto_backup',
+        page: 'challenge_day' + day + '.html',
+        profile: { participantId: pid, name: prof.name || '', birth: prof.birth || '',
+                   shuku: prof.shuku || '', zodiac: prof.zodiac || '',
+                   concern: prof.concern || '', q: prof.q || '', q2: prof.q2 || '' },
+        payload: { fields: { '7日間日記専用記録': JSON.stringify(record) }, source: 'structured_save_backup' }
+      };
+      var iframeName = 'tsukiyomiGasBackupFrame';
+      var iframe = document.querySelector('iframe[name="' + iframeName + '"]');
+      if(!iframe){
+        iframe = document.createElement('iframe');
+        iframe.name = iframeName;
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
+      }
+      var form = document.createElement('form');
+      form.method = 'GET';
+      form.action = url;
+      form.target = iframeName;
+      form.style.display = 'none';
+      [['secretKey', secret],['data', JSON.stringify(envelope)],['t', String(Date.now())]].forEach(function(p){
+        var inp = document.createElement('input');
+        inp.type = 'hidden';
+        inp.name = p[0];
+        inp.value = p[1];
+        form.appendChild(inp);
+      });
+      document.body.appendChild(form);
+      form.submit();
+      window.setTimeout(function(){ if(form.parentNode) form.parentNode.removeChild(form); }, 1000);
+    } catch(e){}
+  }
+
+  function backupAllDaysToGas(){
+    for(var d = 1; d <= 7; d++){
+      (function(day){
+        var rec = readRecord(day);
+        if(rec && rec.day){
+          window.setTimeout(function(){ backupDayToGas(day, rec); }, (day - 1) * 600);
+        }
+      })(d);
+    }
+  }
+
   function loadCachedProfile(){
     try { return JSON.parse(localStorage.getItem('tsukiyomi:diarySync:cachedProfile') || '{}'); }
     catch(e) { return {}; }
@@ -135,6 +201,7 @@
     var record = baseRecord(day);
     writeRecord(day, record);
     syncHiddenForSpreadsheet(day, record);
+    window.setTimeout(function(){ backupAllDaysToGas(); }, 1500);
   }
 
   function loadIntoPage(){
@@ -272,5 +339,11 @@
     bindPhoto();
     bindSave();
     saveNow();
+    // ページロード時に既存データを全日分バックアップ（3秒後・初回のみ）
+    var backupDoneKey = 'tsukiyomi:gasBackupDone:' + identity();
+    if(!sessionStorage.getItem(backupDoneKey)){
+      sessionStorage.setItem(backupDoneKey, '1');
+      window.setTimeout(function(){ backupAllDaysToGas(); }, 3000);
+    }
   });
 })();
