@@ -74,21 +74,32 @@
     /* 日記カード */
     .diary-cards { display: grid; gap: 14px; }
     .diary-card {
-      padding: 20px 18px; border: 1px solid var(--border); border-radius: var(--radius);
-      background: rgba(255,255,255,.03); display: flex; align-items: center; gap: 16px;
-      text-decoration: none; color: inherit; transition: border-color .2s, background .2s;
+      padding: 18px 16px; border: 1px solid var(--border); border-radius: var(--radius);
+      background: rgba(255,255,255,.03); text-decoration: none; color: inherit;
+      transition: border-color .2s, background .2s; display: block;
     }
     .diary-card:hover { border-color: rgba(241,217,155,.45); background: rgba(241,217,155,.05); }
     .diary-card.is-current { border-color: var(--gold2); background: rgba(241,217,155,.08); }
-    .dc-icon { font-size: 32px; flex-shrink: 0; width: 48px; text-align: center; }
+    .dc-top { display: flex; align-items: center; gap: 14px; }
+    .dc-icon { font-size: 30px; flex-shrink: 0; width: 44px; text-align: center; }
     .dc-body { flex: 1; min-width: 0; }
-    .dc-phase { font-size: 16px; color: var(--gold); letter-spacing: .04em; }
-    .dc-date { font-size: 12px; color: var(--muted); margin-top: 2px; }
-    .dc-theme { font-size: 13px; color: var(--white); margin-top: 5px; line-height: 1.6; }
+    .dc-phase { font-size: 15px; color: var(--gold); letter-spacing: .04em; }
+    .dc-date { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .dc-theme { font-size: 12px; color: var(--white); margin-top: 4px; line-height: 1.5; }
     .dc-status { flex-shrink: 0; font-size: 12px; }
     .status-done { color: #7dbb8a; }
     .status-current { color: var(--gold2); }
     .status-upcoming { color: var(--muted); }
+    /* 7日ドット */
+    .dc-dots { display: flex; gap: 5px; margin-top: 12px; flex-wrap: wrap; }
+    .dc-dot {
+      width: 26px; height: 26px; border-radius: 50%; border: 1px solid rgba(241,217,155,.2);
+      display: flex; align-items: center; justify-content: center; font-size: 10px;
+      color: var(--muted); text-decoration: none; transition: all .15s;
+    }
+    .dc-dot:hover { border-color: var(--gold2); color: var(--gold); }
+    .dc-dot.done { background: rgba(125,187,138,.25); border-color: rgba(125,187,138,.6); color: #a8e0a8; }
+    .dc-dot.today { border-color: var(--gold2); color: var(--gold); font-weight: bold; }
 
     /* フッター */
     .back-link { text-align: center; margin-top: 40px; }
@@ -136,7 +147,18 @@
   var userId = profile.email || profile.participantId || '';
   var todayStr = new Date().toISOString().split('T')[0];
 
+  function dailyDoneCount(cycleId, phase){
+    if(!userId) return 0;
+    var count = 0;
+    for(var d = 1; d <= 7; d++){
+      var k = 'tsukiyomi:moonCycle:daily:v1:' + userId + ':' + cycleId + ':' + phase + ':' + d;
+      try { if(localStorage.getItem(k)) count++; } catch(e){}
+    }
+    return count;
+  }
+
   function hasDiary(cycleId, phase){
+    if(dailyDoneCount(cycleId, phase) > 0) return true;
     if(!userId) return false;
     var key = getMoonCycleKey(userId, cycleId, phase);
     try {
@@ -149,6 +171,13 @@
     if(hasDiary(cycleId, phase)) return 'done';
     if(todayStr >= phaseDate) return 'current';
     return 'upcoming';
+  }
+
+  function calcDayInPhase(phaseDate){
+    var start = new Date(phaseDate + 'T00:00:00');
+    var today = new Date(); today.setHours(0,0,0,0);
+    var diff = Math.floor((today - start) / 86400000) + 1;
+    return Math.max(1, Math.min(diff, 7));
   }
 
   var currentInfo = getCurrentPhaseInfo();
@@ -213,21 +242,39 @@
       var meta = PHASE_META[phase];
       var st = phaseStatus(activeCycleId, phase, pd.date);
       var isCur = (phase === currentInfo.phase && activeCycleId === currentInfo.cycleId);
-      var card = document.createElement('a');
-      card.className = 'diary-card' + (isCur ? ' is-current' : '');
-      card.href = 'moon_cycle_diary.html?cycle=' + activeCycleId + '&phase=' + phase;
+      var doneCount = dailyDoneCount(activeCycleId, phase);
+      var todayDay = isCur ? calcDayInPhase(pd.date) : 0;
+
       var statusHTML = st === 'done'
-        ? '<span class="dc-status status-done">✓ 書いた</span>'
+        ? '<span class="dc-status status-done">' + doneCount + '/7日</span>'
         : isCur
-          ? '<span class="dc-status status-current">▶ 今ここ</span>'
+          ? '<span class="dc-status status-current">▶ Day' + todayDay + '</span>'
           : '<span class="dc-status status-upcoming">準備中</span>';
+
+      // 7日ドット
+      var dotsHTML = '<div class="dc-dots">';
+      for(var d = 1; d <= 7; d++){
+        var dKey = 'tsukiyomi:moonCycle:daily:v1:' + userId + ':' + activeCycleId + ':' + phase + ':' + d;
+        var dDone = false;
+        try { dDone = !!localStorage.getItem(dKey); } catch(e){}
+        var dClass = dDone ? 'done' : (isCur && d === todayDay ? 'today' : '');
+        dotsHTML += '<a class="dc-dot ' + dClass + '" href="moon_cycle_diary.html?cycle=' + activeCycleId + '&phase=' + phase + '&day=' + d + '" title="Day' + d + '">' + (dDone ? '✓' : d) + '</a>';
+      }
+      dotsHTML += '</div>';
+
+      var card = document.createElement('div');
+      card.className = 'diary-card' + (isCur ? ' is-current' : '');
       card.innerHTML =
-        '<div class="dc-icon">' + meta.icon + '</div>' +
-        '<div class="dc-body">' +
-          '<div class="dc-phase">' + meta.ja + (pd.zodiac ? '（' + pd.zodiac + '）' : '') + '</div>' +
-          '<div class="dc-date">' + pd.date.replace('-','年').replace('-','月') + '日〜　' + meta.pdca + '</div>' +
-          '<div class="dc-theme">' + pd.theme + '</div>' +
-        '</div>' + statusHTML;
+        '<div class="dc-top">' +
+          '<div class="dc-icon">' + meta.icon + '</div>' +
+          '<div class="dc-body">' +
+            '<div class="dc-phase">' + meta.ja + (pd.zodiac ? '（' + pd.zodiac + '）' : '') + '</div>' +
+            '<div class="dc-date">' + pd.date.replace('-','年').replace('-','月') + '日〜　' + meta.pdca + '</div>' +
+            '<div class="dc-theme">' + pd.theme + '</div>' +
+          '</div>' +
+          statusHTML +
+        '</div>' +
+        (st !== 'upcoming' ? dotsHTML : '');
       cards.appendChild(card);
     });
   }

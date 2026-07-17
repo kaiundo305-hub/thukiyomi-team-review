@@ -10,197 +10,223 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg: #0e0a1a; --surface: #1a1430; --border: rgba(241,217,155,.22);
+      --bg: #0e0a1a; --border: rgba(241,217,155,.22);
       --gold: #f1d99b; --gold2: #c8a84b; --white: #f5f0e8; --muted: rgba(245,240,232,.55);
       --radius: 18px;
     }
     body { background: var(--bg); color: var(--white); font-family: 'Hiragino Mincho ProN', 'Georgia', serif; min-height: 100vh; }
-    .shell { width: min(680px, calc(100% - 32px)); margin: 0 auto; padding: 40px 0 100px; }
+    .shell { width: min(660px, calc(100% - 32px)); margin: 0 auto; padding: 36px 0 100px; }
 
-    /* フェーズヘッダー */
+    /* ─ モード切り替えタブ ─ */
+    .mode-tabs { display: flex; gap: 0; margin-bottom: 28px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+    .mode-tab {
+      flex: 1; padding: 12px 8px; text-align: center; font-size: 13px;
+      background: none; color: var(--muted); border: none; cursor: pointer;
+      font-family: inherit; transition: all .2s; letter-spacing: .04em;
+    }
+    .mode-tab.is-active { background: rgba(241,217,155,.12); color: var(--gold); }
+    .mode-tab + .mode-tab { border-left: 1px solid var(--border); }
+
+    /* ─ フェーズヘッダー ─ */
     .phase-hero {
-      text-align: center; margin-bottom: 32px; padding: 32px 20px;
+      text-align: center; margin-bottom: 24px; padding: 26px 18px;
       border: 1px solid var(--border); border-radius: var(--radius);
-      background: linear-gradient(160deg, rgba(241,217,155,.1), rgba(155,142,196,.07));
+      background: linear-gradient(160deg, rgba(241,217,155,.09), rgba(155,142,196,.06));
     }
-    .ph-kicker { font-size: 11px; color: var(--gold2); letter-spacing: .28em; margin-bottom: 10px; }
-    .ph-icon { font-size: 52px; display: block; margin-bottom: 10px; }
-    .ph-name { font-size: clamp(22px, 5vw, 30px); color: var(--gold); letter-spacing: .08em; }
-    .ph-zodiac { font-size: 14px; color: var(--gold2); margin-top: 5px; letter-spacing: .1em; }
-    .ph-theme { margin-top: 10px; color: var(--muted); font-size: 14px; line-height: 1.8; }
-    .ph-date { margin-top: 8px; font-size: 12px; color: var(--muted); letter-spacing: .08em; }
-    .ph-pdca-badge {
-      display: inline-block; margin-top: 14px; padding: 5px 18px;
-      border: 1px solid var(--gold2); border-radius: 999px;
-      font-size: 12px; color: var(--gold); letter-spacing: .1em;
+    .ph-icon { font-size: 44px; display: block; margin-bottom: 8px; }
+    .ph-name { font-size: clamp(18px, 4vw, 24px); color: var(--gold); letter-spacing: .08em; }
+    .ph-theme { margin-top: 6px; color: var(--muted); font-size: 13px; line-height: 1.7; }
+    .ph-shuku { margin-top: 8px; font-size: 12px; color: var(--gold2); letter-spacing: .12em; }
+
+    /* ─ 7日間進捗ドット ─ */
+    .day-dots { display: flex; gap: 8px; justify-content: center; margin: 18px 0 22px; flex-wrap: wrap; }
+    .day-dot {
+      width: 36px; height: 36px; border-radius: 50%;
+      border: 1px solid var(--border); background: rgba(255,255,255,.04);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; color: var(--muted); cursor: pointer; transition: all .2s;
+      text-decoration: none;
+    }
+    .day-dot:hover { border-color: var(--gold2); color: var(--gold); }
+    .day-dot.is-done { background: rgba(125,187,138,.25); border-color: rgba(125,187,138,.6); color: #a8e0a8; }
+    .day-dot.is-today { background: rgba(200,168,75,.25); border-color: var(--gold2); color: var(--gold); font-weight: bold; }
+
+    /* ─ セクションタイトル ─ */
+    .sec-title { font-size: 11px; color: var(--gold2); letter-spacing: .22em; margin-bottom: 12px; padding-bottom: 7px; border-bottom: 1px solid var(--border); }
+
+    /* ─ 開運アイテム（コンパクト版）─ */
+    .kaiun-strip { display: flex; gap: 8px; margin-bottom: 24px; overflow-x: auto; padding-bottom: 4px; }
+    .kaiun-chip {
+      flex-shrink: 0; padding: 8px 12px; border: 1px solid var(--border); border-radius: 999px;
+      font-size: 12px; color: var(--white); background: rgba(241,217,155,.04);
+      white-space: nowrap;
+    }
+    .kaiun-chip span { color: var(--gold2); margin-right: 4px; }
+
+    /* ─ 今日のプロンプト ─ */
+    .today-prompt { margin-bottom: 18px; }
+    .tp-day { font-size: 11px; color: var(--gold2); letter-spacing: .2em; margin-bottom: 6px; }
+    .tp-q { font-size: 16px; color: var(--gold); line-height: 1.7; }
+
+    /* ─ テキストエリア ─ */
+    textarea.diary-input {
+      width: 100%; padding: 16px; background: rgba(255,255,255,.04);
+      border: 1px solid var(--border); border-radius: 14px;
+      color: var(--white); font-family: inherit; font-size: 15px; line-height: 2;
+      resize: vertical; min-height: 160px; outline: none; transition: border-color .2s;
+    }
+    textarea.diary-input:focus { border-color: var(--gold2); background: rgba(241,217,155,.04); }
+    textarea.diary-input::placeholder { color: rgba(245,240,232,.28); }
+
+    /* ─ 占的インプット ─ */
+    .intention-box { margin-bottom: 24px; }
+    .intention-label { font-size: 13px; color: var(--muted); line-height: 1.7; margin-bottom: 10px; }
+    .intention-display {
+      padding: 14px 16px; border: 1px solid rgba(241,217,155,.3); border-radius: 12px;
+      background: rgba(241,217,155,.06); font-size: 15px; color: var(--gold); line-height: 1.8;
     }
 
-    /* セクションタイトル */
-    .sec-title {
-      font-size: 13px; color: var(--gold2); letter-spacing: .22em;
-      margin-bottom: 14px; padding-bottom: 8px;
-      border-bottom: 1px solid var(--border);
-    }
+    /* ─ 振り返り4問 ─ */
+    .reflection-questions { display: grid; gap: 18px; }
+    .rq-block .rq-num { font-size: 11px; color: var(--gold2); letter-spacing: .2em; margin-bottom: 5px; }
+    .rq-block .rq-text { font-size: 14px; color: var(--gold); line-height: 1.7; margin-bottom: 9px; }
 
-    /* 開運アイテム */
-    .kaiun-section { margin-bottom: 32px; }
-    .kaiun-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-    .kaiun-card {
-      padding: 14px 14px; border: 1px solid var(--border); border-radius: 14px;
-      background: rgba(241,217,155,.04);
-    }
-    .kc-emoji { font-size: 22px; display: block; margin-bottom: 6px; }
-    .kc-item { font-size: 14px; color: var(--gold); line-height: 1.5; }
-    .kc-reason { font-size: 11px; color: var(--muted); margin-top: 4px; line-height: 1.6; }
-
-    @media (max-width: 420px) { .kaiun-grid { grid-template-columns: 1fr; } }
-
-    /* 占的 */
-    .intention-section { margin-bottom: 32px; }
-    .intention-box {
-      padding: 18px 16px; border: 1px solid rgba(241,217,155,.3); border-radius: 14px;
-      background: rgba(241,217,155,.06);
-    }
-    .intention-label { font-size: 11px; color: var(--gold2); letter-spacing: .2em; margin-bottom: 8px; }
-    .intention-display { font-size: 16px; color: var(--gold); line-height: 1.8; }
-    .intention-hint { font-size: 12px; color: var(--muted); margin-top: 6px; line-height: 1.7; }
-    textarea.intention-input {
-      width: 100%; padding: 12px; background: rgba(255,255,255,.05);
-      border: 1px solid var(--border); border-radius: 10px;
-      color: var(--white); font-family: inherit; font-size: 15px; line-height: 1.8;
-      resize: vertical; min-height: 80px; outline: none;
-    }
-    textarea.intention-input:focus { border-color: var(--gold2); }
-
-    /* 日記質問 */
-    .diary-section { margin-bottom: 32px; }
-    .diary-question {
-      margin-bottom: 22px;
-    }
-    .dq-num { font-size: 11px; color: var(--gold2); letter-spacing: .2em; margin-bottom: 6px; }
-    .dq-text { font-size: 15px; color: var(--gold); line-height: 1.7; margin-bottom: 10px; }
-    textarea.dq-input {
-      width: 100%; padding: 14px; background: rgba(255,255,255,.04);
-      border: 1px solid var(--border); border-radius: 12px;
-      color: var(--white); font-family: inherit; font-size: 14px; line-height: 1.9;
-      resize: vertical; min-height: 110px; outline: none; transition: border-color .2s;
-    }
-    textarea.dq-input:focus { border-color: var(--gold2); background: rgba(241,217,155,.04); }
-    textarea.dq-input::placeholder { color: rgba(245,240,232,.3); }
-
-    /* 保存ボタン */
-    .save-area { text-align: center; margin-bottom: 24px; }
+    /* ─ 保存ボタン ─ */
+    .save-area { text-align: center; margin: 20px 0 16px; }
     .btn-save {
-      padding: 15px 48px; background: var(--gold2); color: #1a1025;
-      border: none; border-radius: 999px; font-size: 16px; font-family: inherit;
-      font-weight: bold; cursor: pointer; letter-spacing: .06em; transition: background .2s;
+      padding: 14px 48px; background: var(--gold2); color: #1a1025;
+      border: none; border-radius: 999px; font-size: 15px; font-family: inherit;
+      font-weight: bold; cursor: pointer; letter-spacing: .06em;
     }
     .btn-save:hover { background: var(--gold); }
-    .btn-save:disabled { background: rgba(200,168,75,.4); cursor: not-allowed; }
-    .save-notice { margin-top: 10px; font-size: 12px; color: var(--muted); }
+    .save-hint { font-size: 12px; color: var(--muted); margin-top: 8px; }
 
-    /* 保存完了メッセージ */
+    /* ─ 振り返り鑑定書ボタン ─ */
+    .report-link-area { text-align: center; margin-bottom: 28px; display: none; }
+    .btn-report {
+      padding: 11px 28px; border: 1px solid var(--gold2); background: none;
+      color: var(--gold); border-radius: 999px; font-size: 13px;
+      font-family: inherit; cursor: pointer; letter-spacing: .06em;
+    }
+    .btn-report:hover { background: rgba(241,217,155,.08); }
+
+    /* ─ 保存済み表示 ─ */
+    .saved-tag { display: none; text-align: center; margin-bottom: 14px; font-size: 12px; color: #a8e0a8; }
+
+    /* ─ トースト ─ */
     .toast {
-      position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-      background: #2d4a2d; color: #a8e0a8; padding: 12px 28px; border-radius: 999px;
-      font-size: 14px; display: none; z-index: 100; white-space: nowrap;
+      position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+      background: #1e3d1e; color: #a8e0a8; padding: 11px 26px; border-radius: 999px;
+      font-size: 13px; display: none; z-index: 200; white-space: nowrap;
     }
-    .toast.show { display: block; animation: fadeInOut 3s ease forwards; }
-    @keyframes fadeInOut {
-      0%   { opacity: 0; transform: translateX(-50%) translateY(8px); }
-      15%  { opacity: 1; transform: translateX(-50%) translateY(0); }
-      75%  { opacity: 1; }
-      100% { opacity: 0; }
-    }
-
-    /* 振り返りボタン */
-    .review-area { text-align: center; margin-bottom: 32px; display: none; }
-    .btn-review {
-      padding: 12px 32px; border: 1px solid var(--gold2); background: none;
-      color: var(--gold); border-radius: 999px; font-size: 14px; font-family: inherit;
-      cursor: pointer; letter-spacing: .06em; transition: all .2s;
-    }
-    .btn-review:hover { background: rgba(241,217,155,.1); }
-
-    /* 保存済みバナー */
-    .saved-banner {
-      display: none; margin-bottom: 22px; padding: 14px 16px;
-      border: 1px solid rgba(125,187,138,.4); border-radius: 12px;
-      background: rgba(125,187,138,.07); text-align: center;
-      font-size: 13px; color: #a8e0a8;
+    .toast.show { display: block; animation: fadeOut 3s ease forwards; }
+    @keyframes fadeOut {
+      0%{ opacity:0; transform:translateX(-50%) translateY(6px); }
+      12%{ opacity:1; transform:translateX(-50%) translateY(0); }
+      75%{ opacity:1; }
+      100%{ opacity:0; }
     }
 
-    /* ナビ */
-    .nav-links { display: flex; justify-content: space-between; margin-top: 40px; }
+    /* ─ ナビ ─ */
+    .nav-links { display: flex; justify-content: space-between; margin-top: 36px; }
     .nav-links a { color: var(--muted); font-size: 13px; text-decoration: none; }
     .nav-links a:hover { color: var(--gold); }
   </style>
 </head>
 <body>
 <div class="shell">
-  <div id="phaseHero" class="phase-hero">
-    <p class="ph-kicker" id="phKicker">MOON CYCLE DIARY</p>
+
+  <!-- モード切り替えタブ -->
+  <div class="mode-tabs">
+    <button class="mode-tab is-active" id="tabDaily" onclick="switchMode('daily')">🌙 毎日の日記</button>
+    <button class="mode-tab" id="tabReflect" onclick="switchMode('reflect')">✦ フェーズ振り返り</button>
+  </div>
+
+  <!-- フェーズヘッダー -->
+  <div class="phase-hero">
     <span class="ph-icon" id="phIcon">🌑</span>
-    <h1 class="ph-name" id="phName">—</h1>
-    <p class="ph-zodiac" id="phZodiac"></p>
-    <p class="ph-theme" id="phTheme"></p>
-    <p class="ph-date" id="phDate"></p>
-    <span class="ph-pdca-badge" id="phPdca"></span>
+    <div class="ph-name" id="phName">—</div>
+    <div class="ph-theme" id="phTheme"></div>
+    <div class="ph-shuku" id="phShuku"></div>
   </div>
 
-  <!-- 保存済みバナー -->
-  <div class="saved-banner" id="savedBanner">✓ この日記は保存済みです。内容を編集して上書き保存できます。</div>
+  <!-- 7日間進捗ドット -->
+  <div class="day-dots" id="dayDots"></div>
 
-  <!-- 開運アイテム -->
-  <section class="kaiun-section">
-    <p class="sec-title">✦ 今フェーズの開運アイテム</p>
-    <div class="kaiun-grid" id="kaiun-grid-items"></div>
-  </section>
+  <!-- ─────────── 毎日モード ─────────── -->
+  <div id="panelDaily">
 
-  <!-- 占的 -->
-  <section class="intention-section" id="intentionSection"></section>
+    <p class="sec-title">✦ 今日の開運アイテム</p>
+    <div class="kaiun-strip" id="kaiun-strip-items"></div>
 
-  <!-- 日記質問 -->
-  <section class="diary-section">
-    <p class="sec-title">✦ 今日の日記</p>
-    <div id="diaryQuestions"></div>
-  </section>
+    <div class="today-prompt">
+      <p class="tp-day" id="tpDay">Day —</p>
+      <p class="tp-q" id="tpQ"></p>
+    </div>
 
-  <div class="save-area">
-    <button class="btn-save" id="btnSave" onclick="saveDiary()">日記を保存する</button>
-    <p class="save-notice">書いた内容はこのデバイスに安全に保存されます</p>
+    <textarea class="diary-input" id="dailyInput" placeholder="今日感じたこと、気づいたこと、ふと浮かんだ言葉を…"></textarea>
+
+    <div class="save-area">
+      <button class="btn-save" onclick="saveDaily()">今日の日記を保存</button>
+      <p class="save-hint">毎日短くでも大丈夫。書き続けることが鑑定書になります。</p>
+    </div>
+
+    <div class="saved-tag" id="dailySavedTag">✓ 今日の日記は保存済みです</div>
+
+    <div class="report-link-area" id="dailyReportArea">
+      <button class="btn-report" onclick="goReport()">🔮 振り返り鑑定書を見る</button>
+    </div>
   </div>
 
-  <div class="review-area" id="reviewArea">
-    <p style="font-size:13px; color:var(--muted); margin-bottom:12px;">日記が保存されました。振り返り鑑定書を見ることができます。</p>
-    <button class="btn-review" onclick="goToReport()">🌙 振り返り鑑定書を見る</button>
+  <!-- ─────────── 振り返りモード ─────────── -->
+  <div id="panelReflect" style="display:none;">
+
+    <!-- 占的（新月のみ入力、他は表示） -->
+    <p class="sec-title">✦ 今月の占的（願いのテーマ）</p>
+    <div class="intention-box" id="intentionBox"></div>
+
+    <p class="sec-title">✦ フェーズ振り返り（4問）</p>
+    <div class="reflection-questions" id="reflectQuestions"></div>
+
+    <div class="save-area">
+      <button class="btn-save" onclick="saveReflect()">振り返りを保存</button>
+      <p class="save-hint">保存後、AI月読みコーチングが利用できます。</p>
+    </div>
+
+    <div class="saved-tag" id="reflectSavedTag">✓ 振り返りは保存済みです</div>
+
+    <div class="report-link-area" id="reflectReportArea">
+      <button class="btn-report" onclick="goReport()">🔮 振り返り鑑定書を見る</button>
+    </div>
   </div>
 
   <div class="nav-links">
     <a href="moon_cycle_dashboard.html">← 月サイクル一覧へ</a>
-    <a href="wonderland_gate.html">トップへ</a>
+    <a href="wonderland_gate.html">トップ</a>
   </div>
 </div>
 
-<div class="toast" id="toast">✓ 日記を保存しました</div>
+<div class="toast" id="toast"></div>
 
 <script src="moon_cycle_data.js"></script>
 <script src="diary_data_sync.js"></script>
 <script>
-var CYCLE_ID, PHASE, CYCLE, PHASE_DATA, META, USER_ID;
+var CYCLE_ID, PHASE_KEY, CYCLE, PD, META, USER_ID;
+var CURRENT_DAY = 1; // 1-7 within this phase
 
 function init() {
   var params = new URLSearchParams(location.search);
-  CYCLE_ID = params.get('cycle') || '';
-  PHASE    = params.get('phase') || '';
+  CYCLE_ID  = params.get('cycle') || '';
+  PHASE_KEY = params.get('phase') || '';
+  var dayParam = parseInt(params.get('day') || '0', 10);
 
   CYCLE = MOON_CYCLE_DATA.cycles.find(function(c){ return c.id === CYCLE_ID; });
-  if (!CYCLE || !CYCLE[PHASE]) {
+  if (!CYCLE || !CYCLE[PHASE_KEY]) {
     var info = getCurrentPhaseInfo();
-    CYCLE_ID = info.cycleId; PHASE = info.phase; CYCLE = info.cycle;
+    CYCLE_ID = info.cycleId; PHASE_KEY = info.phase; CYCLE = info.cycle;
   }
-  PHASE_DATA = CYCLE[PHASE];
-  META = PHASE_META[PHASE];
+  PD   = CYCLE[PHASE_KEY];
+  META = PHASE_META[PHASE_KEY];
 
   var profile = (function(){
     try { return JSON.parse(localStorage.getItem('tsukiyomi:diarySync:cachedProfile')||'{}'); }
@@ -208,158 +234,201 @@ function init() {
   })();
   USER_ID = profile.email || profile.participantId || '';
 
-  renderHero(profile);
+  // 今フェーズの何日目か計算
+  CURRENT_DAY = dayParam > 0 ? Math.min(dayParam, 7) : calcCurrentDay();
+
+  renderHeader(profile);
+  renderDots();
   renderKaiun();
-  renderIntention(profile);
-  renderQuestions();
-  loadSaved();
+  renderDailyPrompt();
+  loadDailyEntry();
+  renderIntention();
+  renderReflectQuestions();
+  loadReflectEntry();
 }
 
-function renderHero(profile) {
-  document.getElementById('phKicker').textContent =
-    CYCLE_ID.replace('-','年') + '月 — ' + META.pdca;
+function renderHeader(profile) {
   document.getElementById('phIcon').textContent = META.icon;
-  document.getElementById('phName').textContent = META.ja + (PHASE_DATA.zodiac ? '（' + PHASE_DATA.zodiac + '）' : '');
-  document.getElementById('phZodiac').textContent = PHASE_DATA.zodiac
-    ? PHASE_DATA.zodiac + ' ' + (PHASE_DATA.zodiacEn || '') + ' ✦ 月星座'
-    : '';
-  document.getElementById('phTheme').textContent = PHASE_DATA.theme;
-  document.getElementById('phDate').textContent = '🗓 ' + PHASE_DATA.date.replace('-','年').replace('-','月') + '日〜';
-  document.getElementById('phPdca').textContent = META.pdca;
-
-  // 宿曜パーソナライズ
+  document.getElementById('phName').textContent =
+    META.ja + (PD.zodiac ? '（' + PD.zodiac + '）' : '') +
+    '　' + CYCLE_ID.replace('-','年') + '月';
+  document.getElementById('phTheme').textContent = PD.theme;
   if (profile.shuku) {
-    var badge = document.createElement('p');
-    badge.style.cssText = 'margin-top:10px; font-size:12px; color:var(--gold2); letter-spacing:.1em;';
-    badge.textContent = '✦ あなたの宿曜: ' + profile.shuku;
-    document.getElementById('phaseHero').appendChild(badge);
+    document.getElementById('phShuku').textContent = '✦ あなたの宿曜: ' + profile.shuku;
+  }
+}
+
+function calcCurrentDay() {
+  var start = new Date(PD.date + 'T00:00:00');
+  var today = new Date();
+  today.setHours(0,0,0,0);
+  var diff = Math.floor((today - start) / 86400000) + 1;
+  return Math.max(1, Math.min(diff, 7));
+}
+
+function dailyKey(day) {
+  return 'tsukiyomi:moonCycle:daily:v1:' + USER_ID + ':' + CYCLE_ID + ':' + PHASE_KEY + ':' + day;
+}
+
+function renderDots() {
+  var container = document.getElementById('dayDots');
+  container.innerHTML = '';
+  for (var d = 1; d <= 7; d++) {
+    var saved = false;
+    if (USER_ID) {
+      try { saved = !!localStorage.getItem(dailyKey(d)); } catch(e){}
+    }
+    var isToday = (d === CURRENT_DAY);
+    var link = document.createElement('a');
+    link.href = 'moon_cycle_diary.html?cycle=' + CYCLE_ID + '&phase=' + PHASE_KEY + '&day=' + d;
+    link.className = 'day-dot' + (saved ? ' is-done' : '') + (isToday ? ' is-today' : '');
+    link.textContent = saved ? '✓' : d;
+    link.title = d + '日目';
+    container.appendChild(link);
   }
 }
 
 function renderKaiun() {
-  var grid = document.getElementById('kaiun-grid-items');
-  var items = PHASE_DATA.kaiun || [];
-  if (!items.length) {
-    grid.parentElement.style.display = 'none'; return;
-  }
+  var strip = document.getElementById('kaiun-strip-items');
+  strip.innerHTML = '';
+  var items = PD.kaiun || [];
   items.forEach(function(k) {
-    var card = document.createElement('div');
-    card.className = 'kaiun-card';
-    card.innerHTML =
-      '<span class="kc-emoji">' + k.emoji + '</span>' +
-      '<div class="kc-item">' + k.item + '</div>' +
-      '<div class="kc-reason">' + k.reason + '</div>';
-    grid.appendChild(card);
+    var chip = document.createElement('div');
+    chip.className = 'kaiun-chip';
+    chip.innerHTML = '<span>' + k.emoji + '</span>' + k.item;
+    chip.title = k.reason;
+    strip.appendChild(chip);
   });
 }
 
-function renderIntention(profile) {
-  var sec = document.getElementById('intentionSection');
-  // 占的（月サイクル通しのテーマ）は新月フェーズで入力、他フェーズで表示
+function renderDailyPrompt() {
+  document.getElementById('tpDay').textContent = 'Day ' + CURRENT_DAY + ' / 7';
+  // 日ごとに質問をローテーション（4問を7日でループ）
+  var qIdx = (CURRENT_DAY - 1) % (PD.questions ? PD.questions.length : 1);
+  var q = PD.questions ? PD.questions[qIdx] : '今日の気持ちを書いてください。';
+  document.getElementById('tpQ').textContent = q;
+}
+
+function loadDailyEntry() {
+  if (!USER_ID) return;
+  try {
+    var saved = JSON.parse(localStorage.getItem(dailyKey(CURRENT_DAY)) || 'null');
+    if (!saved) return;
+    document.getElementById('dailyInput').value = saved.text || '';
+    document.getElementById('dailySavedTag').style.display = 'block';
+    document.getElementById('dailyReportArea').style.display = 'block';
+  } catch(e) {}
+}
+
+function saveDaily() {
+  var text = document.getElementById('dailyInput').value;
+  if (USER_ID) {
+    var data = {
+      day: CURRENT_DAY, cycleId: CYCLE_ID, phase: PHASE_KEY,
+      savedAt: new Date().toISOString(), text: text,
+      question: document.getElementById('tpQ').textContent
+    };
+    try { localStorage.setItem(dailyKey(CURRENT_DAY), JSON.stringify(data)); } catch(e){}
+  }
+  showToast('✓ Day ' + CURRENT_DAY + ' の日記を保存しました');
+  document.getElementById('dailySavedTag').style.display = 'block';
+  document.getElementById('dailyReportArea').style.display = 'block';
+  renderDots();
+}
+
+function renderIntention() {
+  var box = document.getElementById('intentionBox');
   var intentionKey = 'tsukiyomi:moonCycle:intention:' + USER_ID + ':' + CYCLE_ID;
 
-  if (PHASE === 'shingetu') {
-    var savedIntention = '';
-    try { savedIntention = localStorage.getItem(intentionKey) || ''; } catch(e){}
-    sec.innerHTML =
-      '<p class="sec-title">✦ 今月の占的（願いのテーマ）</p>' +
-      '<div class="intention-box">' +
-        '<p class="intention-label">今月、あなたが月のサイクルで叶えたい願い・テーマを書いてください</p>' +
-        '<textarea class="intention-input" id="intentionInput" placeholder="例：自分らしく表現できるようになりたい。仕事で次のステップへ進む。">' +
-        escapeHtml(savedIntention) + '</textarea>' +
-        '<p class="intention-hint">ここで書いた内容が、上弦・満月・下弦の日記の「軸」になります。</p>' +
-      '</div>';
+  if (PHASE_KEY === 'shingetu') {
+    var saved = '';
+    try { saved = localStorage.getItem(intentionKey) || ''; } catch(e){}
+    box.innerHTML =
+      '<p class="intention-label">今月、月のサイクルで叶えたい願い・テーマを書いてください。<br>これがこのサイクルの「占的」になります。</p>' +
+      '<textarea class="diary-input" id="intentionInput" style="min-height:80px" placeholder="例：自分らしく表現できるようになりたい">' +
+      escHtml(saved) + '</textarea>';
   } else {
     var intention = '';
     try { intention = localStorage.getItem(intentionKey) || ''; } catch(e){}
-    if (intention) {
-      sec.innerHTML =
-        '<p class="sec-title">✦ 今月の占的（願いのテーマ）</p>' +
-        '<div class="intention-box">' +
-          '<p class="intention-label">新月に立てた願い</p>' +
-          '<div class="intention-display">' + escapeHtml(intention) + '</div>' +
-        '</div>';
-    }
+    box.innerHTML = intention
+      ? '<div class="intention-display">' + escHtml(intention) + '</div>'
+      : '<div class="intention-display" style="color:var(--muted);font-style:italic;">新月フェーズで願いのテーマを書いておくと、ここに表示されます。</div>';
   }
 }
 
-function renderQuestions() {
-  var container = document.getElementById('diaryQuestions');
-  PHASE_DATA.questions.forEach(function(q, i) {
+function renderReflectQuestions() {
+  var container = document.getElementById('reflectQuestions');
+  container.innerHTML = '';
+  (PD.questions || []).forEach(function(q, i) {
     var div = document.createElement('div');
-    div.className = 'diary-question';
+    div.className = 'rq-block';
     div.innerHTML =
-      '<p class="dq-num">Q' + (i+1) + ' / ' + PHASE_DATA.questions.length + '</p>' +
-      '<p class="dq-text">' + escapeHtml(q) + '</p>' +
-      '<textarea class="dq-input" id="dq' + i + '" placeholder="思ったことを、そのまま書いてみてください…" rows="4"></textarea>';
+      '<p class="rq-num">Q' + (i+1) + '</p>' +
+      '<p class="rq-text">' + escHtml(q) + '</p>' +
+      '<textarea class="diary-input" id="rq' + i + '" style="min-height:100px" placeholder="思ったことをそのまま…"></textarea>';
     container.appendChild(div);
   });
 }
 
-function loadSaved() {
+function loadReflectEntry() {
   if (!USER_ID) return;
-  var key = getMoonCycleKey(USER_ID, CYCLE_ID, PHASE);
+  var key = getMoonCycleKey(USER_ID, CYCLE_ID, PHASE_KEY);
   try {
     var saved = JSON.parse(localStorage.getItem(key) || 'null');
-    if (!saved) return;
-    document.getElementById('savedBanner').style.display = 'block';
-    document.getElementById('reviewArea').style.display = 'block';
-    if (saved.lines) {
-      saved.lines.forEach(function(line, i) {
-        var ta = document.getElementById('dq' + i);
-        if (ta) ta.value = line.text || '';
-      });
-    }
+    if (!saved || !saved.lines) return;
+    saved.lines.forEach(function(line, i) {
+      var ta = document.getElementById('rq' + i);
+      if (ta) ta.value = line.text || '';
+    });
+    document.getElementById('reflectSavedTag').style.display = 'block';
+    document.getElementById('reflectReportArea').style.display = 'block';
   } catch(e) {}
 }
 
-function saveDiary() {
-  var lines = [];
-  PHASE_DATA.questions.forEach(function(q, i) {
-    var ta = document.getElementById('dq' + i);
-    lines.push({ question: q, text: ta ? ta.value : '' });
+function saveReflect() {
+  var lines = (PD.questions || []).map(function(q, i) {
+    var ta = document.getElementById('rq' + i);
+    return { question: q, text: ta ? ta.value : '' };
   });
+  var data = { cycleId: CYCLE_ID, phase: PHASE_KEY, savedAt: new Date().toISOString(), lines: lines };
 
-  var data = {
-    cycleId: CYCLE_ID, phase: PHASE,
-    savedAt: new Date().toISOString(),
-    lines: lines
-  };
-
-  // 占的を保存（新月フェーズのみ）
-  if (PHASE === 'shingetu') {
-    var intentionInput = document.getElementById('intentionInput');
-    if (intentionInput && USER_ID) {
-      var intentionKey = 'tsukiyomi:moonCycle:intention:' + USER_ID + ':' + CYCLE_ID;
-      try { localStorage.setItem(intentionKey, intentionInput.value); } catch(e){}
-      data.intention = intentionInput.value;
+  if (PHASE_KEY === 'shingetu') {
+    var ii = document.getElementById('intentionInput');
+    if (ii && USER_ID) {
+      var ik = 'tsukiyomi:moonCycle:intention:' + USER_ID + ':' + CYCLE_ID;
+      try { localStorage.setItem(ik, ii.value); } catch(e){}
+      data.intention = ii.value;
     }
   }
 
   if (USER_ID) {
-    var key = getMoonCycleKey(USER_ID, CYCLE_ID, PHASE);
-    try { localStorage.setItem(key, JSON.stringify(data)); } catch(e){}
+    try { localStorage.setItem(getMoonCycleKey(USER_ID, CYCLE_ID, PHASE_KEY), JSON.stringify(data)); } catch(e){}
   }
-
-  showToast('✓ 日記を保存しました');
-  document.getElementById('savedBanner').style.display = 'block';
-  document.getElementById('reviewArea').style.display = 'block';
+  showToast('✓ 振り返りを保存しました');
+  document.getElementById('reflectSavedTag').style.display = 'block';
+  document.getElementById('reflectReportArea').style.display = 'block';
 }
 
-function goToReport() {
-  location.href = 'moon_cycle_report.html?cycle=' + CYCLE_ID + '&phase=' + PHASE;
+function goReport() {
+  location.href = 'moon_cycle_report.html?cycle=' + CYCLE_ID + '&phase=' + PHASE_KEY;
+}
+
+function switchMode(mode) {
+  var isDaily = (mode === 'daily');
+  document.getElementById('panelDaily').style.display   = isDaily ? '' : 'none';
+  document.getElementById('panelReflect').style.display = isDaily ? 'none' : '';
+  document.getElementById('tabDaily').classList.toggle('is-active', isDaily);
+  document.getElementById('tabReflect').classList.toggle('is-active', !isDaily);
 }
 
 function showToast(msg) {
   var t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.remove('show');
-  void t.offsetWidth;
-  t.classList.add('show');
-  setTimeout(function(){ t.classList.remove('show'); }, 3100);
+  t.textContent = msg; t.classList.remove('show');
+  void t.offsetWidth; t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 3200);
 }
 
-function escapeHtml(s) {
+function escHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
