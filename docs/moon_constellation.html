@@ -241,10 +241,14 @@ function loadChallengeEntries() {
       var record = JSON.parse(localStorage.getItem(k) || 'null');
       if (!record) continue;
       var phase = CHALLENGE_DAY_TO_PHASE[d] || 'shingetu';
+      var dateStr = '';
+      if (record.savedAtJst) {
+        dateStr = String(record.savedAtJst).slice(0, 10).replace(/\//g, '-');
+      }
       if (Array.isArray(record.lines)) {
         record.lines.forEach(function(line) {
           if (line.text && line.text.trim()) {
-            entries.push({ phase: phase, day: d, text: line.text, question: line.placeholder || '' });
+            entries.push({ phase: phase, day: d, text: line.text, question: line.placeholder || '', date: dateStr });
           }
         });
       }
@@ -816,7 +820,7 @@ async function exportToObsidian() {
       var written = 0;
       for (var ci = 0; ci < chalEntries.length; ci++) {
         var entry = chalEntries[ci];
-        var fname = '月読み日記-Day' + entry.day + '.md';
+        var fname = (entry.date ? entry.date : '月読み日記-Day' + entry.day) + '.md';
         var md = generateChallengeMarkdown(entry);
         var fh = await diaryDir.getFileHandle(fname, { create: true });
         var fw = await fh.createWritable();
@@ -896,7 +900,7 @@ function downloadMarkdownZip() {
     var chalEntries = loadChallengeEntries();
     chalEntries.forEach(function(entry, i){
       files.push({
-        name: '月読み日記-Day' + entry.day + '.md',
+        name: (entry.date ? entry.date : '月読み日記-Day' + entry.day) + '.md',
         content: generateChallengeMarkdown(entry)
       });
     });
