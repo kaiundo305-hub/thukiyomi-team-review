@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>プロフィール修正ツール</title>
+  <style>
+    body { font-family: sans-serif; max-width: 600px; margin: 60px auto; padding: 20px; background: #f5f5f5; }
+    h1 { font-size: 1.2em; color: #444; }
+    .card { background: white; border-radius: 12px; padding: 24px; margin: 16px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .label { font-size: 0.85em; color: #888; margin-bottom: 4px; }
+    .value { font-size: 1em; color: #333; font-weight: bold; word-break: break-all; }
+    button { background: #8a70c8; color: white; border: none; padding: 14px 28px; border-radius: 8px; font-size: 1em; cursor: pointer; margin-top: 16px; width: 100%; }
+    button:hover { background: #7560b8; }
+    .result { margin-top: 16px; padding: 12px; border-radius: 8px; font-size: 0.95em; display: none; }
+    .ok { background: #e8f5e9; color: #2e7d32; }
+    .err { background: #ffebee; color: #c62828; }
+    pre { background: #f0f0f0; padding: 10px; border-radius: 6px; font-size: 0.8em; overflow-x: auto; }
+  </style>
+</head>
+<body>
+  <h1>🔧 かのん社長 プロフィール修正ツール</h1>
+
+  <div class="card">
+    <div class="label">現在のcachedProfile</div>
+    <pre id="currentProfile">読み込み中...</pre>
+  </div>
+
+  <div class="card">
+    <div class="label">修正内容</div>
+    <p style="margin:0; color:#555; font-size:0.9em;">
+      ① participantId を <b>005 → 044</b> に修正<br>
+      ② guest:day:6 の日記を <b>044:day:6</b> に移行
+    </p>
+    <button onclick="doFix()">✨ 修正する</button>
+    <div class="result ok" id="result"></div>
+  </div>
+
+  <script>
+    function showCurrent() {
+      var p = localStorage.getItem('tsukiyomi:diarySync:cachedProfile');
+      document.getElementById('currentProfile').textContent = p ? JSON.stringify(JSON.parse(p), null, 2) : '（データなし）';
+    }
+    showCurrent();
+
+    function doFix() {
+      var log = [];
+
+      // ① cachedProfile 修正
+      var p = JSON.parse(localStorage.getItem('tsukiyomi:diarySync:cachedProfile') || '{}');
+      var oldId = p.participantId;
+      p.participantId = '044';
+      p.shuku = '觜宿';
+      localStorage.setItem('tsukiyomi:diarySync:cachedProfile', JSON.stringify(p));
+      log.push('✅ participantId: ' + oldId + ' → 044');
+
+      // ② guest:day:6 → 044:day:6
+      var guestKey = 'tsukiyomi:structuredDiary:v1:guest:day:6';
+      var newKey   = 'tsukiyomi:structuredDiary:v1:044:day:6';
+      var data = localStorage.getItem(guestKey);
+      if (data) {
+        localStorage.setItem(newKey, data);
+        log.push('✅ 日記Day6 を guest → 044 に移行しました');
+      } else {
+        log.push('ℹ️ guest:day:6 のデータは見つかりませんでした（スキップ）');
+      }
+
+      var res = document.getElementById('result');
+      res.innerHTML = log.join('<br>') + '<br><br>修正が完了しました！このページは閉じてください。';
+      res.style.display = 'block';
+
+      showCurrent();
+    }
+  </script>
+</body>
+</html>
