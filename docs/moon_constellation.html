@@ -818,6 +818,8 @@ async function exportToObsidian() {
     if (ACTIVE_CYCLE === 'challenge') {
       var chalEntries = loadChallengeEntries();
       var written = 0;
+      var indexLinks = [];
+      var seenFnames = {};
       for (var ci = 0; ci < chalEntries.length; ci++) {
         var entry = chalEntries[ci];
         var fname = (entry.date ? entry.date : '月読み日記-Day' + entry.day) + '.md';
@@ -826,7 +828,17 @@ async function exportToObsidian() {
         var fw = await fh.createWritable();
         await fw.write(md); await fw.close();
         written++;
+        var linkName = fname.replace('.md', '');
+        if (!seenFnames[linkName]) {
+          seenFnames[linkName] = true;
+          indexLinks.push('- [[' + linkName + ']]');
+        }
       }
+      // 一覧ファイルを作成
+      var indexMd = '# 🌙 月読み日記 一覧\n\n' + indexLinks.join('\n') + '\n';
+      var idxFh = await diaryDir.getFileHandle('月読み日記一覧.md', { create: true });
+      var idxFw = await idxFh.createWritable();
+      await idxFw.write(indexMd); await idxFw.close();
       status.style.color = '#a8e0a8';
       status.textContent = '✓ ' + written + '件のファイルを書き出しました。\nObsidianのグラフビューを開いてください。';
       return;
@@ -898,11 +910,20 @@ function downloadMarkdownZip() {
   // 7日間チャレンジモード
   if (ACTIVE_CYCLE === 'challenge') {
     var chalEntries = loadChallengeEntries();
-    chalEntries.forEach(function(entry, i){
-      files.push({
-        name: (entry.date ? entry.date : '月読み日記-Day' + entry.day) + '.md',
-        content: generateChallengeMarkdown(entry)
-      });
+    var indexLinks = [];
+    var seenFnames = {};
+    chalEntries.forEach(function(entry){
+      var fname = (entry.date ? entry.date : '月読み日記-Day' + entry.day) + '.md';
+      files.push({ name: fname, content: generateChallengeMarkdown(entry) });
+      var linkName = fname.replace('.md', '');
+      if (!seenFnames[linkName]) {
+        seenFnames[linkName] = true;
+        indexLinks.push('- [[' + linkName + ']]');
+      }
+    });
+    files.push({
+      name: '月読み日記一覧.md',
+      content: '# 🌙 月読み日記 一覧\n\n' + indexLinks.join('\n') + '\n'
     });
   } else {
   MOON_CYCLE_DATA.cycles.forEach(function(cycle){
