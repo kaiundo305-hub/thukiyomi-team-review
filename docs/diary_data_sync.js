@@ -4,7 +4,7 @@
   var OUTBOX_KEY = 'tsukiyomi:diarySync:outbox';
   var CACHED_PROFILE_KEY = 'tsukiyomi:diarySync:cachedProfile';
   var STRUCTURED_DIARY_PREFIX = 'tsukiyomi:structuredDiary:v1:';
-  var DEFAULT_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbyFn41Pd3hrifQBCYhRMATxANM_yyEctKnHiY65pLMAE7yij-rYSjef6zd7wEJI8F_v/exec';
+  var DEFAULT_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxIffIfAOptA-WR6jjT9dg8Fc0yb9HpwsLTR-ZG43Nw12_KR_Yi0Xj9IT_FAyXGV_Ic/exec';
   var DEFAULT_SECRET_KEY = 'tsukiyomi-2026-key';
 
   function getParams(){
