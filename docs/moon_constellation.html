@@ -145,7 +145,7 @@
 <div class="modal-overlay" id="exportModal">
   <div class="modal">
     <h2>📤 Obsidianへエクスポート</h2>
-    <p>日記をマークダウンファイルとしてObsidianのvaultに書き出します。<br>エクスポート後、Obsidianのグラフビューを開くと<br>ことばが星座のようにつながって見えます。</p>
+    <p>日記をマークダウンファイルとしてObsidianのvaultに書き出します。<br>フォルダ選択画面で <strong>月読みVault</strong>（または月読みビジネスVault）の<br>ルートフォルダを選んでください。<br>「月サイクル日記」フォルダに自動的に保存されます。</p>
     <div class="modal-btns">
       <button class="modal-btn primary" onclick="exportToObsidian()">🗂 vaultフォルダを選択して書き出す</button>
       <button class="modal-btn secondary" onclick="downloadMarkdownZip()">⬇️ .mdファイルをダウンロード</button>
@@ -811,7 +811,7 @@ async function exportToObsidian() {
   status.style.display = 'block'; status.textContent = 'フォルダを選択してください…';
   try {
     var rootDir = await window.showDirectoryPicker();
-    var diaryDir = await rootDir.getDirectoryHandle('月読み日記', { create: true });
+    var diaryDir = await rootDir.getDirectoryHandle('月サイクル日記', { create: true });
     status.textContent = 'エクスポート中…';
 
     // 7日間チャレンジのエクスポート
@@ -967,7 +967,7 @@ function downloadMarkdownZip() {
 
   document.getElementById('exportStatus').style.display = 'block';
   document.getElementById('exportStatus').style.color = '#a8e0a8';
-  document.getElementById('exportStatus').textContent = files.length + '件のファイルをダウンロード中…\nObsidianのvaultフォルダに移動してください。';
+  document.getElementById('exportStatus').textContent = files.length + '件のファイルをダウンロード中…\nObsidianのvaultの「月サイクル日記」フォルダに移動してください。';
 }
 
 function openExportModal()  { document.getElementById('exportModal').classList.add('open'); }
