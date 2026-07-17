@@ -327,9 +327,12 @@ function buildGraph(cycleId) {
 // ─────────────────────────────────────────
 // 3. 力学シミュレーション
 // ─────────────────────────────────────────
+// 左下=新月(目標) → 左上=上弦 → 右上=満月 → 右下=下弦(ゴールへ)
 var PHASE_ANCHORS = {
-  shingetu: [0.28, 0.35], jougen: [0.72, 0.35],
-  mangetsu: [0.72, 0.68], kagen:   [0.28, 0.68]
+  shingetu: [0.22, 0.73],   // 左下
+  jougen:   [0.22, 0.30],   // 左上
+  mangetsu: [0.78, 0.30],   // 右上
+  kagen:    [0.78, 0.73]    // 右下
 };
 
 function initPositions(nodes, W, H) {
@@ -451,6 +454,60 @@ function draw() {
   var nodes = GRAPH.nodes, edges = GRAPH.edges;
   var nodeById = {};
   nodes.forEach(function(n){ nodeById[n.id] = n; });
+
+  // ─ フロー誘導ライン（新月→上弦→満月→下弦）─
+  var flowOrder = ['shingetu','jougen','mangetsu','kagen'];
+  var flowNodes = flowOrder.map(function(p){ return nodeById[p + ':PHASE']; }).filter(Boolean);
+  if (flowNodes.length === 4) {
+    // メインフロー（実線・グロー）
+    for (var fi = 0; fi < 3; fi++) {
+      var fn0 = flowNodes[fi], fn1 = flowNodes[fi + 1];
+      var grd = ctx.createLinearGradient(fn0.x, fn0.y, fn1.x, fn1.y);
+      grd.addColorStop(0, 'rgba(241,217,155,.35)');
+      grd.addColorStop(1, 'rgba(241,217,155,.15)');
+      ctx.beginPath();
+      ctx.moveTo(fn0.x, fn0.y);
+      ctx.lineTo(fn1.x, fn1.y);
+      ctx.strokeStyle = grd;
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+
+      // 矢印
+      var ax = fn1.x, ay = fn1.y;
+      var angle = Math.atan2(fn1.y - fn0.y, fn1.x - fn0.x);
+      var ar = 8;
+      ctx.beginPath();
+      ctx.moveTo(ax - Math.cos(angle - 0.4) * ar, ay - Math.sin(angle - 0.4) * ar);
+      ctx.lineTo(ax, ay);
+      ctx.lineTo(ax - Math.cos(angle + 0.4) * ar, ay - Math.sin(angle + 0.4) * ar);
+      ctx.strokeStyle = 'rgba(241,217,155,.45)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+
+    // 下弦→次の新月（点線で示唆）
+    ctx.beginPath();
+    ctx.setLineDash([4, 7]);
+    ctx.moveTo(flowNodes[3].x, flowNodes[3].y);
+    // 下弦(右下)から新月(左下)へ湾曲して戻るイメージ
+    var mx = (flowNodes[3].x + flowNodes[0].x) / 2;
+    var my = Math.min(flowNodes[3].y, flowNodes[0].y) + 50;
+    ctx.quadraticCurveTo(mx, my + 30, flowNodes[0].x, flowNodes[0].y);
+    ctx.strokeStyle = 'rgba(241,217,155,.18)';
+    ctx.lineWidth = 0.8;
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // ラベル「目標」「ゴールへ」
+    ctx.font = '11px "Hiragino Mincho ProN", serif';
+    ctx.fillStyle = 'rgba(200,168,75,.65)';
+    ctx.textAlign = 'center';
+    // 新月の下に「目標」
+    ctx.fillText('目標', flowNodes[0].x, flowNodes[0].y + 60);
+    // 下弦の下に「ゴールへ」
+    ctx.fillText('ゴールへ', flowNodes[3].x, flowNodes[3].y + 60);
+    ctx.textAlign = 'left';
+  }
 
   // エッジ
   edges.forEach(function(e){
