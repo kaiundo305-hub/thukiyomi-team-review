@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>月読み日記 振り返り鑑定書 生成ツール</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&family=Dancing+Script:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Noto Serif JP", serif;
+            background: #04050f;
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        #space-canvas {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none; z-index: 0;
+        }
+
+        .moon {
+            position: fixed; top: 30px; right: 50px;
+            width: 90px; height: 90px; border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, #fffde0, #f5d97a 40%, #c8a84b 70%, #8a6a1a);
+            box-shadow: 0 0 30px 10px rgba(245,217,122,0.35), 0 0 80px 30px rgba(200,168,75,0.15), inset -15px -8px 30px rgba(0,0,0,0.35);
+            pointer-events: none; z-index: 0;
+            animation: moonGlow 6s ease-in-out infinite;
+        }
+
+        @keyframes moonGlow {
+            0%,100% { box-shadow: 0 0 30px 10px rgba(245,217,122,0.35), 0 0 80px 30px rgba(200,168,75,0.15), inset -15px -8px 30px rgba(0,0,0,0.35); }
+            50%      { box-shadow: 0 0 50px 20px rgba(245,217,122,0.5), 0 0 120px 50px rgba(200,168,75,0.25), inset -15px -8px 30px rgba(0,0,0,0.35); }
+        }
+
+        .main-container {
+            position: relative; z-index: 1;
+            max-width: 960px; margin: 0 auto;
+            padding: 30px 20px 60px;
+        }
+
+        .page-header { text-align: center; margin-bottom: 28px; }
+        .page-header h1 { font-size: 24px; color: #f5d97a; letter-spacing: 0.08em; margin-bottom: 8px; }
+        .page-header .subtitle { font-size: 13px; color: #a5b4fc; }
+
+        /* ── 検索 ── */
+        .search-wrap { text-align: center; margin-bottom: 20px; }
+        .search-wrap input {
+            background: #1a1c4b; border: 1px solid #4a6cf7;
+            color: #fff; border-radius: 8px;
+            padding: 10px 16px; font-size: 14px;
+            width: 320px; max-width: 90%;
+        }
+
+        /* ── 参加者カード ── */
+        #participantGrid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px; margin-bottom: 30px;
+        }
+
+        .p-card {
+            background: rgba(26,28,75,0.85);
+            border: 1px solid #2d2f6b; border-radius: 12px;
+            padding: 16px 14px; cursor: pointer;
+            transition: all 0.2s; position: relative;
+        }
+        .p-card:hover { border-color: #f5d97a; background: rgba(30,35,90,0.9); }
+        .p-card.active { border-color: #f5d97a; box-shadow: 0 0 16px rgba(245,217,122,0.25); }
+        .p-card-num { font-size: 10px; color: #4a5568; margin-bottom: 4px; }
+        .p-card-name { font-size: 15px; font-weight: bold; color: #e0d0ff; margin-bottom: 4px; }
+        .p-card-shuku { font-size: 13px; color: #f5d97a; }
+        .p-card-birth { font-size: 11px; color: #64748b; margin-top: 4px; }
+        .p-card-badge {
+            font-size: 11px; padding: 2px 8px; border-radius: 10px;
+            background: rgba(124,58,237,0.2); color: #c4b5fd;
+            display: inline-block; margin-top: 4px;
+        }
+        .p-card-done { background: rgba(5,150,105,0.2); color: #6ee7b7; }
+
+        .stats-bar { text-align: center; font-size: 12px; color: #64748b; margin-bottom: 12px; }
+
+        /* ── AI設定 ── */
+        .api-settings-panel {
+            background: rgba(15,17,50,0.8); border: 1px solid #2d2f6b;
+            border-radius: 12px; margin-bottom: 20px; overflow: hidden;
+        }
+        .api-settings-toggle {
+            width: 100%; background: none; border: none; color: #a5b4fc;
+            padding: 14px 18px; font-size: 13px; cursor: pointer;
+            display: flex; justify-content: space-between; align-items: center;
+            font-family: "Noto Serif JP", serif;
+        }
+        .api-settings-body { padding: 14px 18px; border-top: 1px solid #2d2f6b; display: none; }
+        .api-key-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+        .api-key-input {
+            flex: 1; min-width: 200px; background: rgba(0,0,0,0.3);
+            border: 1px solid #4a6cf7; color: #fff; border-radius: 6px;
+            padding: 8px 12px; font-size: 13px;
+        }
+        .btn-save-key {
+            background: rgba(124,58,237,0.3); border: 1px solid #7c3aed;
+            color: #c4b5fd; border-radius: 6px; padding: 8px 14px;
+            font-size: 12px; cursor: pointer; white-space: nowrap;
+            font-family: "Noto Serif JP", serif;
+        }
+        .btn-save-key:hover { opacity: 0.8; }
+        .api-key-note { font-size: 11px; color: #64748b; line-height: 1.6; }
+
+        /* ── 鑑定書エリア ── */
+        #resultArea { display: none; position: relative; z-index: 1; }
+
+        .back-btn {
+            background: rgba(74,108,247,0.2); border: 1px solid #4a6cf7;
+            color: #a5b4fc; border-radius: 8px; padding: 10px 20px;
+            font-size: 14px; cursor: pointer; margin-bottom: 20px;
+            display: inline-flex; align-items: center; gap: 8px;
+            font-family: "Noto Serif JP", serif;
+        }
+        .back-btn:hover { background: rgba(74,108,247,0.35); }
+
+        /* 日記入力エリア */
+        .diary-input-section {
+            background: rgba(15,17,50,0.85); border: 1px solid rgba(124,58,237,0.4);
+            border-radius: 14px; padding: 20px 24px; margin-bottom: 24px;
+        }
+        .diary-input-section h3 {
+            font-size: 14px; color: #c4b5fd; margin-bottom: 12px;
+            letter-spacing: 0.08em; border-bottom: 1px solid rgba(124,58,237,0.25); padding-bottom: 8px;
+        }
+        .diary-textarea {
+            width: 100%; min-height: 180px; background: rgba(0,0,0,0.3);
+            border: 1px solid #4a6cf7; color: #e0d0ff; border-radius: 8px;
+            padding: 12px 14px; font-size: 13px; line-height: 1.8;
+            resize: vertical; font-family: "Noto Serif JP", serif;
+        }
+        .diary-textarea::placeholder { color: #4a5568; }
+        .diary-actions { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+
+        .btn-ai {
+            background: rgba(124,58,237,0.35); border: 1px solid #7c3aed;
+            color: #e0d0ff; border-radius: 8px; padding: 12px 22px;
+            font-size: 14px; cursor: pointer; font-family: "Noto Serif JP", serif;
+            transition: all 0.2s;
+        }
+        .btn-ai:hover:not(:disabled) { background: rgba(124,58,237,0.55); }
+        .btn-ai:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .ai-spinner {
+            display: inline-block; width: 14px; height: 14px;
+            border: 2px solid rgba(196,181,253,0.3); border-top-color: #c4b5fd;
+            border-radius: 50%; animation: spin 0.8s linear infinite;
+            vertical-align: middle; margin-right: 6px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .ai-status { font-size: 12px; color: #a5b4fc; margin-top: 8px; min-height: 16px; }
+
+        /* 鑑定書カード */
+        .result-card {
+            background: #fff; color: #111;
+            border: 3px double #b8960c; border-radius: 16px;
+            padding: 32px 36px; max-width: 720px; margin: 0 auto;
+            position: relative; box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+        }
+
+        .corner-ornament {
+            position: absolute; width: 28px; height: 28px;
+            border-color: #b8960c; border-style: solid; border-radius: 2px;
+        }
+        .corner-tl { top: 10px; left: 10px; border-width: 2px 0 0 2px; }
+        .corner-tr { top: 10px; right: 10px; border-width: 2px 2px 0 0; }
+        .corner-bl { bottom: 10px; left: 10px; border-width: 0 0 2px 2px; }
+        .corner-br { bottom: 10px; right: 10px; border-width: 0 2px 2px 0; }
+
+        .cert-title-banner { text-align: center; margin-bottom: 20px; }
+        .ctb-event { font-size: 10px; color: #b8960c; letter-spacing: 3px; margin-bottom: 6px; }
+        .ctb-deco { font-size: 12px; color: #b8960c; margin: 6px 0; }
+        .ctb-main { font-size: 22px; font-weight: bold; color: #1a1a2e; letter-spacing: 0.15em; margin: 8px 0; }
+        .ctb-sub { font-size: 12px; color: #555; letter-spacing: 0.06em; }
+
+        .cert-top { text-align: center; margin: 16px 0 20px; }
+        .cert-serial { font-size: 11px; color: #94a3b8; margin-bottom: 8px; }
+        .shuku-sym { font-size: 36px; margin: 8px 0; }
+        .recipient-big { font-size: 22px; font-weight: bold; color: #1a1a2e; margin: 8px 0; }
+        .birth-note { font-size: 12px; color: #64748b; margin-top: 4px; }
+
+        .shuku-info-row {
+            display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+            margin: 12px 0 20px;
+        }
+        .shuku-chip {
+            padding: 6px 16px; border-radius: 20px; font-size: 12px;
+            border: 1px solid #b8960c; color: #7c5a0a; background: rgba(184,150,12,0.08);
+        }
+
+        .section-divider {
+            text-align: center; margin: 18px 0 12px;
+            font-size: 11px; color: #b8960c; letter-spacing: 2px;
+        }
+
+        .message-block {
+            background: rgba(250,248,240,0.8); border: 1px solid rgba(184,150,12,0.2);
+            border-radius: 10px; padding: 16px 18px; margin-bottom: 16px;
+        }
+        .message-label {
+            font-size: 11px; font-weight: bold; color: #b8960c;
+            letter-spacing: 1.5px; margin-bottom: 10px; display: block;
+        }
+        .editable-block {
+            font-size: 14px; line-height: 2.0; color: #1a1a2e;
+            white-space: pre-wrap; outline: none; cursor: text;
+            min-height: 40px;
+        }
+        .editable-block:focus { background: rgba(245,215,100,0.06); border-radius: 4px; }
+
+        .zodiac-block {
+            background: linear-gradient(135deg, rgba(240,248,255,0.95), rgba(225,240,255,0.9));
+            border: 1.5px solid #7c9fd4; border-radius: 12px;
+            padding: 18px 20px; margin-bottom: 16px;
+        }
+        .zodiac-sign-header {
+            display: flex; align-items: center; gap: 10px;
+            border-bottom: 1px solid rgba(124,159,212,0.3); padding-bottom: 10px; margin-bottom: 12px;
+        }
+        .zodiac-emoji { font-size: 22px; }
+        .zodiac-sign-name { font-size: 16px; font-weight: bold; color: #1a3a6b; }
+        .zodiac-theme-label { font-size: 12px; color: #4a72aa; background: rgba(124,159,212,0.15); padding: 3px 10px; border-radius: 20px; }
+        .zodiac-keywords { list-style: none; padding: 0; margin: 0 0 12px; }
+        .zodiac-keywords li {
+            font-size: 13px; color: #2a4a7a; padding: 5px 0 5px 18px;
+            border-bottom: 1px dashed rgba(124,159,212,0.2); position: relative;
+        }
+        .zodiac-keywords li::before { content: '✦'; position: absolute; left: 0; color: #7c9fd4; font-size: 10px; top: 7px; }
+        .zodiac-message {
+            font-size: 13px; color: #1a3a6b; font-style: italic;
+            text-align: center; padding: 10px; background: rgba(124,159,212,0.1);
+            border-radius: 8px; line-height: 1.8;
+        }
+
+        .moon-theme-block {
+            background: linear-gradient(135deg, rgba(253,246,220,0.95), rgba(250,240,195,0.9));
+            border: 1.5px solid #d4a017; border-radius: 12px;
+            padding: 18px 20px; margin-bottom: 16px;
+            box-shadow: 0 2px 12px rgba(212,160,23,0.15);
+        }
+        .moon-theme-label {
+            font-size: 12px; font-weight: bold; color: #8a6200;
+            letter-spacing: 2px; margin-bottom: 10px; display: block;
+            text-align: center; border-bottom: 1px solid rgba(212,160,23,0.35); padding-bottom: 8px;
+        }
+
+        .sig-section {
+            display: flex; justify-content: space-between; align-items: flex-end;
+            margin-top: 24px; padding-top: 16px; border-top: 1px solid #ddd;
+        }
+        .sig-kanon { font-family: "Dancing Script", cursive; font-size: 28px; color: #1a1a2e; }
+        .sig-right { text-align: right; font-size: 12px; color: #64748b; line-height: 1.8; }
+        .sig-line { display: block; width: 120px; border-bottom: 1px solid #aaa; margin-left: auto; margin-top: 4px; }
+
+        /* 印刷ボタン類 */
+        .print-actions { display: flex; gap: 10px; justify-content: center; margin: 20px 0; flex-wrap: wrap; }
+        .btn-print {
+            background: #059669; color: #fff; border: none; border-radius: 8px;
+            padding: 12px 28px; font-size: 14px; cursor: pointer;
+            font-family: "Noto Serif JP", serif;
+        }
+        .btn-print:hover { opacity: 0.85; }
+        .btn-reset {
+            background: transparent; border: 1px solid #7c3aed; color: #c4b5fd;
+            border-radius: 8px; padding: 12px 20px; font-size: 13px; cursor: pointer;
+            font-family: "Noto Serif JP", serif; display: none;
+        }
+        .btn-reset:hover { background: rgba(124,58,237,0.15); }
+        .btn-send-email {
+            background: rgba(245,217,122,0.15); border: 1px solid #f5d97a; color: #f5d97a;
+            border-radius: 8px; padding: 12px 22px; font-size: 14px; cursor: pointer;
+            font-family: "Noto Serif JP", serif; display: none; transition: all 0.2s;
+        }
+        .btn-send-email:hover:not(:disabled) { background: rgba(245,217,122,0.3); }
+        .btn-send-email:disabled { opacity: 0.5; cursor: not-allowed; }
+        .email-badge { font-size:11px; color:#f5d97a; text-align:center; margin-top:4px; min-height:16px; }
+
+        .saved-badge {
+            font-size: 11px; color: #4ade80; text-align: center;
+            opacity: 0; transition: opacity 0.3s; margin-top: 4px;
+        }
+
+        /* 日記自動読み込みバッジ */
+        .diary-load-badge {
+            font-size:11px; color:#4ade80; margin-top:6px; min-height:16px; display:none;
+        }
+
+        /* 印刷スタイル */
+        @media print {
+            @page { size: A4 portrait; margin: 14mm 16mm; }
+            html, body {
+                background: #fff !important; color: #000 !important;
+                padding: 0 !important; margin: 0 !important;
+                -webkit-print-color-adjust: exact; print-color-adjust: exact;
+            }
+            #space-canvas, .moon, .no-print { display: none !important; }
+            .main-container { padding: 0 !important; }
+            #resultArea { display: block !important; }
+            .back-btn, .print-actions, .diary-input-section, .api-settings-panel,
+            .page-header, .search-wrap, #participantGrid, .stats-bar, .saved-badge { display: none !important; }
+            .result-card {
+                border: 2px double #555 !important; background: #fff !important;
+                box-shadow: none !important; padding: 12mm 14mm !important;
+                max-width: 100% !important; border-radius: 0 !important;
+                margin: 0 !important; color: #000 !important;
+            }
+            .cert-title-banner, .ctb-event, .ctb-deco, .ctb-main, .ctb-sub,
+            .recipient-big, .shuku-chip, .message-label, .message-block,
+            .editable-block, .sig-section, .birth-note { color: #000 !important; }
+            .message-block { background: #f9f7f0 !important; border: 1px solid #ddd !important; }
+            .editable-block { font-size: 11pt !important; }
+            .corner-ornament { border-color: #555 !important; }
+        }
+    </style>
+</head>
+<body>
+<canvas id="space-canvas"></canvas>
+<div class="moon"></div>
+
+<!-- ━━ 参加者リスト ━━ -->
+<div class="main-container no-print" id="listView">
+    <div class="page-header">
+        <h1>🌙 月読み日記 振り返り鑑定書 生成ツール</h1>
+        <p class="subtitle">参加者の名前をクリックして、7日間の日記をもとに第二の鑑定書を作成できます</p>
+    </div>
+
+    <!-- GAS URL設定 -->
+    <div class="api-settings-panel">
+        <button class="api-settings-toggle" onclick="toggleApiSettings(this)">
+            <span>⚙️ GAS設定（日記自動読み込み・メール送信）</span>
+            <span class="toggle-arrow">▼</span>
+        </button>
+        <div class="api-settings-body" id="gasSettingsBody">
+            <div id="gasUrlCurrent" style="font-size:12px;color:#a5b4fc;margin-bottom:10px;padding:8px 12px;background:rgba(0,0,0,0.25);border-radius:6px;display:none;"></div>
+            <div class="api-key-row">
+                <input type="text" class="api-key-input" id="gasUrlInput" placeholder="https://script.google.com/macros/s/…/exec" autocomplete="off" spellcheck="false">
+                <button class="btn-save-key" onclick="saveGasUrl()">保存</button>
+                <button class="btn-save-key" onclick="clearGasUrl()" style="background:rgba(239,68,68,0.2);border-color:#ef4444;color:#fca5a5;">削除</button>
+            </div>
+            <div class="api-key-note">GAS Web App の URL（デプロイ後に発行される /exec URL）を貼り付けてください。<br>設定すると参加者カードに日記データが自動で読み込まれます。</div>
+            <div id="gasUrlStatus" style="font-size:11px;margin-top:6px;min-height:16px;"></div>
+        </div>
+    </div>
+
+    <!-- 今月の新月テーマ設定 -->
+    <div class="api-settings-panel" style="border-color:rgba(251,191,36,0.4);">
+        <button class="api-settings-toggle" onclick="toggleApiSettings(this)" style="color:#fde68a;">
+            <span>🌙 今月の新月テーマ &nbsp;<span id="moonThemeBadge" style="color:#fcd34d;font-size:12px;"></span></span>
+            <span class="toggle-arrow">▼</span>
+        </button>
+        <div class="api-settings-body" id="moonThemeBody">
+            <div style="font-size:12px;color:#fde68a;margin-bottom:10px;">鑑定書のAI生成に使われます。月が変わったらここを更新してください。</div>
+            <div class="api-key-row" style="flex-wrap:wrap;gap:8px;align-items:center;">
+                <input type="text" class="api-key-input" id="moonSignInput" placeholder="例：双子座" style="max-width:120px;border-color:rgba(251,191,36,0.5);">
+                <span style="color:#fde68a;font-size:13px;">新月　＝　</span>
+                <input type="text" class="api-key-input" id="moonThemeInput" placeholder="例：発信力・人脈運" style="flex:1;border-color:rgba(251,191,36,0.5);">
+                <button class="btn-save-key" onclick="saveMoonTheme()" style="background:rgba(251,191,36,0.2);border-color:#fbbf24;color:#fde68a;">保存</button>
+            </div>
+            <div id="moonThemeStatus" style="font-size:11px;margin-top:6px;min-height:16px;color:#fde68a;"></div>
+        </div>
+    </div>
+
+    <!-- AI設定 -->
+    <div class="api-settings-panel">
+        <button class="api-settings-toggle" onclick="toggleApiSettings(this)">
+            <span>🤖 AI設定（Gemini APIキー・無料）</span>
+            <span class="toggle-arrow">▼</span>
+        </button>
+        <div class="api-settings-body" id="apiSettingsBody">
+            <div id="apiKeyCurrent" style="font-size:12px;color:#a5b4fc;margin-bottom:10px;padding:8px 12px;background:rgba(0,0,0,0.25);border-radius:6px;display:none;"></div>
+            <div class="api-key-row">
+                <input type="text" class="api-key-input" id="apiKeyInput" placeholder="AIzaSy…（Google AI Studio APIキー）" autocomplete="off" spellcheck="false">
+                <button class="btn-save-key" onclick="saveApiKey()">保存</button>
+                <button class="btn-save-key" onclick="testApiKey()" style="background:rgba(74,108,247,0.3);border-color:#4a6cf7;color:#a5b4fc;">テスト</button>
+                <button class="btn-save-key" onclick="clearApiKey()" style="background:rgba(239,68,68,0.2);border-color:#ef4444;color:#fca5a5;">削除</button>
+            </div>
+            <div class="api-key-note">🆓 Google AI Studio（aistudio.google.com）で無料APIキーを発行。<br>キーは <strong style="color:#e0d0ff;">AIzaSy</strong> で始まる文字列です。</div>
+            <div id="apiKeyStatus" style="font-size:11px;margin-top:6px;min-height:16px;"></div>
+        </div>
+    </div>
+
+    <div class="search-wrap">
+        <input type="text" id="searchInput" placeholder="🔍 名前で検索..." oninput="filterCards()">
+    </div>
+    <div id="statsBar" class="stats-bar"></div>
+    <div id="participantGrid"></div>
+</div>
+
+<!-- ━━ 鑑定書作成エリア ━━ -->
+<div id="resultArea">
+    <div class="main-container">
+        <button class="back-btn no-print" onclick="backToList()">← 参加者一覧に戻る</button>
+
+        <!-- 日記入力セクション -->
+        <div class="diary-input-section no-print">
+            <h3>📖 7日間の月読み日記</h3>
+            <div class="diary-load-badge" id="diaryLoadBadge">✓ スプレッドシートから日記を自動読み込みしました</div>
+            <textarea class="diary-textarea" id="diaryText"
+                placeholder="GAS URLを設定すると自動で読み込まれます。または、スプレッドシートから7日間の日記をコピペしてください。
+
+例：
+Day1：今日の月の気づき…
+Day2：今日感じたこと…
+…"></textarea>
+            <div class="diary-actions">
+                <button class="btn-ai" id="aiBtn" onclick="generateReading()">🤖 AI振り返り鑑定を生成</button>
+                <button class="btn-ai" onclick="clearDiary()" style="background:rgba(239,68,68,0.15);border-color:#ef4444;color:#fca5a5;">🗑 日記をクリア</button>
+            </div>
+            <div class="ai-status" id="aiStatus"></div>
+        </div>
+
+        <!-- 鑑定書出力 -->
+        <div class="print-actions no-print">
+            <button class="btn-print" onclick="printReading()">🖨️ 印刷・PDF保存</button>
+            <button class="btn-send-email" id="sendEmailBtn" onclick="sendCertificateEmail()">📧 メールで送信</button>
+            <button class="btn-ai" id="resetReadingBtn" onclick="resetReading()" style="display:none;background:rgba(239,68,68,0.2);border-color:#ef4444;color:#fca5a5;">↺ 鑑定書をリセット</button>
+            <div class="saved-badge" id="savedBadge">✓ 自動保存しました</div>
+            <div class="email-badge" id="emailBadge"></div>
+        </div>
+
+        <div class="result-card" id="resultContent">
+            <!-- JS で生成 -->
+        </div>
+    </div>
+</div>
+
+<script>
+// ==========================================
+// 参加者データ
+// ==========================================
+const BASE_PARTICIPANTS = [
+    { pid:"001", name: "ちえ",              year: 1977, month: 2,  day: 1,  theme: "仕事" },
+    { pid:"002", name: "RENA CHEN",         year: 1996, month: 1,  day: 4,  theme: "仕事・お金" },
+    { pid:"003", name: "福田真弓",          year: 1966, month: 12, day: 31, theme: "仕事" },
+    { pid:"004", name: "宮城あい",          year: 1985, month: 10, day: 3,  theme: "恋愛・家族・健康" },
+    { pid:"005", name: "青山智美",          year: 1957, month: 1,  day: 25, theme: "仕事" },
+    { pid:"006", name: "堀佳子",            year: 1959, month: 9,  day: 29, theme: "仕事" },
+    { pid:"007", name: "Takada Emiko",     year: 1967, month: 9,  day: 23, theme: "仕事" },
+    { pid:"008", name: "栗田知佳",          year: 1959, month: 1,  day: 28, theme: "自分らしさ・生き方" },
+    { pid:"009", name: "Kanonさん",         year: 1998, month: 12, day: 15, theme: "恋愛" },
+    { pid:"010", name: "高田慎一",          year: 1982, month: 5,  day: 26, theme: "恋愛" },
+    { pid:"011", name: "yoko",             year: 1971, month: 1,  day: 15, theme: "仕事" },
+    { pid:"012", name: "M.UME",            year: 1958, month: 7,  day: 3,  theme: "自分らしさ・生き方" },
+    { pid:"013", name: "惠子",             year: 1978, month: 1,  day: 3,  theme: "自分らしさ・生き方" },
+    { pid:"014", name: "hipponaomi",       year: 1971, month: 1,  day: 6,  theme: "自分らしさ・生き方" },
+    { pid:"015", name: "田中茂治",         year: 1962, month: 1,  day: 7,  theme: "お金・その他" },
+    { pid:"016", name: "美波晶子",         year: 1966, month: 2,  day: 4,  theme: "お金" },
+    { pid:"017", name: "天野美穂",         year: 1969, month: 9,  day: 9,  theme: "仕事" },
+    { pid:"018", name: "kishunaあっこ",    year: 1975, month: 4,  day: 29, theme: "自分らしさ・生き方" },
+    { pid:"019", name: "須黒あゆ子",       year: 1971, month: 9,  day: 20, theme: "自分らしさ・生き方" },
+    { pid:"020", name: "丸山早百合",       year: 1966, month: 1,  day: 14, theme: "お金" },
+    { pid:"021", name: "新田道子",         year: 1969, month: 1,  day: 10, theme: "仕事" },
+    { pid:"022", name: "古澤真希",         year: 1987, month: 8,  day: 26, theme: "お金" },
+    { pid:"023", name: "Ooyama Miyoko",   year: 1974, month: 12, day: 27, theme: "恋愛・仕事" },
+    { pid:"024", name: "AKEMI",            year: 1962, month: 7,  day: 7,  theme: "お金" },
+    { pid:"025", name: "池原詩乃",         year: 1969, month: 8,  day: 1,  theme: "仕事" },
+    { pid:"026", name: "chisako",          year: 1966, month: 3,  day: 22, theme: "お金" },
+    { pid:"027", name: "ひらやままり",     year: 1974, month: 2,  day: 14, theme: "家族" },
+    { pid:"028", name: "Noriyuki Okamoto",year: 1972, month: 3,  day: 11, theme: "お金" },
+    { pid:"029", name: "tomomi",           year: 1977, month: 4,  day: 15, theme: "お金" },
+    { pid:"030", name: "SachikoO",         year: 1980, month: 1,  day: 31, theme: "恋愛" },
+    { pid:"031", name: "（名前不明）",      year: 1959, month: 2,  day: 26, theme: "健康" },
+    { pid:"032", name: "hides",            year: 1968, month: 10, day: 17, theme: "仕事・お金" },
+    { pid:"033", name: "古屋七重",         year: 1984, month: 4,  day: 21, theme: "お金" },
+    { pid:"034", name: "大貫一恵",         year: 1957, month: 6,  day: 3,  theme: "お金" },
+    { pid:"035", name: "朱里",             year: 1960, month: 1,  day: 31, theme: "仕事" },
+    { pid:"036", name: "佐藤ひろこ",       year: 1978, month: 7,  day: 3,  theme: "仕事" },
+    { pid:"037", name: "齊藤美紀",         year: 1972, month: 2,  day: 11, theme: "仕事" },
+    { pid:"038", name: "fumie",            year: 1971, month: 3,  day: 27, theme: "仕事" },
+    { pid:"039", name: "渡辺ゆかり",       year: 1968, month: 2,  day: 5,  theme: "自分らしさ・生き方" },
+    { pid:"040", name: "川﨑智貴",         year: 1986, month: 7,  day: 29, theme: "恋愛" },
+    { pid:"041", name: "徳田英弘",         year: 1961, month: 7,  day: 17, theme: "家族" },
+    { pid:"042", name: "谷口貴朗",         year: 1963, month: 9,  day: 21, theme: "健康" },
+    { pid:"044", name: "かのん",           year: 1971, month: 4,  day: 26, theme: "" },
+    { pid:"045", name: "熊川",             year: null, month: null, day: null, theme: "" },
+];
+
+// ==========================================
+// 27宿データ
+// ==========================================
+const shukuData = [
+    { 宿名:"昴宿", 属性:"火1・土3", 才能:"引力・カリスマ", 開運テーマ:"引立運", 本質:"影響力", 天命:"波動を広げる", 使命:"意識を動かす", 因果:"繊細すぎて、周囲の粗さに傷ついてきた", 課題:"繊細・孤立", 強み:"美意識・感性", 開運アイテム:"鏡", 締め:"あなたの美意識は、すでに人の心を動かし始めています。" },
+    { 宿名:"畢宿", 属性:"土4", 才能:"専門性・深度", 開運テーマ:"自分軸", 本質:"理解力", 天命:"構造を掴む", 使命:"本質理解", 因果:"厳格さが周囲との摩擦を生み続けた", 課題:"完璧主義・厳格", 強み:"完成力・締める力", 開運アイテム:"歯ブラシ", 締め:"締める力は、すでに世界に必要とされています。" },
+    { 宿名:"觜宿", 属性:"土2・風2", 才能:"集中・現実力", 開運テーマ:"財運", 本質:"現実化", 天命:"結果にする", 使命:"行動結果化", 因果:"深く見えすぎるために、何度も誤解された", 課題:"誤解・孤独", 強み:"言語化・本質洞察", 開運アイテム:"カーテン", 締め:"あなたの洞察は、すでに言葉になって人を動かし始めています。" },
+    { 宿名:"参宿", 属性:"風4", 才能:"行動・開拓", 開運テーマ:"人気運", 本質:"行動力", 天命:"突破する", 使命:"動かす", 因果:"衝動のまま動いて、何度も空回りした", 課題:"衝動・攻撃性", 強み:"行動力・開拓力", 開運アイテム:"スイッチ", 締め:"あなたの突破力は、すでに動き始めています。" },
+    { 宿名:"井宿", 属性:"風3・水1", 才能:"繁栄・豊穣", 開運テーマ:"物質運", 本質:"循環", 天命:"流れを作る", 使命:"循環させる", 因果:"理解を求めすぎて、感情の流れを止めてしまっていた", 課題:"理屈っぽい", 強み:"学習力・研究力", 開運アイテム:"ナイトランプ", 締め:"あなたが理解したことは、すでに人の道標になっています。" },
+    { 宿名:"鬼宿", 属性:"水4", 才能:"霊感・浄化", 開運テーマ:"強運", 本質:"浄化", 天命:"不要を削る", 使命:"本質化", 因果:"浮世離れしていると感じられ、孤立した経験がある", 課題:"極端・浮世離れ", 強み:"純粋性・新規性", 開運アイテム:"ゴミ箱", 締め:"あなたの純粋さは、すでに世界の粗さを変えはじめています。" },
+    { 宿名:"柳宿", 属性:"水4", 才能:"言葉の力", 開運テーマ:"交渉運", 本質:"言語化", 天命:"伝える", 使命:"理解させる", 因果:"本物を求めすぎて、偽物に囲まれた孤独があった", 課題:"精度が高い・妥協しない", 強み:"真贋を見抜く力", 開運アイテム:"ティッシュ", 締め:"あなたの言葉は、すでに人の人生を動かし始めています。" },
+    { 宿名:"星宿", 属性:"火4", 才能:"輝き・自己表現", 開運テーマ:"不動産", 本質:"魅せる", 天命:"表現する", 使命:"惹きつける", 因果:"輝こうとするたびに、引き下げようとする力と戦ってきた", 課題:"目立ちたがり", 強み:"表現力・スター性", 開運アイテム:"音", 締め:"あなたの輝きは、すでに場を変え始めています。" },
+    { 宿名:"張宿", 属性:"火4", 才能:"援助・包容", 開運テーマ:"援助運", 本質:"拡散", 天命:"広げる", 使命:"流通させる", 因果:"外面を整えることに力を使い過ぎ、本質が見えなくなった時期があった", 課題:"見栄・外面重視", 強み:"演出力・影響力", 開運アイテム:"SNS", 締め:"あなたの影響力は、すでに本物の人を動かし始めています。" },
+    { 宿名:"翼宿", 属性:"火1・土3", 才能:"自由・広がり", 開運テーマ:"海外運", 本質:"拡張", 天命:"制限突破", 使命:"可能性解放", 因果:"自由を求めすぎて、地に足をつけることを拒んできた", 課題:"自由すぎる", 強み:"革新力・変革力", 開運アイテム:"照明", 締め:"あなたの変革力は、すでに動き始めています。" },
+    { 宿名:"軫宿", 属性:"土4", 才能:"社交・変容", 開運テーマ:"社交運", 本質:"縁", 天命:"関係調整", 使命:"人をつなぐ", 因果:"感情に流されすぎて、自分を見失った時期があった", 課題:"感情過多・流される", 強み:"癒し・共感力", 開運アイテム:"味噌汁", 締め:"あなたの温かさは、すでに冷えた場所を変え始めています。" },
+    { 宿名:"角宿", 属性:"土2・風2", 才能:"調和・信頼", 開運テーマ:"縁結び", 本質:"入口", 天命:"始める", 使命:"信頼形成", 因果:"堅すぎるために、柔軟さを求める環境から浮いた", 課題:"堅い・融通が利かない", 強み:"信頼・秩序を作る力", 開運アイテム:"玄関", 締め:"あなたの揺るがない軸は、すでに人を安心させています。" },
+    { 宿名:"亢宿", 属性:"風4", 才能:"知性・分析", 開運テーマ:"頭領運", 本質:"意志", 天命:"軸を通す", 使命:"基準提示", 因果:"意志が強すぎて、対立が生まれ続けた", 課題:"頑固・対立しやすい", 強み:"信念・突破力", 開運アイテム:"鍵", 締め:"あなたの信念は、すでに人を動かし始めています。" },
+    { 宿名:"氐宿", 属性:"風3・水1", 才能:"調整・魅力", 開運テーマ:"人気運", 本質:"引力", 天命:"選ばれる", 使命:"魅力発揮", 因果:"自分を消して他者を優先し続けた結果、埋もれてきた", 課題:"自己犠牲・埋もれる", 強み:"調整力・支援力", 開運アイテム:"財布", 締め:"あなたの支援力は、自分を保つことで、すでに本物になっています。" },
+    { 宿名:"房宿", 属性:"水4", 才能:"豊かさ・行動力", 開運テーマ:"財運", 本質:"受取", 天命:"豊かさ循環", 使命:"受容モデル", 因果:"誰にでも合わせようとした結果、本当の自分を見失いかけた", 課題:"八方美人・依存", 強み:"人脈形成・愛され力", 開運アイテム:"ベッド", 締め:"受け取ることを許した瞬間、あなたの人生はすでに動き始めています。" },
+    { 宿名:"心宿", 属性:"水4", 才能:"直感・感受性", 開運テーマ:"地位運", 本質:"本音", 天命:"感情理解", 使命:"内面解放", 因果:"感情の激しさが、自分も他者も傷つけた経験がある", 課題:"嫉妬・感情の揺れ", 強み:"魅力・引力", 開運アイテム:"キャンドル", 締め:"あなたの感情の深さは、すでに人の心の奥に届いています。" },
+    { 宿名:"尾宿", 属性:"火4", 才能:"情熱・突破力", 開運テーマ:"名声運", 本質:"役割", 天命:"実務遂行", 使命:"現実推進", 因果:"強引すぎるという評価が、リーダーシップを発揮する機会を奪った", 課題:"支配的・強引", 強み:"統率力・リーダーシップ", 開運アイテム:"仕事道具", 締め:"あなたが統率する場所に、本物の仕事はすでに生まれています。" },
+    { 宿名:"箕宿", 属性:"火4", 才能:"自由・先見性", 開運テーマ:"独立運", 本質:"継続", 天命:"流れ維持", 使命:"拡大継続", 因果:"飽きやすいと批判され、継続できないことを責めてきた", 課題:"散漫・飽きやすい", 強み:"拡散力・プロデュース", 開運アイテム:"食器", 締め:"継続が加わった瞬間、あなたのプロデュース力はすでに無敵になっています。" },
+    { 宿名:"斗宿", 属性:"火1・土3", 才能:"誠実・蓄積", 開運テーマ:"名誉運", 本質:"方向", 天命:"未来決定", 使命:"指針提示", 因果:"決断できないまま時間が過ぎ、チャンスを見送ってきた", 課題:"優柔不断・迷う", 強み:"意志・決断力", 開運アイテム:"手帳", 締め:"あなたが方向を決めた日から、積み上げてきたものはすでに動き始めています。" },
+    { 宿名:"女宿", 属性:"土4", 才能:"奉仕・繊細", 開運テーマ:"名誉運", 本質:"感性", 天命:"受容魅力", 使命:"美意識提示", 因果:"完璧を求めすぎて、自分にも他人にも厳しくなりすぎた", 課題:"神経質・厳しい", 強み:"正義感・誠実さ", 開運アイテム:"服", 締め:"あなたの繊細さは、すでに世界に必要な精度を作っています。" },
+    { 宿名:"虚宿", 属性:"土2・風2", 才能:"洞察・神秘", 開運テーマ:"財運", 本質:"空", 天命:"本質回帰", 使命:"削ぎ落とし", 因果:"理想と現実のギャップに苦しみ、現実から逃げたいと感じた時期があった", 課題:"現実逃避・理想過多", 強み:"哲学・真理探究", 開運アイテム:"空間", 締め:"あなたの問いは、すでに答えを超えた場所にある真実を照らしています。" },
+    { 宿名:"危宿", 属性:"風4", 才能:"革新・独創", 開運テーマ:"個性運", 本質:"リスク", 天命:"精度向上", 使命:"崩れ防止", 因果:"崩れる予感を感じながら、誰にも伝えられない孤独があった", 課題:"不安・疑い", 強み:"洞察力・リスク管理", 開運アイテム:"メガネ", 締め:"あなたの洞察力は、すでに誰よりも早く本物を見抜いています。" },
+    { 宿名:"室宿", 属性:"風3・水1", 才能:"献身・忠実", 開運テーマ:"情熱運", 本質:"安定", 天命:"居場所形成", 使命:"継続基盤", 因果:"変化を恐れて閉じこもることで、機会を逃した経験がある", 課題:"閉鎖的・保守的", 強み:"管理力・安定性", 開運アイテム:"家", 締め:"あなたが作る基盤の上に、本物の継続はすでに育っています。" },
+    { 宿名:"壁宿", 属性:"水4", 才能:"知恵・継承", 開運テーマ:"直感運", 本質:"防御", 天命:"境界設定", 使命:"守る", 因果:"侵食されてきた。境界を持たずにいた結果、自分を失った時期がある", 課題:"防御的・距離を取る", 強み:"基盤構築・守り", 開運アイテム:"バスタオル", 締め:"あなたが守るものの強さが、すでに本物の縁を引き寄せています。" },
+    { 宿名:"奎宿", 属性:"水4", 才能:"文才・芸術", 開運テーマ:"文才運", 本質:"知性", 天命:"体系化", 使命:"伝承", 因果:"批判的すぎると言われ、才能を活かす場所がなかった焦りがある", 課題:"批判的・細かい", 強み:"編集力・構造理解", 開運アイテム:"水", 締め:"あなたが体系化した知識は、すでに次の世代の礎になっています。" },
+    { 宿名:"婁宿", 属性:"火4", 才能:"正義・責任感", 開運テーマ:"正義運", 本質:"成果", 天命:"具現化", 使命:"証明", 因果:"義務感が強すぎて、誰かのために動き続けて疲弊した", 課題:"義務感過多・疲弊", 強み:"実務力・責任感", 開運アイテム:"花", 締め:"あなたが積み上げてきた結果は、すでに時間を超えて人を動かしています。" },
+    { 宿名:"胃宿", 属性:"火4", 才能:"蓄積・安定", 開運テーマ:"財運", 本質:"統合", 天命:"満足", 使命:"完結", 因果:"目立たない自分を、長い間低く評価してきた", 課題:"地味・自己評価低い", 強み:"継続力・基盤力", 開運アイテム:"食べ物", 締め:"あなたの継続が積み上げてきたものは、今まさに形になっています。" },
+];
+
+const SHUKU_SYMBOL = {
+    "昴宿":"🪞","畢宿":"🔭","觜宿":"🌱","参宿":"⚡","井宿":"🌊","鬼宿":"🌙",
+    "柳宿":"📝","星宿":"✨","張宿":"🌟","翼宿":"🦋","軫宿":"🌸","角宿":"🚪",
+    "亢宿":"🗝️","氐宿":"💫","房宿":"🌕","心宿":"🕯️","尾宿":"🔥","箕宿":"🌿",
+    "斗宿":"⭐","女宿":"👗","虚宿":"🪐","危宿":"🔮","室宿":"🏡","壁宿":"🛡️",
+    "奎宿":"📚","婁宿":"🌺","胃宿":"🌾"
+};
+
+// ==========================================
+// 宿曜計算エンジン
+// ==========================================
+const SHUKU = ["角","亢","氐","房","心","尾","箕","斗","女","虚","危","室","壁","奎","婁","胃","昴","畢","觜","参","井","鬼","柳","星","張","翼","軫"];
+const MB = {1:11,2:13,3:15,4:17,5:19,6:21,7:24,8:0,9:2,10:4,11:7,12:9};
+function na(a){return a<0?360-(-a-360*Math.floor(-a/360)):a-360*Math.floor(a/360);}
+function ls(t){const k=Math.PI/180,T=[[31557,161,0.0004],[29930,48,0.0004],[2281,221,0.0005],[155,118,0.0005],[33718,316,0.0006],[9038,64,0.0007],[3035,110,0.0007],[65929,45,0.0007],[22519,352,0.0013],[45038,254,0.0015],[445267,208,0.0018],[19,159,0.0018],[32964,158,0.002],[71998.1,265.1,0.02]];let th=T.reduce((s,[a,b,c])=>s+c*Math.cos(k*na(a*t+b)),0);const ag=na(35999.05*t+267.52);return na(th-0.0048*t*Math.cos(k*ag)+1.9147*Math.cos(k*ag)+na(na(36000.7695*t)+280.4659));}
+function lm(t){const k=Math.PI/180,T=[[2322131,191,0.0003],[4067,70,0.0003],[549197,220,0.0003],[1808933,58,0.0003],[349472,337,0.0003],[381404,354,0.0003],[958465,340,0.0003],[12006,187,0.0004],[39871,223,0.0004],[509131,242,0.0005],[1745069,24,0.0005],[1908795,90,0.0005],[2258267,156,0.0006],[111869,38,0.0006],[27864,127,0.0007],[485333,186,0.0007],[405201,50,0.0007],[790672,114,0.0007],[1403732,98,0.0008],[858602,129,0.0009],[1920802,186,0.0011],[1267871,249,0.0012],[1856938,152,0.0016],[401329,274,0.0018],[341337,16,0.0021],[71998,85,0.0021],[990397,357,0.0021],[818536,151,0.0022],[922466,163,0.0023],[99863,122,0.0024],[1379739,17,0.0026],[918399,182,0.0027],[1934,145,0.0028],[541062,259,0.0037],[1781068,21,0.0038],[133,29,0.004],[1844932,56,0.004],[1331734,283,0.004],[481266,205,0.005],[31932,107,0.0052],[926533,323,0.0068],[449334,188,0.0079],[826671,111,0.0085],[1431597,315,0.01],[1303870,246,0.0107],[489205,142,0.011],[1443603,52,0.0125],[75870,41,0.0154],[513197.9,222.5,0.0304],[445267.1,27.9,0.0347],[441199.8,47.4,0.0409],[854535.2,148.2,0.0458],[1367733.1,280.7,0.0533],[377336.3,13.2,0.0571],[63863.5,124.2,0.0588],[966404,276.5,0.1144],[35999.05,87.53,0.1851],[954397.74,179.93,0.2136],[890534.22,145.7,0.6583],[413335.35,10.74,1.274],[477198.868,44.963,6.2888]];return na(T.reduce((s,[a,b,c])=>s+c*Math.cos(k*na(a*t+b)),0)+na(na(481267.8809*t)+218.3162));}
+function y2j(y,m,d){if(m<3){y--;m+=12;}return Math.floor(365.25*y)+Math.floor(y/400)-Math.floor(y/100)+Math.floor(30.59*(m-2))+1721088+d;}
+function cS(tm){let a=Math.floor(tm),b=tm-a-9/24,lc=1,d1=0,d2=1;while(Math.abs(d1+d2)>1/86400){const t=(b+0.5)/36525+(a-2451545)/36525,rs=ls(t),rm=lm(t);let dr=rm-rs;if(lc===1&&dr<0)dr=na(dr);else if(rs>=0&&rs<=20&&rm>=300){dr=na(dr);dr=360-dr;}else if(Math.abs(dr)>40)dr=na(dr);d1=Math.floor((dr*29.530589)/360);d2=(dr*29.530589)/360-d1;a-=d1;b-=d2;if(b<0){b+=1;a--;}if(lc===15&&Math.abs(d1+d2)>1/86400){a=Math.floor(tm-26);b=0;}else if(lc>30){a=tm;b=0;break;}lc++;}return b+a+9/24;}
+function cC(tm){let a=Math.floor(tm),b=tm-a-9/24,r0=30*Math.floor(ls((b+0.5)/36525+(a-2451545)/36525)/30),d1=0,d2=1;while(Math.abs(d1+d2)>1/86400){let dr=ls((b+0.5)/36525+(a-2451545)/36525)-r0;if(dr>180)dr-=360;else if(dr<-180)dr+=360;d1=Math.floor((dr*365.2)/360);d2=(dr*365.2)/360-d1;a-=d1;b-=d2;if(b<0){b+=1;a--;}}return[b+9/24+a,r0];}
+function bN(tm){let a=Math.floor(tm),b=tm-a-9/24,r0=90*Math.floor(ls((b+0.5)/36525+(a-2451545)/36525)/90),d1=0,d2=1;while(Math.abs(d1+d2)>1/86400){let dr=ls((b+0.5)/36525+(a-2451545)/36525)-r0;if(dr>180)dr-=360;else if(dr<-180)dr+=360;d1=Math.floor((dr*365.2)/360);d2=(dr*365.2)/360-d1;a-=d1;b-=d2;if(b<0){b+=1;a--;}}return[b+9/24+a,r0];}
+function getShuku(yr,mo,dy){try{const t0=y2j(yr,mo,dy),ch=[bN(t0),null,null,null];for(let i=1;i<4;i++)ch[i]=cC(ch[i-1][0]+32);const sk=[cS(ch[0][0]),null,null,null,null];for(let i=1;i<5;i++){sk[i]=cS(sk[i-1]+30);if(Math.abs(Math.floor(sk[i-1])-Math.floor(sk[i]))<=26)sk[i]=cS(sk[i-1]+35);}if(Math.floor(sk[1])<=Math.floor(ch[0][0])){for(let i=0;i<4;i++)sk[i]=sk[i+1];sk[4]=cS(sk[3]+35);}else if(Math.floor(sk[0])>Math.floor(ch[0][0])){for(let i=4;i>0;i--)sk[i]=sk[i-1];sk[0]=cS(sk[0]-27);}const lp=Math.floor(sk[4])<=Math.floor(ch[3][0])?1:0;const m=Array.from({length:5},()=>[0,0,0]);m[0][0]=Math.floor(ch[0][1]/30)+2;if(m[0][0]>12)m[0][0]-=12;m[0][2]=Math.floor(sk[0]);for(let i=1;i<5;i++){if(lp&&i!==1&&(Math.floor(ch[i-1][0])<=Math.floor(sk[i-1])||Math.floor(ch[i-1][0])>=Math.floor(sk[i]))){m[i-1][0]=m[i-2][0];m[i-1][2]=Math.floor(sk[i-1]);}m[i][0]=m[i-1][0]+1;if(m[i][0]>12)m[i][0]-=12;m[i][2]=Math.floor(sk[i]);}let ix=0,st=0;for(let i=0;i<5;i++){if(Math.floor(t0)<m[i][2]){st=1;ix=i;break;}else if(Math.floor(t0)===m[i][2]){st=2;ix=i;break;}ix=i;}if(st===0||st===1)ix--;return SHUKU[((MB[m[ix][0]]||0)+Math.floor(t0)-m[ix][2])%27];}catch(e){return null;}}
+
+// ==========================================
+// 12星座 新月テーマデータ
+// ==========================================
+const ZODIAC_THEMES = {
+    '牡羊座': {
+        theme: '開拓運・先駆者力',
+        emoji: '♈',
+        keywords: ['新しいことを始める勇気が高まる', '直感を信じて一歩踏み出す力が開く', 'リーダーシップ・先頭に立つエネルギーが高まる'],
+        message: '行動こそがあなたの扉を開く。迷ったら、まず動く。'
+    },
+    '牡牛座': {
+        theme: '金運・豊かさ体質',
+        emoji: '♉',
+        keywords: ['豊かさを受け取る器が広がる', '自分の価値を正当に評価できるようになる', '継続と安定の力が運を引き寄せる'],
+        message: '豊かさはすでにあなたの中にある。受け取る準備を整えて。'
+    },
+    '双子座': {
+        theme: '発信力・人脈運',
+        emoji: '♊',
+        keywords: ['自分の言葉で伝える力が高まる', '新しい出会いとつながりが生まれやすい', '情報発信が運気を動かす月'],
+        message: 'あなたの言葉が誰かの扉を開く。発信することを恐れないで。'
+    },
+    '蟹座': {
+        theme: '家庭運・引き寄せ体質',
+        emoji: '♋',
+        keywords: ['大切な人との絆が深まる', '心地よい環境を整える力が高まる', '感情の豊かさが人を引き寄せる'],
+        message: '安心できる場所があるから、あなたは輝ける。'
+    },
+    '獅子座': {
+        theme: '魅力運・カリスマ',
+        emoji: '♌',
+        keywords: ['自分らしく輝く力が高まる', '存在感・魅力が人を引きつける', '創造性と自己表現が運を開く'],
+        message: '輝くことを許して。あなたの光が必要とされている。'
+    },
+    '乙女座': {
+        theme: '仕事運・健康運',
+        emoji: '♍',
+        keywords: ['丁寧な積み重ねが実を結ぶ', '心と体を整えることで運が流れ出す', '細部への気配りが信頼と評価につながる'],
+        message: '整えることは、愛すること。あなたの誠実さが道を開く。'
+    },
+    '天秤座': {
+        theme: '恋愛運・縁結び',
+        emoji: '♎',
+        keywords: ['人とのつながりが新しい扉を開く', 'バランスと調和が良縁を引き寄せる', '美しいものへのアンテナが感度を上げる'],
+        message: 'あなたが心を開いたとき、縁はつながり始める。'
+    },
+    '蠍座': {
+        theme: '財運力・変革運',
+        emoji: '♏',
+        keywords: ['手放すことで新しい豊かさが入ってくる', '深いところから変容が始まる', '本質を見抜く力が財運を動かす'],
+        message: '変わることを恐れないで。脱皮した先に本当の力がある。'
+    },
+    '射手座': {
+        theme: '拡大運・自由になる力',
+        emoji: '♐',
+        keywords: ['視野が広がり新しい可能性が見えてくる', '学びと探求が運を呼び込む', '自由に動くことで道が開ける'],
+        message: '地平線の向こうにあなたの答えがある。進んでいい。'
+    },
+    '山羊座': {
+        theme: '出世運・社会的成功',
+        emoji: '♑',
+        keywords: ['積み上げてきたものが認められる', '現実的な計画と行動が実を結ぶ', '責任を引き受けることで信頼と地位が上がる'],
+        message: 'コツコツが最強。あなたの誠実な努力が、今、報われる時。'
+    },
+    '水瓶座': {
+        theme: '友人運・革新力',
+        emoji: '♒',
+        keywords: ['仲間とのつながりが力になる', '独自のアイデアが時代を動かす', '枠を超えることで新しい運が開く'],
+        message: 'あなたの個性こそが贈り物。世界はあなたの革新を待っている。'
+    },
+    '魚座': {
+        theme: '直感運・癒し力',
+        emoji: '♓',
+        keywords: ['心の声に従うことで道が見えてくる', '感受性の豊かさが人を癒し引き寄せる', 'スピリチュアルな感度が高まる月'],
+        message: '夢と現実の間に、あなたの力は宿っている。'
+    }
+};
+
+// ==========================================
+// Gemini API
+// ==========================================
+const GEMINI_MODEL = 'gemini-2.5-flash';
+const GEMINI_URL = key => `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${key}`;
+
+// 今月の新月テーマ（月ごとにここだけ変更する）
+const MOON_THEME = { sign: '双子座', theme: '発信力・人脈運' };
+
+function setApiKeyStatus(msg, color) {
+    const el = document.getElementById('apiKeyStatus');
+    if (el) { el.textContent = msg; el.style.color = color || '#a5b4fc'; }
+}
+
+function saveApiKey() {
+    const raw = document.getElementById('apiKeyInput').value.replace(/\s/g,'').trim();
+    if (!raw) { setApiKeyStatus('⚠ キーを入力してください','#fbbf24'); return; }
+    if (!raw.startsWith('AIzaSy')) { setApiKeyStatus('⚠ AIzaSy で始まるキーを入力してください','#f87171'); return; }
+    localStorage.setItem('gemini_api_key', raw);
+    document.getElementById('apiKeyInput').value = '';
+    setApiKeyStatus('✓ 保存しました（'+raw.length+'文字）','#4ade80');
+    refreshApiKeyDisplay();
+    setTimeout(()=>setApiKeyStatus('',''), 4000);
+}
+
+function clearApiKey() {
+    localStorage.removeItem('gemini_api_key');
+    refreshApiKeyDisplay();
+    setApiKeyStatus('削除しました','#94a3b8');
+}
+
+async function testApiKey() {
+    const key = localStorage.getItem('gemini_api_key');
+    if (!key) { setApiKeyStatus('⚠ キーが保存されていません','#fbbf24'); return; }
+    setApiKeyStatus('⏳ テスト中…','#a5b4fc');
+    try {
+        const res = await fetch(GEMINI_URL(key), {
+            method:'POST', headers:{'content-type':'application/json'},
+            body: JSON.stringify({contents:[{parts:[{text:'こんにちは'}]}], generationConfig:{maxOutputTokens:10}})
+        });
+        if (!res.ok) throw new Error('HTTP '+res.status);
+        setApiKeyStatus('✓ 接続成功！','#4ade80');
+    } catch(e) { setApiKeyStatus('❌ エラー: '+e.message,'#f87171'); }
+}
+
+function refreshApiKeyDisplay() {
+    const key = localStorage.getItem('gemini_api_key');
+    const el = document.getElementById('apiKeyCurrent');
+    if (!el) return;
+    if (key) { el.textContent = '保存済みキー: '+key.slice(0,8)+'…（'+key.length+'文字）'; el.style.display='block'; }
+    else { el.style.display='none'; }
+}
+
+function toggleApiSettings(btn) {
+    const body = btn.nextElementSibling;
+    const open = body.style.display === 'block';
+    body.style.display = open ? 'none' : 'block';
+    btn.querySelector('.toggle-arrow').textContent = open ? '▼' : '▲';
+    if (!open) {
+        if (body.id === 'apiSettingsBody') refreshApiKeyDisplay();
+        else if (body.id === 'moonThemeBody') refreshMoonThemeDisplay();
+    }
+}
+
+// ==========================================
+// 今月の新月テーマ設定
+// ==========================================
+// 参加者ごとの安定したlocalStorageキー（インデックスではなく名前+生年月日で識別）
+function pKey(idx) {
+    const p = participants[idx];
+    if (!p) return `unknown_${idx}`;
+    const name = p.name.replace(/\s/g, '');
+    const bd = `${p.year}${String(p.month).padStart(2,'0')}${String(p.day).padStart(2,'0')}`;
+    return `${name}_${bd}`;
+}
+
+function getMoonTheme() {
+    const saved = localStorage.getItem('moon_theme');
+    if (saved) { try { return JSON.parse(saved); } catch(e) {} }
+    return MOON_THEME;
+}
+
+function saveMoonTheme() {
+    const sign = document.getElementById('moonSignInput').value.trim();
+    const theme = document.getElementById('moonThemeInput').value.trim();
+    const st = document.getElementById('moonThemeStatus');
+    if (!sign || !theme) { st.textContent = '⚠ 星座名とテーマを両方入力してください'; return; }
+    localStorage.setItem('moon_theme', JSON.stringify({ sign, theme }));
+    document.getElementById('moonSignInput').value = '';
+    document.getElementById('moonThemeInput').value = '';
+    st.textContent = '✓ 保存しました';
+    refreshMoonThemeDisplay();
+    setTimeout(() => { if(st) st.textContent = ''; }, 3000);
+}
+
+function refreshMoonThemeDisplay() {
+    const mt = getMoonTheme();
+    const badge = document.getElementById('moonThemeBadge');
+    if (badge) badge.textContent = `現在：${mt.sign}新月 ＝ ${mt.theme}`;
+}
+
+// ==========================================
+// GAS URL 設定
+// ==========================================
+function saveGasUrl() {
+    const val = document.getElementById('gasUrlInput').value.trim();
+    if (!val) { setGasUrlStatus('⚠ URLを入力してください','#fbbf24'); return; }
+    if (!val.includes('script.google.com')) { setGasUrlStatus('⚠ GAS の /exec URL を入力してください','#f87171'); return; }
+    localStorage.setItem('gas_webhook_url', val);
+    document.getElementById('gasUrlInput').value = '';
+    setGasUrlStatus('✓ 保存しました','#4ade80');
+    refreshGasUrlDisplay();
+    setTimeout(() => setGasUrlStatus('',''), 3000);
+    loadParticipantsFromGas();
+}
+
+function clearGasUrl() {
+    localStorage.removeItem('gas_webhook_url');
+    refreshGasUrlDisplay();
+    setGasUrlStatus('削除しました','#94a3b8');
+}
+
+function setGasUrlStatus(msg, color) {
+    const el = document.getElementById('gasUrlStatus');
+    if (el) { el.textContent = msg; el.style.color = color || '#a5b4fc'; }
+}
+
+function refreshGasUrlDisplay() {
+    const url = localStorage.getItem('gas_webhook_url');
+    const el = document.getElementById('gasUrlCurrent');
+    if (!el) return;
+    if (url) { el.textContent = '設定済み: ' + url.slice(0, 50) + '…'; el.style.display = 'block'; }
+    else { el.style.display = 'none'; }
+}
+
+// ==========================================
+// 参加者カード生成
+// ==========================================
+let participants = [...BASE_PARTICIPANTS];
+let currentIdx = null;
+let participantEmail = null;
+
+async function loadParticipantsFromGas() {
+    const gasUrl = localStorage.getItem('gas_webhook_url');
+    if (!gasUrl) return;
+    try {
+        const url = gasUrl + '?secretKey=tsukiyomi-2026-key&action=getParticipants';
+        const res = await fetch(url);
+        const data = await res.json();
+        if (!data.ok || !data.participants.length) return;
+        participants = data.participants.map(p => {
+            const b = (p.birth || '').split('-');
+            return {
+                pid:    p.pid,
+                name:   p.name,
+                year:   b[0] ? parseInt(b[0]) : null,
+                month:  b[1] ? parseInt(b[1]) : null,
+                day:    b[2] ? parseInt(b[2]) : null,
+                theme:  p.concern || '',
+                email:  p.email,
+                shuku:  p.shuku,
+                hasDiaryOnSheet: p.hasDiary
+            };
+        });
+        buildCards('');
+    } catch(e) {
+        console.log('GAS読み込みエラー（ローカルデータを使用）:', e);
+    }
+}
+
+async function fetchParticipantData(idx) {
+    const gasUrl = localStorage.getItem('gas_webhook_url');
+    const p = participants[idx];
+    if (!gasUrl || !p || !p.pid) return;
+    try {
+        const url = gasUrl + '?secretKey=tsukiyomi-2026-key&action=getParticipantData&pid=' + encodeURIComponent(p.pid);
+        const res = await fetch(url);
+        const data = await res.json();
+        if (!data.ok) return;
+
+        participantEmail = data.email || null;
+
+        // メールアドレスが取れたらボタン表示
+        const savedReading = localStorage.getItem(`diary_reading_${pKey(idx)}`);
+        if (participantEmail && savedReading) {
+            const btn = document.getElementById('sendEmailBtn');
+            if (btn) btn.style.display = 'inline-flex';
+        }
+
+        // 日記テキストをスプレッドシートから組み立て
+        const parts = [];
+        if (data.newmoon) parts.push('【新月の願い】\n' + data.newmoon);
+        for (let i = 1; i <= 7; i++) {
+            if (data['day' + i]) parts.push('Day' + i + ':\n' + data['day' + i]);
+        }
+        if (parts.length === 0) return;
+
+        const diaryEl = document.getElementById('diaryText');
+        const savedDiary = localStorage.getItem(`diary_${pKey(idx)}`);
+        if (!savedDiary || !savedDiary.trim()) {
+            diaryEl.value = parts.join('\n\n');
+            localStorage.setItem(`diary_${pKey(idx)}`, diaryEl.value);
+            const badge = document.getElementById('diaryLoadBadge');
+            if (badge) badge.style.display = 'block';
+        }
+    } catch(e) {
+        console.log('参加者データ取得エラー:', e);
+    }
+}
+
+async function sendCertificateEmail() {
+    const gasUrl = localStorage.getItem('gas_webhook_url');
+    if (!gasUrl) { alert('GAS URLを設定してください（上のGAS設定パネル）'); return; }
+    if (!participantEmail) { alert('このページを開き直してもメールアドレスが取得できない場合は、GAS URLの設定を確認してください。'); return; }
+
+    const p = participants[currentIdx];
+    const shukuChar = getShuku(p.year, p.month, p.day);
+    const item = shukuData.find(d => d.宿名 === shukuChar + '宿');
+
+    const mainEl   = document.getElementById('mainMessageEl');
+    const futureEl = document.getElementById('futureMessageEl');
+    const section1 = mainEl   ? mainEl.innerText.trim()   : '';
+    const section2 = futureEl ? futureEl.innerText.trim() : '';
+
+    if (!section1 || section1.includes('AI振り返り鑑定を生成')) {
+        alert('先にAI振り返り鑑定を生成してください。');
+        return;
+    }
+
+    if (!confirm(`${p.name} 様（${participantEmail}）に鑑定書を送信しますか？`)) return;
+
+    const btn = document.getElementById('sendEmailBtn');
+    btn.disabled = true;
+    btn.textContent = '📤 送信中…';
+    document.getElementById('emailBadge').textContent = '';
+
+    try {
+        const res = await fetch(gasUrl, {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({
+                secretKey: 'tsukiyomi-2026-key',
+                action: 'sendCertificate',
+                email: participantEmail,
+                name: p.name,
+                shuku: item ? item.宿名 : '',
+                section1: section1,
+                section2: section2
+            })
+        });
+        const data = await res.json();
+        if (data.ok) {
+            btn.textContent = '✓ 送信済み';
+            btn.style.background = 'rgba(5,150,105,0.3)';
+            btn.style.borderColor = '#059669';
+            btn.style.color = '#6ee7b7';
+            document.getElementById('emailBadge').textContent = '✓ ' + data.message;
+        } else {
+            throw new Error(data.error || '送信失敗');
+        }
+    } catch(e) {
+        btn.disabled = false;
+        btn.textContent = '📧 メールで送信';
+        alert('エラー: ' + e.message + '\n\nCORSエラーの場合は、GASを「新しいバージョン」で再デプロイしてください。');
+    }
+}
+
+function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function buildCards(filter) {
+    const grid = document.getElementById('participantGrid');
+    const list = filter ? participants.filter(p => p.name.includes(filter)) : participants;
+
+    grid.innerHTML = list.map((p, i) => {
+        const origIdx = participants.indexOf(p);
+        const shukuChar = (p.year) ? getShuku(p.year, p.month, p.day) : null;
+        const item = shukuChar ? shukuData.find(d => d.宿名 === shukuChar+'宿') : null;
+        const hasDiary = !!localStorage.getItem(`diary_${pKey(origIdx)}`);
+        const hasReading = !!localStorage.getItem(`diary_reading_${pKey(origIdx)}`);
+        return `<div class="p-card ${currentIdx===origIdx?'active':''}" onclick="showReading(${origIdx})">
+            <div class="p-card-num">No.${String(origIdx+1).padStart(3,'0')}</div>
+            <div class="p-card-name">${escHtml(p.name)}</div>
+            <div class="p-card-shuku">${item ? SHUKU_SYMBOL[item.宿名]||'🌙' : ''} ${item ? item.宿名 : '計算中'}</div>
+            <div class="p-card-birth">${p.year}/${p.month}/${p.day} · ${escHtml(p.theme)}</div>
+            ${hasReading ? '<span class="p-card-badge p-card-done">✓ 鑑定書作成済み</span>' : (hasDiary ? '<span class="p-card-badge">日記入力済み</span>' : '')}
+        </div>`;
+    }).join('');
+
+    document.getElementById('statsBar').textContent = `全${participants.length}名 / 表示中：${list.length}名`;
+}
+
+function filterCards() { buildCards(document.getElementById('searchInput').value); }
+
+// ==========================================
+// 鑑定書表示・生成
+// ==========================================
+function showReading(idx) {
+    const p = participants[idx];
+    if (!p || !p.year) { alert('生年月日が確認できません。'); return; }
+
+    const shukuChar = getShuku(p.year, p.month, p.day);
+    const item = shukuData.find(d => d.宿名 === shukuChar+'宿');
+    if (!item) { alert('宿の計算に失敗しました。'); return; }
+
+    currentIdx = idx;
+
+    // 保存済み日記を復元
+    const savedDiary = localStorage.getItem(`diary_${pKey(idx)}`);
+    if (savedDiary) document.getElementById('diaryText').value = savedDiary;
+    else document.getElementById('diaryText').value = '';
+
+    // 日記の自動保存
+    document.getElementById('diaryText').oninput = () => {
+        localStorage.setItem(`diary_${pKey(idx)}`, document.getElementById('diaryText').value);
+    };
+
+    // 鑑定書の初期表示（保存済み or テンプレート）
+    const today = new Date();
+    const dateStr = `${today.getFullYear()}年${today.getMonth()+1}月${today.getDate()}日`;
+
+    const savedReading = localStorage.getItem(`diary_reading_${pKey(idx)}`);
+    const savedFuture = localStorage.getItem(`diary_future_${pKey(idx)}`);
+    const savedTheme = localStorage.getItem(`diary_theme_${pKey(idx)}`);
+    const mt = getMoonTheme();
+
+    document.getElementById('resultContent').innerHTML = `
+        <div class="corner-ornament corner-tl"></div>
+        <div class="corner-ornament corner-tr"></div>
+        <div class="corner-ornament corner-bl"></div>
+        <div class="corner-ornament corner-br"></div>
+
+        <div class="cert-title-banner">
+            <div class="ctb-event">月読みワンダーランド 特別鑑定書</div>
+            <div class="ctb-deco">◈ &nbsp; ◇ &nbsp; ◈</div>
+            <div class="ctb-main">月 読 み 日 記 振 り 返 り 鑑 定 書</div>
+            <div class="ctb-sub">〜 ７日間のチャレンジを終えたあなたへ 〜</div>
+            <div class="ctb-deco">◈ &nbsp; ◇ &nbsp; ◈</div>
+        </div>
+
+        <div class="cert-top">
+            <div class="cert-serial">No.${String(idx+1).padStart(3,'0')}</div>
+            <div class="shuku-sym">${SHUKU_SYMBOL[item.宿名]||'🌙'}</div>
+            <div class="recipient-big" contenteditable="true">${escHtml(p.name)} 様</div>
+            <div style="font-size:18px;font-weight:bold;color:#1a1a2e;margin:6px 0;">${item.宿名}</div>
+            <div class="birth-note">生年月日：${p.year}年${p.month}月${p.day}日　　鑑定日：${dateStr}</div>
+        </div>
+
+        <div class="shuku-info-row">
+            <span class="shuku-chip">属性：${item.属性}</span>
+            <span class="shuku-chip">天命：${item.天命}</span>
+            <span class="shuku-chip">才能：${item.才能}</span>
+        </div>
+
+        <div class="section-divider">━━━ ７日間の振り返り鑑定 ━━━</div>
+
+        <div class="message-block">
+            <span class="message-label">🌙 ${escHtml(p.name)}さんへ — 月の導きから</span>
+            <div contenteditable="true" class="editable-block" id="mainMessageEl">${
+                savedReading || `7日間の月読み日記を通じて見えてきた${escHtml(p.name)}さんらしさを、${item.宿名}の視点から読み解いていきます。\n\n（左上の「AI振り返り鑑定を生成」ボタンを押すか、直接ここに文章を入力してください）`
+            }</div>
+        </div>
+
+        <div class="section-divider">━━━ これからのあなたへ ━━━</div>
+
+        <div class="message-block">
+            <span class="message-label">✨ 開運メッセージ</span>
+            <div contenteditable="true" class="editable-block" id="futureMessageEl">${savedFuture || `${item.締め}\n\n開運アイテム「${item.開運アイテム}」を大切にしながら、これからの道を歩んでいきましょう。`}</div>
+        </div>
+
+        <div class="section-divider">━━━ 今月の新月テーマ ━━━</div>
+
+        ${(()=>{
+            const zd = ZODIAC_THEMES[mt.sign];
+            if (!zd) return `<div class="zodiac-block"><div style="text-align:center;color:#4a72aa;">今月のテーマ：${escHtml(mt.sign)}新月 ＝ ${escHtml(mt.theme)}</div></div>`;
+            return `<div class="zodiac-block">
+                <div class="zodiac-sign-header">
+                    <span class="zodiac-emoji">${zd.emoji}</span>
+                    <span class="zodiac-sign-name">${escHtml(mt.sign)}新月</span>
+                    <span class="zodiac-theme-label">${escHtml(zd.theme)}</span>
+                </div>
+                <ul class="zodiac-keywords">
+                    ${zd.keywords.map(k=>`<li>${escHtml(k)}</li>`).join('')}
+                </ul>
+                <div class="zodiac-message">${escHtml(zd.message)}</div>
+            </div>`;
+        })()}
+
+        <div class="section-divider">━━━ あなたの日記から ━━━</div>
+
+        <div class="moon-theme-block">
+            <span class="moon-theme-label">🌙 ${escHtml(mt.sign)}新月 ✦ あなたの${escHtml(mt.theme)}</span>
+            <div contenteditable="true" class="editable-block" id="moonThemeMessageEl">${savedTheme || `「AI振り返り鑑定を生成」を押すと、あなたの日記の言葉から${escHtml(mt.theme)}の深読みが生成されます。`}</div>
+        </div>
+
+        <div class="sig-section">
+            <div>
+                <div style="font-size:13px;color:#555;">宿曜占星術師　かのん</div>
+                <div class="sig-kanon">Kanon</div>
+            </div>
+            <div class="sig-right">
+                鑑定日：${dateStr}<br>
+                <span class="sig-line"></span>
+            </div>
+        </div>
+    `;
+
+    // 編集時に自動保存
+    document.getElementById('mainMessageEl').oninput = autoSave;
+    document.getElementById('futureMessageEl').oninput = autoSave;
+    document.getElementById('moonThemeMessageEl').oninput = autoSave;
+
+    document.getElementById('listView').style.display = 'none';
+    document.getElementById('resultArea').style.display = 'block';
+    document.getElementById('resetReadingBtn').style.display = savedReading ? 'inline-flex' : 'none';
+
+    // メール送信ボタンをリセット
+    participantEmail = null;
+    const emailBtn = document.getElementById('sendEmailBtn');
+    if (emailBtn) { emailBtn.style.display = 'none'; emailBtn.disabled = false; emailBtn.textContent = '📧 メールで送信'; emailBtn.style.background = ''; emailBtn.style.borderColor = ''; emailBtn.style.color = ''; }
+    const diaryBadge = document.getElementById('diaryLoadBadge');
+    if (diaryBadge) diaryBadge.style.display = 'none';
+    const emailBadge = document.getElementById('emailBadge');
+    if (emailBadge) emailBadge.textContent = '';
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    buildCards(''); // カードの「作成済み」バッジを更新
+
+    // GASから日記・メールアドレスを非同期で取得
+    fetchParticipantData(idx);
+}
+
+function autoSave() {
+    const mainEl = document.getElementById('mainMessageEl');
+    if (mainEl) localStorage.setItem(`diary_reading_${pKey(currentIdx)}`, mainEl.innerText);
+    const futureEl = document.getElementById('futureMessageEl');
+    if (futureEl) localStorage.setItem(`diary_future_${pKey(currentIdx)}`, futureEl.innerText);
+    const themeEl = document.getElementById('moonThemeMessageEl');
+    if (themeEl) localStorage.setItem(`diary_theme_${pKey(currentIdx)}`, themeEl.innerText);
+    const badge = document.getElementById('savedBadge');
+    if (badge) { badge.style.opacity='1'; clearTimeout(badge._t); badge._t=setTimeout(()=>badge.style.opacity='0',2000); }
+}
+
+function clearDiary() {
+    if (!confirm('日記入力欄をクリアしますか？（この参加者の日記テキストが削除されます）')) return;
+    document.getElementById('diaryText').value = '';
+    localStorage.removeItem(`diary_${pKey(currentIdx)}`);
+}
+
+function resetReading() {
+    if (!confirm('編集した内容を削除して、初期状態に戻しますか？')) return;
+    localStorage.removeItem(`diary_reading_${pKey(currentIdx)}`);
+    localStorage.removeItem(`diary_future_${pKey(currentIdx)}`);
+    localStorage.removeItem(`diary_theme_${pKey(currentIdx)}`);
+    document.getElementById('resetReadingBtn').style.display = 'none';
+    showReading(currentIdx);
+}
+
+function backToList() {
+    document.getElementById('resultArea').style.display = 'none';
+    document.getElementById('listView').style.display = 'block';
+    currentIdx = null;
+    buildCards('');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function printReading() { window.print(); }
+
+// ==========================================
+// AI振り返り鑑定生成
+// ==========================================
+async function generateReading() {
+    const apiKey = localStorage.getItem('gemini_api_key');
+    if (!apiKey) {
+        alert('上のAI設定からGemini APIキーを保存してください。');
+        return;
+    }
+
+    const p = participants[currentIdx];
+    if (!p) return;
+
+    const shukuChar = getShuku(p.year, p.month, p.day);
+    const item = shukuData.find(d => d.宿名 === shukuChar+'宿');
+    if (!item) return;
+
+    const diaryText = document.getElementById('diaryText').value.trim();
+    if (!diaryText) {
+        alert('7日間の日記内容を入力してください。');
+        return;
+    }
+
+    const MOON_THEME = getMoonTheme();
+
+    const btn = document.getElementById('aiBtn');
+    const statusEl = document.getElementById('aiStatus');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="ai-spinner"></span> 生成中…';
+    statusEl.textContent = 'AIが振り返り鑑定メッセージを生成しています…';
+
+    const prompt = `あなたは宿曜占星術師「かのん」です。
+参加者が書いた7日間の月読み日記を深く読み解き、その人だけの変化・才能・これからの指針が伝わる「第２の鑑定書」を書いてください。
+
+大切なのは、一般的な占い文ではなく、日記に書かれた本人の言葉と7日間の変容に根ざした鑑定文にすることです。
+宿曜の情報はテンプレートとして並べるのではなく、日記から見える変化・課題・才能の芽と自然につなげてください。
+
+【参加者情報】
+お名前：${p.name} 様
+命宿：${item.宿名}
+本質：${item.本質}
+才能：${item.才能}
+天命：${item.天命}
+使命：${item.使命}
+前世の因果：${item.因果}
+強み：${item.強み}
+開運テーマ：${item.開運テーマ}
+開運アイテム：${item.開運アイテム}
+ご相談テーマ：${p.theme}
+
+【今月の新月テーマ】
+${MOON_THEME.sign}新月 ＝ ${MOON_THEME.theme}
+このチャレンジは「${MOON_THEME.theme}」が開く月に行われました。
+
+【7日間の月読み日記の内容】
+${diaryText}
+
+【まず内部で確認すること】
+出力前に、日記の「Day1」「Day2」「Day3」「Day4」「Day5」「Day6」「Day7」などの見出しや流れを手がかりに、以下を必ず読み取ってください。
+ただし、この分析メモ自体は出力しないでください。
+
+1. Day1からDay7にかけて、気持ち・視点・行動がどう変化したか
+2. 日記内で繰り返し出てくる言葉、テーマ、感情
+3. 7日間の中で最も大きな変化が起きた場面
+4. 手放したもの、または手放そうとしているもの
+5. 未来への行動宣言、自分へのメッセージ、明日から始めたいこと
+6. 日記の中に表れている才能の芽、強み、本来の魅力
+7. 宿曜の本質・才能・天命と、日記の変容が自然につながるポイント
+8. 「${MOON_THEME.theme}」という今月のテーマに照らして、日記の中に表れた具体的な場面・言葉・行動を3つ以上見つける
+
+【出力形式】
+以下の2つのセクションを必ず順番通りに出力してください。
+
+セクション1（7日間の振り返り・650〜800文字）：
+${p.name}さんの7日間の日記から見えてきた変容を、Day1からDay7への流れが伝わるように書いてください。
+日記内の本人の言葉を2〜3個、そのまま短く引用してください（「　」で括る）。
+繰り返し出てきたテーマ、最大の変化、手放したもの、才能の芽を自然に織り込み、${item.宿名}の本質・才能・天命とつなげてください。
+
+特に今月のテーマ「${MOON_THEME.theme}」について、日記の中でこの方がどんな場面でそれを体験・発揮していたかを、本人の言葉を引用しながら具体的に描いてください。
+「あなたは${MOON_THEME.sign}月だから発信力がある」という決めつけではなく、「あなたの日記のこの言葉・この場面こそが、${MOON_THEME.theme}が動いた瞬間でした」という読み解き方にしてください。
+
+「あなたはこういう宿だから」という決めつけではなく、「日記に表れていたこの変化は、宿のこの力とも響き合っています」という書き方にしてください。
+かのんとして、${p.name}さんに直接語りかける温かい鑑定文にしてください。
+段落間は1行空けてください。
+
+---SECTION2---
+
+セクション2（これからのあなたへ・250〜350文字）：
+日記に書かれていた未来への行動宣言、自分へのメッセージ、明日から始めたいことを受け止めて、これからの具体的な整え方を伝えてください。
+半年先、または次の月のサイクルへ向かうために、何を大切にし、何を手放し、どんな小さな行動を続けるとよいかを書いてください。
+必要であれば、開運アイテム「${item.開運アイテム}」を、その人の行動や願いと自然につなげてください。
+最後の一文は、${MOON_THEME.sign}新月が開いた「${MOON_THEME.theme}」というこの月のテーマを自然な言葉で受け取り、${p.name}さんがその扉をこれからも開き続けられるような、温かく力強い言葉で締めくくってください。
+
+---SECTION3---
+
+セクション3（今月テーマ深読み・150〜200文字）：
+以下の3ステップの順番で書いてください。
+
+1. 日記の中から、"伝えた・表現した・つながった"場面を1つ選び、具体的に描く
+2. 「あなたは〇〇と書いていました」と本人の言葉をそのまま1つ返す
+3. それが「${MOON_THEME.theme}」とどうつながるかを、鑑定の言葉で一言翻訳する
+
+最後に、この月に${MOON_THEME.theme}の扉が開いたことへの、短い祝福の一文を添えてください。
+文章は${p.name}さんへの直接語りかけで書いてください。
+
+【共通ルール】
+- マークダウン（**、##など）や装飾記号は使わず、自然な文章のみ
+- 「---SECTION2---」の区切り文字はそのまま出力すること（前後に余分な文字を入れない）
+- 本人の日記の言葉を2〜3個、そのまま「　」で引用すること
+- 日記に書かれていない具体的事実を勝手に作らないこと
+- 宿曜データだけで文章を埋めず、必ず日記内容を中心に書くこと
+- 段落間は1行空ける`;
+
+    try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 60000);
+        let res;
+        try {
+            res = await fetch(GEMINI_URL(apiKey), {
+                method: 'POST',
+                headers: { 'content-type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: prompt }] }],
+                    generationConfig: { maxOutputTokens: 2048, temperature: 0.85 }
+                }),
+                signal: controller.signal
+            });
+        } finally { clearTimeout(timeoutId); }
+
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.error?.message || `HTTP ${res.status}`);
+        }
+
+        const data = await res.json();
+        const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+        const cleaned = text.replace(/[*#]+/g, '').trim();
+        const [section1, rest] = cleaned.split('---SECTION2---');
+        const [section2, section3] = (rest || '').split('---SECTION3---');
+
+        const mainEl = document.getElementById('mainMessageEl');
+        if (mainEl) mainEl.innerText = section1 ? section1.trim() : cleaned;
+
+        const futureEl = document.getElementById('futureMessageEl');
+        if (futureEl) futureEl.innerText = section2 ? section2.trim() : item.締め;
+
+        const themeEl = document.getElementById('moonThemeMessageEl');
+        if (themeEl) themeEl.innerText = section3 ? section3.trim() : '';
+
+        autoSave();
+
+        document.getElementById('resetReadingBtn').style.display = 'inline-flex';
+        if (participantEmail) {
+            const emailBtn = document.getElementById('sendEmailBtn');
+            if (emailBtn) emailBtn.style.display = 'inline-flex';
+        }
+        statusEl.textContent = '✓ 振り返り鑑定メッセージを生成しました';
+        setTimeout(() => { statusEl.textContent = ''; }, 4000);
+    } catch(e) {
+        const msg = e.name === 'AbortError' ? 'タイムアウト（60秒）。ネットワークまたはAPIキーを確認してください' : e.message;
+        statusEl.textContent = '⚠ エラー: ' + msg;
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '🤖 AI振り返り鑑定を生成';
+    }
+}
+
+// ==========================================
+// 星空アニメーション
+// ==========================================
+(function () {
+    const canvas = document.getElementById('space-canvas');
+    const ctx = canvas.getContext('2d');
+    let W, H, stars = [], shooting = [];
+    function resize() { W=canvas.width=window.innerWidth; H=canvas.height=Math.max(window.innerHeight,document.body.scrollHeight); }
+    function mkStar() { return {x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.4+0.2,phase:Math.random()*Math.PI*2,speed:Math.random()*0.008+0.002,color:['#ffffff','#d0e8ff','#ffe8d0','#e0d0ff'][Math.floor(Math.random()*4)]}; }
+    function mkShoot() { return {x:Math.random()*W*0.7,y:Math.random()*H*0.4,len:Math.random()*180+80,speed:Math.random()*14+8,alpha:1,angle:Math.PI/5+Math.random()*0.3}; }
+    function init() { resize(); stars=Array.from({length:300},mkStar); }
+    function draw() {
+        ctx.clearRect(0,0,W,H);
+        const now = performance.now()/1000;
+        stars.forEach(s=>{const a=0.5+0.5*Math.sin(now*s.speed+s.phase);ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle=s.color;ctx.globalAlpha=a*0.85;ctx.fill();});
+        ctx.globalAlpha=1;
+        shooting=shooting.filter(s=>{s.alpha>0.02;s.x+=Math.cos(s.angle)*s.speed;s.y+=Math.sin(s.angle)*s.speed;s.alpha*=0.94;const grd=ctx.createLinearGradient(s.x,s.y,s.x-Math.cos(s.angle)*s.len,s.y-Math.sin(s.angle)*s.len);grd.addColorStop(0,`rgba(255,255,220,${s.alpha})`);grd.addColorStop(1,'rgba(255,255,220,0)');ctx.beginPath();ctx.moveTo(s.x,s.y);ctx.lineTo(s.x-Math.cos(s.angle)*s.len,s.y-Math.sin(s.angle)*s.len);ctx.strokeStyle=grd;ctx.lineWidth=1.5;ctx.stroke();return s.alpha>0.02;});
+        if(Math.random()<0.005&&shooting.length<3)shooting.push(mkShoot());
+        requestAnimationFrame(draw);
+    }
+    window.addEventListener('resize',()=>{resize();stars=Array.from({length:300},mkStar);});
+    init(); draw();
+})();
+
+// 初期化
+buildCards('');
+refreshApiKeyDisplay();
+refreshGasUrlDisplay();
+refreshMoonThemeDisplay();
+loadParticipantsFromGas();
+</script>
+</body>
+</html>
