@@ -215,7 +215,11 @@ function toJst_(date) {
 // ===== 日記データ取得（クライアントの復元用） =====
 function getDiaryData_(identifier, lookupType) {
   var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  // 'records' が空なら '7ちゃれ' も試みる
   var sheet = ss.getSheetByName('records');
+  if (!sheet || sheet.getLastRow() < 2) {
+    sheet = ss.getSheetByName('7ちゃれ');
+  }
   if (!sheet || sheet.getLastRow() < 2) {
     return ContentService
       .createTextOutput(JSON.stringify({ ok: true, days: {} }))
@@ -231,12 +235,28 @@ function getDiaryData_(identifier, lookupType) {
   var PAYLOAD_COL = 13;
   var lookupCol = (lookupType === 'email') ? EMAIL_COL : PID_COL;
 
+  // participantId の先頭ゼロを除去して数値比較できるようにする
+  function normalizeId(val) {
+    var s = String(val || '').trim().toLowerCase();
+    // 数値のみの場合は先頭ゼロを除去
+    return s.replace(/^0+(\d+)$/, '$1');
+  }
+  var normalizedIdentifier = normalizeId(identifier);
+
   var days = {};
   var daySavedAt = {};
 
   for (var i = 0; i < data.length; i++) {
     var rowVal = String(data[i][lookupCol]).trim().toLowerCase();
-    if (rowVal !== identifier.toLowerCase()) continue;
+    // 完全一致 または 先頭ゼロ除去後の一致（例：044 ↔ 44）
+    var matched = (rowVal === identifier.toLowerCase()) ||
+                  (lookupType !== 'email' && normalizeId(rowVal) === normalizedIdentifier);
+    // email lookup の場合は email 列でも追加チェック
+    if (!matched && lookupType !== 'email') {
+      var emailVal = String(data[i][EMAIL_COL]).trim().toLowerCase();
+      if (emailVal && emailVal === identifier.toLowerCase()) matched = true;
+    }
+    if (!matched) continue;
 
     var page = normalizePage_(String(data[i][PAGE_COL]));
     var dayMatch = page.match(/challenge_day(\d+)/);
