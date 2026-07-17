@@ -816,7 +816,7 @@ async function exportToObsidian() {
       var written = 0;
       for (var ci = 0; ci < chalEntries.length; ci++) {
         var entry = chalEntries[ci];
-        var fname = 'チャレンジ-Day' + entry.day + '-' + ci + '.md';
+        var fname = '月読み日記-Day' + entry.day + '.md';
         var md = generateChallengeMarkdown(entry);
         var fh = await diaryDir.getFileHandle(fname, { create: true });
         var fw = await fh.createWritable();
@@ -896,7 +896,7 @@ function downloadMarkdownZip() {
     var chalEntries = loadChallengeEntries();
     chalEntries.forEach(function(entry, i){
       files.push({
-        name: 'チャレンジ-Day' + entry.day + '-' + i + '.md',
+        name: '月読み日記-Day' + entry.day + '.md',
         content: generateChallengeMarkdown(entry)
       });
     });
