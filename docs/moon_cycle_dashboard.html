@@ -121,6 +121,12 @@
     <p class="dash-sub">新月・上弦・満月・下弦のリズムで<br>月のPDCAを回し、あなたの願いを育てます。</p>
   </header>
 
+  <!-- Moonポイント表示 -->
+  <div id="pointsBar" style="display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border:1px solid rgba(241,217,155,.25);border-radius:12px;background:rgba(241,217,155,.06);margin-bottom:20px;">
+    <span style="font-size:13px;color:var(--gold);">🌙 <span id="ptTotal">—</span> Moon Points</span>
+    <a href="moon_treasure.html" style="font-size:12px;color:var(--gold2);text-decoration:none;">🗝️ 月の宝箱を開く →</a>
+  </div>
+
   <!-- 現在フェーズ -->
   <section class="current-phase-banner" id="currentBanner"></section>
 
@@ -137,6 +143,7 @@
 </div>
 
 <script src="moon_cycle_data.js"></script>
+<script src="moon_points.js"></script>
 <script src="diary_data_sync.js"></script>
 <script>
 (function(){
@@ -279,6 +286,10 @@
     });
   }
   renderCards();
+
+  // Moonポイント表示
+  var pts = getMoonPoints(userId);
+  document.getElementById('ptTotal').textContent = pts.toLocaleString();
 })();
 </script>
 <script>

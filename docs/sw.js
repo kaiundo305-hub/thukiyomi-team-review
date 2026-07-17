@@ -1,4 +1,4 @@
-var CACHE_NAME = 'tsukiyomi-v2';
+var CACHE_NAME = 'tsukiyomi-v3';
 var CACHE_URLS = [
   './wonderland_gate.html',
   './challenge_intro.html',
@@ -16,6 +16,8 @@ var CACHE_URLS = [
   './moon_cycle_diary.html',
   './moon_cycle_report.html',
   './moon_cycle_data.js',
+  './moon_points.js',
+  './moon_treasure.html',
   './app.js',
   './diary_data_sync.js',
   './style.css',

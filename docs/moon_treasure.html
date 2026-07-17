@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>月の宝箱 | 月読みワンダーランド</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1a1025">
+  <link rel="apple-touch-icon" href="images/icon-192.png">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #080615; --border: rgba(241,217,155,.2);
+      --gold: #f1d99b; --gold2: #c8a84b; --white: #f5f0e8; --muted: rgba(245,240,232,.5);
+      --radius: 18px;
+    }
+    body { background: var(--bg); color: var(--white); font-family: 'Hiragino Mincho ProN', 'Georgia', serif; min-height: 100vh; }
+    .shell { width: min(700px, calc(100% - 32px)); margin: 0 auto; padding: 40px 0 100px; }
+
+    /* ヘッダー */
+    .treasure-header { text-align: center; margin-bottom: 40px; }
+    .th-kicker { font-size: 11px; color: var(--gold2); letter-spacing: .3em; margin-bottom: 12px; }
+    .th-icon { font-size: 56px; display: block; margin-bottom: 12px; }
+    .th-title { font-size: clamp(22px, 5vw, 32px); color: var(--gold); letter-spacing: .1em; line-height: 1.4; }
+    .th-sub { margin-top: 10px; color: var(--muted); font-size: 14px; line-height: 1.9; }
+
+    /* Moonポイントカード */
+    .points-card {
+      display: flex; align-items: center; gap: 20px;
+      padding: 24px 22px; margin-bottom: 36px;
+      border: 1px solid rgba(241,217,155,.4); border-radius: var(--radius);
+      background: linear-gradient(135deg, rgba(241,217,155,.12), rgba(200,168,75,.06));
+    }
+    .pc-icon { font-size: 44px; }
+    .pc-body { flex: 1; }
+    .pc-label { font-size: 11px; color: var(--gold2); letter-spacing: .22em; margin-bottom: 4px; }
+    .pc-points { font-size: 42px; color: var(--gold); letter-spacing: .05em; line-height: 1; }
+    .pc-unit { font-size: 14px; color: var(--gold2); margin-left: 6px; }
+    .pc-streak { margin-top: 8px; font-size: 13px; color: var(--muted); }
+    .streak-fire { color: #e8805a; }
+    .pc-next { flex-shrink: 0; text-align: right; }
+    .pc-next-label { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+    .pc-next-item { font-size: 13px; color: var(--gold); }
+    .pc-progress { margin-top: 6px; width: 120px; height: 5px; background: rgba(255,255,255,.1); border-radius: 999px; overflow: hidden; }
+    .pc-progress-fill { height: 100%; background: var(--gold2); border-radius: 999px; transition: width .5s; }
+
+    /* セクションタイトル */
+    .sec-title { font-size: 12px; color: var(--gold2); letter-spacing: .25em; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+
+    /* 月石グリッド */
+    .gems-section { margin-bottom: 40px; }
+    .gems-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    @media(max-width:480px){ .gems-grid { grid-template-columns: repeat(2, 1fr); } }
+
+    .gem-card {
+      padding: 16px 10px; border: 1px solid var(--border); border-radius: 14px;
+      text-align: center; background: rgba(255,255,255,.03);
+      transition: transform .2s, border-color .2s;
+    }
+    .gem-card.unlocked { border-color: rgba(241,217,155,.5); background: rgba(241,217,155,.06); }
+    .gem-card.unlocked:hover { transform: translateY(-3px); }
+    .gem-card.locked { opacity: .35; }
+    .gem-emoji { font-size: 34px; display: block; margin-bottom: 8px; }
+    .gem-name { font-size: 12px; color: var(--gold); line-height: 1.4; margin-bottom: 4px; }
+    .gem-cycle { font-size: 10px; color: var(--gold2); letter-spacing: .1em; }
+    .gem-desc { font-size: 11px; color: var(--muted); line-height: 1.6; margin-top: 6px; display: none; }
+    .gem-card.unlocked:hover .gem-desc { display: block; }
+    .gem-lock { font-size: 20px; color: rgba(255,255,255,.2); margin-bottom: 4px; }
+
+    /* 称号 */
+    .titles-section { margin-bottom: 40px; }
+    .titles-grid { display: grid; gap: 10px; }
+    .title-card {
+      display: flex; align-items: center; gap: 14px;
+      padding: 16px 16px; border: 1px solid var(--border); border-radius: 14px;
+      background: rgba(255,255,255,.025);
+    }
+    .title-card.unlocked { border-color: rgba(241,217,155,.45); background: rgba(241,217,155,.07); }
+    .title-card.locked { opacity: .35; }
+    .title-emoji { font-size: 28px; flex-shrink: 0; width: 40px; text-align: center; }
+    .title-body { flex: 1; }
+    .title-name { font-size: 15px; color: var(--gold); }
+    .title-desc { font-size: 12px; color: var(--muted); margin-top: 3px; line-height: 1.6; }
+    .title-condition { font-size: 11px; color: var(--gold2); margin-top: 4px; }
+    .title-badge {
+      flex-shrink: 0; padding: 3px 10px; border-radius: 999px; font-size: 10px;
+    }
+    .badge-unlocked { background: rgba(125,187,138,.25); color: #a8e0a8; }
+    .badge-locked { background: rgba(255,255,255,.07); color: var(--muted); }
+
+    /* ポイント履歴 */
+    .history-section { margin-bottom: 40px; }
+    .history-list { display: grid; gap: 8px; }
+    .history-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 14px; border: 1px solid rgba(255,255,255,.07); border-radius: 10px;
+      font-size: 13px;
+    }
+    .hi-reason { color: var(--muted); }
+    .hi-amount { color: var(--gold); font-size: 14px; }
+    .hi-date { font-size: 11px; color: rgba(255,255,255,.3); margin-top: 2px; }
+
+    /* ナビ */
+    .nav-links { display: flex; justify-content: space-between; margin-top: 36px; }
+    .nav-links a { color: var(--muted); font-size: 13px; text-decoration: none; }
+    .nav-links a:hover { color: var(--gold); }
+
+    /* 解放アニメ */
+    @keyframes gemUnlock {
+      0%{ transform: scale(.6); opacity: 0; }
+      60%{ transform: scale(1.15); }
+      100%{ transform: scale(1); opacity: 1; }
+    }
+    .gem-card.just-unlocked { animation: gemUnlock .6s ease both; }
+  </style>
+</head>
+<body>
+<div class="shell">
+
+  <header class="treasure-header">
+    <p class="th-kicker">MOON TREASURE</p>
+    <span class="th-icon">🗝️</span>
+    <h1 class="th-title">月の宝箱</h1>
+    <p class="th-sub">月のサイクルを旅するたびに<br>石と称号があなたのもとに集まります</p>
+  </header>
+
+  <!-- Moonポイント -->
+  <div class="points-card" id="pointsCard"></div>
+
+  <!-- 月石コレクション -->
+  <section class="gems-section">
+    <p class="sec-title">✦ 月石コレクション</p>
+    <div class="gems-grid" id="gemsGrid"></div>
+  </section>
+
+  <!-- 称号 -->
+  <section class="titles-section">
+    <p class="sec-title">✦ 称号</p>
+    <div class="titles-grid" id="titlesGrid"></div>
+  </section>
+
+  <!-- ポイント履歴 -->
+  <section class="history-section" id="historySection" style="display:none;">
+    <p class="sec-title">✦ 獲得履歴</p>
+    <div class="history-list" id="historyList"></div>
+  </section>
+
+  <div class="nav-links">
+    <a href="moon_cycle_dashboard.html">← 月サイクル一覧へ</a>
+    <a href="wonderland_gate.html">トップ</a>
+  </div>
+</div>
+
+<script src="moon_cycle_data.js"></script>
+<script src="moon_points.js"></script>
+<script>
+(function(){
+  var profile = (function(){
+    try { return JSON.parse(localStorage.getItem('tsukiyomi:diarySync:cachedProfile')||'{}'); }
+    catch(e){ return {}; }
+  })();
+  var userId = profile.email || profile.participantId || '';
+
+  var totalPts = getMoonPoints(userId);
+  var unlockedItems = getMoonItems(userId);
+  var streak = getDailyStreak(userId);
+
+  function isUnlocked(id) {
+    return unlockedItems.some(function(i){ return i.id === id || i.id.startsWith(id + ':'); });
+  }
+
+  // ─ ポイントカード ─
+  var MILESTONES = [100, 300, 700, 1500];
+  var nextMilestone = MILESTONES.find(function(m){ return m > totalPts; }) || null;
+  var prevMilestone = 0;
+  if (nextMilestone) {
+    var idx = MILESTONES.indexOf(nextMilestone);
+    prevMilestone = idx > 0 ? MILESTONES[idx-1] : 0;
+  }
+  var progressPct = nextMilestone
+    ? Math.min(100, Math.round((totalPts - prevMilestone) / (nextMilestone - prevMilestone) * 100))
+    : 100;
+
+  var nextTitle = nextMilestone
+    ? MOON_TITLES.find(function(t){ return t.condition === 'points:' + nextMilestone; })
+    : null;
+
+  document.getElementById('pointsCard').innerHTML =
+    '<div class="pc-icon">🌙</div>' +
+    '<div class="pc-body">' +
+      '<p class="pc-label">MOON POINTS</p>' +
+      '<div><span class="pc-points">' + totalPts.toLocaleString() + '</span><span class="pc-unit">pt</span></div>' +
+      (streak > 1 ? '<p class="pc-streak"><span class="streak-fire">🔥</span> ' + streak + '日連続記録中</p>' : '') +
+    '</div>' +
+    (nextTitle ? '<div class="pc-next">' +
+      '<p class="pc-next-label">次の称号まで</p>' +
+      '<p class="pc-next-item">' + nextTitle.emoji + ' ' + nextTitle.name + '</p>' +
+      '<div class="pc-progress"><div class="pc-progress-fill" style="width:' + progressPct + '%"></div></div>' +
+      '<p style="font-size:10px;color:var(--muted);margin-top:3px;text-align:right">' + totalPts + ' / ' + nextMilestone + 'pt</p>' +
+    '</div>' : '<div class="pc-next"><p style="font-size:13px;color:var(--gold)">✨ 全称号解放！</p></div>');
+
+  // ─ 月石グリッド ─
+  var gemsGrid = document.getElementById('gemsGrid');
+  // 全サイクル×4フェーズ分の月石スロットを表示
+  MOON_CYCLE_DATA.cycles.forEach(function(cycle){
+    Object.keys(MOON_GEMS).forEach(function(phase){
+      var gem = MOON_GEMS[phase];
+      var itemId = gem.id + ':' + cycle.id;
+      var unlocked = unlockedItems.some(function(i){ return i.id === itemId; });
+      var card = document.createElement('div');
+      card.className = 'gem-card' + (unlocked ? ' unlocked' : ' locked');
+      var cycleLabel = cycle.id.replace('-','年') + '月';
+      card.innerHTML = unlocked
+        ? '<span class="gem-emoji">' + gem.emoji + '</span>' +
+          '<div class="gem-name">' + gem.name + '</div>' +
+          '<div class="gem-cycle">' + cycleLabel + '</div>' +
+          '<div class="gem-desc">' + gem.desc + '</div>'
+        : '<div class="gem-lock">🔒</div>' +
+          '<div class="gem-name">' + cycleLabel + '<br>' + PHASE_META[phase].ja + '</div>';
+      gemsGrid.appendChild(card);
+    });
+  });
+
+  // ─ 称号グリッド ─
+  var titlesGrid = document.getElementById('titlesGrid');
+  MOON_TITLES.forEach(function(title){
+    var unlocked = isUnlocked(title.id);
+    var card = document.createElement('div');
+    card.className = 'title-card' + (unlocked ? ' unlocked' : ' locked');
+    var condLabel = title.type === 'cycle'
+      ? 'サイクル' + title.condition.replace('cycle:','') + '回完走'
+      : title.condition.replace('points:','') + ' Moon Points達成';
+    card.innerHTML =
+      '<div class="title-emoji">' + title.emoji + '</div>' +
+      '<div class="title-body">' +
+        '<div class="title-name">' + title.name + '</div>' +
+        '<div class="title-desc">' + title.desc + '</div>' +
+        '<div class="title-condition">' + condLabel + '</div>' +
+      '</div>' +
+      '<span class="title-badge ' + (unlocked ? 'badge-unlocked' : 'badge-locked') + '">' +
+        (unlocked ? '✓ 解放済み' : '未解放') + '</span>';
+    titlesGrid.appendChild(card);
+  });
+
+  // ─ 獲得履歴 ─
+  try {
+    var logData = JSON.parse(localStorage.getItem('tsukiyomi:moonPoints:v1:' + userId) || '{}');
+    var log = (logData.log || []).slice().reverse().slice(0, 10);
+    if (log.length > 0) {
+      document.getElementById('historySection').style.display = '';
+      var list = document.getElementById('historyList');
+      log.forEach(function(entry){
+        var row = document.createElement('div');
+        row.className = 'history-item';
+        var date = entry.at ? entry.at.split('T')[0] : '';
+        row.innerHTML =
+          '<div><div class="hi-reason">' + (entry.reason || '') + '</div>' +
+          '<div class="hi-date">' + date + '</div></div>' +
+          '<div class="hi-amount">+' + entry.amount + ' pt</div>';
+        list.appendChild(row);
+      });
+    }
+  } catch(e){}
+})();
+</script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function() { navigator.serviceWorker.register("sw.js"); });
+}
+</script>
+</body>
+</html>

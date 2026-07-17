@@ -202,13 +202,14 @@
 
   <div class="nav-links">
     <a href="moon_cycle_dashboard.html">← 月サイクル一覧へ</a>
-    <a href="wonderland_gate.html">トップ</a>
+    <a href="moon_treasure.html">🗝️ 月の宝箱</a>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script src="moon_cycle_data.js"></script>
+<script src="moon_points.js"></script>
 <script src="diary_data_sync.js"></script>
 <script>
 var CYCLE_ID, PHASE_KEY, CYCLE, PD, META, USER_ID;
@@ -322,7 +323,9 @@ function loadDailyEntry() {
 
 function saveDaily() {
   var text = document.getElementById('dailyInput').value;
+  var isNew = false;
   if (USER_ID) {
+    isNew = !localStorage.getItem(dailyKey(CURRENT_DAY));
     var data = {
       day: CURRENT_DAY, cycleId: CYCLE_ID, phase: PHASE_KEY,
       savedAt: new Date().toISOString(), text: text,
@@ -330,7 +333,32 @@ function saveDaily() {
     };
     try { localStorage.setItem(dailyKey(CURRENT_DAY), JSON.stringify(data)); } catch(e){}
   }
-  showToast('✓ Day ' + CURRENT_DAY + ' の日記を保存しました');
+
+  // ポイント付与（新規保存のみ）
+  if (isNew && USER_ID) {
+    recordDailyStreak(USER_ID);
+    var r = addMoonPoints(USER_ID, MOON_POINT_VALUES.daily_entry, 'Day' + CURRENT_DAY + '日記');
+    var msg = '✓ Day ' + CURRENT_DAY + ' 保存 ＋' + MOON_POINT_VALUES.daily_entry + ' 🌙';
+
+    // 7日コンプリートチェック
+    var doneCount = 0;
+    for (var d = 1; d <= 7; d++) {
+      try { if (localStorage.getItem(dailyKey(d))) doneCount++; } catch(e){}
+    }
+    if (doneCount === 7) {
+      var phaseResult = onPhaseComplete(USER_ID, CYCLE_ID, PHASE_KEY);
+      if (phaseResult.points > 0) {
+        msg = '🎉 7日コンプリート！ ＋' + (MOON_POINT_VALUES.daily_entry + phaseResult.points) + ' 🌙';
+        if (phaseResult.messages.length) {
+          setTimeout(function(){ showToast(phaseResult.messages[0]); }, 2000);
+        }
+      }
+    }
+    showToast(msg);
+  } else {
+    showToast('✓ Day ' + CURRENT_DAY + ' の日記を更新しました');
+  }
+
   document.getElementById('dailySavedTag').style.display = 'block';
   document.getElementById('dailyReportArea').style.display = 'block';
   renderDots();
@@ -403,8 +431,15 @@ function saveReflect() {
 
   if (USER_ID) {
     try { localStorage.setItem(getMoonCycleKey(USER_ID, CYCLE_ID, PHASE_KEY), JSON.stringify(data)); } catch(e){}
+    var rr = onReflectComplete(USER_ID, CYCLE_ID, PHASE_KEY);
+    if (rr.points > 0) {
+      showToast('✓ 振り返り保存 ＋' + rr.points + ' 🌙');
+    } else {
+      showToast('✓ 振り返りを保存しました');
+    }
+  } else {
+    showToast('✓ 振り返りを保存しました');
   }
-  showToast('✓ 振り返りを保存しました');
   document.getElementById('reflectSavedTag').style.display = 'block';
   document.getElementById('reflectReportArea').style.display = 'block';
 }
