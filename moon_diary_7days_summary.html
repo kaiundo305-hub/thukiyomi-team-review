@@ -332,7 +332,42 @@
         }
       }
 
-      document.addEventListener('DOMContentLoaded', render);
+      // スプレッドシートに保存済みの日記があれば、ローカルに無い日だけ自動復元して再描画する
+      function restoreFromSheet(){
+        var pid = profile.participantId || params.get('pid') || '';
+        if(!pid) return;
+        var gasUrl = (localStorage.getItem('tsukiyomi:sheetSync:url') ||
+          'https://script.google.com/macros/s/AKfycbxIffIfAOptA-WR6jjT9dg8Fc0yb9HpwsLTR-ZG43Nw12_KR_Yi0Xj9IT_FAyXGV_Ic/exec').trim();
+        var secret = (localStorage.getItem('tsukiyomi:sheetSync:secretKey') || 'tsukiyomi-2026-key').trim();
+        if(!gasUrl) return;
+        window.__tsukiyomiSummaryRestore = function(result){
+          if(!result || !result.ok || !result.days) return;
+          var changed = false;
+          Object.keys(result.days).forEach(function(dayNum){
+            var key = 'tsukiyomi:structuredDiary:v1:' + identity + ':day:' + dayNum;
+            var existing = null;
+            try { existing = JSON.parse(localStorage.getItem(key) || 'null'); } catch(e){}
+            var hasText = existing && (existing.lines || []).some(function(l){ return String(l.text || '').trim(); });
+            if(hasText) return;
+            try {
+              localStorage.setItem(key, JSON.stringify(result.days[dayNum]));
+              changed = true;
+            } catch(e){}
+          });
+          if(changed) render();
+        };
+        var script = document.createElement('script');
+        script.src = gasUrl + '?pid=' + encodeURIComponent(pid) +
+          '&secretKey=' + encodeURIComponent(secret) +
+          '&callback=__tsukiyomiSummaryRestore&t=' + Date.now();
+        script.onerror = function(){};
+        document.head.appendChild(script);
+      }
+
+      document.addEventListener('DOMContentLoaded', function(){
+        render();
+        restoreFromSheet();
+      });
     })();
   </script>
 </body>

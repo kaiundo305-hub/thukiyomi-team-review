@@ -5,7 +5,9 @@
 
   function identity(){
     var p = params();
-    return p.get('participantId') || p.get('birth') || p.get('name') || 'guest';
+    var cached = loadCachedProfile();
+    return p.get('participantId') || p.get('pid') || cached.participantId ||
+           p.get('birth') || p.get('name') || cached.birth || cached.name || 'guest';
   }
 
   function dayNumber(){
@@ -331,10 +333,36 @@
     panel.appendChild(hidden);
   }
 
+  function rescueGuestData(){
+    var id = identity();
+    if(!id || id === 'guest') return;
+    for(var d = 1; d <= 7; d++){
+      var idKey = 'tsukiyomi:structuredDiary:v1:' + id + ':day:' + d;
+      var guestKey = 'tsukiyomi:structuredDiary:v1:guest:day:' + d;
+      try {
+        var guestRaw = localStorage.getItem(guestKey);
+        if(!guestRaw) continue;
+        var guestRec = JSON.parse(guestRaw);
+        var guestHasText = guestRec && (guestRec.lines || []).some(function(l){ return (l.text || '').trim().length > 0; });
+        if(!guestHasText) continue;
+        var idRaw = localStorage.getItem(idKey);
+        var idHasText = false;
+        if(idRaw){
+          try {
+            var idRec = JSON.parse(idRaw);
+            idHasText = (idRec.lines || []).some(function(l){ return (l.text || '').trim().length > 0; });
+          } catch(e){}
+        }
+        if(!idHasText) localStorage.setItem(idKey, guestRaw);
+      } catch(e){}
+    }
+  }
+
   document.addEventListener('DOMContentLoaded', function(){
     hideTechnicalFields();
     addHiddenField();
     hideTechnicalFields();
+    rescueGuestData();
     loadIntoPage();
     bindPhoto();
     bindSave();
