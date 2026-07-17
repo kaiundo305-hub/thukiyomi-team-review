@@ -1,0 +1,795 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ことばの星座 | 月読みワンダーランド</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#04020e">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --gold: #f1d99b; --gold2: #c8a84b; --white: #f5f0e8; --muted: rgba(245,240,232,.5);
+      --phase-new:  #5a4a8a; --phase-jog: #2a5a8a; --phase-full:#7a5a10; --phase-kag:#4a4a5a;
+    }
+    html, body { width:100%; height:100%; overflow: hidden; background: #04020e; }
+
+    /* ─ キャンバス ─ */
+    #starCanvas { position: fixed; inset: 0; display: block; cursor: crosshair; }
+
+    /* ─ トップバー ─ */
+    .topbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 10;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 18px; background: rgba(4,2,14,.85);
+      border-bottom: 1px solid rgba(241,217,155,.15); backdrop-filter: blur(8px);
+    }
+    .tb-title { font-family: 'Hiragino Mincho ProN', serif; font-size: 15px; color: var(--gold); letter-spacing: .12em; }
+    .tb-right { display: flex; gap: 8px; align-items: center; }
+    .tb-btn {
+      padding: 6px 14px; border: 1px solid rgba(241,217,155,.4); border-radius: 999px;
+      background: none; color: var(--gold); font-size: 12px; cursor: pointer;
+      font-family: 'Hiragino Mincho ProN', serif; letter-spacing: .06em; transition: all .2s;
+    }
+    .tb-btn:hover { background: rgba(241,217,155,.12); }
+    .tb-btn.primary { background: rgba(200,168,75,.25); border-color: var(--gold2); }
+
+    /* ─ サイクルタブ ─ */
+    .cycle-bar {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 10;
+      display: flex; gap: 6px; justify-content: center; padding: 10px 14px;
+      background: rgba(4,2,14,.85); border-top: 1px solid rgba(241,217,155,.15); backdrop-filter: blur(8px);
+    }
+    .cyc-btn {
+      padding: 6px 14px; border: 1px solid rgba(241,217,155,.25); border-radius: 999px;
+      background: none; color: var(--muted); font-size: 12px; cursor: pointer;
+      font-family: 'Hiragino Mincho ProN', serif; transition: all .2s;
+    }
+    .cyc-btn.active { border-color: var(--gold2); color: var(--gold); background: rgba(241,217,155,.1); }
+
+    /* ─ ノードツールチップ ─ */
+    .node-tip {
+      position: fixed; z-index: 20; pointer-events: none;
+      max-width: 260px; padding: 12px 14px;
+      background: rgba(10,6,28,.93); border: 1px solid rgba(241,217,155,.35);
+      border-radius: 12px; backdrop-filter: blur(6px);
+      font-family: 'Hiragino Mincho ProN', serif;
+      transform: translate(12px, -50%); display: none;
+    }
+    .nt-word { font-size: 15px; color: var(--gold); margin-bottom: 6px; }
+    .nt-phase { font-size: 11px; color: var(--gold2); letter-spacing: .12em; margin-bottom: 8px; }
+    .nt-excerpt { font-size: 12px; color: var(--muted); line-height: 1.8; }
+
+    /* ─ 凡例 ─ */
+    .legend {
+      position: fixed; top: 56px; right: 14px; z-index: 10;
+      padding: 10px 14px; background: rgba(4,2,14,.8);
+      border: 1px solid rgba(241,217,155,.15); border-radius: 10px;
+      font-family: 'Hiragino Mincho ProN', serif;
+    }
+    .leg-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--muted); margin-bottom: 5px; }
+    .leg-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+    /* ─ エクスポートモーダル ─ */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 30; display: none;
+      background: rgba(0,0,0,.7); align-items: center; justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      width: min(440px, calc(100% - 32px)); padding: 28px 24px;
+      background: #0e0a1a; border: 1px solid rgba(241,217,155,.3);
+      border-radius: 18px; font-family: 'Hiragino Mincho ProN', serif;
+    }
+    .modal h2 { font-size: 18px; color: var(--gold); margin-bottom: 10px; }
+    .modal p { font-size: 13px; color: var(--muted); line-height: 1.9; margin-bottom: 16px; }
+    .modal-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+    .modal-btn {
+      flex: 1; padding: 12px 16px; border-radius: 12px; font-size: 13px;
+      cursor: pointer; font-family: inherit; text-align: center; border: none;
+    }
+    .modal-btn.primary { background: var(--gold2); color: #1a1025; font-weight: bold; }
+    .modal-btn.secondary { background: rgba(255,255,255,.08); color: var(--white); border: 1px solid rgba(255,255,255,.15); }
+    .modal-status { margin-top: 12px; font-size: 12px; color: #a8e0a8; display: none; }
+
+    /* ─ 空データ ─ */
+    .empty-msg {
+      position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%);
+      text-align: center; font-family: 'Hiragino Mincho ProN', serif; display: none;
+    }
+    .empty-icon { font-size: 48px; display: block; margin-bottom: 14px; }
+    .empty-text { font-size: 15px; color: var(--muted); line-height: 2; }
+    .empty-link { display: inline-block; margin-top: 16px; padding: 10px 24px; border: 1px solid rgba(241,217,155,.4); border-radius: 999px; color: var(--gold); text-decoration: none; font-size: 13px; }
+  </style>
+</head>
+<body>
+<canvas id="starCanvas"></canvas>
+
+<!-- トップバー -->
+<div class="topbar">
+  <span class="tb-title">🌌 ことばの星座</span>
+  <div class="tb-right">
+    <button class="tb-btn" onclick="showLegend()">凡例</button>
+    <button class="tb-btn primary" onclick="openExportModal()">📤 Obsidianへ</button>
+    <a href="moon_cycle_dashboard.html" style="color:var(--muted);font-size:12px;text-decoration:none;padding:6px 10px;">← 戻る</a>
+  </div>
+</div>
+
+<!-- サイクルタブ -->
+<div class="cycle-bar" id="cycleBar"></div>
+
+<!-- 凡例 -->
+<div class="legend" id="legend" style="display:none;">
+  <div class="leg-item"><div class="leg-dot" style="background:#8a70c8"></div>新月（P:願い）</div>
+  <div class="leg-item"><div class="leg-dot" style="background:#4a90c8"></div>上弦（D:実行）</div>
+  <div class="leg-item"><div class="leg-dot" style="background:#c8a820"></div>満月（C:感謝）</div>
+  <div class="leg-item"><div class="leg-dot" style="background:#8a8aa8"></div>下弦（A:手放し）</div>
+  <div class="leg-item" style="margin-top:8px;font-size:10px;">● 大きい星 = よく出る言葉</div>
+</div>
+
+<!-- ノードツールチップ -->
+<div class="node-tip" id="nodeTip">
+  <div class="nt-word" id="ntWord"></div>
+  <div class="nt-phase" id="ntPhase"></div>
+  <div class="nt-excerpt" id="ntExcerpt"></div>
+</div>
+
+<!-- 空データメッセージ -->
+<div class="empty-msg" id="emptyMsg">
+  <span class="empty-icon">🌑</span>
+  <p class="empty-text">まだ日記が書かれていません。<br>月サイクル日記を書くと<br>ここに星座が広がります。</p>
+  <a class="empty-link" href="moon_cycle_dashboard.html">月サイクルへ →</a>
+</div>
+
+<!-- Obsidianエクスポートモーダル -->
+<div class="modal-overlay" id="exportModal">
+  <div class="modal">
+    <h2>📤 Obsidianへエクスポート</h2>
+    <p>日記をマークダウンファイルとしてObsidianのvaultに書き出します。<br>エクスポート後、Obsidianのグラフビューを開くと<br>ことばが星座のようにつながって見えます。</p>
+    <div class="modal-btns">
+      <button class="modal-btn primary" onclick="exportToObsidian()">🗂 vaultフォルダを選択して書き出す</button>
+      <button class="modal-btn secondary" onclick="downloadMarkdownZip()">⬇️ .mdファイルをダウンロード</button>
+    </div>
+    <p class="modal-status" id="exportStatus"></p>
+    <div style="margin-top:14px;text-align:right;">
+      <button onclick="closeExportModal()" style="background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;">閉じる</button>
+    </div>
+  </div>
+</div>
+
+<script src="moon_cycle_data.js"></script>
+<script src="moon_points.js"></script>
+<script src="diary_data_sync.js"></script>
+<script>
+// ─────────────────────────────────────────
+// 1. データ読み込み
+// ─────────────────────────────────────────
+var profile = (function(){
+  try { return JSON.parse(localStorage.getItem('tsukiyomi:diarySync:cachedProfile')||'{}'); }
+  catch(e){ return {}; }
+})();
+var USER_ID = profile.email || profile.participantId || '';
+
+// 不要語リスト（日本語の機能語）
+var STOP_WORDS = new Set([
+  'こと','もの','ため','よう','それ','これ','あれ','どこ','なに','いつ','だれ',
+  'から','まで','より','でも','また','そして','しかし','けど','ので','なの',
+  'あり','あっ','ある','いる','する','なる','くる','いく','みる','できる',
+  'です','ます','した','して','いた','くれ','もらい','ちゃん','さん',
+  'そう','どう','よく','まだ','もう','ちょっと','すごく','とても','少し',
+  'です','ます','ない','ました','ません','おり','おる',
+  'この','その','あの','どの','ここ','そこ','あそこ','どこか',
+  'はい','いいえ','うん','ん','え','あ','ぁ','に','は','を','が','の',
+  'て','と','も','で','へ','や','か','な','わ','よ','ね','さ','ことば',
+]);
+
+function extractKeywords(text, maxWords) {
+  if (!text) return [];
+  var words = text
+    .replace(/[。、！？\n\r.,!?]/g, ' ')
+    .split(/\s+/)
+    .map(function(w){ return w.trim(); })
+    .filter(function(w){ return w.length >= 2 && !STOP_WORDS.has(w) && !/^[ぁ-ん]{1}$/.test(w); });
+  // 頻度カウント
+  var freq = {};
+  words.forEach(function(w){ freq[w] = (freq[w]||0) + 1; });
+  return Object.keys(freq)
+    .sort(function(a,b){ return freq[b]-freq[a]; })
+    .slice(0, maxWords || 8)
+    .map(function(w){ return { word: w, count: freq[w] }; });
+}
+
+function loadAllEntries(cycleId) {
+  var entries = [];
+  if (!USER_ID) return entries;
+  PHASE_ORDER.forEach(function(phase){
+    for (var d = 1; d <= 7; d++) {
+      var k = 'tsukiyomi:moonCycle:daily:v1:' + USER_ID + ':' + cycleId + ':' + phase + ':' + d;
+      try {
+        var saved = JSON.parse(localStorage.getItem(k)||'null');
+        if (saved && saved.text && saved.text.trim()) {
+          entries.push({ phase: phase, day: d, cycleId: cycleId,
+            text: saved.text, question: saved.question||'' });
+        }
+      } catch(e){}
+    }
+    var rk = getMoonCycleKey(USER_ID, cycleId, phase);
+    try {
+      var ref = JSON.parse(localStorage.getItem(rk)||'null');
+      if (ref && ref.lines) {
+        ref.lines.forEach(function(line){
+          if (line.text && line.text.trim()) {
+            entries.push({ phase: phase, day: 'r', cycleId: cycleId,
+              text: line.text, question: line.question||'' });
+          }
+        });
+      }
+    } catch(e){}
+  });
+  return entries;
+}
+
+// ─────────────────────────────────────────
+// 2. グラフ構築
+// ─────────────────────────────────────────
+var PHASE_COLORS = {
+  shingetu: '#8a70c8', jougen: '#4a90c8', mangetsu: '#c8a820', kagen: '#8a8aa8'
+};
+var PHASE_GLOW = {
+  shingetu: 'rgba(138,112,200,.4)', jougen: 'rgba(74,144,200,.4)',
+  mangetsu: 'rgba(200,168,32,.4)', kagen: 'rgba(138,138,168,.4)'
+};
+
+function buildGraph(cycleId) {
+  var entries = loadAllEntries(cycleId);
+  var nodeMap = {};
+  var edges = [];
+
+  // フェーズノード（固定）
+  PHASE_ORDER.forEach(function(phase){
+    var meta = PHASE_META[phase];
+    var cycle = MOON_CYCLE_DATA.cycles.find(function(c){ return c.id === cycleId; });
+    var pd = cycle ? cycle[phase] : {};
+    nodeMap[phase + ':PHASE'] = {
+      id: phase + ':PHASE', word: meta.icon + ' ' + meta.ja,
+      phase: phase, count: 6, isPhase: true,
+      excerpt: pd.theme || ''
+    };
+  });
+
+  // 占的ノード
+  var intentionKey = 'tsukiyomi:moonCycle:intention:' + USER_ID + ':' + cycleId;
+  try {
+    var intention = localStorage.getItem(intentionKey);
+    if (intention && intention.trim()) {
+      var kws = extractKeywords(intention, 4);
+      kws.forEach(function(kw){
+        var nid = 'shingetu:' + kw.word;
+        if (!nodeMap[nid]) nodeMap[nid] = { id: nid, word: kw.word, phase: 'shingetu', count: 0, excerpts: [] };
+        nodeMap[nid].count += kw.count;
+        nodeMap[nid].excerpts = nodeMap[nid].excerpts || [];
+        nodeMap[nid].excerpts.push({ text: intention.slice(0,60), phase: 'shingetu', day: '占的' });
+        edges.push({ source: 'shingetu:PHASE', target: nid });
+      });
+    }
+  } catch(e){}
+
+  // 日記エントリからキーワード抽出
+  entries.forEach(function(entry){
+    var kws = extractKeywords(entry.text, 8);
+    var prevId = null;
+    kws.forEach(function(kw){
+      var nid = entry.phase + ':' + kw.word;
+      if (!nodeMap[nid]) nodeMap[nid] = { id: nid, word: kw.word, phase: entry.phase, count: 0, excerpts: [] };
+      nodeMap[nid].count += kw.count;
+      if (!nodeMap[nid].excerpts) nodeMap[nid].excerpts = [];
+      if (nodeMap[nid].excerpts.length < 3) {
+        nodeMap[nid].excerpts.push({
+          text: entry.text.slice(0,60) + (entry.text.length > 60 ? '…' : ''),
+          phase: entry.phase, day: entry.day
+        });
+      }
+      edges.push({ source: entry.phase + ':PHASE', target: nid });
+      if (prevId && prevId !== nid) {
+        edges.push({ source: prevId, target: nid });
+      }
+      prevId = nid;
+    });
+  });
+
+  // 同じ言葉が複数フェーズに出た場合のクロスリンク
+  var wordsByWord = {};
+  Object.values(nodeMap).forEach(function(n){
+    if (n.isPhase) return;
+    var w = n.word;
+    if (!wordsByWord[w]) wordsByWord[w] = [];
+    wordsByWord[w].push(n.id);
+  });
+  Object.values(wordsByWord).forEach(function(ids){
+    if (ids.length > 1) {
+      for (var i = 0; i < ids.length - 1; i++) {
+        edges.push({ source: ids[i], target: ids[i+1], isCross: true });
+      }
+    }
+  });
+
+  // 重複エッジ除去
+  var edgeSet = new Set();
+  edges = edges.filter(function(e){
+    var key = [e.source, e.target].sort().join('|');
+    if (edgeSet.has(key)) return false;
+    edgeSet.add(key); return true;
+  });
+
+  return { nodes: Object.values(nodeMap), edges: edges };
+}
+
+// ─────────────────────────────────────────
+// 3. 力学シミュレーション
+// ─────────────────────────────────────────
+var PHASE_ANCHORS = {
+  shingetu: [0.28, 0.35], jougen: [0.72, 0.35],
+  mangetsu: [0.72, 0.68], kagen:   [0.28, 0.68]
+};
+
+function initPositions(nodes, W, H) {
+  nodes.forEach(function(n){
+    if (n.isPhase) {
+      var anc = PHASE_ANCHORS[n.phase];
+      n.x = anc[0] * W; n.y = anc[1] * H;
+      n.fx = n.x; n.fy = n.y; // fixed
+    } else {
+      var anc2 = PHASE_ANCHORS[n.phase];
+      var angle = Math.random() * Math.PI * 2;
+      var r = 60 + Math.random() * 80;
+      n.x = anc2[0] * W + Math.cos(angle) * r;
+      n.y = anc2[1] * H + Math.sin(angle) * r;
+    }
+    n.vx = 0; n.vy = 0;
+  });
+}
+
+function simulate(nodes, edges, iterations) {
+  var nodeById = {};
+  nodes.forEach(function(n){ nodeById[n.id] = n; });
+
+  for (var iter = 0; iter < iterations; iter++) {
+    var alpha = 1 - iter / iterations;
+
+    // Phase anchor gravity
+    nodes.forEach(function(n){
+      if (n.isPhase) return;
+      var canvas = document.getElementById('starCanvas');
+      var W = canvas.width, H = canvas.height;
+      var anc = PHASE_ANCHORS[n.phase];
+      var ax = anc[0] * W, ay = anc[1] * H;
+      n.vx += (ax - n.x) * 0.015 * alpha;
+      n.vy += (ay - n.y) * 0.015 * alpha;
+    });
+
+    // Repulsion
+    for (var i = 0; i < nodes.length; i++) {
+      for (var j = i+1; j < nodes.length; j++) {
+        var a = nodes[i], b = nodes[j];
+        var dx = b.x - a.x, dy = b.y - a.y;
+        var dist = Math.sqrt(dx*dx + dy*dy) || 1;
+        var minDist = 60;
+        if (dist < minDist) {
+          var f = (minDist - dist) / dist * 0.3 * alpha;
+          if (!a.fx) { a.vx -= dx * f; a.vy -= dy * f; }
+          if (!b.fx) { b.vx += dx * f; b.vy += dy * f; }
+        }
+      }
+    }
+
+    // Spring edges
+    edges.forEach(function(e){
+      var s = nodeById[e.source], t = nodeById[e.target];
+      if (!s || !t) return;
+      var dx = t.x - s.x, dy = t.y - s.y;
+      var dist = Math.sqrt(dx*dx + dy*dy) || 1;
+      var idealLen = e.isCross ? 160 : 90;
+      var f = (dist - idealLen) / dist * 0.04 * alpha;
+      if (!s.fx) { s.vx += dx * f; s.vy += dy * f; }
+      if (!t.fx) { t.vx -= dx * f; t.vy -= dy * f; }
+    });
+
+    // Update positions
+    nodes.forEach(function(n){
+      if (n.fx !== undefined) { n.x = n.fx; n.y = n.fy; return; }
+      n.vx *= 0.85; n.vy *= 0.85;
+      n.x += n.vx; n.y += n.vy;
+    });
+  }
+}
+
+// ─────────────────────────────────────────
+// 4. 描画
+// ─────────────────────────────────────────
+var bgStars = [];
+function initBgStars(W, H) {
+  bgStars = [];
+  for (var i = 0; i < 200; i++) {
+    bgStars.push({
+      x: Math.random() * W, y: Math.random() * H,
+      r: Math.random() * 1.2 + 0.2,
+      alpha: Math.random() * 0.6 + 0.2,
+      twinkle: Math.random() * Math.PI * 2,
+      speed: 0.02 + Math.random() * 0.03
+    });
+  }
+}
+
+var GRAPH = null;
+var ACTIVE_CYCLE = '';
+var animFrame = null;
+
+function draw() {
+  var canvas = document.getElementById('starCanvas');
+  var ctx = canvas.getContext('2d');
+  var W = canvas.width, H = canvas.height;
+  var t = Date.now() / 1000;
+
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#04020e';
+  ctx.fillRect(0, 0, W, H);
+
+  // 背景の星
+  bgStars.forEach(function(s){
+    var alpha = s.alpha * (0.7 + 0.3 * Math.sin(t * s.speed * 60 + s.twinkle));
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255,255,255,' + alpha + ')';
+    ctx.fill();
+  });
+
+  if (!GRAPH || GRAPH.nodes.length === 0) {
+    animFrame = requestAnimationFrame(draw);
+    return;
+  }
+
+  var nodes = GRAPH.nodes, edges = GRAPH.edges;
+  var nodeById = {};
+  nodes.forEach(function(n){ nodeById[n.id] = n; });
+
+  // エッジ
+  edges.forEach(function(e){
+    var s = nodeById[e.source], t2 = nodeById[e.target];
+    if (!s || !t2) return;
+    ctx.beginPath();
+    ctx.moveTo(s.x, s.y);
+    ctx.lineTo(t2.x, t2.y);
+    ctx.strokeStyle = e.isCross
+      ? 'rgba(241,217,155,.12)'
+      : 'rgba(241,217,155,.18)';
+    ctx.lineWidth = e.isCross ? 0.5 : 0.8;
+    ctx.stroke();
+  });
+
+  // ノード
+  nodes.forEach(function(n){
+    var r = n.isPhase ? 28 : Math.max(5, Math.min(16, 5 + n.count * 2.5));
+    var color = PHASE_COLORS[n.phase] || '#888';
+    var glow  = PHASE_GLOW[n.phase]  || 'rgba(128,128,128,.3)';
+    var twink = n.isPhase ? 1 : (0.85 + 0.15 * Math.sin(t * (0.5 + (n.id.length % 7) * 0.1) + n.id.length));
+
+    // グロー
+    var grd = ctx.createRadialGradient(n.x, n.y, r * 0.3, n.x, n.y, r * 2.5);
+    grd.addColorStop(0, glow);
+    grd.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, r * 2.5, 0, Math.PI * 2);
+    ctx.fillStyle = grd;
+    ctx.fill();
+
+    // 本体
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, r * twink, 0, Math.PI * 2);
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(241,217,155,' + (n.isPhase ? '.6' : '.3') + ')';
+    ctx.lineWidth = n.isPhase ? 1.5 : 0.8;
+    ctx.stroke();
+
+    // ラベル
+    var fs = n.isPhase ? 13 : Math.max(10, Math.min(13, 9 + n.count));
+    ctx.font = (n.isPhase ? 'bold ' : '') + fs + 'px "Hiragino Mincho ProN", serif';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = n.isPhase ? '#f1d99b' : 'rgba(245,240,232,.8)';
+    ctx.shadowColor = 'rgba(0,0,0,.8)';
+    ctx.shadowBlur = 4;
+    ctx.fillText(n.word, n.x, n.y + r + fs + 2);
+    ctx.shadowBlur = 0;
+  });
+
+  animFrame = requestAnimationFrame(draw);
+}
+
+// ─────────────────────────────────────────
+// 5. インタラクション
+// ─────────────────────────────────────────
+var hoveredNode = null;
+
+function getNodeAt(mx, my) {
+  if (!GRAPH) return null;
+  var found = null, bestDist = 999;
+  GRAPH.nodes.forEach(function(n){
+    var dx = n.x - mx, dy = n.y - my;
+    var dist = Math.sqrt(dx*dx + dy*dy);
+    var r = n.isPhase ? 30 : Math.max(6, Math.min(18, 5 + n.count * 2.5));
+    if (dist < r + 8 && dist < bestDist) { found = n; bestDist = dist; }
+  });
+  return found;
+}
+
+document.getElementById('starCanvas').addEventListener('mousemove', function(e){
+  var rect = this.getBoundingClientRect();
+  var mx = e.clientX - rect.left, my = e.clientY - rect.top;
+  hoveredNode = getNodeAt(mx, my);
+  this.style.cursor = hoveredNode ? 'pointer' : 'crosshair';
+  var tip = document.getElementById('nodeTip');
+  if (hoveredNode) {
+    document.getElementById('ntWord').textContent = hoveredNode.word;
+    document.getElementById('ntPhase').textContent =
+      PHASE_META[hoveredNode.phase].ja + (hoveredNode.isPhase ? ' フェーズ' : '');
+    var excerpts = (hoveredNode.excerpts || []).map(function(ex){
+      return '「' + ex.text + '」';
+    }).join('\n');
+    document.getElementById('ntExcerpt').textContent = excerpts || hoveredNode.excerpt || '';
+    tip.style.display = 'block';
+    tip.style.left = (e.clientX + 14) + 'px';
+    tip.style.top  = e.clientY + 'px';
+  } else {
+    tip.style.display = 'none';
+  }
+});
+
+document.getElementById('starCanvas').addEventListener('mouseleave', function(){
+  document.getElementById('nodeTip').style.display = 'none';
+});
+
+// タッチ対応
+document.getElementById('starCanvas').addEventListener('touchstart', function(e){
+  var touch = e.touches[0];
+  var rect = this.getBoundingClientRect();
+  var mx = touch.clientX - rect.left, my = touch.clientY - rect.top;
+  var n = getNodeAt(mx, my);
+  var tip = document.getElementById('nodeTip');
+  if (n) {
+    document.getElementById('ntWord').textContent = n.word;
+    document.getElementById('ntPhase').textContent = PHASE_META[n.phase].ja;
+    var excerpts = (n.excerpts || []).map(function(ex){ return '「' + ex.text + '」'; }).join('\n');
+    document.getElementById('ntExcerpt').textContent = excerpts || n.excerpt || '';
+    tip.style.display = 'block';
+    tip.style.left = (touch.clientX + 14) + 'px';
+    tip.style.top  = touch.clientY + 'px';
+    e.preventDefault();
+  } else { tip.style.display = 'none'; }
+}, { passive: false });
+
+// ─────────────────────────────────────────
+// 6. サイクル切り替え
+// ─────────────────────────────────────────
+function selectCycle(cycleId) {
+  ACTIVE_CYCLE = cycleId;
+  document.querySelectorAll('.cyc-btn').forEach(function(b){
+    b.classList.toggle('active', b.dataset.cycle === cycleId);
+  });
+
+  var canvas = document.getElementById('starCanvas');
+  var W = canvas.width, H = canvas.height;
+  var graph = buildGraph(cycleId);
+  initPositions(graph.nodes, W, H);
+  simulate(graph.nodes, graph.edges, 200);
+  GRAPH = graph;
+
+  var hasData = graph.nodes.some(function(n){ return !n.isPhase; });
+  document.getElementById('emptyMsg').style.display = hasData ? 'none' : 'flex';
+}
+
+// ─────────────────────────────────────────
+// 7. Obsidianエクスポート
+// ─────────────────────────────────────────
+function generateMarkdown(entry, cycleId, intentionText) {
+  var phase = entry.phase;
+  var meta = PHASE_META[phase];
+  var cycle = MOON_CYCLE_DATA.cycles.find(function(c){ return c.id === cycleId; });
+  var pd = cycle ? cycle[phase] : {};
+  var zodiac = pd.zodiac || '';
+  var dayLabel = entry.day === 'r' ? '振り返り' : 'Day' + entry.day;
+
+  var kws = extractKeywords(entry.text, 6).map(function(k){ return '[[' + k.word + ']]'; }).join(' · ');
+
+  return '---\n' +
+    'tags: [月読み日記, ' + phase + ', ' + (zodiac||'') + ', ' + cycleId + ']\n' +
+    'date: ' + new Date().toISOString().split('T')[0] + '\n' +
+    'phase: ' + meta.ja + '\n' +
+    (zodiac ? 'zodiac: ' + zodiac + '\n' : '') +
+    'cycle: ' + cycleId + '\n' +
+    'day: ' + dayLabel + '\n' +
+    '---\n\n' +
+    '# ' + meta.icon + ' ' + meta.ja + ' ' + dayLabel + ' — ' + cycleId.replace('-','年') + '月\n\n' +
+    (intentionText ? '> **今月の願い**: ' + intentionText + '\n\n' : '') +
+    (entry.question ? '**Q: ' + entry.question + '**\n\n' : '') +
+    entry.text + '\n\n' +
+    '---\n\n## ✦ つながりのことば\n\n' +
+    '[[' + cycleId + '-' + phase + ']] · ' + kws + '\n\n' +
+    '#月読み日記 #' + phase + ' #' + cycleId + '\n';
+}
+
+function generatePhaseIndex(cycleId, phase, intentionText) {
+  var meta = PHASE_META[phase];
+  var cycle = MOON_CYCLE_DATA.cycles.find(function(c){ return c.id === cycleId; });
+  var pd = cycle ? cycle[phase] : {};
+  var days = PHASE_ORDER.map(function(p){ return '[[' + cycleId + '-' + p + ']]'; }).join(' → ');
+  return '# ' + meta.icon + ' ' + cycleId.replace('-','年') + '月 ' + meta.ja + '\n\n' +
+    (intentionText && phase === 'shingetu' ? '> **今月の願い**: ' + intentionText + '\n\n' : '') +
+    '**テーマ**: ' + (pd.theme||'') + '\n\n' +
+    '**PDCAサイクル**: ' + days + '\n\n' +
+    '#月読み日記 #' + phase + ' #' + cycleId + '\n';
+}
+
+async function exportToObsidian() {
+  if (!window.showDirectoryPicker) {
+    alert('このブラウザはフォルダ選択に対応していません。\nChromeまたはEdgeをお使いください。\n\n代わりに「.mdファイルをダウンロード」をお試しください。');
+    return;
+  }
+  var status = document.getElementById('exportStatus');
+  status.style.display = 'block'; status.textContent = 'フォルダを選択してください…';
+  try {
+    var rootDir = await window.showDirectoryPicker();
+    var diaryDir = await rootDir.getDirectoryHandle('月読み日記', { create: true });
+    status.textContent = 'エクスポート中…';
+
+    var written = 0;
+    for (var ci = 0; ci < MOON_CYCLE_DATA.cycles.length; ci++) {
+      var cycle = MOON_CYCLE_DATA.cycles[ci];
+      var cycleId = cycle.id;
+      var intentionKey = 'tsukiyomi:moonCycle:intention:' + USER_ID + ':' + cycleId;
+      var intentionText = '';
+      try { intentionText = localStorage.getItem(intentionKey) || ''; } catch(e){}
+
+      for (var pi = 0; pi < PHASE_ORDER.length; pi++) {
+        var phase = PHASE_ORDER[pi];
+        // フェーズインデックス
+        var idxContent = generatePhaseIndex(cycleId, phase, intentionText);
+        var idxFile = await diaryDir.getFileHandle(cycleId + '-' + phase + '.md', { create: true });
+        var idxW = await idxFile.createWritable();
+        await idxW.write(idxContent); await idxW.close();
+
+        // 日記エントリ
+        for (var d = 1; d <= 7; d++) {
+          var dk = 'tsukiyomi:moonCycle:daily:v1:' + USER_ID + ':' + cycleId + ':' + phase + ':' + d;
+          var saved = null;
+          try { saved = JSON.parse(localStorage.getItem(dk)||'null'); } catch(e){}
+          if (!saved || !saved.text) continue;
+          var md = generateMarkdown({ phase: phase, day: d, text: saved.text, question: saved.question||'' }, cycleId, intentionText);
+          var fname = cycleId + '-' + phase + '-Day' + d + '.md';
+          var fh = await diaryDir.getFileHandle(fname, { create: true });
+          var fw = await fh.createWritable();
+          await fw.write(md); await fw.close();
+          written++;
+        }
+        // 振り返り
+        var rk = getMoonCycleKey(USER_ID, cycleId, phase);
+        try {
+          var ref = JSON.parse(localStorage.getItem(rk)||'null');
+          if (ref && ref.lines) {
+            ref.lines.forEach(async function(line, li){
+              if (!line.text) return;
+              var rm = generateMarkdown({ phase: phase, day: 'r', text: line.text, question: line.question||'' }, cycleId, intentionText);
+              var rfname = cycleId + '-' + phase + '-振り返り' + (li+1) + '.md';
+              try {
+                var rfh = await diaryDir.getFileHandle(rfname, { create: true });
+                var rfw = await rfh.createWritable();
+                await rfw.write(rm); await rfw.close();
+              } catch(e){}
+            });
+            written++;
+          }
+        } catch(e){}
+      }
+    }
+
+    status.style.color = '#a8e0a8';
+    status.textContent = '✓ ' + written + '件のファイルを「月読み日記」フォルダに書き出しました。\nObsidianのグラフビューを開いてください。';
+  } catch(e) {
+    if (e.name !== 'AbortError') {
+      status.style.color = '#e8a08a';
+      status.textContent = 'エラー: ' + e.message;
+    } else { status.style.display = 'none'; }
+  }
+}
+
+function downloadMarkdownZip() {
+  // ZIPなしでも、1ファイルずつダウンロードさせる（最大10件）
+  var files = [];
+  MOON_CYCLE_DATA.cycles.forEach(function(cycle){
+    var cycleId = cycle.id;
+    var intentionKey = 'tsukiyomi:moonCycle:intention:' + USER_ID + ':' + cycleId;
+    var intentionText = '';
+    try { intentionText = localStorage.getItem(intentionKey) || ''; } catch(e){}
+    PHASE_ORDER.forEach(function(phase){
+      for (var d = 1; d <= 7; d++) {
+        var dk = 'tsukiyomi:moonCycle:daily:v1:' + USER_ID + ':' + cycleId + ':' + phase + ':' + d;
+        var saved = null;
+        try { saved = JSON.parse(localStorage.getItem(dk)||'null'); } catch(e){}
+        if (!saved || !saved.text) continue;
+        files.push({
+          name: cycleId + '-' + phase + '-Day' + d + '.md',
+          content: generateMarkdown({ phase: phase, day: d, text: saved.text, question: saved.question||'' }, cycleId, intentionText)
+        });
+      }
+    });
+  });
+
+  if (files.length === 0) {
+    document.getElementById('exportStatus').style.display = 'block';
+    document.getElementById('exportStatus').style.color = '#e8a08a';
+    document.getElementById('exportStatus').textContent = '日記データがまだありません。';
+    return;
+  }
+
+  files.slice(0, 20).forEach(function(f, i){
+    setTimeout(function(){
+      var blob = new Blob([f.content], { type: 'text/markdown;charset=utf-8' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url; a.download = f.name;
+      document.body.appendChild(a); a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }, i * 300);
+  });
+
+  document.getElementById('exportStatus').style.display = 'block';
+  document.getElementById('exportStatus').style.color = '#a8e0a8';
+  document.getElementById('exportStatus').textContent = files.length + '件のファイルをダウンロード中…\nObsidianのvaultフォルダに移動してください。';
+}
+
+function openExportModal()  { document.getElementById('exportModal').classList.add('open'); }
+function closeExportModal() { document.getElementById('exportModal').classList.remove('open'); }
+function showLegend() {
+  var l = document.getElementById('legend');
+  l.style.display = l.style.display === 'none' ? '' : 'none';
+}
+
+// ─────────────────────────────────────────
+// 8. 初期化
+// ─────────────────────────────────────────
+function onResize() {
+  var canvas = document.getElementById('starCanvas');
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+  initBgStars(canvas.width, canvas.height);
+  if (ACTIVE_CYCLE) selectCycle(ACTIVE_CYCLE);
+}
+
+window.addEventListener('DOMContentLoaded', function(){
+  var canvas = document.getElementById('starCanvas');
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+  initBgStars(canvas.width, canvas.height);
+
+  // サイクルタブ生成
+  var bar = document.getElementById('cycleBar');
+  MOON_CYCLE_DATA.cycles.forEach(function(cycle){
+    var btn = document.createElement('button');
+    btn.className = 'cyc-btn';
+    btn.dataset.cycle = cycle.id;
+    btn.textContent = cycle.id.replace('-','年') + '月';
+    btn.addEventListener('click', function(){ selectCycle(cycle.id); });
+    bar.appendChild(btn);
+  });
+
+  // 現在のサイクルをデフォルト選択
+  var current = getCurrentPhaseInfo();
+  selectCycle(current.cycleId);
+
+  animFrame = requestAnimationFrame(draw);
+});
+
+window.addEventListener('resize', onResize);
+</script>
+</body>
+</html>
