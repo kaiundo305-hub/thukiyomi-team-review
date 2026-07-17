@@ -29,6 +29,9 @@
     .daily-oracle-record{display:none}
     @media(max-width:720px){.daily-card-stage{grid-template-columns:1fr}.daily-card-image{min-height:190px}.daily-oracle-section{padding:24px 16px}}
   </style>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#3a2a1a">
+  <link rel="apple-touch-icon" href="images/icon-192.png">
 </head>
 <body>
   <main class="challenge-shell" data-challenge-day="2">
@@ -159,5 +162,12 @@
   <script src="diary_structured_save.js?v=20260616a"></script>
   <script src="diary_data_sync.js?v=20260616a"></script>
   <script src="moon_daily_item_oracle_draw.js?v=20260616c"></script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function() {
+    navigator.serviceWorker.register("sw.js");
+  });
+}
+</script>
 </body>
 </html>

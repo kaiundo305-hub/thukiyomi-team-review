@@ -6,6 +6,9 @@
   <title>Day6 願いの丘 | 月読みワンダーランド</title>
   <meta name="description" content="月読みワンダーランド7日間チャレンジ Day6。本当はどう生きたいかを思い出し、月読み日記に残します。">
   <link rel="stylesheet" href="style.css?v=diary-paper-20260530">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#3a2a1a">
+  <link rel="apple-touch-icon" href="images/icon-192.png">
 </head>
 <body>
   <main class="challenge-shell" data-challenge-day="6">
@@ -99,5 +102,12 @@
   <script src="diary_fresh_start.js?v=20260616a"></script>
   <script src="diary_structured_save.js?v=20260616a"></script>
   <script src="diary_data_sync.js?v=20260616a"></script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function() {
+    navigator.serviceWorker.register("sw.js");
+  });
+}
+</script>
 </body>
 </html>

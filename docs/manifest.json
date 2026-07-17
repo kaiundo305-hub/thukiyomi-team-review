@@ -1,0 +1,25 @@
+{
+  "name": "月読みワンダーランド",
+  "short_name": "月読み日記",
+  "description": "27宿天命鑑定 × 7日間月読み日記",
+  "start_url": "./wonderland_gate.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#1a1025",
+  "theme_color": "#3a2a1a",
+  "lang": "ja",
+  "icons": [
+    {
+      "src": "images/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "images/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -6,6 +6,9 @@
   <title>自分発見ムーンゲート | 月読みワンダーランド</title>
   <meta name="description" content="月読みワンダーランドの7日間チャレンジへ進むための、やさしい入口です。">
   <link rel="stylesheet" href="style.css?v=diary-paper-20260530">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#3a2a1a">
+  <link rel="apple-touch-icon" href="images/icon-192.png">
 </head>
 <body>
   <main class="gate-shell">
@@ -102,5 +105,12 @@
   </main>
 
   <script src="app.js"></script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function() {
+    navigator.serviceWorker.register("sw.js");
+  });
+}
+</script>
 </body>
 </html>

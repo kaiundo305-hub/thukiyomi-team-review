@@ -52,6 +52,9 @@
     @media(max-width:520px){.summary-shell{width:min(100% - 18px,1060px)}.summary-board{grid-template-columns:repeat(2,1fr)}.summary-day{padding:22px 16px}.summary-hero{padding:30px 18px}.clue-grid{grid-template-columns:1fr}}
     @media print{body{background:#fff!important}.summary-shell{width:100%;padding:0}.summary-hero,.summary-actions,.summary-board{display:none}.summary-day{break-inside:avoid;page-break-inside:avoid;box-shadow:none;margin-bottom:14mm}.summary-grid{gap:0}}
   </style>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#3a2a1a">
+  <link rel="apple-touch-icon" href="images/icon-192.png">
 </head>
 <body>
   <main class="summary-shell">
@@ -336,5 +339,12 @@
     })();
   </script>
   <script src="diary_data_sync.js"></script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function() {
+    navigator.serviceWorker.register("sw.js");
+  });
+}
+</script>
 </body>
 </html>

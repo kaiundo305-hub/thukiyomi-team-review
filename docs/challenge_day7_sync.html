@@ -6,6 +6,9 @@
   <title>Day7 月の城 | 月読みワンダーランド</title>
   <meta name="description" content="月読みワンダーランド7日間チャレンジ Day7。7日間の気づきを受け取り、新しい自分を迎えます。">
   <link rel="stylesheet" href="style.css?v=diary-paper-20260530">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#3a2a1a">
+  <link rel="apple-touch-icon" href="images/icon-192.png">
 </head>
 <body>
   <main class="challenge-shell" data-challenge-day="7">
@@ -123,5 +126,12 @@
   <script src="diary_fresh_start.js?v=20260616a"></script>
   <script src="diary_structured_save.js?v=20260616a"></script>
   <script src="diary_data_sync.js?v=20260616a"></script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function() {
+    navigator.serviceWorker.register("sw.js");
+  });
+}
+</script>
 </body>
 </html>

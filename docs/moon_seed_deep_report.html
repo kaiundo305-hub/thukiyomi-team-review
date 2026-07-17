@@ -1486,6 +1486,9 @@
       [data-deep-report] [data-chapter-tab].tab-hidden { display: block !important; }
     }
   </style>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#3a2a1a">
+  <link rel="apple-touch-icon" href="images/icon-192.png">
 </head>
 <body>
   <div id="corner-ornament" aria-hidden="true"></div>
@@ -2895,5 +2898,12 @@
     });
   });
   </script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function() {
+    navigator.serviceWorker.register("sw.js");
+  });
+}
+</script>
 </body>
 </html>
