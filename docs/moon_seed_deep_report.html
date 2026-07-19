@@ -3,10 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>月読み日記｜第2の鑑定書 | 月読みワンダーランド</title>
   <meta name="description" content="7日間の月読み日記に残した言葉、写メ、感謝、次の一歩をもとに、おかげさまの流れを読み解く第2の鑑定書です。">
-  <link rel="stylesheet" href="style.css?v=20260716a">
-  <link rel="preload" href="images/枠月透かし.png" as="image">
+  <link rel="stylesheet" href="style.css?v=20260707k">
+  <link rel="preload" href="images/枠月透かし_print.jpg" as="image">
   <style>
     /* ══════════════════════════════════════════
        和紙テーマ ─ 鑑定書ページを羊皮紙に（ページ外は宇宙ディープブルー）
@@ -26,7 +29,7 @@
     }
 
     /* 四隅マーク・印刷枠は画面では非表示（preloadでimg読み込みを保証済み） */
-    #corner-ornament, #print-page-frame { display: none; }
+    #corner-ornament, #print-page-paper, #print-page-frame { display: none; }
 
     /* イントロパネルの暗い背景・枠を除去 */
     [data-deep-report] .deep-report-intro-panel,
@@ -94,10 +97,10 @@
       padding: 64px 72px !important;
       box-sizing: border-box !important;
       /* A4サイズ(794×1122px)で縦タイル → 1ページごとに枠が表示される */
-      /* 枠画像の上に紙色を50%重ねて枠を薄く見せる */
+      /* 枠画像の上に紙色を重ねて枠を薄く見せる */
       background:
         linear-gradient(rgba(248,241,227,.55), rgba(248,241,227,.55)),
-        url('images/枠月透かし.png') center top / 100% 1122px repeat-y !important;
+        url('images/枠月透かし_print.jpg') center top / 100% 1122px repeat-y !important;
       box-shadow: 0 4px 32px rgba(60,40,10,.22) !important;
     }
 
@@ -302,9 +305,7 @@
       [data-no-diary-cta], .challenge-nav,
       #data-backup-section, .gate-footer, #refresh-status,
       [style*="safe-area-inset-bottom"],
-      button[onclick*="refreshDeepReport"],
-      #chapter-bottom-nav,
-      #sg-btn, #sg-fetch-status, #sg-diary-preview { display: none !important; }
+      button[onclick*="refreshDeepReport"] { display: none !important; }
 
       /* AI分析・Geminiエラーは印刷不要 */
       #deep-ai-analysis-section,
@@ -316,45 +317,50 @@
       [data-deep-diary-days] p[style*="b0957a"],
       [data-deep-diary-days] > p:only-child:not([data-diary-day]) { display: none !important; }
 
-      /* 空セクション（コンテンツ未設定）を印刷から除外 */
-      /* tab-hidden show rule (0,3,0) を上書きするため特異度 0,4,0 で指定 */
-      [data-deep-report] [data-chapter-tab][data-kanon-panel]:not([data-has-content]),
-      [data-deep-report] [data-chapter-tab][data-deep-voices-section]:not([data-has-content]),
-      [data-deep-report] [data-chapter-tab][data-deep-voices-section-cont]:not([data-has-content]),
-      [data-deep-report] [data-chapter-tab][data-deep-template-section]:not([data-has-content]) { display: none !important; }
+      /* 空セクション非表示（tab-hidden強制表示を上書き） */
+      [data-kanon-panel]:not([data-has-content]),
+      [data-deep-voices-section]:not([data-has-content]),
+      [data-deep-voices-section-cont]:not([data-has-content]),
+      [data-deep-template-section]:not([data-has-content]) { display: none !important; }
+
+      /* 日記サマリーの縦方向指定をリセット（空白ページ防止） */
+      [data-deep-diary-summary] {
+        min-height: 0 !important;
+        height: auto !important;
+        max-height: none !important;
+      }
+
+      /* 和文組版 */
+      body {
+        font-feature-settings: "palt" 1;
+      }
+      [data-deep-report] .deep-report-panel p,
+      [data-deep-report] .deep-report-panel li {
+        text-align: justify !important;
+        text-justify: inter-ideograph !important;
+        font-feature-settings: "palt" 1 !important;
+      }
+      [data-deep-report] .deep-report-panel h2 {
+        letter-spacing: 0.08em !important;
+        break-after: avoid !important;
+      }
 
       .deep-report-header-img, .moon-mark { display: none !important; }
 
-      /* イントロ画像（第2の鑑定書でわかること）を1ページ内に収める */
-      .deep-report-intro-image-panel {
-        break-inside: avoid !important;
-        text-align: center !important;
-      }
-      .deep-report-intro-image {
-        max-width: 100% !important;
-        max-height: 220mm !important;
-        width: auto !important;
-        height: auto !important;
-        object-fit: contain !important;
-        display: block !important;
-        margin: 0 auto !important;
-      }
-
-      /* ★ 全印刷ページに枠を表示：A4サイズ固定で下切れを防ぐ */
+      /* ★ 全印刷ページに枠を表示（imgタグ＋preloadで確実に印刷） */
       #print-page-frame {
         display: block !important;
         position: fixed;
         top: 0; left: 0;
-        width: 210mm;
-        height: 297mm;
+        width: 100%; height: 100%;
         pointer-events: none;
         z-index: 0;
       }
       #print-page-frame img {
         display: block !important;
-        width: 210mm;
-        height: 297mm;
-        object-fit: fill;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
       }
 
       html { background: white !important; }
@@ -362,16 +368,18 @@
         background: transparent !important;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
-        font-size: 10.5pt;
-        line-height: 1.9;
+        font-size: 11pt;
+        line-height: 1.85;
         color: #2a1810 !important;
-        font-feature-settings: "palt" 1;
       }
 
-      /* ── コンテンツ領域：A4内側の余白 ── */
+      /* コンテンツ全幅・余白・シャドウなし・背景透明 */
       main.challenge-shell {
         width: 100% !important;
-        padding: 36mm 30mm 34mm !important;
+        /* @page margin:0 なので padding が紙端からの距離そのもの */
+        /* top: 38mm → 角装飾(~35mm)より3mm内側 */
+        /* sides: 32mm → 146mm=36字/行 */
+        padding: 38mm 32mm 36mm !important;
         margin: 0 !important;
         background: transparent !important;
         box-shadow: none !important;
@@ -379,269 +387,121 @@
         z-index: 1;
       }
 
-      /* 扉ページタイトルブロック */
+      /* 扉ページ（第2の鑑定書）のタイトルブロック：印刷時は枠画像に任せ透明化 */
       .deep-report-title-block {
         background: transparent !important;
         border: none !important;
         box-shadow: none !important;
         min-height: auto !important;
-        padding: 16mm 0 14mm !important;
-        display: block !important;
+        padding: 28mm 0 20mm !important;
       }
       .deep-report-title-block::before {
         border-color: rgba(168, 121, 50, .14) !important;
       }
-      /* タイトル内コンテナ：縦並びに */
-      .deep-report-title-block .deep-report-title-surface {
-        display: block !important;
-        max-width: 100% !important;
-        padding: 0 !important;
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-      }
-      /* ガイドボックス：猫画像を非表示・横幅を確保 */
-      .deep-report-title-block .challenge-guide {
-        display: block !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        margin-top: 18px !important;
-        padding: 12px 16px !important;
-        box-sizing: border-box !important;
-        background: rgba(254,249,235,.8) !important;
-        border: 1px solid rgba(168,121,50,.25) !important;
-        border-radius: 6px !important;
-        box-shadow: none !important;
-      }
-      .deep-report-title-block .challenge-guide img { display: none !important; }
-      .deep-report-title-block .challenge-guide p {
-        margin: 0 !important;
-        text-align: left !important;
-        font-size: 10.5pt !important;
-        line-height: 1.9 !important;
-        color: #3d3328 !important;
-      }
 
       .challenge-card { padding: 0 !important; }
 
-      /* ── パネル共通 ── */
+      /* パネルはページ分割しない（パネル途中での改ページを防止） */
       [data-deep-report] .deep-report-panel {
         background: transparent !important;
         border: none !important;
         box-shadow: none !important;
-        padding: 0 0 10px !important;
-        break-inside: auto;
+        padding: 0 0 16px !important;
+        break-inside: avoid;
       }
-      /* 日記サマリーの inline min-height を印刷時に無効化（空白ページ防止） */
-      [data-deep-diary-summary] {
-        min-height: auto !important;
-        height: auto !important;
-        max-height: none !important;
-        overflow: visible !important;
-      }
+
+      /* パネル末尾の装飾を印刷時非表示 */
       [data-deep-report] .deep-report-panel::after { display: none !important; }
 
-      /* ── 出版レベル見出しスタイル ── */
-      [data-deep-report] .deep-report-panel h2,
-      [data-deep-report] .completion-panel h2 {
-        font-size: 16pt !important;
-        font-weight: bold !important;
-        letter-spacing: 0.12em !important;
-        color: #5a3010 !important;
-        line-height: 1.4 !important;
-        margin: 0 0 14px !important;
-        padding-bottom: 8px !important;
-        border-bottom: 1.5px solid rgba(168,121,50,.4) !important;
-        break-after: avoid !important;
-      }
-      [data-deep-report] .deep-report-panel h3 {
-        font-size: 12pt !important;
-        font-weight: bold !important;
-        letter-spacing: 0.06em !important;
-        color: #7a4a18 !important;
-        margin: 14px 0 6px !important;
-        break-after: avoid !important;
-      }
-
-      /* ── 本文テキスト ── */
-      [data-deep-report] .deep-report-panel p,
-      [data-deep-report] .completion-panel p {
-        font-size: 10.5pt !important;
-        line-height: 1.95 !important;
-        text-align: justify !important;
-        text-justify: inter-ideograph !important;
-        margin: 0 0 10px !important;
-        color: #2a1810 !important;
-      }
-
-      /* 孤立行・孤立ワード防止 */
-      h2, h3, h4 { break-after: avoid; }
+      /* 見出しのあとは改ページしない、孤立行を3行以上に設定 */
+      h2, h3 { break-after: avoid; }
       p, li { orphans: 3; widows: 3; }
 
-      /* ── カード類：分割しない（小さい要素のみ） ── */
+      /* カード1枚ずつ分割しない（グリッド全体はOK → 1ページ目の空白を防ぐ） */
       .deep-template-card,
       .deep-report-intro-item,
-      .diary-voice-item { break-inside: avoid; }
-      /* 大きいパネルは分割許可（break-inside:avoidは空白ページの原因になる） */
-      .completion-panel { break-inside: auto !important; }
+      .deep-guidance-block,
+      .next-moon-section > *,
+      .completion-panel { break-inside: avoid; }
 
-      /* ── 4つのしるしカード ── */
+      /* カード背景を印刷用クリームに（ダークテーマ上書き） */
       .deep-template-card,
       .deep-report-intro-item {
-        background: rgba(254,249,235,.95) !important;
-        border: 1px solid rgba(168,121,50,.25) !important;
+        background: rgba(254,249,235,.9) !important;
+        border: 1px solid rgba(168,121,50,.2) !important;
         color: #2a1810 !important;
         box-shadow: none !important;
       }
       .deep-template-label { color: #a87932 !important; }
       .deep-template-card h3 { color: #7a5520 !important; }
 
-      /* ── 章パネルの背景（薄クリーム） ── */
+      /* 暗いカード背景をすべてクリーム色に */
+      [class*="deep-report-intro-item"],
+      [class*="deep-template-card"],
       [class*="deep-diary-card"],
       [class*="moon-cycle"],
       [class*="next-moon-item"],
-      .deep-guidance-block {
-        background: rgba(168,121,50,.05) !important;
-        border: 1px solid rgba(168,121,50,.2) !important;
-        color: #2a1810 !important;
-        box-shadow: none !important;
-      }
-
-      /* completionパネルは背景なし（本文ページとして） */
+      .deep-guidance-block,
       .completion-panel {
-        background: transparent !important;
-        border: none !important;
+        background: rgba(168,121,50,.06) !important;
+        border: 1px solid rgba(168,121,50,.25) !important;
+        color: #2a1810 !important;
         box-shadow: none !important;
       }
 
-      /* ── テキストエリア（月のサイクル） ── */
+      /* テキストエリア */
       #moon-cycle-section textarea {
-        border: 1px solid rgba(168,121,50,.35) !important;
-        background: rgba(254,250,240,.8) !important;
-        color: #2a1810 !important;
-        font-size: 10pt !important;
-        line-height: 1.7 !important;
+        border: 1px solid rgba(168,121,50,.4) !important;
+        min-height: 40px;
+        background: #faf5eb !important;
       }
       [data-deep-report] #moon-cycle-section > div {
         grid-template-columns: repeat(2,minmax(0,1fr)) !important;
-        gap: 12px !important;
+        gap: 10px !important;
         margin-top: 14px !important;
       }
       [data-deep-report] #moon-cycle-section {
-        padding-bottom: 18px !important;
+        padding-bottom: 22px !important;
       }
       [data-deep-report] #moon-cycle-section > div > div {
-        padding: 14px 16px !important;
+        padding: 12px 14px !important;
       }
       [data-deep-report] #moon-cycle-section textarea {
-        min-height: 0 !important;
-        height: auto !important;
-        max-height: none !important;
-        overflow: visible !important;
-        font-size: 10pt !important;
-        line-height: 1.6 !important;
-        padding: 8px 12px !important;
-        resize: none !important;
+        min-height: 36px !important;
+        font-size: 12px !important;
+        line-height: 1.55 !important;
+        padding: 8px 10px !important;
       }
-      /* すべてのtextareaを印刷時に高さ自動展開 */
-      [data-deep-report] textarea {
-        height: auto !important;
-        min-height: 0 !important;
-        max-height: none !important;
-        overflow: visible !important;
-        resize: none !important;
-      }
-      /* 双子座セクション箇条書きアイテムとtextareaブロックを分割しない */
-      [data-seal="双子座新月"] > div > div,
-      [data-seal="双子座満月"] > div > div { break-inside: avoid; }
-      [data-seal="双子座満月"] > div:last-child { break-inside: avoid; }
 
-      /* ── ガイダンス・月フェーズ：左ボーダーアクセント ── */
+      /* ガイダンスブロック・月フェーズを左ボーダーアクセントに（角装飾との重複を解消） */
       .deep-guidance-block,
       .next-moon-section > * {
         background: transparent !important;
         border: none !important;
-        border-left: 2.5px solid rgba(168,121,50,.6) !important;
+        border-left: 3px solid rgba(168,121,50,.65) !important;
         border-radius: 0 !important;
-        padding: 4px 0 10px 16px !important;
+        padding: 2px 0 10px 14px !important;
         box-shadow: none !important;
-        margin-bottom: 10px !important;
       }
 
-      /* エピローグ：直前セクションと同ページに収める */
-      .deep-report-epilogue {
-        break-before: avoid !important;
-        page-break-before: avoid !important;
-      }
-      /* CTAボタンセクションは印刷不要（0,4,0 で tab-hidden 0,3,0 を上書き）→ 最後ページを1枚に */
-      [data-deep-report] [data-chapter-tab][data-no-diary-cta] { display: none !important; }
+      .deep-report-epilogue { display: none; }
 
-      /* 月のサイクルセクション：半透明インラインカラーを印刷時に上書き（読みやすさ確保） */
-      #moon-cycle-section .deep-guidance-text,
-      #moon-cycle-section p { color: #3d3328 !important; }
-      #moon-cycle-section > div > div { background: rgba(168,121,50,0.08) !important; }
-      #moon-cycle-section > div > div > div > div > div:first-child { color: #7a5018 !important; }
-      #moon-cycle-section > div > div > div > div > div:last-child { color: #5a3010 !important; font-weight: bold !important; }
-      #moon-cycle-section textarea { color: #2a1810 !important; }
-
-      /* ── 章の区切り ── */
-      /* スクリーンCSS の break-after:page（双子座新月・満月）を印刷では無効化 */
-      [data-deep-report] .deep-report-closing[data-seal="双子座新月"],
-      [data-deep-report] .deep-report-closing[data-seal="双子座満月"],
-      [data-deep-report] .deep-report-closing:is([data-seal="双子座満月"], [data-seal="双子座新月"]) {
-        break-after: auto !important;
-        page-break-after: auto !important;
-        padding-top: 24px !important;
-        padding-bottom: 24px !important;
-      }
-
-      /* opening セクションは1ページ内に収める（バナー画像＋見出し＋説明文を分割しない） */
+      /* ── 四つのしるしパネルの後に改ページ → 第2の鑑定書が扉表紙になる ── */
       .deep-report-opening {
-        break-inside: avoid !important;
-        page-break-inside: avoid !important;
-        padding-bottom: 0 !important;
+        break-after: page;
       }
-      /* openingバナー画像の高さを制限して1ページに収める */
-      .deep-opening-banner {
-        max-width: 100% !important;
-        max-height: 100mm !important;
-        width: auto !important;
-        height: auto !important;
-        object-fit: contain !important;
-        display: block !important;
-        margin: 0 auto 14px !important;
-      }
-      /* タイトルブロック・チャプターは自然に流す */
-      .deep-report-chapter { break-before: auto; }
-      /* 見出しの直後で改ページしない */
-      [data-deep-report] .deep-report-panel h2 { break-after: avoid !important; }
 
-      /* ── タイトルブロック：文字色を確実に可視化 ── */
-      .deep-report-title-block {
-        padding: 14mm 0 12mm !important;
-      }
-      .deep-report-title-block .day-label,
-      .deep-report-title-block .challenge-theme,
-      .deep-report-title-block .catch-heading {
-        color: #5a3010 !important;
-      }
-      .deep-report-title-block h1,
-      .deep-report-title-block h1 span { color: #3d2808 !important; font-size: 26pt !important; }
-      .deep-report-title-block h1 small { color: #7a5020 !important; font-size: 14pt !important; display: block !important; margin-top: 4px !important; }
-      .deep-report-title-block .challenge-guide p { color: #4a3728 !important; }
-
-      /* ── 新月願いブロック ── */
+      /* ── moon-question (div#deep-title) はページをまたがない ── */
+      /* p, li の orphans/widows は div に効かないため個別に指定 */
       #deep-title {
         break-inside: avoid;
         break-before: avoid;
         color: #3d3328 !important;
-        background: rgba(168,121,50,.04) !important;
-        border-left: 2.5px solid rgba(168,121,50,.6) !important;
-        border-radius: 0 !important;
-        padding: 10px 0 10px 16px !important;
-        font-size: 10.5pt !important;
-        line-height: 1.85 !important;
-        margin: 14px 0 !important;
+        background: transparent !important;
+        border-left-color: rgba(168,121,50,.65) !important;
+        padding: 8px 0 8px 14px !important;
+        font-size: 11pt !important;
+        margin: 12px 0 !important;
       }
 
       /* ── 四つのしるし 2×2グリッド（印刷最適化） ── */
@@ -657,44 +517,93 @@
         margin-top: 14px !important;
       }
       [data-deep-report] .deep-report-opening .deep-template-card {
-        padding: 18px 16px !important;
-        border-radius: 6px !important;
-        border: 1px solid rgba(168,121,50,.28) !important;
-        background: rgba(254,249,235,.95) !important;
+        padding: 20px 18px !important;
+        border-radius: 8px !important;
       }
       [data-deep-report] .deep-report-opening .deep-template-label {
-        font-size: 8pt !important;
-        letter-spacing: 0.45em !important;
-        color: rgba(168,121,50,.7) !important;
-        margin-bottom: 7px !important;
+        font-size: 9px !important;
+        letter-spacing: 0.4em !important;
+        color: rgba(168,121,50,.65) !important;
+        margin-bottom: 8px !important;
         display: block !important;
-        text-transform: uppercase;
       }
       [data-deep-report] .deep-report-opening .deep-template-card h3 {
-        font-size: 13pt !important;
-        font-weight: bold !important;
-        line-height: 1.35 !important;
-        color: #6a3a10 !important;
+        font-size: 14px !important;
+        line-height: 1.4 !important;
+        color: #7a4a18 !important;
         margin-bottom: 8px !important;
-        letter-spacing: 0.05em !important;
       }
       [data-deep-report] .deep-report-opening .deep-template-card p:first-of-type {
-        font-size: 9pt !important;
+        font-size: 10px !important;
         font-style: italic;
-        color: rgba(100,60,20,.6) !important;
-        border-bottom: 1px solid rgba(168,121,50,.2) !important;
+        color: rgba(100,60,20,.55) !important;
+        border-bottom: 1px solid rgba(168,121,50,.18) !important;
         padding-bottom: 8px !important;
         margin-bottom: 10px !important;
-        line-height: 1.7 !important;
       }
       [data-deep-report] .deep-report-opening .deep-template-card p:last-of-type {
-        font-size: 11pt !important;
-        line-height: 1.85 !important;
-        color: #2a1810 !important;
+        font-size: 12px !important;
+        line-height: 1.8 !important;
+        color: #3d2810 !important;
         margin: 0 !important;
-        text-align: justify !important;
-        text-justify: inter-ideograph !important;
       }
+
+      /* ── 振り返り鑑定セクション（印刷時は必ず表示） ── */
+      #furikaeri-section {
+        display: block !important;
+        break-before: page;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        color: #2a1810 !important;
+        padding: 0 0 20px !important;
+      }
+      #furikaeri-section h2 {
+        font-size: 14pt !important;
+        color: #7a5010 !important;
+        letter-spacing: 0.08em !important;
+        border-bottom: 1px solid rgba(168,121,50,.4) !important;
+        padding-bottom: 8px !important;
+        margin-bottom: 16px !important;
+      }
+      #furikaeri-section .fk-header-sub {
+        font-size: 9pt !important;
+        color: rgba(168,121,50,.7) !important;
+        letter-spacing: 0.15em !important;
+        margin-bottom: 20px !important;
+      }
+      #furikaeri-section .fk-section-label {
+        font-size: 9pt !important;
+        font-weight: 700 !important;
+        color: rgba(168,121,50,.8) !important;
+        letter-spacing: 0.2em !important;
+        border-bottom: 1px solid rgba(168,121,50,.3) !important;
+        padding-bottom: 4px !important;
+        margin: 20px 0 10px !important;
+      }
+      #furikaeri-section .fk-text {
+        font-size: 11pt !important;
+        line-height: 2 !important;
+        color: #2a1810 !important;
+        white-space: pre-wrap !important;
+        text-align: justify !important;
+      }
+      #furikaeri-section .fk-zodiac-block {
+        background: rgba(168,121,50,.06) !important;
+        border: 1px solid rgba(168,121,50,.3) !important;
+        border-radius: 8px !important;
+        padding: 14px 18px !important;
+        margin: 20px 0 !important;
+      }
+      #furikaeri-section .fk-sig {
+        text-align: right !important;
+        font-size: 10pt !important;
+        color: rgba(100,60,20,.6) !important;
+        margin-top: 20px !important;
+        padding-top: 10px !important;
+        border-top: 1px solid rgba(168,121,50,.2) !important;
+      }
+      #furikaeri-status { display: none !important; }
     }
 
     /* ══ 画面専用：A4ページスナップ・出版品質レイアウト ══ */
@@ -1323,6 +1232,15 @@
     [data-deep-report] .deep-report-intro-panel {
       gap: 0 !important;
     }
+    /* 画像パネル専用：固定高さ・flex制約を外して画像をそのまま表示 */
+    [data-deep-report] .deep-report-intro-image-panel {
+      display: block !important;
+      height: auto !important;
+      min-height: unset !important;
+      max-height: none !important;
+      padding: 0 !important;
+      text-align: center;
+    }
     [data-deep-report] .deep-report-intro-heading {
       text-align: center !important;
       margin: 0 auto !important;
@@ -1341,19 +1259,19 @@
     }
     [data-deep-report] .deep-report-intro-image {
       display: block !important;
-      max-width: 100% !important;
-      max-height: 155mm !important;
-      width: auto !important;
+      width: min(100%, 1020px) !important;
       height: auto !important;
-      object-fit: contain !important;
-      margin: 0 auto !important;
+      margin: 8px auto 0 !important;
     }
-    [data-deep-report] .deep-opening-banner {
-      max-height: 120mm !important;
-      max-width: 100% !important;
-      width: auto !important;
-      height: auto !important;
-      object-fit: contain !important;
+    [data-deep-report] .deep-report-intro-image-title {
+      display: block !important;
+      margin: 0 auto 18px !important;
+      text-align: center !important;
+      font-size: 26px !important;
+      line-height: 1.2 !important;
+      font-weight: 600 !important;
+      letter-spacing: .16em !important;
+      color: #8f6421 !important;
     }
 
       /* ── 「育んだもの」「月読みの願い」：横マージン+中央揃え+見出し１行分 ── */
@@ -1380,6 +1298,365 @@
         max-height: none !important;
         margin-top: 24px !important;
         padding: 24px 0 !important;
+      }
+    }
+
+    /* ══ 印刷最終仕上げ：出版社品質の版面・表紙・章扉 ══ */
+    @media print {
+      @page {
+        size: A4;
+        margin: 0;
+        background: #fffdfa;
+      }
+
+      html,
+      body {
+        width: 210mm !important;
+        min-height: 297mm !important;
+      }
+
+      body {
+        font-family: "Hiragino Mincho ProN", "Yu Mincho", "YuMincho", "Noto Serif JP", serif !important;
+        font-size: 10.8pt !important;
+        line-height: 1.92 !important;
+        letter-spacing: .018em !important;
+        color: #2f2218 !important;
+        background: #fffdfa !important;
+      }
+
+      body::before,
+      body::after {
+        content: none !important;
+        display: none !important;
+      }
+
+      #print-page-paper {
+        display: block !important;
+        position: fixed !important;
+        inset: 0 !important;
+        background: #fffdfa !important;
+        pointer-events: none !important;
+        z-index: 100 !important;
+      }
+
+      #print-page-frame {
+        inset: 0 auto auto 0 !important;
+        width: 210mm !important;
+        /* PDF変換時の端数で下枠が裁ち落とされないよう、用紙下端に1mm残す */
+        height: 296mm !important;
+        background: #fffdfa !important;
+        opacity: 1 !important;
+        mix-blend-mode: normal !important;
+        z-index: 1000 !important;
+        mix-blend-mode: multiply !important;
+        overflow: visible !important;
+      }
+
+      #print-page-frame img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: contain !important;
+        object-position: center center !important;
+        box-sizing: border-box !important;
+        padding: 2.5mm 2.5mm 1.5mm !important;
+        filter: none !important;
+      }
+
+      #renewal-overlay,
+      #ev-end-overlay,
+      #camera-overlay,
+      body > div[style*="position:fixed"][style*="z-index:9999"]:not(#print-page-frame),
+      body > div[style*="position: fixed"][style*="z-index: 9999"]:not(#print-page-frame) {
+        display: none !important;
+      }
+
+      main.challenge-shell {
+        padding: 30mm 28mm 31mm !important;
+        background: transparent !important;
+        position: relative !important;
+        z-index: 102 !important;
+      }
+
+      [data-deep-report] .completion-panel.deep-report-opening,
+      [data-deep-report] .deep-report-title-block,
+      [data-deep-report] .deep-report-intro-panel,
+      [data-deep-report] .challenge-body > .deep-report-panel,
+      [data-deep-report] article > .deep-report-panel:not(.deep-report-opening) {
+        min-height: 237mm !important;
+        box-sizing: border-box !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }
+
+      [data-deep-report] .completion-panel.deep-report-opening {
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+        padding: 19mm 11mm 17mm !important;
+        text-align: center !important;
+      }
+
+      [data-deep-report] .deep-report-opening .deep-opening-banner {
+        width: 68mm !important;
+        max-width: 68mm !important;
+        margin: 0 auto 10mm !important;
+        filter: sepia(.08) saturate(.96) contrast(1.02) !important;
+      }
+
+      [data-deep-report] .deep-report-opening h2[data-seal] {
+        margin: 0 0 6mm !important;
+        font-size: 18pt !important;
+        line-height: 1.55 !important;
+        letter-spacing: .14em !important;
+      }
+
+      [data-deep-report] .deep-report-opening .deep-guidance-text {
+        max-width: 118mm !important;
+        margin: 0 auto 3mm !important;
+        font-size: 10.5pt !important;
+        line-height: 1.95 !important;
+        letter-spacing: .035em !important;
+        text-align: center !important;
+      }
+
+      [data-deep-report] .deep-report-title-block {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 0 !important;
+        min-height: 237mm !important;
+        page-break-before: always !important;
+        break-before: page !important;
+        page-break-after: always !important;
+        break-after: page !important;
+      }
+
+      [data-deep-report] .deep-report-title-block[data-chapter-tab].tab-hidden,
+      [data-deep-report] .deep-report-title-block[data-chapter-tab] {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+      }
+
+      [data-deep-report] .deep-report-title-surface {
+        position: relative !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+        width: 126mm !important;
+        min-height: 172mm !important;
+        padding: 22mm 16mm 18mm !important;
+        box-sizing: border-box !important;
+        border: 1px solid rgba(142, 97, 33, .36) !important;
+        border-radius: 0 !important;
+        background:
+          linear-gradient(90deg, rgba(168,121,50,.25), transparent 18%, transparent 82%, rgba(168,121,50,.20)),
+          radial-gradient(ellipse at 50% 18%, rgba(205,169,88,.17), transparent 42%),
+          linear-gradient(180deg, rgba(255,253,247,.97), rgba(250,242,224,.94)) !important;
+        box-shadow: inset 0 0 0 1.6mm rgba(255,252,242,.65), 0 0 0 .28mm rgba(168,121,50,.10) !important;
+      }
+
+      [data-deep-report] .deep-report-title-surface::before,
+      [data-deep-report] .deep-report-title-surface::after {
+        content: "" !important;
+        position: absolute !important;
+        left: 16mm !important;
+        right: 16mm !important;
+        height: 1px !important;
+        background: linear-gradient(90deg, transparent, rgba(168,121,50,.58), transparent) !important;
+      }
+
+      [data-deep-report] .deep-report-title-surface::before { top: 18mm !important; }
+      [data-deep-report] .deep-report-title-surface::after { bottom: 18mm !important; }
+
+      [data-deep-report] .deep-report-title-surface > div {
+        width: 100% !important;
+        text-align: center !important;
+      }
+
+      [data-deep-report] .deep-report-title-surface .day-label {
+        display: block !important;
+        margin: 0 0 12mm !important;
+        padding: 0 !important;
+        color: rgba(130,87,28,.68) !important;
+        font-family: Georgia, "Times New Roman", serif !important;
+        font-size: 7.5pt !important;
+        line-height: 1 !important;
+        letter-spacing: .34em !important;
+      }
+
+      [data-deep-report] .deep-report-title-surface .challenge-title {
+        margin: 0 !important;
+        text-align: center !important;
+      }
+
+      [data-deep-report] .deep-report-title-surface .deep-report-title span {
+        display: block !important;
+        margin: 0 0 7mm !important;
+        color: #7b541f !important;
+        font-size: 22pt !important;
+        line-height: 1.2 !important;
+        letter-spacing: .2em !important;
+        font-weight: 500 !important;
+      }
+
+      [data-deep-report] .deep-report-title-surface .deep-report-title small {
+        display: block !important;
+        color: #4a3119 !important;
+        font-size: 34pt !important;
+        line-height: 1.18 !important;
+        letter-spacing: .12em !important;
+        font-weight: 600 !important;
+        white-space: nowrap !important;
+      }
+
+      [data-deep-report] .deep-report-title-surface .challenge-title::after {
+        content: "" !important;
+        display: block !important;
+        width: 26mm !important;
+        height: 1px !important;
+        margin: 10mm auto 0 !important;
+        background: rgba(168,121,50,.55) !important;
+      }
+
+      [data-deep-report] .deep-report-title-surface .challenge-theme {
+        display: block !important;
+        max-width: 90mm !important;
+        margin: 10mm auto 0 !important;
+        color: #6d4a21 !important;
+        font-size: 10.3pt !important;
+        line-height: 1.9 !important;
+        letter-spacing: .08em !important;
+        text-align: center !important;
+      }
+
+      [data-deep-report] .deep-report-title-surface .catch-heading {
+        margin: 8mm auto 0 !important;
+        color: rgba(89,61,28,.74) !important;
+        font-size: 9.8pt !important;
+        line-height: 1.8 !important;
+        letter-spacing: .09em !important;
+        text-align: center !important;
+      }
+
+      [data-deep-report] .deep-report-title-surface .challenge-guide {
+        display: grid !important;
+        grid-template-columns: 22mm minmax(0,1fr) !important;
+        align-items: center !important;
+        gap: 6mm !important;
+        width: 96mm !important;
+        margin: 13mm auto 0 !important;
+        padding: 5mm 6mm !important;
+        box-sizing: border-box !important;
+        border: 1px solid rgba(168,121,50,.18) !important;
+        background: rgba(255,252,245,.66) !important;
+      }
+
+      [data-deep-report] .deep-report-title-surface .challenge-guide img {
+        width: 22mm !important;
+        height: auto !important;
+      }
+
+      [data-deep-report] .deep-report-title-surface .challenge-guide p {
+        margin: 0 !important;
+        color: #594027 !important;
+        font-size: 8.7pt !important;
+        line-height: 1.74 !important;
+        letter-spacing: .025em !important;
+        text-align: left !important;
+      }
+
+      [data-deep-report] .deep-report-intro-image-panel {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 12mm 7mm !important;
+      }
+
+      [data-deep-report] .deep-report-intro-image-panel img {
+        width: 100% !important;
+        max-width: 150mm !important;
+        height: auto !important;
+        filter: sepia(.04) contrast(1.01) !important;
+      }
+
+      [data-deep-report] .deep-report-panel h2 {
+        position: relative !important;
+        margin: 0 auto 13mm !important;
+        color: #7f541c !important;
+        font-size: 22pt !important;
+        line-height: 1.45 !important;
+        letter-spacing: .12em !important;
+        text-align: center !important;
+        font-weight: 600 !important;
+      }
+
+      [data-deep-report] .deep-report-panel h2::after {
+        content: "" !important;
+        display: block !important;
+        width: 28mm !important;
+        height: 1px !important;
+        margin: 7mm auto 0 !important;
+        background: linear-gradient(90deg, transparent, rgba(168,121,50,.62), transparent) !important;
+      }
+
+      [data-deep-report] .deep-report-panel h2[data-seal]::before {
+        display: block !important;
+        margin: 0 0 4mm !important;
+        color: rgba(168,121,50,.58) !important;
+        font-family: Georgia, "Times New Roman", serif !important;
+        font-size: 7.2pt !important;
+        line-height: 1 !important;
+        letter-spacing: .28em !important;
+        text-align: center !important;
+      }
+
+      [data-deep-report] .challenge-body > .deep-report-panel,
+      [data-deep-report] article > .deep-report-panel:not(.deep-report-opening) {
+        padding: 18mm 10mm 16mm !important;
+      }
+
+      [data-deep-report] .deep-report-chapter {
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+      }
+
+      [data-deep-report] .deep-report-chapter p[data-deep-current],
+      [data-deep-report] .deep-report-chapter p[data-deep-themes],
+      [data-deep-report] .deep-report-chapter p[data-deep-shuku],
+      [data-deep-report] .deep-report-chapter p[data-deep-next],
+      [data-deep-report] .deep-report-chapter p[data-deep-current-cont] {
+        max-width: 126mm !important;
+        margin: 0 auto !important;
+        padding: 8mm 9mm !important;
+        background: rgba(255,252,246,.72) !important;
+        border: none !important;
+        border-left: 1.1mm solid rgba(168,121,50,.58) !important;
+        border-radius: 0 !important;
+        box-shadow: inset 0 0 0 1px rgba(168,121,50,.12) !important;
+        font-size: 11.2pt !important;
+        line-height: 2.06 !important;
+        letter-spacing: .04em !important;
+      }
+
+      [data-deep-report] .deep-template-card,
+      [data-deep-report] [data-deep-diary-days] > div,
+      [data-deep-report] .deep-report-closing > div[style*="flex-direction:column"] > div {
+        border-radius: 0 !important;
+        background: rgba(255,252,246,.72) !important;
+        border: 1px solid rgba(168,121,50,.18) !important;
+        box-shadow: none !important;
+      }
+
+      [data-deep-report] .deep-report-summary h2 span {
+        display: block !important;
+        margin-top: 3mm !important;
+        color: rgba(82,55,27,.72) !important;
+        font-size: 10pt !important;
+        letter-spacing: .04em !important;
       }
     }
 
@@ -1484,19 +1761,620 @@
       .deep-chapter-tabs { display: none !important; }
       .tab-hidden { display: block !important; }
       [data-deep-report] [data-chapter-tab].tab-hidden { display: block !important; }
+      [data-deep-report] .completion-panel.deep-report-opening[data-chapter-tab].tab-hidden,
+      [data-deep-report] .completion-panel.deep-report-opening[data-chapter-tab] {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+      }
+      [data-deep-report] .moon-mark,
+      [data-deep-report] .moon-mark[data-chapter-tab].tab-hidden {
+        display: none !important;
+      }
+    }
+
+    /* 印刷最終層：操作UI除外・終章組版・プレビュー負荷軽減 */
+    @media print {
+      /* 画面用エフェクトは印刷レンダリングへ持ち込まない。 */
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+      }
+      [data-deep-report] * {
+        filter: none !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        text-shadow: none !important;
+      }
+      body::before,
+      body::after {
+        content: none !important;
+        display: none !important;
+      }
+      html,
+      body {
+        background: #fffdfa !important;
+      }
+
+      /* A4そのものを版面の基準にし、各ページの重心をそろえる。 */
+      main.challenge-shell {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 30mm !important;
+        box-sizing: border-box !important;
+      }
+
+      /* 後段の tab-hidden 強制表示より高い特異度で操作UIを除外する。 */
+      [data-deep-report] [data-no-diary-cta][data-chapter-tab],
+      [data-deep-report] #chapter-bottom-nav,
+      [data-deep-report] .chapter-bottom-nav,
+      [data-deep-report] .challenge-nav,
+      [data-deep-report] #moon-phase-save-status,
+      [data-deep-report] div:has(> button[onclick*="refreshDeepReport"]),
+      [data-deep-report] button,
+      [data-deep-report] a.moon-button,
+      [data-deep-report] a.quiet-button {
+        display: none !important;
+      }
+
+      /* データ未設定の任意セクションを、tab-hidden の印刷解除後も出さない。 */
+      [data-deep-report] [data-kanon-panel]:not([data-has-content])[data-chapter-tab],
+      [data-deep-report] [data-deep-voices-section]:not([data-has-content])[data-chapter-tab],
+      [data-deep-report] [data-deep-voices-section-cont]:not([data-has-content])[data-chapter-tab],
+      [data-deep-report] [data-deep-template-section]:not([data-has-content])[data-chapter-tab] {
+        display: none !important;
+      }
+
+      [data-deep-report] [data-deep-current-continuation]:not([data-has-content])[data-chapter-tab] {
+        display: none !important;
+      }
+
+      /* 扉と案内ページは、A4一枚の中央に収める。 */
+      [data-deep-report] .deep-report-opening,
+      [data-deep-report] .deep-report-title-block,
+      [data-deep-report] .deep-report-intro-panel {
+        width: 100% !important;
+        /* A4 297mm - 印刷用上下余白(30mm + 30mm) = 237mm */
+        min-height: 237mm !important;
+        height: 237mm !important;
+        max-height: 237mm !important;
+        margin: 0 !important;
+        padding: 18mm 0 !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        break-inside: avoid-page !important;
+        page-break-inside: avoid !important;
+        break-after: page !important;
+        page-break-after: always !important;
+      }
+
+      [data-deep-report] .deep-report-opening .deep-opening-banner {
+        display: block !important;
+        width: auto !important;
+        height: auto !important;
+        max-width: 100% !important;
+        max-height: 146mm !important;
+        margin: 0 auto 7mm !important;
+        object-fit: contain !important;
+        object-position: center center !important;
+      }
+
+      [data-deep-report] .deep-report-opening h2 {
+        margin-bottom: 5mm !important;
+        text-align: center !important;
+      }
+
+      [data-deep-report] .deep-report-opening .deep-guidance-text {
+        max-width: 124mm !important;
+        margin: 0 auto 2.5mm !important;
+        text-align: center !important;
+      }
+
+      [data-deep-report] .deep-report-title-block {
+        padding-top: 34mm !important;
+        padding-bottom: 34mm !important;
+      }
+
+      /* 第2の鑑定書の扉：写真に頼らない、中央軸のタイポグラフィで組む。 */
+      [data-deep-report] .deep-report-title-surface {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        width: 100% !important;
+        max-width: 132mm !important;
+        margin: 0 auto !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+        text-align: center !important;
+      }
+
+      [data-deep-report] .deep-report-title-surface > div {
+        width: 100% !important;
+        text-align: center !important;
+      }
+
+      [data-deep-report] .deep-report-title-surface .day-label {
+        justify-content: center !important;
+        margin: 0 auto 9mm !important;
+        color: rgba(126,82,26,.78) !important;
+        font-family: Georgia, "Times New Roman", serif !important;
+        font-size: 8.5pt !important;
+        font-weight: 400 !important;
+        line-height: 1 !important;
+        letter-spacing: .32em !important;
+      }
+
+      [data-deep-report] .deep-report-title-surface .day-label::before,
+      [data-deep-report] .deep-report-title-surface .day-label::after {
+        width: 18mm !important;
+        background: linear-gradient(90deg, transparent, rgba(168,121,50,.62)) !important;
+      }
+
+      [data-deep-report] .deep-report-title-surface .day-label::after {
+        transform: scaleX(-1) !important;
+      }
+
+      [data-deep-report] .deep-report-title-surface .challenge-title {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        text-align: center !important;
+      }
+
+      [data-deep-report] .deep-report-title-surface .deep-report-title span {
+        margin: 0 0 7mm !important;
+        color: #4d331d !important;
+        font-size: 19pt !important;
+        font-weight: 400 !important;
+        line-height: 1.35 !important;
+        letter-spacing: .18em !important;
+      }
+
+      [data-deep-report] .deep-report-title-surface .deep-report-title small {
+        width: 100% !important;
+        max-width: 118mm !important;
+        padding: 6mm 0 6.5mm !important;
+        border-top: 1px solid rgba(168,121,50,.48) !important;
+        border-bottom: 1px solid rgba(168,121,50,.48) !important;
+        color: #684113 !important;
+        font-size: 30pt !important;
+        font-weight: 600 !important;
+        line-height: 1.2 !important;
+        letter-spacing: .12em !important;
+        text-align: center !important;
+        white-space: nowrap !important;
+      }
+
+      [data-deep-report] .deep-report-title-surface .challenge-title::after {
+        display: none !important;
+      }
+
+      [data-deep-report] .deep-report-title-surface .challenge-theme {
+        display: block !important;
+        max-width: 112mm !important;
+        margin: 10mm auto 0 !important;
+        padding: 0 !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        color: #765328 !important;
+        background: transparent !important;
+        font-size: 9.5pt !important;
+        font-weight: 500 !important;
+        line-height: 1.9 !important;
+        letter-spacing: .08em !important;
+        text-align: center !important;
+      }
+
+      [data-deep-report] .deep-report-title-surface .catch-heading {
+        max-width: 100mm !important;
+        margin: 7mm auto 0 !important;
+        color: rgba(61,45,30,.82) !important;
+        font-size: 10pt !important;
+        line-height: 1.9 !important;
+        letter-spacing: .08em !important;
+        text-align: center !important;
+      }
+
+      [data-deep-report] .deep-report-title-surface .challenge-guide {
+        display: block !important;
+        width: 100% !important;
+        max-width: 114mm !important;
+        margin: 12mm auto 0 !important;
+        padding: 8mm 5mm 0 !important;
+        border: 0 !important;
+        border-top: 1px solid rgba(168,121,50,.32) !important;
+        border-radius: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        box-sizing: border-box !important;
+      }
+
+      [data-deep-report] .deep-report-title-surface .challenge-guide::before {
+        content: "PROLOGUE" !important;
+        display: block !important;
+        margin: 0 0 5mm !important;
+        color: rgba(126,82,26,.62) !important;
+        font-family: Georgia, "Times New Roman", serif !important;
+        font-size: 7pt !important;
+        line-height: 1 !important;
+        letter-spacing: .38em !important;
+        text-align: center !important;
+      }
+
+      [data-deep-report] .deep-report-title-surface .challenge-guide img {
+        display: none !important;
+      }
+
+      [data-deep-report] .deep-report-title-surface .challenge-guide p {
+        max-width: 104mm !important;
+        margin: 0 auto !important;
+        color: #51402f !important;
+        font-size: 9.5pt !important;
+        line-height: 2.05 !important;
+        letter-spacing: .055em !important;
+        text-align: center !important;
+      }
+
+      [data-deep-report] .deep-report-intro-panel .deep-report-intro-image {
+        display: block !important;
+        width: auto !important;
+        height: auto !important;
+        max-width: 100% !important;
+        max-height: 222mm !important;
+        margin: 0 auto !important;
+        object-fit: contain !important;
+        object-position: center center !important;
+      }
+
+      /* 独立章は短い内容ほど中央へ、長い内容は自然に伸ばす。 */
+      [data-deep-report] .challenge-body > .deep-first-concern,
+      [data-deep-report] .challenge-body > .deep-report-template,
+      [data-deep-report] .challenge-body > .deep-report-summary,
+      [data-deep-report] .deep-report-chapter {
+        width: 100% !important;
+        min-height: 294mm !important;
+        margin: 0 !important;
+        padding: 34mm 0 !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        break-before: page !important;
+        page-break-before: always !important;
+        break-after: page !important;
+        page-break-after: always !important;
+      }
+
+      /* 記録見出しと重複する画面用の導入帯は、単独ページ化を防ぐため除外する。 */
+      [data-deep-report] #deep-title[data-chapter-tab] {
+        display: none !important;
+      }
+
+      /* 月フェーズの記録欄は、入力文字数に合わせて伸ばして全文を印刷する。 */
+      [data-deep-report] #moon-cycle-section > div {
+        align-items: start !important;
+      }
+
+      [data-deep-report] #moon-cycle-section > div > div {
+        align-self: start !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+      }
+
+      [data-deep-report] #moon-cycle-section textarea {
+        field-sizing: content !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: 16mm !important;
+        max-height: none !important;
+        overflow: visible !important;
+        resize: none !important;
+        white-space: pre-wrap !important;
+        overflow-wrap: anywhere !important;
+        box-sizing: border-box !important;
+      }
+
+      [data-deep-report] .deep-report-closing {
+        width: 100% !important;
+        min-height: 294mm !important;
+        margin: 0 !important;
+        padding: 34mm 0 !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        break-before: page !important;
+        page-break-before: always !important;
+      }
+
+      /* 項目数の多い満月・新月ページは、本文を切らずに一枚へ組む。 */
+      [data-deep-report] .deep-report-closing:is([data-seal="双子座満月"], [data-seal="双子座新月"]) {
+        padding-top: 20mm !important;
+        padding-bottom: 20mm !important;
+      }
+
+      [data-deep-report] .deep-report-closing:is([data-seal="双子座満月"], [data-seal="双子座新月"]) > div[style*="flex-direction:column"] {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 3.5mm !important;
+        margin-top: 5mm !important;
+      }
+
+      [data-deep-report] .deep-report-closing:is([data-seal="双子座満月"], [data-seal="双子座新月"]) > div[style*="flex-direction:column"] > div {
+        padding: 3.5mm 4mm !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+      }
+
+      [data-deep-report] .deep-report-closing:is([data-seal="双子座満月"], [data-seal="双子座新月"]) > div[style*="flex-direction:column"] p {
+        font-size: 9pt !important;
+        line-height: 1.55 !important;
+        margin: 0 !important;
+      }
+
+      [data-deep-report] .deep-report-closing:is([data-seal="双子座満月"], [data-seal="双子座新月"]) textarea {
+        min-height: 18mm !important;
+        font-size: 9pt !important;
+        line-height: 1.55 !important;
+      }
+
+      /* 終章は必ず独立ページから始め、ページ途中への流れ込みを防ぐ。 */
+      [data-deep-report] .deep-report-epilogue[data-chapter-tab],
+      [data-deep-report] .deep-report-epilogue[data-chapter-tab].tab-hidden {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 100% !important;
+        min-height: 294mm !important;
+        margin: 0 !important;
+        padding: 36mm 10mm 38mm !important;
+        box-sizing: border-box !important;
+        color: #3d2b1c !important;
+        background: transparent !important;
+        border: 0 !important;
+        box-shadow: none !important;
+        break-before: page !important;
+        page-break-before: always !important;
+        break-inside: avoid-page !important;
+        page-break-inside: avoid !important;
+      }
+
+      [data-deep-report] .deep-report-epilogue::before {
+        content: "終章" !important;
+        display: block !important;
+        margin: 0 0 16mm !important;
+        color: rgba(168,121,50,.68) !important;
+        font-family: Georgia, "Times New Roman", serif !important;
+        font-size: 8pt !important;
+        line-height: 1 !important;
+        letter-spacing: .42em !important;
+      }
+
+      [data-deep-report] .deep-report-epilogue::after {
+        content: "" !important;
+        display: block !important;
+        width: 30mm !important;
+        height: 1px !important;
+        margin: 14mm 0 0 !important;
+        background: linear-gradient(90deg, transparent, rgba(168,121,50,.65), transparent) !important;
+      }
+
+      [data-deep-report] .deep-report-epilogue .deep-report-epilogue-text {
+        max-width: 116mm !important;
+        margin: 0 auto 8mm !important;
+        padding: 0 !important;
+        color: #3d2b1c !important;
+        font-size: 12pt !important;
+        line-height: 2.15 !important;
+        letter-spacing: .055em !important;
+        text-align: center !important;
+        text-justify: auto !important;
+        orphans: 3 !important;
+        widows: 3 !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+      }
+
+      [data-deep-report] .deep-report-epilogue .deep-report-epilogue-text:first-of-type {
+        max-width: 136mm !important;
+        margin-bottom: 12mm !important;
+        color: #704817 !important;
+        font-size: 15pt !important;
+        line-height: 1.8 !important;
+        letter-spacing: .06em !important;
+        white-space: nowrap !important;
+      }
+
+      [data-deep-report] .deep-report-epilogue .deep-report-epilogue-text:last-of-type {
+        margin-bottom: 0 !important;
+      }
+    }
+
+    /* ── 目次 ── */
+    @media print { #toc-btn, #toc-backdrop, #toc-drawer { display: none !important; } }
+
+    #toc-btn {
+      flex-shrink: 0;
+      display: flex; align-items: center; gap: 5px;
+      padding: 7px 13px;
+      border: 1px solid rgba(216,181,109,0.55);
+      border-radius: 4px;
+      background: linear-gradient(135deg, rgba(168,121,50,0.32), rgba(216,181,109,0.14));
+      color: #d8b56d;
+      font-size: 10.5px; letter-spacing: .15em; font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      font-family: inherit;
+      transition: background .2s, box-shadow .2s;
+      box-shadow: 0 0 10px rgba(216,181,109,0.15);
+    }
+    #toc-btn:hover {
+      background: linear-gradient(135deg, rgba(168,121,50,0.5), rgba(216,181,109,0.25));
+      box-shadow: 0 0 16px rgba(216,181,109,0.3);
+    }
+    #toc-btn svg { width: 13px; height: 13px; flex-shrink: 0; }
+
+    #toc-backdrop {
+      display: none;
+      position: fixed; inset: 0; z-index: 9001;
+      background: rgba(0,0,0,.45);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+    }
+    #toc-backdrop.open { display: block; }
+
+    #toc-drawer {
+      position: fixed;
+      top: 0; right: 0; bottom: 0;
+      z-index: 9002;
+      width: min(320px, 88vw);
+      background: linear-gradient(170deg, #12100a, #1a1400);
+      border-left: 1px solid rgba(216,181,109,.2);
+      box-shadow: -8px 0 40px rgba(0,0,0,.6);
+      overflow-y: auto;
+      transform: translateX(110%);
+      transition: transform .32s cubic-bezier(.22,.8,.36,1);
+      overscroll-behavior: contain;
+    }
+    #toc-drawer.open { transform: translateX(0); }
+
+    .toc-header {
+      position: sticky; top: 0;
+      background: linear-gradient(180deg, #12100a 70%, transparent);
+      padding: 20px 20px 12px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid rgba(216,181,109,.15);
+    }
+    .toc-title {
+      font-family: 'Hiragino Mincho ProN', serif;
+      font-size: 15px; letter-spacing: .2em; color: #d8b56d; font-weight: 400;
+    }
+    .toc-title small { font-size: 10px; color: rgba(216,181,109,.5); display: block; letter-spacing: .15em; margin-top: 2px; }
+    #toc-close {
+      background: none; border: none; cursor: pointer;
+      color: rgba(216,181,109,.5); font-size: 22px; line-height: 1;
+      padding: 4px; border-radius: 50%;
+      transition: color .2s, background .2s;
+    }
+    #toc-close:hover { color: #d8b56d; background: rgba(216,181,109,.1); }
+
+    .toc-body { padding: 8px 0 32px; }
+
+    .toc-chapter {
+      padding: 0;
+      border-bottom: 1px solid rgba(216,181,109,.08);
+    }
+    .toc-chapter-btn {
+      width: 100%; text-align: left;
+      background: none; border: none; cursor: pointer;
+      padding: 12px 20px 10px;
+      display: flex; align-items: baseline; gap: 10px;
+      transition: background .18s;
+    }
+    .toc-chapter-btn:hover { background: rgba(216,181,109,.07); }
+    .toc-ch-num {
+      font-size: 10px; letter-spacing: .1em; color: rgba(168,121,50,.7);
+      font-family: 'Georgia', serif; flex-shrink: 0; min-width: 22px;
+    }
+    .toc-ch-name {
+      font-size: 13px; line-height: 1.45; color: #d8b56d;
+      font-family: 'Hiragino Mincho ProN', serif; letter-spacing: .06em;
+    }
+    .toc-subs { padding: 0 0 6px 52px; }
+    .toc-sub-btn {
+      display: block; width: 100%; text-align: left;
+      background: none; border: none; cursor: pointer;
+      padding: 5px 16px 5px 0;
+      font-size: 11px; line-height: 1.55; color: rgba(216,181,109,.55);
+      letter-spacing: .04em;
+      font-family: 'Hiragino Kaku Gothic Pro', sans-serif;
+      position: relative;
+      transition: color .18s;
+    }
+    .toc-sub-btn::before {
+      content: '·'; position: absolute; left: -10px; top: 5px;
+      color: rgba(168,121,50,.5); font-size: 14px;
+    }
+    .toc-sub-btn:hover { color: #d8b56d; }
+
+    /* 印刷外枠の最終方式：子imgの断片化を避け、fixed要素自身の背景として描画 */
+    @media print {
+      #print-page-frame {
+        display: block !important;
+        position: fixed !important;
+        inset: 0 !important;
+        width: 210mm !important;
+        height: 297mm !important;
+        background: none !important;
+        pointer-events: none !important;
+        z-index: 101 !important;
+      }
+      #print-page-frame img {
+        display: block !important;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: fill !important;
+        padding: 0 !important;
+        mix-blend-mode: multiply !important;
+      }
+      html {
+        background: #fffdfa !important;
+      }
+      body {
+        background-color: #fffdfa !important;
+        background-image: none !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      main.challenge-shell,
+      [data-deep-report] .deep-report-panel,
+      [data-deep-report] .deep-report-title-block,
+      [data-deep-report] .deep-report-intro-panel {
+        background: transparent !important;
+      }
     }
   </style>
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#3a2a1a">
-  <link rel="apple-touch-icon" href="images/icon-192.png">
 </head>
 <body>
+
+  <div id="toc-backdrop"></div>
+  <div id="toc-drawer" role="dialog" aria-modal="true" aria-label="目次">
+    <div class="toc-header">
+      <div class="toc-title">
+        ☽ 目次
+        <small>第2の鑑定書</small>
+      </div>
+      <button id="toc-close" aria-label="閉じる">✕</button>
+    </div>
+    <nav class="toc-body" id="toc-body"></nav>
+  </div>
+
   <div id="corner-ornament" aria-hidden="true"></div>
-  <div id="print-page-frame" aria-hidden="true"><img src="images/枠月透かし.png" alt="" aria-hidden="true" role="presentation" loading="eager"></div>
+  <div id="print-page-paper" aria-hidden="true"></div>
+  <div id="print-page-frame" aria-hidden="true"><img src="images/枠月透かし_print.jpg" alt="" aria-hidden="true" role="presentation" loading="eager"></div>
   <main class="challenge-shell" data-deep-report>
     <article class="challenge-card">
       <nav class="deep-chapter-tabs" aria-label="章ナビゲーション">
-        <button class="deep-chapter-tab-btn active" data-tab-target="1">はじめに</button>
+        <button id="toc-btn" aria-label="目次を開く" title="目次">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="3" y1="6"  x2="21" y2="6"/>
+            <line x1="3" y1="12" x2="15" y2="12"/>
+            <line x1="3" y1="18" x2="18" y2="18"/>
+          </svg>
+          目次
+        </button>
+        <button class="deep-chapter-tab-btn active" data-tab-target="1">第二の鑑定書とは</button>
         <button class="deep-chapter-tab-btn" data-tab-target="2">7日間の記録</button>
         <button class="deep-chapter-tab-btn" data-tab-target="3">今のあなた</button>
         <button class="deep-chapter-tab-btn" data-tab-target="4">成長の願い</button>
@@ -1507,16 +2385,6 @@
         <button class="deep-chapter-tab-btn" data-tab-target="9">次の旅へ</button>
       </nav>
       <div class="moon-mark" aria-hidden="true" data-chapter-tab="1"></div>
-      <section class="completion-panel deep-report-panel deep-report-opening" data-seal="四つのしるし" data-chapter-tab="1">
-        <img src="images/４つのしるし.png" alt="" class="deep-opening-banner" aria-hidden="true" role="presentation">
-        <h2 data-seal="四つのしるし">月読み日記にあらわれた<br>4つのしるし</h2>
-        <p class="deep-guidance-text">
-          7日間の日記に残された言葉、感謝、気づき、次の一歩。
-        </p>
-        <p class="deep-guidance-text">
-          この鑑定書では、その4つのしるしから、今のあなたの流れと次章への導きを読み解きます。
-        </p>
-      </section>
       <header class="challenge-header deep-report-title-block" data-chapter-tab="1">
         <div class="deep-report-title-surface">
           <div>
@@ -1535,8 +2403,19 @@
         </div>
       </header>
 
+      <section class="completion-panel deep-report-panel deep-report-opening" data-seal="四つのしるし" data-chapter-tab="1">
+        <img src="images/４つのしるし_print.jpg" alt="" class="deep-opening-banner" aria-hidden="true" role="presentation">
+        <h2 data-seal="四つのしるし">月読み日記にあらわれた<br>4つのしるし</h2>
+        <p class="deep-guidance-text">
+          7日間の日記に残された言葉、感謝、気づき、次の一歩。
+        </p>
+        <p class="deep-guidance-text">
+          この鑑定書では、その4つのしるしから、今のあなたの流れと次章への導きを読み解きます。
+        </p>
+      </section>
+
       <section class="deep-report-intro-panel deep-report-intro-image-panel" data-chapter-tab="1">
-        <img class="deep-report-intro-image" src="images/deep_report_intro_v2.png" alt="第2の鑑定書でわかること">
+        <img src="images/deep_report_intro_v2_print.jpg" alt="第2の鑑定書でわかること" style="display:block;width:100%;max-width:800px;margin:0 auto;">
       </section>
 
       <section class="challenge-body" aria-labelledby="deep-title">
@@ -1558,8 +2437,8 @@
             <p class="deep-guidance-text">新月の願いと7日間の記録がそろうと、ここにキーワードが表示されます。</p>
           </div>
         </section>
-        <section class="completion-panel deep-report-panel deep-report-summary" data-deep-diary-summary data-seal="記録" data-chapter-tab="2" style="display:block;height:auto;max-height:none;min-height:1122px;overflow:visible;">
-          <h2 data-seal="記録">7日間チャレンジテーマ<br><span style="font-size:0.85em;font-weight:normal;">あなたは、それぞれの質問に、こう書きました。</span></h2>
+        <section class="completion-panel deep-report-panel deep-report-summary" data-deep-diary-summary data-chapter-tab="2" style="display:block;height:auto;max-height:none;min-height:1122px;overflow:visible;">
+          <h2>7日間チャレンジテーマ<br><span style="font-size:0.85em;font-weight:normal;">あなたは、それぞれの質問に、こう書きました。</span></h2>
           <div data-deep-diary-days><p style="color:#b0957a;font-size:13px;">日記データを読み込んでいます…</p></div>
         </section>
         <section class="completion-panel deep-report-panel deep-report-chapter" data-seal="第一章" data-chapter-tab="3">
@@ -1615,10 +2494,10 @@
         <section class="completion-panel deep-report-panel deep-report-closing" data-seal="月読みの願い" data-chapter-tab="7">
           <h2 data-seal="月読みの願い">月読みワンダーランドが<br>届けたいもの</h2>
           <p class="deep-guidance-text">
-            月読みワンダーランドが届けたいのは、宿命を知り、天命に近づきながら、感謝が自然に育つ毎日です。
+            月読みワンダーランドが届けたいのは、何気なく選んでいる日常のものや出来事の中に流れるエネルギーに気づき、その流れがすでにあなたを望む方向へ引き寄せていると感じられる視点です。
           </p>
           <p class="deep-guidance-text">
-            宿命を知ると、自分への理解が深まります。感謝が育つと、人間関係と仕事の流れがやさしく整います。
+            振り返りを重ねることで、これからの発展に必要なものやことが見えてきます。未来のあなたが過去のあなたをそっと導き、望む未来へやさしく進んでいけるようになります。
           </p>
         </section>
       </section>
@@ -1686,7 +2565,7 @@
 
       <!-- 双子座の新月からのアドバイス -->
       <section class="completion-panel deep-report-panel deep-report-closing" data-seal="双子座新月" data-chapter-tab="8">
-        <h2 data-seal="双子座新月">双子座の新月から<br>始めたこと</h2>
+        <h2 data-seal="双子座新月">双子座の新月から<br>始めるといいこと</h2>
         <p class="deep-guidance-text">満月の振り返りが終わったら、次の新月へ向かう準備を始めましょう。双子座のエネルギーは「言葉・好奇心・つながり」。小さな一歩を言葉にするところから、新しいサイクルがひらきます。</p>
 
         <div style="display:flex;flex-direction:column;gap:14px;margin-top:24px;">
@@ -1783,7 +2662,7 @@
 
         </div>
 
-        <div style="margin-top:24px;break-inside:avoid;page-break-inside:avoid;">
+        <div style="margin-top:24px;">
           <p style="font-size:12px;letter-spacing:0.15em;color:#6b3d0e;margin:0 0 10px;">🌕 満月の気づきを書き留める</p>
           <textarea id="moon-fullmoon-gemini" placeholder="双子座満月のタイミングに気づいたこと、手放したこと、感謝できることを自由に書いてください。" style="width:100%;box-sizing:border-box;min-height:100px;background:rgba(254,250,235,0.7);border:1px solid rgba(184,145,58,0.4);border-radius:8px;color:#3d3328;font-size:13px;line-height:1.8;padding:12px 14px;resize:vertical;font-family:inherit;" oninput="localStorage.setItem('moon-fullmoon-gemini', this.value)"></textarea>
         </div>
@@ -1915,108 +2794,196 @@
         </p>
         <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-top:16px;">
 
+          <!-- 牡羊座 -->
           <div style="background:rgba(255,250,242,.65);border:1px solid rgba(168,121,50,.16);border-radius:10px;padding:10px 12px;">
-            <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;">
-              <span style="font-size:16px;line-height:1;">♈</span>
-              <div><div style="font-size:9px;letter-spacing:.08em;color:rgba(168,121,50,.55);">3月</div><div style="font-size:12.5px;font-weight:700;color:#7a5010;">牡羊座</div></div>
+            <div style="font-size:18px;font-weight:900;color:#a87932;letter-spacing:.04em;line-height:1.15;margin-bottom:2px;">開拓運</div>
+            <div style="font-size:10px;font-weight:700;color:#c8903a;letter-spacing:.12em;margin-bottom:7px;">先駆者力</div>
+            <div style="display:flex;align-items:center;gap:5px;border-top:1px solid rgba(168,121,50,.15);padding-top:7px;">
+              <span style="font-size:13px;line-height:1;opacity:.7;">♈</span>
+              <div style="font-size:9px;color:rgba(168,121,50,.6);">3月　牡羊座</div>
             </div>
-            <div style="font-size:10.5px;color:#6b3d0e;font-weight:600;line-height:1.5;">開拓運・先駆者力</div>
           </div>
 
+          <!-- 牡牛座 -->
           <div style="background:rgba(255,250,242,.65);border:1px solid rgba(168,121,50,.16);border-radius:10px;padding:10px 12px;">
-            <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;">
-              <span style="font-size:16px;line-height:1;">♉</span>
-              <div><div style="font-size:9px;letter-spacing:.08em;color:rgba(168,121,50,.55);">4月</div><div style="font-size:12.5px;font-weight:700;color:#7a5010;">牡牛座</div></div>
+            <div style="font-size:18px;font-weight:900;color:#a87932;letter-spacing:.04em;line-height:1.15;margin-bottom:2px;">金運</div>
+            <div style="font-size:10px;font-weight:700;color:#c8903a;letter-spacing:.12em;margin-bottom:7px;">豊かさ体質</div>
+            <div style="display:flex;align-items:center;gap:5px;border-top:1px solid rgba(168,121,50,.15);padding-top:7px;">
+              <span style="font-size:13px;line-height:1;opacity:.7;">♉</span>
+              <div style="font-size:9px;color:rgba(168,121,50,.6);">4月　牡牛座</div>
             </div>
-            <div style="font-size:10.5px;color:#6b3d0e;font-weight:600;line-height:1.5;">金運・豊かさ体質</div>
           </div>
 
+          <!-- 双子座（今ここ） -->
           <div style="background:rgba(168,121,50,.12);border:2px solid rgba(168,121,50,.5);border-radius:10px;padding:10px 12px;position:relative;">
             <div style="position:absolute;top:-8px;right:8px;background:#a87932;color:#fff;font-size:9px;font-weight:700;letter-spacing:.08em;padding:2px 8px;border-radius:8px;">今ここ</div>
-            <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;">
-              <span style="font-size:16px;line-height:1;">♊</span>
-              <div><div style="font-size:9px;letter-spacing:.08em;color:rgba(168,121,50,.65);">5月</div><div style="font-size:12.5px;font-weight:700;color:#7a5010;">双子座</div></div>
+            <div style="font-size:18px;font-weight:900;color:#a87932;letter-spacing:.04em;line-height:1.15;margin-bottom:2px;">発信力</div>
+            <div style="font-size:10px;font-weight:700;color:#c8903a;letter-spacing:.12em;margin-bottom:7px;">人脈運</div>
+            <div style="display:flex;align-items:center;gap:5px;border-top:1px solid rgba(168,121,50,.25);padding-top:7px;">
+              <span style="font-size:13px;line-height:1;opacity:.8;">♊</span>
+              <div style="font-size:9px;color:rgba(168,121,50,.7);">5月　双子座</div>
             </div>
-            <div style="font-size:10.5px;color:#6b3d0e;font-weight:600;line-height:1.5;">発信力・人脈運</div>
           </div>
 
+          <!-- 蟹座（次） -->
           <div style="background:rgba(255,250,242,.65);border:2px dashed rgba(168,121,50,.38);border-radius:10px;padding:10px 12px;position:relative;">
             <div style="position:absolute;top:-8px;right:8px;background:rgba(168,121,50,.55);color:#fff;font-size:9px;font-weight:700;letter-spacing:.08em;padding:2px 8px;border-radius:8px;">次</div>
-            <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;">
-              <span style="font-size:16px;line-height:1;">♋</span>
-              <div><div style="font-size:9px;letter-spacing:.08em;color:rgba(168,121,50,.55);">6月</div><div style="font-size:12.5px;font-weight:700;color:#7a5010;">蟹座</div></div>
+            <div style="font-size:18px;font-weight:900;color:#a87932;letter-spacing:.04em;line-height:1.15;margin-bottom:2px;">家庭運</div>
+            <div style="font-size:10px;font-weight:700;color:#c8903a;letter-spacing:.12em;margin-bottom:7px;">引き寄せ体質</div>
+            <div style="display:flex;align-items:center;gap:5px;border-top:1px solid rgba(168,121,50,.15);padding-top:7px;">
+              <span style="font-size:13px;line-height:1;opacity:.7;">♋</span>
+              <div style="font-size:9px;color:rgba(168,121,50,.6);">6月　蟹座</div>
             </div>
-            <div style="font-size:10.5px;color:#6b3d0e;font-weight:600;line-height:1.5;">家庭運・引き寄せ体質</div>
           </div>
 
+          <!-- 獅子座 -->
           <div style="background:rgba(255,250,242,.65);border:1px solid rgba(168,121,50,.16);border-radius:10px;padding:10px 12px;">
-            <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;">
-              <span style="font-size:16px;line-height:1;">♌</span>
-              <div><div style="font-size:9px;letter-spacing:.08em;color:rgba(168,121,50,.55);">7月</div><div style="font-size:12.5px;font-weight:700;color:#7a5010;">獅子座</div></div>
+            <div style="font-size:18px;font-weight:900;color:#a87932;letter-spacing:.04em;line-height:1.15;margin-bottom:2px;">魅力運</div>
+            <div style="font-size:10px;font-weight:700;color:#c8903a;letter-spacing:.12em;margin-bottom:7px;">カリスマ</div>
+            <div style="display:flex;align-items:center;gap:5px;border-top:1px solid rgba(168,121,50,.15);padding-top:7px;">
+              <span style="font-size:13px;line-height:1;opacity:.7;">♌</span>
+              <div style="font-size:9px;color:rgba(168,121,50,.6);">7月　獅子座</div>
             </div>
-            <div style="font-size:10.5px;color:#6b3d0e;font-weight:600;line-height:1.5;">魅力運・カリスマ</div>
           </div>
 
+          <!-- 乙女座 -->
           <div style="background:rgba(255,250,242,.65);border:1px solid rgba(168,121,50,.16);border-radius:10px;padding:10px 12px;">
-            <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;">
-              <span style="font-size:16px;line-height:1;">♍</span>
-              <div><div style="font-size:9px;letter-spacing:.08em;color:rgba(168,121,50,.55);">8月</div><div style="font-size:12.5px;font-weight:700;color:#7a5010;">乙女座</div></div>
+            <div style="font-size:18px;font-weight:900;color:#a87932;letter-spacing:.04em;line-height:1.15;margin-bottom:2px;">仕事運</div>
+            <div style="font-size:10px;font-weight:700;color:#c8903a;letter-spacing:.12em;margin-bottom:7px;">健康運</div>
+            <div style="display:flex;align-items:center;gap:5px;border-top:1px solid rgba(168,121,50,.15);padding-top:7px;">
+              <span style="font-size:13px;line-height:1;opacity:.7;">♍</span>
+              <div style="font-size:9px;color:rgba(168,121,50,.6);">8月　乙女座</div>
             </div>
-            <div style="font-size:10.5px;color:#6b3d0e;font-weight:600;line-height:1.5;">仕事運・健康運</div>
           </div>
 
+          <!-- 天秤座 -->
           <div style="background:rgba(255,250,242,.65);border:1px solid rgba(168,121,50,.16);border-radius:10px;padding:10px 12px;">
-            <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;">
-              <span style="font-size:16px;line-height:1;">♎</span>
-              <div><div style="font-size:9px;letter-spacing:.08em;color:rgba(168,121,50,.55);">9月</div><div style="font-size:12.5px;font-weight:700;color:#7a5010;">天秤座</div></div>
+            <div style="font-size:18px;font-weight:900;color:#a87932;letter-spacing:.04em;line-height:1.15;margin-bottom:2px;">恋愛運</div>
+            <div style="font-size:10px;font-weight:700;color:#c8903a;letter-spacing:.12em;margin-bottom:7px;">縁結び</div>
+            <div style="display:flex;align-items:center;gap:5px;border-top:1px solid rgba(168,121,50,.15);padding-top:7px;">
+              <span style="font-size:13px;line-height:1;opacity:.7;">♎</span>
+              <div style="font-size:9px;color:rgba(168,121,50,.6);">9月　天秤座</div>
             </div>
-            <div style="font-size:10.5px;color:#6b3d0e;font-weight:600;line-height:1.5;">恋愛運・縁結び</div>
           </div>
 
+          <!-- 蠍座 -->
           <div style="background:rgba(255,250,242,.65);border:1px solid rgba(168,121,50,.16);border-radius:10px;padding:10px 12px;">
-            <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;">
-              <span style="font-size:16px;line-height:1;">♏</span>
-              <div><div style="font-size:9px;letter-spacing:.08em;color:rgba(168,121,50,.55);">10月</div><div style="font-size:12.5px;font-weight:700;color:#7a5010;">蠍座</div></div>
+            <div style="font-size:18px;font-weight:900;color:#a87932;letter-spacing:.04em;line-height:1.15;margin-bottom:2px;">財運力</div>
+            <div style="font-size:10px;font-weight:700;color:#c8903a;letter-spacing:.12em;margin-bottom:7px;">変革運</div>
+            <div style="display:flex;align-items:center;gap:5px;border-top:1px solid rgba(168,121,50,.15);padding-top:7px;">
+              <span style="font-size:13px;line-height:1;opacity:.7;">♏</span>
+              <div style="font-size:9px;color:rgba(168,121,50,.6);">10月　蠍座</div>
             </div>
-            <div style="font-size:10.5px;color:#6b3d0e;font-weight:600;line-height:1.5;">財運力・変革運</div>
           </div>
 
+          <!-- 射手座 -->
           <div style="background:rgba(255,250,242,.65);border:1px solid rgba(168,121,50,.16);border-radius:10px;padding:10px 12px;">
-            <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;">
-              <span style="font-size:16px;line-height:1;">♐</span>
-              <div><div style="font-size:9px;letter-spacing:.08em;color:rgba(168,121,50,.55);">11月</div><div style="font-size:12.5px;font-weight:700;color:#7a5010;">射手座</div></div>
+            <div style="font-size:18px;font-weight:900;color:#a87932;letter-spacing:.04em;line-height:1.15;margin-bottom:2px;">拡大運</div>
+            <div style="font-size:10px;font-weight:700;color:#c8903a;letter-spacing:.12em;margin-bottom:7px;">自由になる力</div>
+            <div style="display:flex;align-items:center;gap:5px;border-top:1px solid rgba(168,121,50,.15);padding-top:7px;">
+              <span style="font-size:13px;line-height:1;opacity:.7;">♐</span>
+              <div style="font-size:9px;color:rgba(168,121,50,.6);">11月　射手座</div>
             </div>
-            <div style="font-size:10.5px;color:#6b3d0e;font-weight:600;line-height:1.5;">拡大運・自由になる力</div>
           </div>
 
+          <!-- 山羊座 -->
           <div style="background:rgba(255,250,242,.65);border:1px solid rgba(168,121,50,.16);border-radius:10px;padding:10px 12px;">
-            <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;">
-              <span style="font-size:16px;line-height:1;">♑</span>
-              <div><div style="font-size:9px;letter-spacing:.08em;color:rgba(168,121,50,.55);">12月</div><div style="font-size:12.5px;font-weight:700;color:#7a5010;">山羊座</div></div>
+            <div style="font-size:18px;font-weight:900;color:#a87932;letter-spacing:.04em;line-height:1.15;margin-bottom:2px;">出世運</div>
+            <div style="font-size:10px;font-weight:700;color:#c8903a;letter-spacing:.12em;margin-bottom:7px;">社会的成功</div>
+            <div style="display:flex;align-items:center;gap:5px;border-top:1px solid rgba(168,121,50,.15);padding-top:7px;">
+              <span style="font-size:13px;line-height:1;opacity:.7;">♑</span>
+              <div style="font-size:9px;color:rgba(168,121,50,.6);">12月　山羊座</div>
             </div>
-            <div style="font-size:10.5px;color:#6b3d0e;font-weight:600;line-height:1.5;">出世運・社会的成功</div>
           </div>
 
+          <!-- 水瓶座 -->
           <div style="background:rgba(255,250,242,.65);border:1px solid rgba(168,121,50,.16);border-radius:10px;padding:10px 12px;">
-            <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;">
-              <span style="font-size:16px;line-height:1;">♒</span>
-              <div><div style="font-size:9px;letter-spacing:.08em;color:rgba(168,121,50,.55);">1月</div><div style="font-size:12.5px;font-weight:700;color:#7a5010;">水瓶座</div></div>
+            <div style="font-size:18px;font-weight:900;color:#a87932;letter-spacing:.04em;line-height:1.15;margin-bottom:2px;">革新力</div>
+            <div style="font-size:10px;font-weight:700;color:#c8903a;letter-spacing:.12em;margin-bottom:7px;">先見の明</div>
+            <div style="display:flex;align-items:center;gap:5px;border-top:1px solid rgba(168,121,50,.15);padding-top:7px;">
+              <span style="font-size:13px;line-height:1;opacity:.7;">♒</span>
+              <div style="font-size:9px;color:rgba(168,121,50,.6);">1月　水瓶座</div>
             </div>
-            <div style="font-size:10.5px;color:#6b3d0e;font-weight:600;line-height:1.5;">革新力・先見の明</div>
           </div>
 
+          <!-- 魚座 -->
           <div style="background:rgba(255,250,242,.65);border:1px solid rgba(168,121,50,.16);border-radius:10px;padding:10px 12px;">
-            <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;">
-              <span style="font-size:16px;line-height:1;">♓</span>
-              <div><div style="font-size:9px;letter-spacing:.08em;color:rgba(168,121,50,.55);">2月</div><div style="font-size:12.5px;font-weight:700;color:#7a5010;">魚座</div></div>
+            <div style="font-size:18px;font-weight:900;color:#a87932;letter-spacing:.04em;line-height:1.15;margin-bottom:2px;">直感力</div>
+            <div style="font-size:10px;font-weight:700;color:#c8903a;letter-spacing:.12em;margin-bottom:7px;">癒し運</div>
+            <div style="display:flex;align-items:center;gap:5px;border-top:1px solid rgba(168,121,50,.15);padding-top:7px;">
+              <span style="font-size:13px;line-height:1;opacity:.7;">♓</span>
+              <div style="font-size:9px;color:rgba(168,121,50,.6);">2月　魚座</div>
             </div>
-            <div style="font-size:10.5px;color:#6b3d0e;font-weight:600;line-height:1.5;">直感力・癒し運</div>
           </div>
 
         </div>
         <p style="text-align:center;font-size:11.5px;color:rgba(100,60,20,.6);margin-top:16px;line-height:2;">
           <strong style="color:#7a5010;">1年続けると、12の運の扉が開き、宿命の全体像が見えてきます。</strong>
         </p>
+      </section>
+
+      <!-- ── 振り返り鑑定 ──────────────────────────────────── -->
+      <section id="furikaeri-section" class="completion-panel deep-report-panel deep-report-closing" data-chapter-tab="9" style="margin-top:24px;">
+        <h2 style="font-size:1.05em;letter-spacing:.06em;border-bottom:1px solid rgba(200,180,255,0.2);padding-bottom:10px;margin-bottom:6px;">
+          ━━━ ７日間の振り返り鑑定 ━━━
+        </h2>
+        <p class="fk-header-sub" style="font-size:11px;color:rgba(200,180,255,0.5);letter-spacing:.1em;margin:0 0 16px;">
+          🌙 日記の言葉から紐解く、あなただけの第２の鑑定書
+        </p>
+
+        <div id="furikaeri-status" style="font-size:12px;color:rgba(200,180,255,0.6);min-height:20px;margin-bottom:8px;"></div>
+
+        <!-- Section 1: 振り返り -->
+        <div id="furikaeri-s1-wrap" style="display:none;">
+          <p class="fk-section-label" style="font-size:10px;font-weight:700;letter-spacing:.2em;color:rgba(200,180,255,0.45);border-bottom:1px solid rgba(200,180,255,0.12);padding-bottom:4px;margin:0 0 12px;">
+            ━━ ７日間の振り返り ━━
+          </p>
+          <p id="furikaeri-s1" class="fk-text" style="font-size:13.5px;line-height:2.05;color:rgba(245,240,230,0.88);white-space:pre-wrap;margin:0 0 20px;"></p>
+        </div>
+
+        <!-- Section 2: これからのあなたへ -->
+        <div id="furikaeri-s2-wrap" style="display:none;">
+          <p class="fk-section-label" style="font-size:10px;font-weight:700;letter-spacing:.2em;color:rgba(200,180,255,0.45);border-bottom:1px solid rgba(200,180,255,0.12);padding-bottom:4px;margin:0 0 12px;">
+            ━━ これからのあなたへ ━━
+          </p>
+          <p id="furikaeri-s2" class="fk-text" style="font-size:13.5px;line-height:2.05;color:rgba(245,240,230,0.88);white-space:pre-wrap;margin:0 0 20px;"></p>
+        </div>
+
+        <!-- 今月の新月テーマ（静的）-->
+        <div id="furikaeri-zodiac-wrap" style="display:none;background:rgba(100,80,200,0.08);border:1px solid rgba(200,180,255,0.2);border-radius:10px;padding:14px 16px;margin:0 0 16px;">
+          <p style="font-size:10px;letter-spacing:.2em;color:rgba(200,180,255,0.45);margin:0 0 8px;">━━ 今月の新月テーマ ━━</p>
+          <div id="furikaeri-zodiac-content"></div>
+        </div>
+
+        <!-- Section 3: 今月テーマ深読み -->
+        <div id="furikaeri-s3-wrap" style="display:none;">
+          <p class="fk-section-label" style="font-size:10px;font-weight:700;letter-spacing:.2em;color:rgba(200,180,255,0.45);border-bottom:1px solid rgba(200,180,255,0.12);padding-bottom:4px;margin:0 0 12px;">
+            ━━ あなたの日記から ━━
+          </p>
+          <p id="furikaeri-s3" class="fk-text" style="font-size:13.5px;line-height:2.05;color:rgba(245,240,230,0.88);white-space:pre-wrap;margin:0 0 20px;"></p>
+        </div>
+
+        <!-- Section 4: 双子座新月からの日記 -->
+        <div id="furikaeri-s4-wrap" style="display:none;">
+          <p class="fk-section-label" style="font-size:10px;font-weight:700;letter-spacing:.2em;color:rgba(200,180,255,0.45);border-bottom:1px solid rgba(200,180,255,0.12);padding-bottom:4px;margin:0 0 12px;">
+            ━━ 双子座新月からの日記 ━━
+          </p>
+          <p id="furikaeri-s4" class="fk-text" style="font-size:13.5px;line-height:2.05;color:rgba(245,240,230,0.88);white-space:pre-wrap;margin:0 0 20px;"></p>
+        </div>
+
+        <!-- Section 5: 今月するといい開運行動 -->
+        <div id="furikaeri-s5-wrap" style="display:none;">
+          <p class="fk-section-label" style="font-size:10px;font-weight:700;letter-spacing:.2em;color:rgba(200,180,255,0.45);border-bottom:1px solid rgba(200,180,255,0.12);padding-bottom:4px;margin:0 0 12px;">
+            ━━ 今月するといい開運行動 ━━
+          </p>
+          <p id="furikaeri-s5" class="fk-text" style="font-size:13.5px;line-height:2.05;color:rgba(245,240,230,0.88);white-space:pre-wrap;margin:0 0 20px;"></p>
+        </div>
+
+        <!-- 署名 -->
+        <div id="furikaeri-sig" class="fk-sig" style="display:none;text-align:right;font-size:11px;color:rgba(200,180,255,0.4);margin-top:16px;padding-top:10px;border-top:1px solid rgba(200,180,255,0.12);">
+          宿曜占星術師　かのん<br>
+          <span style="font-family:'Dancing Script',cursive;font-size:22px;color:rgba(200,180,255,0.6);">Kanon</span>
+        </div>
       </section>
 
       <!-- データバックアップ・復元 -->
@@ -2146,6 +3113,16 @@
         <span style="font-size:20px;line-height:1;">🖨️</span>
         <span>印刷</span>
       </button>
+      <a href="../../Applications/27shuku/diary-reading.html" id="gnav-diary-cert" style="
+        flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+        padding:10px 4px 9px;color:rgba(245,215,100,0.85);text-decoration:none;
+        font-size:11px;gap:3px;letter-spacing:.03em;
+        border-left:1px solid rgba(200,180,255,0.08);
+        transition:color .2s;-webkit-tap-highlight-color:transparent;
+      ">
+        <span style="font-size:20px;line-height:1;">📋</span>
+        <span>振り返り鑑定</span>
+      </a>
     </nav>
 
     <!-- APIキー設定パネル（スライドイン） -->
@@ -2196,14 +3173,13 @@
     setTimeout(function() { location.reload(); }, 300);
   }
   </script>
-  <script src="diary_data_sync.js?v=20260622" onerror="void 0"></script>
+  <script src="diary_data_sync.js?v=20260718" onerror="void 0"></script>
   <script src="diary_structured_save.js?v=20260622" onerror="void 0"></script>
   <script src="participants_data.js?v=20260622" onerror="void 0"></script>
-  <script src="diary_entries_data.js?v=20260705" onerror="void 0"></script>
-  <script src="participants_loader.js?v=20260711" onerror="void 0"></script>
-  <script src="shuku_report_gen.js?v=20260716-keywords" onerror="void 0"></script>
+  <script src="participants_loader.js?v=20260718" onerror="void 0"></script>
+  <script src="shuku_report_gen.js?v=20260712" onerror="void 0"></script>
   <script src="deep_report_overrides.js?v=20260630b" onerror="void 0"></script>
-  <script src="app.js?v=20260714-pdf-fix"></script>
+  <script src="app.js?v=20260718f"></script>
   <script src="gemini_deep_analysis.js?v=20260705"></script>
   <script>
   // 月の4フェーズ記録 — 自動保存・復元・GAS同期
@@ -2283,11 +3259,9 @@
           if(wish) el.value = wish;
         }
       });
-      // 双子座満月メモ復元（管理者プレビュー時はスキップ：かのんの記録が参加者PDFに混入しないよう）
-      var _moonUrlPid = (new URLSearchParams(window.location.search||'')).get('participantId')
-                      || (new URLSearchParams(window.location.search||'')).get('pid') || '';
+      // 双子座満月メモ復元
       var geminiEl = document.getElementById('moon-fullmoon-gemini');
-      if(geminiEl && !_moonUrlPid){
+      if(geminiEl){
         var geminiSaved = localStorage.getItem('moon-fullmoon-gemini');
         if(geminiSaved) geminiEl.value = geminiSaved;
       }
@@ -2457,7 +3431,7 @@
     /* ── GAS URL（participants_lookup GASと同じエンドポイント） ── */
     /* google_apps_script_participants_lookup.gs を再デプロイ後、自動で使えます */
     var SHINGETSU_GAS_URL = window.SHINGETSU_GAS_URL ||
-      'https://script.google.com/macros/s/AKfycbxWpo3QzBNxemQNtYqYZfuMhjyrr2prjY6lsZPUZP5soKjimHzMts_Phz8D73DUYvbs/exec';
+      'https://script.google.com/macros/s/AKfycbyFn41Pd3hrifQBCYhRMATxANM_yyEctKnHiY65pLMAE7yij-rYSjef6zd7wEJI8F_v/exec';
     var SHINGETSU_SECRET  = 'tsukiyomi-2026-key';
 
     /* ── キャッシュ ── */
@@ -2778,7 +3752,7 @@
   // チャプタータブ切り替え
   (function(){
     var STORAGE_KEY = 'deepReportCurrentTab';
-    var CHAPTER_LABELS = ['はじめに', '7日間の記録', '今のあなた', '成長の願い', 'あなたの気質', '次の一歩', 'あなたの言葉', '宿命診断', '次の旅へ'];
+    var CHAPTER_LABELS = ['第二の鑑定書とは', '7日間の記録', '今のあなた', '成長の願い', 'あなたの気質', '次の一歩', 'あなたの言葉', '宿命診断', '次の旅へ'];
     var CHAPTER_TOTAL = 9;
 
     function updateBottomNav(n) {
@@ -2846,8 +3820,8 @@
           switchTab(btn.getAttribute('data-tab-target'));
         });
       });
-      var saved = '1';
-      try { saved = sessionStorage.getItem(STORAGE_KEY) || '1'; } catch(e) {}
+      var saved = '2';
+      try { saved = sessionStorage.getItem(STORAGE_KEY) || '2'; } catch(e) {}
       switchTab(saved);
     }
     if (document.readyState === 'loading') {
@@ -2882,28 +3856,321 @@
     setTimeout(apply, 1500);
   })();
   </script>
+
   <script>
-  // 印刷前にtextareaをコンテンツ高さに自動展開（印刷でコンテンツが切れる防止）
-  window.addEventListener('beforeprint', function() {
-    document.querySelectorAll('[data-deep-report] textarea').forEach(function(ta) {
-      ta.style.height = 'auto';
-      ta.style.height = ta.scrollHeight + 'px';
-      ta.style.overflow = 'visible';
+  // ── 目次 ──
+  (function(){
+    var TOC_DATA = [
+      { tab: 1, name: '第二の鑑定書とは', subs: [
+        '月読み日記にあらわれた4つのしるし',
+        'この鑑定書は12ヶ月の旅のはじまりです'
+      ]},
+      { tab: 2, name: '7日間の記録', subs: [
+        '第一の鑑定書からはじまった旅',
+        '日記から浮かびあがった4つのキーワード',
+        '7日間チャレンジテーマ'
+      ]},
+      { tab: 3, name: '今のあなた', subs: [
+        '月読み日記から見えた、今のあなた'
+      ]},
+      { tab: 4, name: '成長の願い', subs: [
+        '4つのしるしが告げる育ち始めた願い'
+      ]},
+      { tab: 5, name: 'あなたの気質', subs: [
+        '宿曜から授かったあなたの土台資質'
+      ]},
+      { tab: 6, name: '次の一歩', subs: [
+        'おかげさまと共に進む、次の一歩'
+      ]},
+      { tab: 7, name: 'あなたの言葉', subs: [
+        '月読み日記に残された、あなた自身の言葉',
+        'この7日間で育んだもの',
+        '月読みワンダーランドが届けたいもの',
+        '月のサイクルで育てていくこと'
+      ]},
+      { tab: 8, name: '宿命診断', subs: [
+        '双子座の新月から始めるといいこと',
+        '双子座満月から整えていくこと',
+        '双子座新月 × 宿命診断'
+      ]},
+      { tab: 9, name: '次の旅へ', subs: [
+        '次の新月から始まる蟹座チャレンジ'
+      ]}
+    ];
+
+    var CHAPTER_NUMS = ['一', '二', '三', '四', '五', '六', '七', '八', '九'];
+
+    function buildToc() {
+      var body = document.getElementById('toc-body');
+      if (!body) return;
+      var html = '';
+      TOC_DATA.forEach(function(ch, i) {
+        var subHtml = '';
+        ch.subs.forEach(function(s) {
+          subHtml += '<button class="toc-sub-btn" data-toc-tab="' + ch.tab + '">' + s + '</button>';
+        });
+        html +=
+          '<div class="toc-chapter">' +
+            '<button class="toc-chapter-btn" data-toc-tab="' + ch.tab + '">' +
+              '<span class="toc-ch-num">第' + CHAPTER_NUMS[i] + '章</span>' +
+              '<span class="toc-ch-name">' + ch.name + '</span>' +
+            '</button>' +
+            '<div class="toc-subs">' + subHtml + '</div>' +
+          '</div>';
+      });
+      body.innerHTML = html;
+
+      body.querySelectorAll('[data-toc-tab]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var tab = parseInt(btn.getAttribute('data-toc-tab'), 10);
+          closeToc();
+          if (window.switchDeepTab) window.switchDeepTab(tab);
+        });
+      });
+    }
+
+    function openToc() {
+      document.getElementById('toc-drawer').classList.add('open');
+      document.getElementById('toc-backdrop').classList.add('open');
+      document.getElementById('toc-btn').setAttribute('aria-expanded', 'true');
+    }
+    function closeToc() {
+      document.getElementById('toc-drawer').classList.remove('open');
+      document.getElementById('toc-backdrop').classList.remove('open');
+      document.getElementById('toc-btn').setAttribute('aria-expanded', 'false');
+    }
+
+    document.getElementById('toc-btn').addEventListener('click', function() {
+      var open = document.getElementById('toc-drawer').classList.contains('open');
+      if (open) closeToc(); else openToc();
     });
-  });
-  window.addEventListener('afterprint', function() {
-    document.querySelectorAll('[data-deep-report] textarea').forEach(function(ta) {
-      ta.style.height = '';
-      ta.style.overflow = '';
+    document.getElementById('toc-close').addEventListener('click', closeToc);
+    document.getElementById('toc-backdrop').addEventListener('click', closeToc);
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeToc();
     });
-  });
+
+    buildToc();
+  })();
   </script>
-<script>
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", function() {
-    navigator.serviceWorker.register("sw.js");
-  });
-}
-</script>
+
+  <!-- ══ 振り返り鑑定 自動生成スクリプト ══ -->
+  <script>
+  (function() {
+    'use strict';
+
+    var MODEL = 'gemini-2.5-flash';
+    var CACHE_KEY = 'furikaeri:v1:';
+    var MOON_THEME = { sign: '双子座', theme: '発信力・人脈運' };
+    var ZODIAC_DATA = {
+      emoji: '♊', sign: '双子座', theme: '発信力・人脈運',
+      keywords: ['自分の言葉で伝える力が高まる', '新しい出会いとつながりが生まれやすい', '情報発信が運気を動かす月'],
+      message: 'あなたの言葉が誰かの扉を開く。発信することを恐れないで。'
+    };
+
+    var SHUKU_MAP = {
+      '昴宿':{ 本質:'影響力', 才能:'引力・カリスマ', 天命:'波動を広げる', 使命:'意識を動かす', 強み:'美意識・感性', 開運アイテム:'鏡' },
+      '畢宿':{ 本質:'理解力', 才能:'専門性・深度', 天命:'構造を掴む', 使命:'本質理解', 強み:'完成力・締める力', 開運アイテム:'歯ブラシ' },
+      '觜宿':{ 本質:'現実化', 才能:'集中・現実力', 天命:'結果にする', 使命:'行動結果化', 強み:'言語化・本質洞察', 開運アイテム:'カーテン' },
+      '参宿':{ 本質:'行動力', 才能:'行動・開拓', 天命:'突破する', 使命:'動かす', 強み:'行動力・開拓力', 開運アイテム:'スイッチ' },
+      '井宿':{ 本質:'循環', 才能:'繁栄・豊穣', 天命:'流れを作る', 使命:'循環させる', 強み:'学習力・研究力', 開運アイテム:'ナイトランプ' },
+      '鬼宿':{ 本質:'浄化', 才能:'霊感・浄化', 天命:'不要を削る', 使命:'本質化', 強み:'純粋性・新規性', 開運アイテム:'ゴミ箱' },
+      '柳宿':{ 本質:'言語化', 才能:'言葉の力', 天命:'伝える', 使命:'理解させる', 強み:'真贋を見抜く力', 開運アイテム:'ティッシュ' },
+      '星宿':{ 本質:'魅せる', 才能:'輝き・自己表現', 天命:'表現する', 使命:'惹きつける', 強み:'表現力・スター性', 開運アイテム:'音' },
+      '張宿':{ 本質:'拡散', 才能:'援助・包容', 天命:'広げる', 使命:'流通させる', 強み:'演出力・影響力', 開運アイテム:'SNS' },
+      '翼宿':{ 本質:'拡張', 才能:'自由・広がり', 天命:'制限突破', 使命:'可能性解放', 強み:'革新力・変革力', 開運アイテム:'照明' },
+      '軫宿':{ 本質:'縁', 才能:'社交・変容', 天命:'関係調整', 使命:'人をつなぐ', 強み:'癒し・共感力', 開運アイテム:'味噌汁' },
+      '角宿':{ 本質:'入口', 才能:'調和・信頼', 天命:'始める', 使命:'信頼形成', 強み:'信頼・秩序を作る力', 開運アイテム:'玄関' },
+      '亢宿':{ 本質:'意志', 才能:'知性・分析', 天命:'軸を通す', 使命:'基準提示', 強み:'信念・突破力', 開運アイテム:'鍵' },
+      '氐宿':{ 本質:'引力', 才能:'調整・魅力', 天命:'選ばれる', 使命:'魅力発揮', 強み:'調整力・支援力', 開運アイテム:'財布' },
+      '房宿':{ 本質:'受取', 才能:'豊かさ・行動力', 天命:'豊かさ循環', 使命:'受容モデル', 強み:'人脈形成・愛され力', 開運アイテム:'ベッド' },
+      '心宿':{ 本質:'本音', 才能:'直感・感受性', 天命:'感情理解', 使命:'内面解放', 強み:'魅力・引力', 開運アイテム:'キャンドル' },
+      '尾宿':{ 本質:'役割', 才能:'情熱・突破力', 天命:'実務遂行', 使命:'現実推進', 強み:'統率力・リーダーシップ', 開運アイテム:'仕事道具' },
+      '箕宿':{ 本質:'継続', 才能:'自由・先見性', 天命:'流れ維持', 使命:'拡大継続', 強み:'拡散力・プロデュース', 開運アイテム:'食器' },
+      '斗宿':{ 本質:'方向', 才能:'誠実・蓄積', 天命:'未来決定', 使命:'指針提示', 強み:'意志・決断力', 開運アイテム:'手帳' },
+      '女宿':{ 本質:'感性', 才能:'奉仕・繊細', 天命:'受容魅力', 使命:'美意識提示', 強み:'正義感・誠実さ', 開運アイテム:'服' },
+      '虚宿':{ 本質:'空', 才能:'洞察・神秘', 天命:'本質回帰', 使命:'削ぎ落とし', 強み:'哲学・真理探究', 開運アイテム:'空間' },
+      '危宿':{ 本質:'リスク', 才能:'革新・独創', 天命:'精度向上', 使命:'崩れ防止', 強み:'洞察力・リスク管理', 開運アイテム:'メガネ' },
+      '室宿':{ 本質:'安定', 才能:'献身・忠実', 天命:'居場所形成', 使命:'継続基盤', 強み:'管理力・安定性', 開運アイテム:'家' },
+      '壁宿':{ 本質:'防御', 才能:'知恵・継承', 天命:'境界設定', 使命:'守る', 強み:'基盤構築・守り', 開運アイテム:'バスタオル' },
+      '奎宿':{ 本質:'知性', 才能:'文才・芸術', 天命:'体系化', 使命:'伝承', 強み:'編集力・構造理解', 開運アイテム:'水' },
+      '婁宿':{ 本質:'成果', 才能:'正義・責任感', 天命:'具現化', 使命:'証明', 強み:'実務力・責任感', 開運アイテム:'花' },
+      '胃宿':{ 本質:'統合', 才能:'蓄積・安定', 天命:'満足', 使命:'完結', 強み:'継続力・基盤力', 開運アイテム:'食べ物' }
+    };
+
+    function getApiKey() {
+      return (window.GEMINI_API_KEY || '').trim() ||
+             (localStorage.getItem('tsukiyomi:geminiApiKey') || '').trim();
+    }
+
+    function getPid() {
+      var p = new URLSearchParams(window.location.search || '');
+      return p.get('participantId') || p.get('pid') || 'guest';
+    }
+
+    function getProfile() {
+      var pid = getPid();
+      var d = (window.PARTICIPANTS_DATA && window.PARTICIPANTS_DATA[pid]) || {};
+      if (!d || !d.name) {
+        try { d = JSON.parse(localStorage.getItem('tsukiyomi:participantProfile:v1:' + pid) || '{}'); } catch(e) {}
+      }
+      return d || {};
+    }
+
+    function getDiaryText(pid) {
+      var prefix = 'tsukiyomi:structuredDiary:v1:' + pid + ':day:';
+      var days = [];
+      for (var d = 1; d <= 7; d++) {
+        try {
+          var raw = localStorage.getItem(prefix + d);
+          if (!raw) continue;
+          var rec = JSON.parse(raw);
+          if (!rec || !rec.lines) continue;
+          var lines = rec.lines.filter(function(l) { return (l.text || '').trim().length > 0; });
+          if (!lines.length) continue;
+          days.push('Day' + d + ':\n' + lines.map(function(l) { return (l.label ? '【' + l.label + '】' : '') + l.text; }).join('\n'));
+        } catch(e) {}
+      }
+      return days.join('\n\n');
+    }
+
+    function buildPrompt(profile, item, diaryText) {
+      var name = profile.name || 'あなた';
+      var shuku = profile.shuku || '';
+      return 'あなたは宿曜占星術師「かのん」です。参加者が書いた7日間の月読み日記を深く読み解き、その人だけの変化・才能・これからの指針が伝わる「振り返り鑑定書」を書いてください。\n\n' +
+        '【参加者情報】\nお名前：' + name + ' 様\n命宿：' + shuku + '\n本質：' + (item.本質||'') + '\n才能：' + (item.才能||'') + '\n天命：' + (item.天命||'') + '\n使命：' + (item.使命||'') + '\n強み：' + (item.強み||'') + '\n開運アイテム：' + (item.開運アイテム||'') + '\n\n' +
+        '【今月の新月テーマ】\n' + MOON_THEME.sign + '新月 ＝ ' + MOON_THEME.theme + '\n\n' +
+        '【7日間の月読み日記】\n' + diaryText + '\n\n' +
+        '【出力形式】以下の3つのセクションを必ず順番通りに出力してください。\n\n' +
+        'セクション1（7日間の振り返り・650〜800文字）：' + name + 'さんの7日間の変容をDay1からDay7の流れで書いてください。日記の言葉を2〜3個「　」で引用し、' + shuku + 'の本質・才能とつなげてください。今月のテーマ「' + MOON_THEME.theme + '」が日記のどの場面で動いていたかを具体的に描いてください。段落間は1行空けてください。\n\n' +
+        '---SECTION2---\n\n' +
+        'セクション2（これからのあなたへ・250〜350文字）：日記の行動宣言を受け止め、次のサイクルに向けた具体的な整え方を書いてください。開運アイテム「' + (item.開運アイテム||'') + '」を自然につなげ、最後は「' + MOON_THEME.theme + '」の扉をこれからも開き続けられる言葉で締めくくってください。\n\n' +
+        '---SECTION3---\n\n' +
+        'セクション3（今月テーマ深読み・150〜200文字）：①日記から"伝えた・表現した・つながった"場面を1つ選んで描く ②「あなたは〇〇と書いていました」と本人の言葉を返す ③それが「' + MOON_THEME.theme + '」とどうつながるか一言で翻訳する。最後に' + MOON_THEME.theme + 'の扉が開いたことへの短い祝福を添えてください。\n\n' +
+        '【共通ルール】マークダウン不使用。「---SECTION2---」「---SECTION3---」はそのまま出力。段落間1行空け。';
+    }
+
+    function showZodiac() {
+      var el = document.getElementById('furikaeri-zodiac-content');
+      if (!el) return;
+      var z = ZODIAC_DATA;
+      el.innerHTML =
+        '<div style="font-size:22px;margin-bottom:4px;">' + z.emoji + ' ' + z.sign + '新月</div>' +
+        '<div style="font-size:13px;font-weight:700;color:rgba(200,180,255,0.8);margin-bottom:10px;">' + z.theme + '</div>' +
+        '<ul style="margin:0 0 10px;padding-left:18px;font-size:12px;color:rgba(200,180,255,0.65);line-height:1.9;">' +
+        z.keywords.map(function(k) { return '<li>' + k + '</li>'; }).join('') +
+        '</ul>' +
+        '<p style="font-size:12px;color:rgba(200,180,255,0.7);margin:0;font-style:italic;">' + z.message + '</p>';
+      document.getElementById('furikaeri-zodiac-wrap').style.display = 'block';
+    }
+
+    function renderResult(s1, s2, s3, s4, s5) {
+      var set = function(id, wrapId, text) {
+        var el = document.getElementById(id);
+        var wrap = document.getElementById(wrapId);
+        if (el && text) { el.textContent = text; wrap.style.display = 'block'; }
+      };
+      set('furikaeri-s1', 'furikaeri-s1-wrap', s1);
+      set('furikaeri-s2', 'furikaeri-s2-wrap', s2);
+      set('furikaeri-s3', 'furikaeri-s3-wrap', s3);
+      set('furikaeri-s4', 'furikaeri-s4-wrap', s4 || '');
+      set('furikaeri-s5', 'furikaeri-s5-wrap', s5 || '');
+      showZodiac();
+      var sig = document.getElementById('furikaeri-sig');
+      if (sig) sig.style.display = 'block';
+    }
+
+    async function generate(pid, profile, diaryText) {
+      var statusEl = document.getElementById('furikaeri-status');
+      var apiKey = getApiKey();
+      if (!apiKey) { if (statusEl) statusEl.textContent = ''; return; }
+
+      var item = SHUKU_MAP[profile.shuku] || {};
+      var prompt = buildPrompt(profile, item, diaryText);
+
+      if (statusEl) statusEl.textContent = '✦ 振り返り鑑定を生成しています…';
+
+      try {
+        var url = 'https://generativelanguage.googleapis.com/v1beta/models/' + MODEL + ':generateContent?key=' + apiKey;
+        var res = await fetch(url, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], generationConfig: { maxOutputTokens: 4096, temperature: 0.85 } })
+        });
+        if (!res.ok) { var e = await res.json().catch(function(){return {};}); throw new Error(e.error && e.error.message ? e.error.message : 'HTTP ' + res.status); }
+        var data = await res.json();
+        var text = (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0] && data.candidates[0].content.parts[0].text) || '';
+        var cleaned = text.replace(/[*#]+/g, '').trim();
+        var parts1 = cleaned.split('---SECTION2---');
+        var s1 = parts1[0] ? parts1[0].trim() : '';
+        var rest = parts1[1] || '';
+        var parts2 = rest.split('---SECTION3---');
+        var s2 = parts2[0] ? parts2[0].trim() : '';
+        var s3 = parts2[1] ? parts2[1].trim() : '';
+
+        localStorage.setItem(CACHE_KEY + pid, JSON.stringify({ s1: s1, s2: s2, s3: s3, ts: Date.now() }));
+        renderResult(s1, s2, s3, '', '');
+        loadSections45(pid, { s1: s1, s2: s2, s3: s3 });
+        if (statusEl) statusEl.textContent = '';
+      } catch(err) {
+        if (statusEl) statusEl.textContent = '⚠ ' + err.message;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      var pid = getPid();
+      var profile = getProfile();
+      var diaryText = getDiaryText(pid);
+
+      // キャッシュがあれば即表示
+      try {
+        var cached = JSON.parse(localStorage.getItem(CACHE_KEY + pid) || 'null');
+        if (cached && cached.s1) {
+          renderResult(cached.s1, cached.s2, cached.s3, cached.s4 || '', cached.s5 || '');
+          // s4/s5がキャッシュになければGASから補完
+          if (!cached.s4 && !cached.s5) loadSections45(pid, cached);
+          return;
+        }
+      } catch(e) {}
+
+      // 日記データとAPIキーがあれば自動生成
+      if (diaryText && getApiKey()) {
+        generate(pid, profile, diaryText);
+      } else {
+        // Gemini生成ができない場合もGASからs4/s5を試みる
+        loadSections45(pid, null);
+      }
+    });
+
+    var _GAS_URL = 'https://script.google.com/macros/s/AKfycbyFn41Pd3hrifQBCYhRMATxANM_yyEctKnHiY65pLMAE7yij-rYSjef6zd7wEJI8F_v/exec';
+    var _GAS_SECRET = 'tsukiyomi-2026-key';
+
+    function loadSections45(pid, existingCache) {
+      if (!pid || pid === 'guest') return;
+      fetch(_GAS_URL + '?pid=' + encodeURIComponent(pid) + '&secretKey=' + encodeURIComponent(_GAS_SECRET))
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          if (!data || !data.ok) return;
+          var s4 = data.section4 || '';
+          var s5 = data.section5 || '';
+          if (!s4 && !s5) return;
+          // キャッシュを更新
+          var base = existingCache || {};
+          var updated = { s1: base.s1 || '', s2: base.s2 || '', s3: base.s3 || '', s4: s4, s5: s5, ts: Date.now() };
+          try { localStorage.setItem(CACHE_KEY + pid, JSON.stringify(updated)); } catch(e) {}
+          // 表示を更新
+          var set = function(id, wrapId, text) {
+            var el = document.getElementById(id);
+            var wrap = document.getElementById(wrapId);
+            if (el && text) { el.textContent = text; wrap.style.display = 'block'; }
+          };
+          set('furikaeri-s4', 'furikaeri-s4-wrap', s4);
+          set('furikaeri-s5', 'furikaeri-s5-wrap', s5);
+        })
+        .catch(function() {});
+    }
+
+  })();
+  </script>
 </body>
 </html>
