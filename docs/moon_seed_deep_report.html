@@ -604,6 +604,37 @@
         border-top: 1px solid rgba(168,121,50,.2) !important;
       }
       #furikaeri-status { display: none !important; }
+      /* 天命アクショングリッド — 印刷用 */
+      #furikaeri-section .kaun-label {
+        color: rgba(168,121,50,.8) !important;
+        border-bottom-color: rgba(168,121,50,.3) !important;
+      }
+      #furikaeri-section .kaun-grid {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 8px !important;
+        margin-bottom: 12px !important;
+      }
+      #furikaeri-section .kaun-grid-item {
+        background: rgba(0,0,0,0.03) !important;
+        border: 1px solid rgba(168,121,50,.2) !important;
+        border-radius: 5px !important;
+        padding: 9px 11px !important;
+      }
+      #furikaeri-section .kaun-grid-item-label {
+        font-size: 8pt !important;
+        color: rgba(168,121,50,.7) !important;
+        letter-spacing: 0.1em !important;
+        margin-bottom: 3px !important;
+      }
+      #furikaeri-section .kaun-grid-item-value {
+        font-size: 10.5pt !important;
+        line-height: 1.7 !important;
+        color: #2a1810 !important;
+      }
+      #furikaeri-section .kaun-action-list { list-style: none !important; padding: 0 !important; margin: 0 !important; }
+      #furikaeri-section .kaun-action-list li { display: flex !important; align-items: flex-start !important; gap: 8px !important; font-size: 10.5pt !important; line-height: 1.8 !important; color: #2a1810 !important; }
+      #furikaeri-section .kaun-action-dot { width: 5px !important; height: 5px !important; border-radius: 50% !important; background: #7a5010 !important; margin-top: 7px !important; flex-shrink: 0 !important; }
     }
 
     /* ══ 画面専用：A4ページスナップ・出版品質レイアウト ══ */
@@ -2310,6 +2341,29 @@
 
     /* 印刷外枠の最終方式：子imgの断片化を避け、fixed要素自身の背景として描画 */
     @media print {
+      @page {
+        size: A4 portrait !important;
+        margin: 0 !important;
+      }
+      html,
+      body {
+        width: 210mm !important;
+        min-height: 297mm !important;
+      }
+      /* 画面操作用UIは紙面へ一切出さない */
+      #global-nav,
+      #apikey-panel,
+      #toc-backdrop,
+      #toc-drawer,
+      .deep-chapter-tabs,
+      .chapter-bottom-nav,
+      .challenge-nav,
+      .moon-mark,
+      [data-no-diary-cta],
+      body > [style*="position:fixed"],
+      body > [style*="position: fixed"] {
+        display: none !important;
+      }
       #print-page-frame {
         display: block !important;
         position: fixed !important;
@@ -2342,6 +2396,174 @@
       [data-deep-report] .deep-report-title-block,
       [data-deep-report] .deep-report-intro-panel {
         background: transparent !important;
+      }
+      /* 正しい冒頭順：表紙 → 4つのしるし → この鑑定書でわかること */
+      [data-deep-report] .deep-report-title-block {
+        break-before: auto !important;
+        page-break-before: auto !important;
+        break-after: page !important;
+        page-break-after: always !important;
+      }
+      [data-deep-report] .completion-panel.deep-report-opening,
+      [data-deep-report] .deep-report-intro-panel {
+        break-before: page !important;
+        page-break-before: always !important;
+        break-after: page !important;
+        page-break-after: always !important;
+      }
+
+      /* 出版用の共通版面 */
+      [data-deep-report] .challenge-body > .deep-report-panel,
+      [data-deep-report] article > .deep-report-panel:not(.deep-report-opening) {
+        width: 100% !important;
+        min-height: 237mm !important;
+        margin: 0 !important;
+        padding: 17mm 0 15mm !important;
+        box-sizing: border-box !important;
+        break-before: page !important;
+        page-break-before: always !important;
+        break-after: page !important;
+        page-break-after: always !important;
+      }
+      [data-deep-report] .deep-report-panel h2 {
+        margin: 0 auto 8mm !important;
+        font-size: 22pt !important;
+        line-height: 1.45 !important;
+        letter-spacing: .12em !important;
+      }
+      [data-deep-report] .deep-report-panel h2[data-seal]::before {
+        margin: 0 auto 4mm !important;
+        font-size: 7.5pt !important;
+      }
+      [data-deep-report] .deep-guidance-text,
+      [data-deep-report] .deep-report-panel > p {
+        font-size: 10.5pt !important;
+        line-height: 1.85 !important;
+      }
+
+      /* 二重改ページによる空白ページを防ぐ */
+      [data-deep-report] .deep-first-concern {
+        break-after: page !important;
+        page-break-after: always !important;
+      }
+      [data-deep-report] #deep-title {
+        display: none !important;
+      }
+      [data-deep-report] .deep-report-template {
+        break-before: auto !important;
+        page-break-before: auto !important;
+      }
+
+      /* 4つのキーワード：カードを一枚に収める */
+      [data-deep-report] .deep-report-template [data-deep-template] {
+        margin-top: 3mm !important;
+      }
+      [data-deep-report] .deep-template-grid {
+        gap: 3mm !important;
+        margin-top: 3mm !important;
+      }
+      [data-deep-report] .deep-template-card {
+        min-height: 0 !important;
+        padding: 3.5mm 4mm !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+      }
+      [data-deep-report] .deep-template-card h3 {
+        margin: 0 0 1.5mm !important;
+        font-size: 12pt !important;
+        line-height: 1.45 !important;
+      }
+      [data-deep-report] .deep-template-card p {
+        margin: 0 !important;
+        padding: 0 !important;
+        font-size: 8.8pt !important;
+        line-height: 1.55 !important;
+      }
+
+      /* 7日間の記録：2段組みでDay7の孤立ページをなくす */
+      [data-deep-report] .deep-report-summary {
+        padding-top: 14mm !important;
+        padding-bottom: 13mm !important;
+      }
+      [data-deep-report] .deep-report-summary h2 {
+        margin-bottom: 6mm !important;
+      }
+      [data-deep-report] [data-deep-diary-days] {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        align-items: start !important;
+        gap: 3mm 4mm !important;
+      }
+      [data-deep-report] [data-deep-diary-days] > div {
+        min-width: 0 !important;
+        margin: 0 !important;
+        padding: 3mm 3.5mm !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+      }
+      [data-deep-report] [data-deep-diary-days] > div,
+      [data-deep-report] [data-deep-diary-days] p,
+      [data-deep-report] [data-deep-diary-days] span {
+        font-size: 8.35pt !important;
+        line-height: 1.48 !important;
+      }
+
+      /* 連携データがない追加セクションは空白ページを作らない */
+      #linked-newmoon-diary-section:not([data-has-content]),
+      #linked-luck-action-section:not([data-has-content]) {
+        display: none !important;
+        break-before: auto !important;
+        page-break-before: auto !important;
+        break-after: auto !important;
+        page-break-after: auto !important;
+      }
+      #furikaeri-section:not(:has(.fk-text:not(:empty))) {
+        display: none !important;
+        min-height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        break-before: auto !important;
+        page-break-before: auto !important;
+        break-after: auto !important;
+        page-break-after: auto !important;
+      }
+      [data-deep-report] .deep-report-epilogue[data-chapter-tab],
+      [data-deep-report] .deep-report-epilogue[data-chapter-tab].tab-hidden {
+        break-before: auto !important;
+        page-break-before: auto !important;
+      }
+
+      /* 表紙から3ページ目までの主ビジュアルを、紙面の視覚的な中央へ */
+      [data-deep-report] .deep-report-title-block .deep-report-title-surface {
+        transform: translateY(8mm) !important;
+      }
+      [data-deep-report] .completion-panel.deep-report-opening > * {
+        transform: translateY(8mm) !important;
+      }
+      [data-deep-report] .deep-report-intro-image-panel > img {
+        transform: translateY(10mm) !important;
+      }
+
+      /* 第2章以降：本文量別に安全な移動量で視覚的な中央へ。
+         レイアウト方式は変えず、非表示章や改ページ判定に影響させない。 */
+      [data-deep-report] .challenge-body > .deep-report-panel:not(.deep-report-epilogue) > *,
+      [data-deep-report] article > .deep-report-panel:not(.deep-report-opening):not(.deep-report-epilogue) > * {
+        transform: translateY(18mm) !important;
+      }
+      [data-deep-report] .deep-report-template > * {
+        transform: translateY(10mm) !important;
+      }
+      [data-deep-report] .deep-report-summary > * {
+        transform: none !important;
+      }
+      [data-deep-report] .deep-report-chapter > *,
+      [data-deep-report] .deep-first-concern > * {
+        transform: translateY(28mm) !important;
+      }
+      [data-deep-report] .deep-report-chapter[data-seal="第二章"] > *,
+      [data-deep-report] .deep-report-chapter[data-seal="第三章"] > *,
+      [data-deep-report] .deep-report-chapter[data-seal="第四章"] > * {
+        transform: translateY(45mm) !important;
       }
     }
   </style>
@@ -2979,6 +3201,9 @@
           <p id="furikaeri-s5" class="fk-text" style="font-size:13.5px;line-height:2.05;color:rgba(245,240,230,0.88);white-space:pre-wrap;margin:0 0 20px;"></p>
         </div>
 
+        <!-- 天命アクショングリッド（静的生成） -->
+        <div id="kaun-grid-section" style="display:none;margin-top:16px;"></div>
+
         <!-- 署名 -->
         <div id="furikaeri-sig" class="fk-sig" style="display:none;text-align:right;font-size:11px;color:rgba(200,180,255,0.4);margin-top:16px;padding-top:10px;border-top:1px solid rgba(200,180,255,0.12);">
           宿曜占星術師　かのん<br>
@@ -3427,6 +3652,60 @@
       { re:/家族|子|夫|妻|パートナー|親|関係|夫婦|恋|愛/,          label:'人間関係・愛',           advice:'「大切な人に一言届ける」こと。その小さな言葉が、関係の流れを温め直します。双子座の月は対話に宿るエネルギーで満ちています。' },
       { re:/自分|使命|天命|在り方|ありたい|本当の自分|自己/,         label:'自己実現・使命',         advice:'「自分の言葉で一文書く」ことからスタート。書くことが、自分への理解と宿命をつないでいきます。今日の一行が未来への地図になります。' },
     ];
+
+    /* ── 12宮 × 天命アクションデータ ── */
+    var ZODIAC_GRID_DATA = {
+      '牡羊座':{ element:'火・活動宮', moves:'始める・挑む・リードする', actions:['迷っていた新しいことを今日一歩踏み出してみる','「やりたい」という気持ちに素直に従って動いてみる','得意なことを活かして誰かを引っ張る機会を作る'] },
+      '牡牛座':{ element:'地・固定宮', moves:'整える・深める・じっくり育てる', actions:['生活の中に「心地いい習慣」を一つ加える','大切にしているものを丁寧に扱う時間を意識して作る','焦らずコツコツと今の積み上げを信頼し続ける'] },
+      '双子座':{ element:'風・柔軟宮', moves:'書く・話す・つなぐ', actions:['気になっていた学びや情報を、一つ誰かにシェアする','声に出す・書くことを毎日たった5分続けてみる','後回しにしていた「連絡したい人」に今月中に一言届ける'] },
+      '蟹座':  { element:'水・活動宮', moves:'感じる・守る・育てる', actions:['大切な人に「ありがとう」を言葉にして伝える','自分の感情に正直に向き合う時間を意識して作る','安心できる場所・人との時間を丁寧に大切にする'] },
+      '獅子座':{ element:'火・固定宮', moves:'輝く・表現する・楽しむ', actions:['自分が好きなことをためらわず一つ表現してみる','誰かを喜ばせることを一つ企画してみる','自分の気持ちを素直に言葉にして伝えてみる'] },
+      '乙女座':{ element:'地・柔軟宮', moves:'整える・分析する・奉仕する', actions:['身の回りを一つ整理・整頓してすっきりさせる','誰かの役に立てることを一つ探して動いてみる','細かいことを丁寧にやり遂げることに集中してみる'] },
+      '天秤座':{ element:'風・活動宮', moves:'バランスを取る・つなぐ・整える', actions:['悩んでいる関係に、穏やかな一言を届けてみる','美しいもの・心地いいものに意識的に触れる時間を作る','「どちらも大切」という視点で迷いを一つ手放してみる'] },
+      '蠍座':  { element:'水・固定宮', moves:'深める・変容する・手放す', actions:['もう手放してもいいものを一つ決めて手放す','深く気になっていることを本格的に調べ始める','信頼できる人に本音を少し話す機会を作る'] },
+      '射手座':{ element:'火・柔軟宮', moves:'広げる・冒険する・学ぶ', actions:['新しい世界・知識・人に触れる機会を意識して作る','「いつかやりたいこと」の最初の小さな一歩を踏み出す','視野が広がる体験・情報を一つ積極的に選んでみる'] },
+      '山羊座':{ element:'地・活動宮', moves:'達成する・積み上げる・構築する', actions:['今月の目標を一つ具体的に書き出して決める','長期的にやりたいことの計画を一行でも書いてみる','コツコツ続けている習慣を今日も繰り返すことを大切にする'] },
+      '水瓶座':{ element:'風・固定宮', moves:'革新する・つながる・自由に発想する', actions:['固定観念を一つ外して新しい発想を試みる','自分らしい個性を一つ思い切って表現してみる','気になっているコミュニティや分野に一歩踏み込んでみる'] },
+      '魚座':  { element:'水・柔軟宮', moves:'感じる・流れに乗る・癒す', actions:['直感を信じて、ひとつだけ動いてみる','感謝・祈り・静かな時間で内側を整える習慣を作る','今のご縁を大切に、流れに逆らわず丁寧に過ごしてみる'] }
+    };
+
+    function renderKaunGrid() {
+      var section = document.getElementById('kaun-grid-section');
+      if (!section) return;
+      var profile = getProfile();
+      var shuku = profile.shuku || '';
+      var sd = SHUKU_MAP[shuku] || {};
+      var sign = MOON_THEME.sign;
+      var theme = MOON_THEME.theme;
+      var zg = ZODIAC_GRID_DATA[sign];
+      if (!zg) return;
+      var talent = sd.才能 || '';
+      var strength = sd.強み || '';
+      var crossMsg = talent
+        ? '「' + talent + '」の才能に' + sign + 'の風（' + theme + '）が重なる月。' + zg.moves + 'ことで天命が動き出す。'
+        : sign + 'の新月に、' + zg.moves + 'ことで流れが動き始める。';
+      var actionsHtml = zg.actions.map(function(a) {
+        return '<li><span class="kaun-action-dot" style="display:inline-block;width:5px;height:5px;border-radius:50%;background:rgba(63,173,148,0.8);margin-top:8px;flex-shrink:0;"></span>' + a + '</li>';
+      }).join('');
+      section.innerHTML =
+        '<p class="fk-section-label kaun-label" style="font-size:10px;font-weight:700;letter-spacing:.2em;color:rgba(200,180,255,0.45);border-bottom:1px solid rgba(200,180,255,0.12);padding-bottom:4px;margin:0 0 12px;">━━ 今月の天命アクション ━━</p>' +
+        '<div class="kaun-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">' +
+          '<div class="kaun-grid-item" style="background:rgba(255,255,255,0.04);border:1px solid rgba(200,180,255,0.12);border-radius:6px;padding:10px 12px;">' +
+            '<div class="kaun-grid-item-label" style="font-size:9px;letter-spacing:.12em;color:rgba(200,180,255,0.35);margin-bottom:4px;">' + sign + ' / エレメント</div>' +
+            '<div class="kaun-grid-item-value" style="font-size:12.5px;line-height:1.7;color:rgba(245,240,230,0.85);">' + zg.element + '<br><span style="font-size:11px;color:rgba(200,180,255,0.5);">' + zg.moves + '</span></div>' +
+          '</div>' +
+          '<div class="kaun-grid-item" style="background:rgba(255,255,255,0.04);border:1px solid rgba(200,180,255,0.12);border-radius:6px;padding:10px 12px;">' +
+            '<div class="kaun-grid-item-label" style="font-size:9px;letter-spacing:.12em;color:rgba(200,180,255,0.35);margin-bottom:4px;">命宿の才能 / 強み</div>' +
+            '<div class="kaun-grid-item-value" style="font-size:12.5px;line-height:1.7;color:rgba(245,240,230,0.85);">' + (talent||'—') + '<br><span style="font-size:11px;color:rgba(200,180,255,0.5);">' + strength + '</span></div>' +
+          '</div>' +
+          '<div class="kaun-grid-item" style="grid-column:span 2;background:rgba(63,173,148,0.06);border:1px solid rgba(63,173,148,0.25);border-radius:6px;padding:10px 12px;">' +
+            '<div class="kaun-grid-item-label" style="font-size:9px;letter-spacing:.12em;color:rgba(63,173,148,0.7);margin-bottom:4px;">' + (shuku||'命宿') + ' × ' + sign + ' エネルギー</div>' +
+            '<div class="kaun-grid-item-value" style="font-size:12.5px;line-height:1.75;color:rgba(245,240,230,0.9);">' + crossMsg + '</div>' +
+          '</div>' +
+        '</div>' +
+        '<ul class="kaun-action-list" style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:7px;">' + actionsHtml + '</ul>';
+      section.style.display = 'block';
+    }
 
     /* ── GAS URL（participants_lookup GASと同じエンドポイント） ── */
     /* google_apps_script_participants_lookup.gs を再デプロイ後、自動で使えます */
@@ -4076,6 +4355,7 @@
       set('furikaeri-s4', 'furikaeri-s4-wrap', s4 || '');
       set('furikaeri-s5', 'furikaeri-s5-wrap', s5 || '');
       showZodiac();
+      renderKaunGrid();
       var sig = document.getElementById('furikaeri-sig');
       if (sig) sig.style.display = 'block';
     }
