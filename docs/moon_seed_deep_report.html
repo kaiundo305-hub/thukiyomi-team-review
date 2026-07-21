@@ -3204,6 +3204,14 @@
         <!-- 天命アクショングリッド（静的生成） -->
         <div id="kaun-grid-section" style="display:none;margin-top:16px;"></div>
 
+        <!-- Section: 双子座新月からの開運アドバイス鑑定 -->
+        <div id="furikaeri-sg-advice-wrap" style="display:none;margin-top:24px;">
+          <p class="fk-section-label" style="font-size:10px;font-weight:700;letter-spacing:.2em;color:rgba(200,180,255,0.45);border-bottom:1px solid rgba(200,180,255,0.12);padding-bottom:4px;margin:0 0 12px;">
+            ━━ 双子座新月からの開運アドバイス ━━
+          </p>
+          <p id="furikaeri-sg-advice" class="fk-text" style="font-size:13.5px;line-height:2.05;color:rgba(245,240,230,0.88);white-space:pre-wrap;margin:0 0 20px;"></p>
+        </div>
+
         <!-- 署名 -->
         <div id="furikaeri-sig" class="fk-sig" style="display:none;text-align:right;font-size:11px;color:rgba(200,180,255,0.4);margin-top:16px;padding-top:10px;border-top:1px solid rgba(200,180,255,0.12);">
           宿曜占星術師　かのん<br>
@@ -4326,7 +4334,9 @@
         'セクション2（これからのあなたへ・250〜350文字）：日記の行動宣言を受け止め、次のサイクルに向けた具体的な整え方を書いてください。開運アイテム「' + (item.開運アイテム||'') + '」を自然につなげ、最後は「' + MOON_THEME.theme + '」の扉をこれからも開き続けられる言葉で締めくくってください。\n\n' +
         '---SECTION3---\n\n' +
         'セクション3（今月テーマ深読み・150〜200文字）：①日記から"伝えた・表現した・つながった"場面を1つ選んで描く ②「あなたは〇〇と書いていました」と本人の言葉を返す ③それが「' + MOON_THEME.theme + '」とどうつながるか一言で翻訳する。最後に' + MOON_THEME.theme + 'の扉が開いたことへの短い祝福を添えてください。\n\n' +
-        '【共通ルール】マークダウン不使用。「---SECTION2---」「---SECTION3---」はそのまま出力。段落間1行空け。';
+        '---SECTION4---\n\n' +
+        'セクション4（双子座新月からの開運アドバイス・150〜250文字）：7日間の流れを受け取り、「' + MOON_THEME.sign + ' × ' + shuku + 'の宿命の力」の交差点から、次の新月サイクルで一番輝ける具体的な開運アクションを1〜2つ提案してください。「今あなたにとって大切なこと」を一言で表し、鑑定書の締めくくりとして温かく背中を押す言葉で結んでください。\n\n' +
+        '【共通ルール】マークダウン不使用。「---SECTION2---」「---SECTION3---」「---SECTION4---」はそのまま出力。段落間1行空け。';
     }
 
     function showZodiac() {
@@ -4343,7 +4353,7 @@
       document.getElementById('furikaeri-zodiac-wrap').style.display = 'block';
     }
 
-    function renderResult(s1, s2, s3, s4, s5) {
+    function renderResult(s1, s2, s3, s4, s5, sgAdvice) {
       var set = function(id, wrapId, text) {
         var el = document.getElementById(id);
         var wrap = document.getElementById(wrapId);
@@ -4354,6 +4364,7 @@
       set('furikaeri-s3', 'furikaeri-s3-wrap', s3);
       set('furikaeri-s4', 'furikaeri-s4-wrap', s4 || '');
       set('furikaeri-s5', 'furikaeri-s5-wrap', s5 || '');
+      set('furikaeri-sg-advice', 'furikaeri-sg-advice-wrap', sgAdvice || '');
       showZodiac();
       renderKaunGrid();
       var sig = document.getElementById('furikaeri-sig');
@@ -4386,11 +4397,14 @@
         var rest = parts1[1] || '';
         var parts2 = rest.split('---SECTION3---');
         var s2 = parts2[0] ? parts2[0].trim() : '';
-        var s3 = parts2[1] ? parts2[1].trim() : '';
+        var rest2 = parts2[1] || '';
+        var parts3 = rest2.split('---SECTION4---');
+        var s3 = parts3[0] ? parts3[0].trim() : rest2.trim();
+        var sgAdvice = parts3[1] ? parts3[1].trim() : '';
 
-        localStorage.setItem(CACHE_KEY + pid, JSON.stringify({ s1: s1, s2: s2, s3: s3, ts: Date.now() }));
-        renderResult(s1, s2, s3, '', '');
-        loadSections45(pid, { s1: s1, s2: s2, s3: s3 });
+        localStorage.setItem(CACHE_KEY + pid, JSON.stringify({ s1: s1, s2: s2, s3: s3, sgAdvice: sgAdvice, ts: Date.now() }));
+        renderResult(s1, s2, s3, '', '', sgAdvice);
+        loadSections45(pid, { s1: s1, s2: s2, s3: s3, sgAdvice: sgAdvice });
         if (statusEl) statusEl.textContent = '';
       } catch(err) {
         if (statusEl) statusEl.textContent = '⚠ ' + err.message;
@@ -4406,7 +4420,7 @@
       try {
         var cached = JSON.parse(localStorage.getItem(CACHE_KEY + pid) || 'null');
         if (cached && cached.s1) {
-          renderResult(cached.s1, cached.s2, cached.s3, cached.s4 || '', cached.s5 || '');
+          renderResult(cached.s1, cached.s2, cached.s3, cached.s4 || '', cached.s5 || '', cached.sgAdvice || '');
           // s4/s5がキャッシュになければGASから補完
           if (!cached.s4 && !cached.s5) loadSections45(pid, cached);
           return;
@@ -4436,7 +4450,7 @@
           if (!s4 && !s5) return;
           // キャッシュを更新
           var base = existingCache || {};
-          var updated = { s1: base.s1 || '', s2: base.s2 || '', s3: base.s3 || '', s4: s4, s5: s5, ts: Date.now() };
+          var updated = { s1: base.s1 || '', s2: base.s2 || '', s3: base.s3 || '', s4: s4, s5: s5, sgAdvice: base.sgAdvice || '', ts: Date.now() };
           try { localStorage.setItem(CACHE_KEY + pid, JSON.stringify(updated)); } catch(e) {}
           // 表示を更新
           var set = function(id, wrapId, text) {
