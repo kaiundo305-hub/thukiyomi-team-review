@@ -2568,6 +2568,15 @@
       }
     }
   </style>
+<!-- クライアント版：管理者向けUI非表示 -->
+<style>
+  #gnav-book, #gnav-ai, #gnav-export, #gnav-import, #gnav-apikey, #gnav-diary-cert { display: none !important; }
+  #apikey-panel { display: none !important; }
+  .challenge-nav { display: none !important; }
+  #moon-cycle-section { display: none !important; }
+  div:has(> textarea#moon-fullmoon-gemini) { display: none !important; }
+  #sg-input-panel { display: none !important; }
+</style>
 </head>
 <body>
 
