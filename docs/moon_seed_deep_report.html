@@ -4467,5 +4467,56 @@
 
   })();
   </script>
+
+  <!-- ══ クライアント公開版：鑑定書の閲覧のみ・入力/管理機能を全て非表示 ══ -->
+  <style>
+    /* ── ボトムナビ：印刷以外をすべて隠す ── */
+    #gnav-book,
+    #gnav-ai,
+    #gnav-export,
+    #gnav-import,
+    #gnav-apikey,
+    #gnav-diary-cert { display: none !important; }
+
+    /* APIキー入力パネル */
+    #apikey-panel { display: none !important; }
+
+    /* 「月読み日記BOOKへ戻る」「第三の鑑定書へ」ナビ */
+    .challenge-nav { display: none !important; }
+
+    /* 月のサイクル記録セクション（textarea×4） */
+    #moon-cycle-section { display: none !important; }
+
+    /* 双子座新月×宿命診断：AI生成パネル全体 */
+    #sg-section { display: none !important; }
+
+    /* 双子座満月セクション内の「満月の気づき」入力エリア */
+    div:has(> #moon-fullmoon-gemini) { display: none !important; }
+
+    /* 日記バックアップ・復元セクション */
+    #data-backup-section { display: none !important; }
+
+    /* 「日記を追記したら鑑定書を今すぐ更新」ボタン */
+    div:has(> button[onclick="refreshDeepReport()"]) { display: none !important; }
+
+    /* 「月読み日記を書く」CTA */
+    [data-no-diary-cta] { display: none !important; }
+
+    /* 章タブ：内容が非表示のタブを隠す（あなたの言葉/宿命診断） */
+    .deep-chapter-tab-btn[data-tab-target="7"],
+    .deep-chapter-tab-btn[data-tab-target="8"] { display: none !important; }
+
+    /* 残存するtextareaをすべて非表示 */
+    main textarea { display: none !important; }
+  </style>
+  <script>
+    /* 管理・入力操作をすべて無効化 */
+    window.gnavApiKey        = function() {};
+    window.gnavAI            = function() {};
+    window.exportDiaryData   = function() {};
+    window.importDiaryData   = function() {};
+    window.apikeyPanelSave   = function() {};
+    window.refreshDeepReport = function() {};
+  </script>
 </body>
 </html>
