@@ -4076,5 +4076,36 @@
 
   })();
   </script>
+
+  <!-- ══ クライアント公開版：入力・管理機能を非表示 ══ -->
+  <style>
+    /* ナビ：APIキー・書き出し・復元・振り返り鑑定（内部ツール）を隠す */
+    #gnav-apikey,
+    #gnav-export,
+    #gnav-import,
+    #gnav-diary-cert { display: none !important; }
+
+    /* APIキー入力パネル */
+    #apikey-panel { display: none !important; }
+
+    /* 月のサイクル記録セクション（textarea×4） */
+    #moon-cycle-section { display: none !important; }
+
+    /* 双子座新月×宿命診断：AI生成パネル全体 */
+    #sg-section { display: none !important; }
+
+    /* 双子座満月セクション内の「満月の気づきを書き留める」入力エリア */
+    div:has(> #moon-fullmoon-gemini) { display: none !important; }
+
+    /* 念のため残存するtextareaをすべて読み取り専用・非表示 */
+    main textarea { display: none !important; }
+  </style>
+  <script>
+    /* 管理操作を無効化（ナビが残っていても動作しないように） */
+    window.gnavApiKey       = function() {};
+    window.exportDiaryData  = function() {};
+    window.importDiaryData  = function() {};
+    window.apikeyPanelSave  = function() {};
+  </script>
 </body>
 </html>
