@@ -4468,9 +4468,9 @@
   })();
   </script>
 
-  <!-- ══ クライアント公開版：鑑定書の閲覧のみ・入力/管理機能を全て非表示 ══ -->
+  <!-- ══ クライアント公開版：入力・管理 UI のみ非表示、コンテンツは保持 ══ -->
   <style>
-    /* ── ボトムナビ：印刷以外をすべて隠す ── */
+    /* ボトムナビ：日記BOOK・AI・APIキー・書き出し・復元・振り返りを隠す */
     #gnav-book,
     #gnav-ai,
     #gnav-export,
@@ -4478,44 +4478,32 @@
     #gnav-apikey,
     #gnav-diary-cert { display: none !important; }
 
-    /* APIキー入力パネル */
+    /* APIキー入力スライドパネル */
     #apikey-panel { display: none !important; }
 
-    /* 「月読み日記BOOKへ戻る」「第三の鑑定書へ」ナビ */
+    /* 「月読み日記BOOKへ戻る」ナビ */
     .challenge-nav { display: none !important; }
 
-    /* 月のサイクル記録セクション（textarea×4） */
+    /* 月のサイクル書き込みセクション（textarea×4） */
     #moon-cycle-section { display: none !important; }
 
-    /* 宿命診断：入力フォームのみ非表示（診断結果 #sg-result は残す） */
+    /* 宿命診断：入力フォームのみ非表示（表示済み診断結果 #sg-result は残す） */
     #sg-input-panel { display: none !important; }
 
-    /* 宿命診断：「書き直す」ボタン非表示 */
+    /* 「書き直す」ボタン */
     #sg-result > div:first-child { display: none !important; }
 
-    /* 双子座満月セクション内の「満月の気づき」入力エリア */
+    /* 双子座満月セクション内の「満月の気づきを書き留める」textarea */
     div:has(> #moon-fullmoon-gemini) { display: none !important; }
 
     /* 日記バックアップ・復元セクション */
     #data-backup-section { display: none !important; }
 
-    /* 「日記を追記したら鑑定書を今すぐ更新」ボタン */
+    /* 「日記を追記したら更新」ボタン */
     div:has(> button[onclick="refreshDeepReport()"]) { display: none !important; }
 
     /* 「月読み日記を書く」CTA */
     [data-no-diary-cta] { display: none !important; }
-
-    /* 残存するtextareaをすべて非表示 */
-    main textarea { display: none !important; }
   </style>
-  <script>
-    /* 管理・入力操作をすべて無効化 */
-    window.gnavApiKey        = function() {};
-    window.gnavAI            = function() {};
-    window.exportDiaryData   = function() {};
-    window.importDiaryData   = function() {};
-    window.apikeyPanelSave   = function() {};
-    window.refreshDeepReport = function() {};
-  </script>
 </body>
 </html>
