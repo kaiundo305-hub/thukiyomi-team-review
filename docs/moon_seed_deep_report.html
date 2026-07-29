@@ -2373,14 +2373,19 @@
         height: 297mm !important;
         background: none !important;
         pointer-events: none !important;
-        z-index: 101 !important;
+        overflow: visible !important;
+        z-index: 10000 !important;
       }
       #print-page-frame img {
         display: block !important;
         width: 100% !important;
         height: 100% !important;
+        min-height: 297mm !important;
         object-fit: fill !important;
+        object-position: top left !important;
         padding: 0 !important;
+        margin: 0 !important;
+        box-sizing: border-box !important;
         mix-blend-mode: multiply !important;
       }
       html {
