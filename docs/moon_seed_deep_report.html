@@ -2550,26 +2550,10 @@
         transform: translateY(10mm) !important;
       }
 
-      /* 第2章以降：本文量別に安全な移動量で視覚的な中央へ。
-         レイアウト方式は変えず、非表示章や改ページ判定に影響させない。 */
+      /* 第2章以降：transform によるズレを除去し、flex 中央揃えに統一 */
       [data-deep-report] .challenge-body > .deep-report-panel:not(.deep-report-epilogue) > *,
       [data-deep-report] article > .deep-report-panel:not(.deep-report-opening):not(.deep-report-epilogue) > * {
-        transform: translateY(18mm) !important;
-      }
-      [data-deep-report] .deep-report-template > * {
-        transform: translateY(10mm) !important;
-      }
-      [data-deep-report] .deep-report-summary > * {
         transform: none !important;
-      }
-      [data-deep-report] .deep-report-chapter > *,
-      [data-deep-report] .deep-first-concern > * {
-        transform: translateY(28mm) !important;
-      }
-      [data-deep-report] .deep-report-chapter[data-seal="第二章"] > *,
-      [data-deep-report] .deep-report-chapter[data-seal="第三章"] > *,
-      [data-deep-report] .deep-report-chapter[data-seal="第四章"] > * {
-        transform: translateY(45mm) !important;
       }
     }
   </style>
