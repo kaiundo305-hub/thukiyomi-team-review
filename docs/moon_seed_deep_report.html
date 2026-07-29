@@ -2413,13 +2413,13 @@
         page-break-after: auto !important;
       }
 
-      /* 出版用の共通版面 */
+      /* 出版用の共通版面：天地 30mm（3cm）固定 */
       [data-deep-report] .challenge-body > .deep-report-panel,
       [data-deep-report] article > .deep-report-panel:not(.deep-report-opening) {
         width: 100% !important;
         min-height: 237mm !important;
         margin: 0 !important;
-        padding: 17mm 0 15mm !important;
+        padding: 30mm 0 !important;
         box-sizing: border-box !important;
         break-before: page !important;
         page-break-before: always !important;
@@ -2447,10 +2447,10 @@
         line-height: 1.85 !important;
       }
 
-      /* 二重改ページによる空白ページを防ぐ */
+      /* deep-first-concern は break-after を auto に（二重改ページ防止） */
       [data-deep-report] .deep-first-concern {
-        break-after: page !important;
-        page-break-after: always !important;
+        break-after: auto !important;
+        page-break-after: auto !important;
       }
       [data-deep-report] #deep-title {
         display: none !important;
