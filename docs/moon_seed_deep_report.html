@@ -2398,6 +2398,10 @@
       [data-deep-report] .deep-report-intro-panel {
         background: transparent !important;
       }
+      /* challenge-shell の天地パディングを統一（ブロック1810の padding:0 30mm を上書き） */
+      main.challenge-shell {
+        padding: 0 28mm !important;
+      }
       /* ── 各ページの改ページ：break-before のみに統一（break-after との二重発生を防止） ── */
       [data-deep-report] .deep-report-title-block {
         break-before: auto !important;
@@ -2413,7 +2417,7 @@
         page-break-after: auto !important;
       }
 
-      /* 出版用の共通版面：天地 30mm（3cm）固定 */
+      /* 出版用の共通版面：天地 30mm（3cm）固定・上揃え */
       [data-deep-report] .challenge-body > .deep-report-panel,
       [data-deep-report] article > .deep-report-panel:not(.deep-report-opening) {
         width: 100% !important;
@@ -2421,6 +2425,7 @@
         margin: 0 !important;
         padding: 30mm 0 !important;
         box-sizing: border-box !important;
+        display: block !important;
         break-before: page !important;
         page-break-before: always !important;
         break-after: auto !important;
