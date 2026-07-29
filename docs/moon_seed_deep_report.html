@@ -2555,6 +2555,19 @@
       [data-deep-report] article > .deep-report-panel:not(.deep-report-opening):not(.deep-report-epilogue) > * {
         transform: none !important;
       }
+
+      /* 印刷不要セクション：tab-hidden 強制表示より高い詳細度(ID)で確実に除外 */
+      /* #deep-ai-analysis-section: 非表示だが tab-hidden ルールで強制表示されてしまう */
+      /* #data-backup-section: 管理用バックアップUI（クライアントに不要） */
+      #deep-ai-analysis-section,
+      #data-backup-section {
+        display: none !important;
+        break-before: auto !important;
+        page-break-before: auto !important;
+        min-height: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
     }
   </style>
 <!-- クライアント版：管理者向けUI非表示 -->
