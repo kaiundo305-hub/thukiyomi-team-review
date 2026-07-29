@@ -2398,19 +2398,19 @@
       [data-deep-report] .deep-report-intro-panel {
         background: transparent !important;
       }
-      /* 正しい冒頭順：表紙 → 4つのしるし → この鑑定書でわかること */
+      /* ── 各ページの改ページ：break-before のみに統一（break-after との二重発生を防止） ── */
       [data-deep-report] .deep-report-title-block {
         break-before: auto !important;
         page-break-before: auto !important;
-        break-after: page !important;
-        page-break-after: always !important;
+        break-after: auto !important;
+        page-break-after: auto !important;
       }
       [data-deep-report] .completion-panel.deep-report-opening,
       [data-deep-report] .deep-report-intro-panel {
         break-before: page !important;
         page-break-before: always !important;
-        break-after: page !important;
-        page-break-after: always !important;
+        break-after: auto !important;
+        page-break-after: auto !important;
       }
 
       /* 出版用の共通版面 */
@@ -2423,9 +2423,14 @@
         box-sizing: border-box !important;
         break-before: page !important;
         page-break-before: always !important;
-        break-after: page !important;
-        page-break-after: always !important;
+        break-after: auto !important;
+        page-break-after: auto !important;
       }
+
+      /* ── 宿命診断：入力フォームは印刷不要（診断結果がある場合のみ出力） ── */
+      #sg-input-panel,
+      #sg-diary-preview,
+      #sg-fetch-status { display: none !important; }
       [data-deep-report] .deep-report-panel h2 {
         margin: 0 auto 8mm !important;
         font-size: 22pt !important;
