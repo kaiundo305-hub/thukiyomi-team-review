@@ -2584,6 +2584,19 @@
         padding: 0 !important;
         margin: 0 !important;
       }
+
+      /* 扉表紙：内側のボックスを除去し、金の装飾枠と一体化した活字組みへ */
+      [data-deep-report] .deep-report-title-surface {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        max-width: 116mm !important;
+        position: relative !important;
+      }
+      [data-deep-report] .deep-report-title-surface::before,
+      [data-deep-report] .deep-report-title-surface::after {
+        display: none !important;
+      }
     }
   </style>
 <!-- クライアント版：管理者向けUI非表示 -->
