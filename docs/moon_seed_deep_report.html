@@ -2585,6 +2585,22 @@
         margin: 0 !important;
       }
 
+      /* わかることページ：画像をページ内に収める */
+      [data-deep-report] .deep-report-intro-image-panel {
+        overflow: visible !important;
+        padding: 0 !important;
+      }
+      [data-deep-report] .deep-report-intro-image-panel > img {
+        display: block !important;
+        width: auto !important;
+        max-width: 100% !important;
+        max-height: 200mm !important;
+        height: auto !important;
+        margin: 0 auto !important;
+        object-fit: contain !important;
+        transform: none !important;
+      }
+
       /* 扉表紙：内側のボックスを除去し、金の装飾枠と一体化した活字組みへ */
       [data-deep-report] .deep-report-title-surface {
         background: transparent !important;
